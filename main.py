@@ -22,14 +22,7 @@ async def on_command_error(ctx, error):
   else:
     pass
 
-class Utils(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-
-    @commands.command()
-    async def ping(self, ctx):
-        await ctx.send('Pong! {0}'.format(bot.latency * 1000 + " Seconds"))
-
 bot.load_extension("jishaku")
-bot.load_extension(Utils(bot))
+bot.load_extension("riftgun")
+bot.load_extension("cogs.utils")
 bot.run(os.getenv("BOT_TOKEN"))
