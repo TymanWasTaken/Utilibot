@@ -16,8 +16,8 @@ class Utils(commands.Cog):
 	@commands.bot_has_permissions(administrator=True)
 	async def purge(self, ctx, number):
 		deleted = await ctx.channel.purge(limit=int(number)+1)
-		message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
-		await asyncio.sleep(1.5)
+		message = await ctx.channel.send(f'Deleted {len(deleted)-1} message(s)')
+		await asyncio.sleep(2.5)
 		await message.delete()
 
 def setup(bot):
