@@ -14,7 +14,7 @@ class Utils(commands.Cog):
 		await ctx.send(embed=embed)
 
 	@commands.command()
-	@commands.check(is_owner)
+	@commands.is_owner()
 	async def quit(self, ctx):
 		await ctx.send('Shutting down...')
 		print('Recived quit command, shutting down.')
