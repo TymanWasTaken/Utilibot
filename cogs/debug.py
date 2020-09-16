@@ -17,7 +17,7 @@ class Debug(commands.Cog):
 
 	@commands.command()
 	@commands.is_owner()
-	async def git(self, ctx, *message=["No message specified"]):
+	async def git(self, ctx, *, message="No message specified"):
 		m = await ctx.send("Updating repo...")
 		os.system(f'/home/pi/utilibot/git.sh {"".join(message)}')
 		await m.edit(content='Updated repo successfully!')
