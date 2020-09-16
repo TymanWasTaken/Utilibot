@@ -20,7 +20,7 @@ class Debug(commands.Cog):
 	async def git(self, ctx, message="No message specified"):
 		m = await ctx.send("Updating repo...")
 		os.system(f'/home/pi/utilibot/git.sh {message}')
-		await m.edit('Updated repo successfully!')
+		await m.edit(content='Updated repo successfully!')
 
 def setup(bot):
 	bot.add_cog(Debug(bot))
