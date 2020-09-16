@@ -18,7 +18,6 @@ class Debug(commands.Cog):
 	@commands.command()
 	@commands.is_owner()
 	async def git(self, ctx, *, message):
-		print(f'/home/pi/utilibot/git.sh {message}')
 		m = await ctx.send("Updating repo...")
 		os.system(f'/home/pi/utilibot/git.sh {message}')
 		await m.edit(content='Updated repo successfully!')
