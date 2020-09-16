@@ -1,6 +1,5 @@
-import discord
+import discord, random
 from discord.ext import commands
-import random
 
 class Utils(commands.Cog):
 	def __init__(self, bot):
