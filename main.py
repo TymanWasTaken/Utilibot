@@ -32,7 +32,7 @@ class Fun(commands.Cog):
 
 	@commands.command()
 	async def hello(self, ctx):
-		await ctx.send("hello.")
+		await ctx.send("Hello there.")
 
 class Utils(commands.Cog):
 	def __init__(self, bot):
