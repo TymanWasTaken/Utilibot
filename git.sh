@@ -1,4 +1,4 @@
-if [ $# -eq 1 ]
+if [ $# -gt 0 ]
   then
     git add -A
 	git add -u
@@ -7,6 +7,6 @@ if [ $# -eq 1 ]
 else
 	git add -A
 	git add -u
-	git commit -m "No message specified"
+	git commit -m "$*"
 	git push
 fi
