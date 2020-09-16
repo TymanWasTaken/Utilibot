@@ -26,33 +26,8 @@ async def on_command_error(ctx, error):
 	else:
 		pass
 
-class Fun(commands.Cog):
-	def __init__(self, bot):
-		self.bot = bot
-
-	@commands.command()
-	async def hello(self, ctx):
-		await ctx.send("Hello there.")
-
-class Utils(commands.Cog):
-	def __init__(self, bot):
-		self.bot = bot
-
-	@commands.command()
-	async def ping(self, ctx):
-		embed = discord.Embed(title="Ping!", description=f"Pong! `{round(self.bot.latency * 1000)} ms`", color=0x3bff00)
-		await ctx.send(embed=embed)
-
-	@commands.command()
-	@commands.check(is_owner)
-	async def quit(self, ctx):
-		await ctx.send('Shutting down...')
-		print('Recived quit command, shutting down.')
-		await bot.logout()
-		sys.exit()
-
 bot.load_extension("jishaku")
 bot.load_extension("riftgun")
-bot.add_cog(Fun(bot))
-bot.add_cog(Utils(bot))
+bot.load_extension("cogs.fun")
+bot.load_extension("cogs.utils")
 bot.run(os.getenv("BOT_TOKEN"))
