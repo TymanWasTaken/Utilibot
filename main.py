@@ -4,7 +4,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 load_dotenv(verbose=True)
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or('u!'), case_insensitive=True)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or('u!'), case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False))
 
 async def is_owner(ctx):
 	return ctx.author.id == 487443883127472129

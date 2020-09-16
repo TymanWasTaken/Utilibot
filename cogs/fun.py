@@ -12,6 +12,13 @@ class Fun(commands.Cog):
 		"""
 		await ctx.send("Hello there.")
 
+	@commands.command()
+	async def say(self, ctx, *, message):
+		"""
+		Says what you tell it to, self-explanitory
+		"""
+		await ctx.send(message)
+
 def setup(bot):
 	bot.add_cog(Fun(bot))
 	print('[FunCog] Fun cog loaded')
