@@ -7,6 +7,9 @@ class Fun(commands.Cog):
 
 	@commands.command()
 	async def hello(self, ctx):
+		"""
+		:)
+		"""
 		await ctx.send("Hello there.")
 
 def setup(bot):

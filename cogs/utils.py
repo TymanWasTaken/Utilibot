@@ -5,20 +5,29 @@ class Utils(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command()
-	async def ping(self, ctx):
-		color = "%06x" % random.randint(0, 0xFFFFFF)
-		embed = discord.Embed(title="Ping!", description=f"Pong! `{round(self.bot.latency * 1000)} ms`", color=int(color, 16))
-		await ctx.send(embed=embed)
-
-	@commands.command()
-	@commands.has_permissions(manage_messages=True)
-	@commands.bot_has_permissions(manage_messages=True)
-	async def purge(self, ctx, number):
-		deleted = await ctx.channel.purge(limit=int(number)+1)
-		message = await ctx.channel.send(f'Deleted {len(deleted)-1} message(s)')
-		await asyncio.sleep(2.5)
-		await message.delete()
+	@commands.command(name="allperms")
+	@commands.has_permissions(manage_channels=True)
+	@commands.bot_has_permissions(manage_channels=True)
+	async def loop_channels(self, ctx, permission, state, role=None):
+		"""
+		Change permission overrides for all channels.
+		"""
+		if role is None:
+			role = ctx.guild.default_role
+		else:
+			role = ctx.guild.get_role(int(role)) or role
+		state = state.lower()
+		permission = permission.lower()
+		if state == "true":
+			state = True
+		elif state == "neutral":
+			state = None
+		elif state == "false":
+			state = False
+		else:
+			return await ctx.send("State must be one of: True, Neutral, or False")
+		for channel in ctx.guild.channels:
+			await channel.set_permissions(role, **{permission: state})
 
 def setup(bot):
 	bot.add_cog(Utils(bot))
