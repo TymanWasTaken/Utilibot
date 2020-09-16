@@ -13,7 +13,7 @@ async def is_owner(ctx):
 
 @bot.event
 async def on_ready():
-	print('Bot logged in as {0.user}'.format(bot))
+	print(f'Bot logged in as {bot.user}')
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -22,7 +22,7 @@ async def on_command_error(ctx, error):
 	elif isinstance(error, commands.NotOwner):
 		await ctx.send('Nice try but you are not the owner.')
 	elif isinstance(error, commands.CommandNotFound):
-		await ctx.send('Not a command!')
+		await ctx.send(f'Not a command, <@{ctx.author.id}>')
 	else:
 		pass
 
@@ -30,4 +30,5 @@ bot.load_extension("jishaku")
 bot.load_extension("riftgun")
 bot.load_extension("cogs.fun")
 bot.load_extension("cogs.utils")
+bot.load_extension("cogs.debug")
 bot.run(os.getenv("BOT_TOKEN"))

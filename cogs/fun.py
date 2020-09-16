@@ -10,4 +10,5 @@ class Fun(commands.Cog):
 		await ctx.send("Hello there.")
 
 def setup(bot):
-    bot.add_cog(Fun(bot))
+	bot.add_cog(Fun(bot))
+	print('[FunCog] Fun cog loaded')

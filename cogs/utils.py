@@ -1,8 +1,6 @@
 import discord
 from discord.ext import commands
-
-async def is_owner(ctx):
-	return ctx.author.id == 487443883127472129
+import random
 
 class Utils(commands.Cog):
 	def __init__(self, bot):
@@ -10,16 +8,10 @@ class Utils(commands.Cog):
 
 	@commands.command()
 	async def ping(self, ctx):
-		embed = discord.Embed(title="Ping!", description=f"Pong! `{round(self.bot.latency * 1000)} ms`", color=0x3bff00)
+		color = "%06x" % random.randint(0, 0xFFFFFF)
+		embed = discord.Embed(title="Ping!", description=f"Pong! `{round(self.bot.latency * 1000)} ms`", color=int(color, 16))
 		await ctx.send(embed=embed)
 
-	@commands.command()
-	@commands.is_owner()
-	async def quit(self, ctx):
-		await ctx.send('Shutting down...')
-		print('Recived quit command, shutting down.')
-		await bot.logout()
-		sys.exit()
-
 def setup(bot):
-    bot.add_cog(Utils(bot))
+	bot.add_cog(Utils(bot))
+	print('[UtilsCog] Utils cog loaded')
