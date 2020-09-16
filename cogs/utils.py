@@ -15,13 +15,10 @@ class Utils(commands.Cog):
 	@commands.has_permissions(administrator=True)
 	@commands.bot_has_permissions(administrator=True)
 	async def purge(self, ctx, number):
-		number = int(number) #Converting the amount of messages to delete to an integer
-		counter = 0
-		async for x in bot.logs_from(ctx.message.channel, limit = number):
-			if counter < number:
-				await bot.delete_message(x)
-				counter += 1
-				await asyncio.sleep(1.2) #1.2 second timer so the deleting process can be even
+		deleted = await ctx.channel.purge(limit=int(number)+1)
+		message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
+		await asyncio.sleep(1.5)
+		await message.delete()
 
 def setup(bot):
 	bot.add_cog(Utils(bot))
