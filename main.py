@@ -24,7 +24,7 @@ async def on_command_error(ctx, error):
 	elif isinstance(error, commands.CommandNotFound):
 		await ctx.send(f'Not a command, <@{ctx.author.id}>')
 	else:
-		pass
+		embed = discord.Embed(title="Oh no!", description="An error occured.\nIf you are a normal user, you may try and contact the developers.\nIf you are a dev, run with Jishaku debug to see the full error.")
 
 bot.load_extension("jishaku")
 bot.load_extension("riftgun")
