@@ -25,12 +25,24 @@ class Info(commands.Cog):
 		await ctx.send(embed=embed)
 	
 	@commands.command(name="botperms")
-	async def _bot_permissions(self, ctx):
-		perms = sorted([x for x,y in dict(ctx.channel.permissions_for(ctx.me)).items() if y])
-		nice_perms = ""
-		for perm in perms:
-			nice_perms = nice_perms + "`" + perm + "`\n"
-		await ctx.send(embed=discord.Embed(title="All of the bot's permissions:", description=nice_perms, color=randcolor()))
+	async def _bot_permissions(self, ctx, channel_permissions="False"):
+		"""
+		Shows all of the bot's permissions, neatly sorted.
+
+		channel_permissions = Whether or not to check the channel permissions, instead of the guild ones (default false)
+		"""
+		if channel_permissions.lower() == "true":
+			perms = sorted([x for x,y in dict(ctx.me.permissions_in(ctx.channel)).items() if y])
+			nice_perms = ""
+			for perm in perms:
+				nice_perms = nice_perms + "`" + perm.replace("_", " ").capitalize() + "`\n"
+			await ctx.send(embed=discord.Embed(title="All of the bot's permissions in this channel:", description=nice_perms, color=randcolor()))
+		elif channel_permissions.lower() == "false":
+			perms = sorted([x for x,y in dict(ctx.me.guild_permissions).items() if y])
+			nice_perms = ""
+			for perm in perms:
+				nice_perms = nice_perms + "`" + perm.replace("_", " ").capitalize() + "`\n"
+			await ctx.send(embed=discord.Embed(title="All of the bot's permissions in this server:", description=nice_perms, color=randcolor()))
 
 def setup(bot):
 	bot.add_cog(Info(bot))
