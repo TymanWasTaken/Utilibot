@@ -17,8 +17,12 @@ class Fun(commands.Cog):
 		"""
 		Says what you tell it to, self-explanitory
 		"""
+		await ctx.message.delete()
 		await ctx.send(message)
 
+	@commands.command()
+	async def paroot(self, ctx):
+		await ctx.send("<:nou:755946318068973659>")
 def setup(bot):
 	bot.add_cog(Fun(bot))
 	print('[FunCog] Fun cog loaded')
