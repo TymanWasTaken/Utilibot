@@ -25,6 +25,7 @@ class Info(commands.Cog):
 		await ctx.send(embed=embed)
 	
 	@commands.command(name="botperms")
+	@commands.has_permissions(manage_guild=True)
 	async def _bot_permissions(self, ctx, channel_permissions="False"):
 		"""
 		Shows all of the bot's permissions, neatly sorted.
