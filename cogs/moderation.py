@@ -15,7 +15,7 @@ async def purge_messages(number, channel, mode, check=None):
 		return await channel.purge(limit=number)
 	diff_message = 0
 	total_message = 0
-	async for message in channel.history(limit=100):
+	async for message in channel.history(limit=None):
 		if diff_message == number:
 			break
 		if check(message):

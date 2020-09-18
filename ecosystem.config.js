@@ -1,6 +1,6 @@
 module.exports = {
   apps : [{
-	name: "Utilibot",
+	name: "Utilibot dev",
     script: 'python3.8 main.py'
   }],
 };
