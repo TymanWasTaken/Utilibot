@@ -54,7 +54,7 @@ bot.load_extension("jishaku")
 bot.load_extension("riftgun")
 bot.load_extension("guildmanager")
 # This loads all cogs in the directory, so I don't have to manually add cogs when I make/change them
-os.chdir("/home/pi/utilibot/cogs")
+os.chdir("cogs")
 for file in glob.glob("*.py"):
 	file = file.replace(".py", "")
 	bot.load_extension(f"cogs.{file}")
