@@ -30,6 +30,8 @@ async def on_command_error(ctx, error):
 		await ctx.send(f'Not a command, <@{ctx.author.id}>')
 	elif isinstance(error, commands.CheckFailure):
 		await ctx.send(error)
+	elif isinstance(error, commands.BadArgument):
+		await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
 	else:
 		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers.\nIf you are a dev, run with Jishaku debug to see the full error.\nError message: \n`{error}`", color=0xff1100)
 		await ctx.send(embed=embed)

@@ -60,7 +60,17 @@ class Moderation(commands.Cog):
 		message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
 		await asyncio.sleep(2.5)
 		await message.delete()
-		
+	
+	@commands.command()
+	@commands.has_permissions(manage_messages=True)
+	@commands.bot_has_permissions(manage_messages=True)
+	async def ban(self, ctx, member: discord.Member, *, reason="No reason given"):
+		try:
+			await member.send(content=f"You were banned from {ctx.guild.name}, by {ctx.author.name}, for the reason `{reason}.")
+		except:
+			pass
+		await ctx.guild.ban(user=member, reason=f"Banned by {ctx.author.name}, for the reason: " + reason)
+		await ctx.send(f"Banned {member.name} for the reason `{reason}`")
 
 def setup(bot):
 	bot.add_cog(Moderation(bot))
