@@ -7,12 +7,6 @@ load_dotenv(verbose=True)
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('u!'), case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False))
 
-<<<<<<< HEAD
-=======
-async def is_owner(ctx):
-	return ctx.author.id == 487443883127472129
-
->>>>>>> 21f3a529486f7dc714756bc924bdb46f3574f4da
 @bot.check
 async def globally_block_dms(ctx):
 	if ctx.guild is not None:
