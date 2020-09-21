@@ -62,15 +62,26 @@ class Moderation(commands.Cog):
 		await message.delete()
 	
 	@commands.command()
-	@commands.has_permissions(manage_messages=True)
-	@commands.bot_has_permissions(manage_messages=True)
+	@commands.has_permissions(ban_members=True)
+	@commands.bot_has_permissions(ban_members=True)
 	async def ban(self, ctx, member: discord.Member, *, reason="No reason given"):
 		try:
 			await member.send(content=f"You were banned from {ctx.guild.name}, by {ctx.author.name}, for the reason `{reason}.")
 		except:
-			pass
+			await ctx.send(f"Error: Could not DM user.")
 		await ctx.guild.ban(user=member, reason=f"Banned by {ctx.author.name}, for the reason: " + reason)
 		await ctx.send(f"Banned {member.name} for the reason `{reason}`")
+
+	@commands.command()
+	@commands.has_permissions(kick_members=True)
+	@commands.bot_has_permissions(kick_members=True)
+	async def ban(self, ctx, member: discord.Member, *, reason="No reason given"):
+		try:
+			await member.send(content=f"You were kicked from {ctx.guild.name}, by {ctx.author.name}, for the reason `{reason}.")
+		except:
+			await ctx.send(f"Error: Could not DM user.")
+		await ctx.guild.kick(user=member, reason=f"Banned by {ctx.author.name}, for the reason: " + reason)
+		await ctx.send(f"Kicked {member.name} for the reason `{reason}`")
 
 def setup(bot):
 	bot.add_cog(Moderation(bot))
