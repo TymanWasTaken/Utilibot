@@ -22,7 +22,7 @@ class Fun(commands.Cog):
 
 	@commands.command()
 	async def paroot(self, ctx):
-		await ctx.send("<:paroot:755947816165048431>")
+		await ctx.send("<a:paroot:755947816165048431>")
 def setup(bot):
 	bot.add_cog(Fun(bot))
 	print('[FunCog] Fun cog loaded')
