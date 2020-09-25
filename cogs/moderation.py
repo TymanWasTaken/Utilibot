@@ -80,8 +80,8 @@ class Moderation(commands.Cog):
 			await member.send(content=f"You were kicked from {ctx.guild.name}, by {ctx.author.name}, for the reason `{reason}.")
 		except:
 			await ctx.send(f"Error: Could not DM user.")
-		await ctx.guild.kick(user=member, reason=f"Banned by {ctx.author.name}, for the reason: " + reason)
-		await ctx.send(f"Kicked {member.name} for the reason `{reason}`")
+		await ctx.guild.ban(user=member, reason=f"Banned by {ctx.author.name}, for the reason: " + reason)
+		await ctx.send(f"Banned {member.name} for the reason `{reason}`")
 
 def setup(bot):
 	bot.add_cog(Moderation(bot))

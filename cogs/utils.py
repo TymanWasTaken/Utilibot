@@ -84,7 +84,7 @@ class Utils(commands.Cog):
 		"""
 		Shows the permissions that correspond to a permissions value
 		"""
-		await ctx.send(embed=discord.Embed(title=f"Permissions for value {value}:", c=permsfromvalue(value), color=randcolor()))
+		await ctx.send(embed=discord.Embed(title=f"Permissions for value {value}:", description=permsfromvalue(value), color=randcolor()))
 
 def setup(bot):
 	bot.add_cog(Utils(bot))

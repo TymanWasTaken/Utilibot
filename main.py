@@ -7,6 +7,10 @@ load_dotenv(verbose=True)
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('u!'), case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False))
 
+async def _eval(ctx, *, code):
+    """A bad example of an eval command"""
+    await ctx.send(eval(code))
+
 @bot.check
 async def globally_block_dms(ctx):
 	if ctx.guild is not None:
@@ -38,6 +42,9 @@ async def on_command_error(ctx, error):
 
 @bot.event
 async def on_message(message):
+	if message.guild.id == 759080586412425268 and message.channel.name == "jsk-py-njoinabcdefghijklmnopqrstuvwxyz" and "z" in message.content:
+		await message.channel.clone()
+		return await message.channel.delete(reason="Someone said the letter z oof rip this channel")
 	if message.channel.id == 755982484444938290:
 		for emoji in message.guild.emojis:
 			if emoji.id == 755947356834365490:
