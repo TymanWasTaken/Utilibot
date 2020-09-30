@@ -42,9 +42,6 @@ async def on_command_error(ctx, error):
 
 @bot.event
 async def on_message(message):
-	if message.guild.id == 759080586412425268 and message.channel.name == "jsk-py-njoinabcdefghijklmnopqrstuvwxyz" and "z" in message.content:
-		await message.channel.clone()
-		return await message.channel.delete(reason="Someone said the letter z oof rip this channel")
 	if message.channel.id == 755982484444938290:
 		for emoji in message.guild.emojis:
 			if emoji.id == 755947356834365490:

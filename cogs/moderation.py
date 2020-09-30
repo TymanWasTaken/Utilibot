@@ -72,16 +72,46 @@ class Moderation(commands.Cog):
 		await ctx.guild.ban(user=member, reason=f"Banned by {ctx.author.name}, for the reason: " + reason)
 		await ctx.send(f"Banned {member.name} for the reason `{reason}`")
 
-	@commands.command()
+	@commands.command(name="kick")
+	@commands.bot_has_guild_permissions(kick_members=True)
 	@commands.has_permissions(kick_members=True)
-	@commands.bot_has_permissions(kick_members=True)
-	async def ban(self, ctx, member: discord.Member, *, reason="No reason given"):
-		try:
-			await member.send(content=f"You were kicked from {ctx.guild.name}, by {ctx.author.name}, for the reason `{reason}.")
-		except:
-			await ctx.send(f"Error: Could not DM user.")
-		await ctx.guild.ban(user=member, reason=f"Banned by {ctx.author.name}, for the reason: " + reason)
-		await ctx.send(f"Banned {member.name} for the reason `{reason}`")
+	async def kick(self, ctx, member: discord.Member, *, reason=None):
+		"""
+		Does what it says, kicks them from the server.
+		"""
+		if member.top_role >= ctx.author.top_role:
+			await ctx.message.delete()
+			await ctx.send("This user can't be kicked due to hierachry.")
+		else:
+			await ctx.message.delete()
+			try:
+				await member.send(f"You were kicked from {ctx.guild} for the reason: `{reason}`")
+				await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
+				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
+			except:
+				await ctx.send(f"Eror: Could Not DM user")
+				await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
+				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
+	
+	@commands.command(name="ban")
+	@commands.bot_has_guild_permissions(ban_members=True)
+	@commands.has_permissions(ban_members=True)
+	async def ban(self, ctx, member: discord.Member, *, reason=None):
+		"""
+		Does what it says, bans them from the server.
+		"""
+		if member.top_role >= ctx.author.top_role:
+			await ctx.send("This user can't be banned due to hierachry.")
+		else:
+			await ctx.message.delete()
+			try:
+				await member.send(f"You were banned from {ctx.guild} for the reason: `{reason}`")
+				await member.ban(reason=f"{member.name} was banned by {ctx.author.name}, for the reason: {reason}")
+				await ctx.send(f"Banned {member} for the reason: `{reason}`")
+			except:
+				await ctx.send(f"Error: Could Not DM user")
+				await member.ban(reason=f"{member.name} was banned by {ctx.author.name}, for the reason: {reason}")
+				await ctx.send(f"Banned {member} for the reason: `{reason}`")
 
 def setup(bot):
 	bot.add_cog(Moderation(bot))
