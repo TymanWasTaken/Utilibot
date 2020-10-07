@@ -2,3 +2,4 @@ discord.py
 python-dotenv
 pylint
 jishaku
+youtube_dl

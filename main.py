@@ -7,10 +7,6 @@ load_dotenv(verbose=True)
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('u!'), case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False))
 
-async def _eval(ctx, *, code):
-    """A bad example of an eval command"""
-    await ctx.send(eval(code))
-
 @bot.check
 async def globally_block_dms(ctx):
 	if ctx.guild is not None:
@@ -54,8 +50,8 @@ async def on_message(message):
 	await bot.process_commands(message)
 
 bot.load_extension("jishaku")
-bot.load_extension("riftgun")
-bot.load_extension("guildmanager")
+# bot.load_extension("riftgun")
+# bot.load_extension("guildmanager")
 # This loads all cogs in the directory, so I don't have to manually add cogs when I make/change them
 os.chdir("cogs")
 for file in glob.glob("*.py"):
