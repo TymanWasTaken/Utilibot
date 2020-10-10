@@ -22,10 +22,12 @@ async def on_ready():
 
 @bot.event
 async def on_command_error(ctx, error):
+        errorchannel = bot.get_channel(764333133738541056)
 	if isinstance(error, commands.TooManyArguments):
 		await ctx.send('Too many arguments')
 	elif isinstance(error, commands.NotOwner):
 		await ctx.send('Nice try but you are not the owner.')
+                await errorchannel.send(f"{ctx.member.tag} tried to run `{ctx.message.content}`, but they are not owner.")
 	elif isinstance(error, commands.CommandNotFound):
 		await ctx.send(f'Not a command, <@{ctx.author.id}>')
 	elif isinstance(error, commands.CheckFailure):
