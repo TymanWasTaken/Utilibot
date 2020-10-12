@@ -1,5 +1,5 @@
 # Imports
-import discord, os, time, glob
+import discord, os, time, glob, postbin, traceback
 from datetime import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -35,9 +35,11 @@ async def on_command_error(ctx, error):
 	elif isinstance(error, commands.BadArgument):
 		await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
 	else:
+		tb = traceback.format_exception(type(error), error, error.__traceback__)
+		url = await postbin.postAsync(content=tb)
 		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers.\nIf you are a dev, run with Jishaku debug to see the full error.\nError message: \n`{error}`", color=0xff1100)
 		await ctx.send(embed=embed)
-		await errorchannel.send(content=f"{ctx.author} tried to run {ctx.command.qualified_name}, but this error happened:", embed=embed)
+		await errorchannel.send(content=f"{ctx.author} tried to run {ctx.command.qualified_name}, but this error happened:\nHastebin: <{url}>", embed=embed)
 
 @bot.event
 async def on_message(message):
