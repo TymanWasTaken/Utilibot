@@ -27,7 +27,7 @@ async def on_command_error(ctx, error):
 		await ctx.send('Too many arguments')
 	elif isinstance(error, commands.NotOwner):
 		await ctx.send('Nice try but you are not the owner.')
-		await errorchannel.send(f"{ctx.member.tag} tried to run `{ctx.message.content}`, but they are not owner.")
+		await errorchannel.send(f"{ctx.member.tag} tried to run `{ctx.command.qualified_name}`, but they are not owner.")
 	elif isinstance(error, commands.CommandNotFound):
 		await ctx.send(f'Not a command, <@{ctx.author.id}>')
 	elif isinstance(error, commands.CheckFailure):
@@ -37,7 +37,7 @@ async def on_command_error(ctx, error):
 	else:
 		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers.\nIf you are a dev, run with Jishaku debug to see the full error.\nError message: \n`{error}`", color=0xff1100)
 		await ctx.send(embed=embed)
-		await errorchannel.send(content=f"{ctx.author.tag} tried to run {ctx.message.content}, but this error happened:", embed=embed)
+		await errorchannel.send(content=f"{ctx.author.mention} tried to run {ctx.command.qualified_name}, but this error happened:", embed=embed)
 
 @bot.event
 async def on_message(message):
