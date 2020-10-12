@@ -42,6 +42,11 @@ class Debug(commands.Cog):
 			return await ctx.send(f'Command "{alt_ctx.invoked_with}" is not found')
 
 		return await alt_ctx.command.reinvoke(alt_ctx)
+	
+	@commands.command()
+	@commands.is_owner()
+	async def error(self, ctx):
+		await ctx.send(a)
 
 def setup(bot):
 	bot.add_cog(Debug(bot))

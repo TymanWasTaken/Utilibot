@@ -37,6 +37,7 @@ async def on_command_error(ctx, error):
 	else:
 		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers.\nIf you are a dev, run with Jishaku debug to see the full error.\nError message: \n`{error}`", color=0xff1100)
 		await ctx.send(embed=embed)
+		await errorchannel.send(content=f"{ctx.author.tag} tried to run {ctx.message.content}, but this error happened:", embed=embed)
 
 @bot.event
 async def on_message(message):

@@ -1,5 +1,6 @@
-import discord, random, asyncio
+import discord, random, asyncio, string
 from discord.ext import commands
+import datetime
 
 def randcolor():
 	return int("%06x" % random.randint(0, 0xFFFFFF), 16)
@@ -25,8 +26,12 @@ class Info(commands.Cog):
 		"""
 		Get the bot's latency, in miliseconds.
 		"""
-		embed = discord.Embed(title="Ping!", description=f"Pong! `{round(self.bot.latency * 1000)} ms`", color=randcolor())
-		await ctx.send(embed=embed)
+		embed1 = discord.Embed(title="Pong!", description=f"Given Latency:`{round(self.bot.latency * 1000)} ms`", color=randcolor())
+		m = await ctx.send(embed=embed1)
+		embed2 = embed1
+		time = m.created_at - ctx.message.created_at
+		embed2.description = f"Given Latency: `{round(self.bot.latency * 1000)} ms`\nMeasured Latency: `{int(time.microseconds / 1000)}ms`"
+		await m.edit(embed=embed2)
 
 	@commands.command()
 	async def invite(self, ctx):

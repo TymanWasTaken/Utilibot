@@ -37,8 +37,10 @@ class Utils(commands.Cog):
 			state = False
 		else:
 			return await ctx.send("State must be one of: True, Neutral, or False")
+		m = await ctx.send(f"Changing permission `{permission}` to state `{state}` for role {role.name} on all channels.")
 		for channel in ctx.guild.channels:
 			await channel.set_permissions(role, **{permission: state})
+		await m.edit(content=f"Changed permission `{permission}` to state `{state}` for role {role.name} on all channels.")
 
 	@commands.command()
 	async def findrole(self, ctx, role: discord.Role):
