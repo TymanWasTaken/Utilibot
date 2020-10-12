@@ -87,8 +87,8 @@ class Music(commands.Cog):
 
 		async with ctx.typing():
 			try:
-				player = await YTDLSource.from_url(url, loop=self.bot.loop)
-				ctx.voice_client.play(player, after=lambda e: cleanup(ctx, e, player, url.replace('https://www.youtube.com/watch?v=', '')))
+				player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+				ctx.voice_client.play(player)
 				await ctx.send(f'Now playing: {player.title}')
 			except youtube_dl.utils.DownloadError:
 				await ctx.send("Error downloading the file, is the link correct?")

@@ -34,9 +34,11 @@ async def on_command_error(ctx, error):
 		await ctx.send(error)
 	elif isinstance(error, commands.BadArgument):
 		await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
+	elif isinstance(error, cogs.music.VoiceError):
+		pass
 	else:
 		tb = traceback.format_exception(type(error), error, error.__traceback__)
-		url = await postbin.postAsync(content=tb)
+		url = await postbin.postAsync(content="".join(tb))
 		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers.\nIf you are a dev, run with Jishaku debug to see the full error.\nError message: \n`{error}`", color=0xff1100)
 		await ctx.send(embed=embed)
 		await errorchannel.send(content=f"{ctx.author} tried to run {ctx.command.qualified_name}, but this error happened:\nHastebin: <{url}>", embed=embed)
