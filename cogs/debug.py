@@ -26,7 +26,7 @@ class Debug(commands.Cog):
 		Upload code to github.
 		"""
 		m = await ctx.send("Updating repo...")
-		code = os.system(f'/home/pi/utilibot/git.sh {message}')
+		code = os.system(f'../git.sh {message}')
 		await m.edit(content=f'Updated repo successfully, with return code {code}!')
 
 	@commands.command(name="su")
@@ -46,7 +46,7 @@ class Debug(commands.Cog):
 	@commands.command()
 	@commands.is_owner()
 	async def error(self, ctx):
-		await ctx.send(a)
+		adashjkdsahdsajhdsahjsadhhdsah
 
 def setup(bot):
 	bot.add_cog(Debug(bot))

@@ -57,6 +57,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
 
 class Music(commands.Cog):
+	status = {}
 	def __init__(self, bot):
 		self.bot = bot
 
@@ -74,6 +75,7 @@ class Music(commands.Cog):
 		"""
 		Plays a youtube video (Must be in the format "https://www.youtube.com/watch?v={Video ID}"
 		"""
+		url = url.lstrip("<").rstrip(">")
 		if not re.search("https:\/\/www\.youtube\.com\/watch\?v=(?:.){11}$", url):
 				return await ctx.send('Not a valid youtube URL!')
 		if ctx.voice_client is None:
@@ -83,7 +85,8 @@ class Music(commands.Cog):
 				await ctx.send('You are not connected to a voice channel.')
 				raise VoiceError("You are not connected to a voice channel.")
 		elif ctx.voice_client.is_playing():
-			ctx.voice_client.stop()
+			await ctx.send("Music is already playing!")
+			raise VoiceError("Music is already playing!")
 
 		async with ctx.typing():
 			try:
@@ -123,6 +126,7 @@ class Music(commands.Cog):
 		"""Stops and disconnects the bot from voice"""
 
 		await ctx.voice_client.disconnect()
+		
 
 def setup(bot):
 	bot.add_cog(Music(bot))

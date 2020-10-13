@@ -44,6 +44,8 @@ class Utils(commands.Cog):
 
 	@commands.command()
 	async def findrole(self, ctx, role: discord.Role):
+		if ctx.channel.permissions_for(ctx.me).embed_links == False:
+			return await ctx.send("It appears I do not have permission to `Link embeds` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")
 		members = ""
 		for member in ctx.guild.members:
 			if role in member.roles:
@@ -86,6 +88,8 @@ class Utils(commands.Cog):
 		"""
 		Shows the permissions that correspond to a permissions value
 		"""
+		if ctx.channel.permissions_for(ctx.me).embed_links == False:
+			return await ctx.send("It appears I do not have permission to `Link embeds` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")
 		await ctx.send(embed=discord.Embed(title=f"Permissions for value {value}:", description=permsfromvalue(value), color=randcolor()))
 
 def setup(bot):

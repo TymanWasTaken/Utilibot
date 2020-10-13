@@ -1,10 +1,10 @@
 # Imports
-import discord, os, time, glob, postbin, traceback
+import discord, os, time, glob, postbin, traceback, cogs, importlib
 from datetime import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
+music = importlib.import_module("cogs.music")
 load_dotenv(verbose=True)
-
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('u!'), case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False))
 
 @bot.check
@@ -32,16 +32,30 @@ async def on_command_error(ctx, error):
 		await ctx.send(f'Not a command, <@{ctx.author.id}>')
 	elif isinstance(error, commands.CheckFailure):
 		await ctx.send(error)
+	elif isinstance(error, commands.MissingRequiredArgument):
+		await ctx.send(str(error).capitalize())
 	elif isinstance(error, commands.BadArgument):
 		await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
-	elif isinstance(error, cogs.music.VoiceError):
+	elif isinstance(error, music.VoiceError):
 		pass
 	else:
-		tb = traceback.format_exception(type(error), error, error.__traceback__)
-		url = await postbin.postAsync(content="".join(tb))
-		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers.\nIf you are a dev, run with Jishaku debug to see the full error.\nError message: \n`{error}`", color=0xff1100)
+		invitelink = f"https://discord.gg/"
+		for invite in await bot.get_guild(755887706386726932).invites():
+			if invite.temporary == True:
+				pass
+			else:
+				invitelink = invitelink + invite.code
+				break
+		else:
+			newinvite = await bot.get_channel(755910440533491773).create_invite(reason="Creating invite to the server for an error message.")
+			invitelink = invitelink + newinvite.code
+		tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
+		tb = f"Command ran: {ctx.message.content}\n\n{tb}"
+		# url = await postbin.postAsync(content=tb)
+		url = "Temporarily ommited"
+		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers, they just got a log of the error.\nYou can join the support server [here]({invitelink})\nError message: \n`{error}`", color=0xff1100)
 		await ctx.send(embed=embed)
-		await errorchannel.send(content=f"{ctx.author} tried to run {ctx.command.qualified_name}, but this error happened:\nHastebin: <{url}>", embed=embed)
+		await errorchannel.send(content=f"{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <{url}>", embed=embed)
 
 @bot.event
 async def on_message(message):

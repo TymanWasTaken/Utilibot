@@ -73,7 +73,7 @@ class Moderation(commands.Cog):
 		await ctx.send(f"Banned {member.name} for the reason `{reason}`")
 
 	@commands.command(name="kick")
-	@commands.bot_has_guild_permissions(kick_members=True)
+	@commands.bot_has_permissions(kick_members=True)
 	@commands.has_permissions(kick_members=True)
 	async def kick(self, ctx, member: discord.Member, *, reason=None):
 		"""
