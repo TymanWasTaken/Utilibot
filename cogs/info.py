@@ -64,7 +64,12 @@ class Info(commands.Cog):
 	async def requiredperms(self, ctx):
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have permission to `Link embeds` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")
-		embed=discord.Embed(title="Required permissions for the bot:", description="Necissary perms:\n`Read messages`, `Send messages`, `Embed links`\nPerms for commands to run:\n`Kick members`, `Ban members`, `Manage messages`, `Manage channels`", color=randcolor())
+		embed=discord.Embed(title="Required permissions for the bot:", description="Necessary perms:\n`Read messages`, `Send messages`, `Embed links`\nPerms for commands to run:\n`Kick members`, `Ban members`, `Manage messages`, `Manage channels`", color=randcolor())
+		await ctx.send(embed=embed)
+	
+	@commands.command()
+	async def vote(self, ctx):
+		embed = discord.Embed(title="Vote link:", description="You can vote for me [here](https://top.gg/bot/755084857280954550/vote)!").set_footer(text="Currently does not work because the bot is not approved on top.gg")	
 		await ctx.send(embed=embed)
 
 def setup(bot):

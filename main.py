@@ -5,7 +5,9 @@ from discord.ext import commands
 from dotenv import load_dotenv
 music = importlib.import_module("cogs.music")
 load_dotenv(verbose=True)
-bot = commands.Bot(command_prefix=commands.when_mentioned_or('u!'), case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False))
+intents = discord.Intents()
+intents.value = 32511
+bot = commands.Bot(command_prefix=commands.when_mentioned_or('u!'), case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
 
 @bot.check
 async def globally_block_dms(ctx):
@@ -22,6 +24,7 @@ async def on_ready():
 
 @bot.event
 async def on_command_error(ctx, error):
+	nocommandblacklist = [264445053596991498, 458341246453415947, 735615909884067930]
 	errorchannel = bot.get_channel(764333133738541056)
 	if isinstance(error, commands.TooManyArguments):
 		await ctx.send('Too many arguments')
@@ -29,6 +32,8 @@ async def on_command_error(ctx, error):
 		await ctx.send('Nice try but you are not the owner.')
 		await errorchannel.send(f"{ctx.author} tried to run `{ctx.command.qualified_name}`, but they are not owner.")
 	elif isinstance(error, commands.CommandNotFound):
+		if ctx.guild.id in nocommandblacklist:
+			return
 		await ctx.send(f'Not a command, <@{ctx.author.id}>')
 	elif isinstance(error, commands.CheckFailure):
 		await ctx.send(error)
@@ -51,9 +56,9 @@ async def on_command_error(ctx, error):
 			invitelink = invitelink + newinvite.code
 		tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
 		tb = f"Command ran: {ctx.message.content}\n\n{tb}"
-		# url = await postbin.postAsync(content=tb)
-		url = "Temporarily ommited"
-		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers, they just got a log of the error.\nYou can join the support server [here]({invitelink})\nError message: \n`{error}`", color=0xff1100)
+		try:
+			url = await postbin.postAsync(content=tb, retry=1)
+		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers, they just got a log of the error.\nYou can join the support server [here]({invitelink})\nError message: \n`{str(error)}`", color=0xff1100)
 		await ctx.send(embed=embed)
 		await errorchannel.send(content=f"{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <{url}>", embed=embed)
 
@@ -70,6 +75,29 @@ async def on_message(message):
 
 	await bot.process_commands(message)
 
+@bot.event
+async def on_guild_join(guild):
+	print("Joined server")
+	perms = [x for x,y in dict(guild.me.guild_permissions).items() if not y]
+	denied = []
+	if "send_messages" in perms:
+		denied.append("send_messages")
+	if "read_messages" in perms:
+		denied.append("read_messages")
+	if "embed_links" in perms:
+		denied.append("embed_links")
+	if denied != []:
+		await guild.owner.send(f"You or someone else has added me to your server, but it appears I do not have the following needed permissions:\n{', '.join(denied)}")
+"""
+@bot.event
+async def on_voice_state_update(member, before, after):
+	channel = bot.get_channel(before.voice.voice_channel.id)
+	if member.guild.me.voice.channel == before.channel and before.voice.voice_channel is not None and after.voice.voice_channel is None:
+		if channel.members == [bot.user.id]:
+			vc = member.guild.voice_client
+			await vc.disconnect()
+			vc.cleanup()
+"""
 bot.load_extension("jishaku")
 # bot.load_extension("riftgun")
 # bot.load_extension("guildmanager")

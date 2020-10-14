@@ -1,4 +1,4 @@
-import discord
+import discord, random
 from discord.ext import commands
 
 class Fun(commands.Cog):
@@ -23,6 +23,14 @@ class Fun(commands.Cog):
 	@commands.command()
 	async def paroot(self, ctx):
 		await ctx.send("<a:paroot:755947816165048431>")
+
+	@commands.command()
+	async def choose(self, ctx, *, choices: str):
+		if not "|" in choices:
+			return await ctx.send("Please seperate the choices with a |.")
+		choices = choices.split("|")
+		await ctx.send(random.choice(choices))
+
 def setup(bot):
 	bot.add_cog(Fun(bot))
 	print('[FunCog] Fun cog loaded')

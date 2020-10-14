@@ -2,6 +2,9 @@ import discord, sys, os
 from discord.ext import commands
 from jishaku import models
 
+class ManualError(Exception):
+	pass
+
 async def is_owner(ctx):
 	return ctx.author.id == 487443883127472129
 
@@ -46,7 +49,7 @@ class Debug(commands.Cog):
 	@commands.command()
 	@commands.is_owner()
 	async def error(self, ctx):
-		adashjkdsahdsajhdsahjsadhhdsah
+		raise ManualError("Error caused by command, probably for debugging purposes")
 
 def setup(bot):
 	bot.add_cog(Debug(bot))

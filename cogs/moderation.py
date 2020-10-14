@@ -60,17 +60,6 @@ class Moderation(commands.Cog):
 		message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
 		await asyncio.sleep(2.5)
 		await message.delete()
-	
-	@commands.command()
-	@commands.has_permissions(ban_members=True)
-	@commands.bot_has_permissions(ban_members=True)
-	async def ban(self, ctx, member: discord.Member, *, reason="No reason given"):
-		try:
-			await member.send(content=f"You were banned from {ctx.guild.name}, by {ctx.author.name}, for the reason `{reason}.")
-		except:
-			await ctx.send(f"Error: Could not DM user.")
-		await ctx.guild.ban(user=member, reason=f"Banned by {ctx.author.name}, for the reason: " + reason)
-		await ctx.send(f"Banned {member.name} for the reason `{reason}`")
 
 	@commands.command(name="kick")
 	@commands.bot_has_permissions(kick_members=True)
@@ -94,7 +83,7 @@ class Moderation(commands.Cog):
 				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
 	
 	@commands.command(name="ban")
-	@commands.bot_has_guild_permissions(ban_members=True)
+	@commands.bot_has_permissions(ban_members=True)
 	@commands.has_permissions(ban_members=True)
 	async def ban(self, ctx, member: discord.Member, *, reason=None):
 		"""
@@ -112,6 +101,22 @@ class Moderation(commands.Cog):
 				await ctx.send(f"Error: Could Not DM user")
 				await member.ban(reason=f"{member.name} was banned by {ctx.author.name}, for the reason: {reason}")
 				await ctx.send(f"Banned {member} for the reason: `{reason}`")
+	
+	@commands.command()
+	@commands.has_permissions(manage_messages=True)
+	@commands.bot_has_permissions(manage_roles=True)
+	async def mute(self, ctx, member: discord.Member):
+		"""
+		Mutes a member so they cannot speak in the server. This command uses the first role it finds named "muted", ignoring case.
+		"""
+		muterole = next((x for x in ctx.guild.roles if x.name.lower() == "muted"), None) or await ctx.guild.create_role(name="Muted", color=0x757575, reason="Could not automatically detect a role named \"Muted\", so creating one to use.")
+		member.add_roles(muterole, reason=f"Member muted by {str(ctx.author)}")
+		channels = [x for x in ctx.guild.channels if x.permissions_for(member).send_messages == True]
+		if channels != []:
+			await ctx.send(f"I have detected that {str(member)} still has permission to talk in some channels, attempting to apply a fix.")
+			for channel in channels:
+				await channel.set_permissions(muterole, send_messages=False, reason="Applying overrites for muted role")
+		await ctx.send(f"Successfully muted {str(member)}.")
 
 def setup(bot):
 	bot.add_cog(Moderation(bot))
