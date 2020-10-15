@@ -59,7 +59,7 @@ async def on_command_error(ctx, error):
 		url = await postbin.postAsync(content=tb, retry=1)
 		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers, they just got a log of the error.\nYou can join the support server [here]({invitelink})\nError message: \n`{str(error)}`", color=0xff1100)
 		await ctx.send(embed=embed)
-		await errorchannel.send(content=f"{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <{url}>", embed=embed)
+		await errorchannel.send(content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <{url}>", embed=embed)
 
 @bot.event
 async def on_message(message):
