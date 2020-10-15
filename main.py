@@ -56,8 +56,7 @@ async def on_command_error(ctx, error):
 			invitelink = invitelink + newinvite.code
 		tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
 		tb = f"Command ran: {ctx.message.content}\n\n{tb}"
-		try:
-			url = await postbin.postAsync(content=tb, retry=1)
+		url = await postbin.postAsync(content=tb, retry=1)
 		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers, they just got a log of the error.\nYou can join the support server [here]({invitelink})\nError message: \n`{str(error)}`", color=0xff1100)
 		await ctx.send(embed=embed)
 		await errorchannel.send(content=f"{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <{url}>", embed=embed)
@@ -87,7 +86,7 @@ async def on_guild_join(guild):
 	if "embed_links" in perms:
 		denied.append("embed_links")
 	if denied != []:
-		await guild.owner.send(f"You or someone else has added me to your server, but it appears I do not have the following needed permissions:\n{', '.join(denied)}")
+		await guild.owner.send(f"You or someone else has added me to your server, but it appears I do not have the following needed permissions:\n{', '.join(denied)}\n\nIf this is intentional, just ignore this message.")
 """
 @bot.event
 async def on_voice_state_update(member, before, after):
