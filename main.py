@@ -90,8 +90,8 @@ async def on_guild_join(guild):
 """
 @bot.event
 async def on_voice_state_update(member, before, after):
-	channel = bot.get_channel(before.voice.voice_channel.id)
-	if member.guild.me.voice.channel == before.channel and before.voice.voice_channel is not None and after.voice.voice_channel is None:
+	channel = bot.get_channel(before.channel.id)
+	if member.guild.me.voice.channel == before.channel and before.channel is not None and after.channel is None:
 		if channel.members == [bot.user.id]:
 			vc = member.guild.voice_client
 			await vc.disconnect()
@@ -102,7 +102,7 @@ bot.load_extension("jishaku")
 # bot.load_extension("guildmanager")
 # This loads all cogs in the directory, so I don't have to manually add cogs when I make/change them
 os.chdir("cogs")
-for file in glob.glob("*.py"):
+for file in sorted(glob.glob("*.py")):
 	file = file.replace(".py", "")
 	bot.load_extension(f"cogs.{file}")
 bot.run(os.getenv("BOT_TOKEN"))

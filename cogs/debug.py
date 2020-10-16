@@ -24,6 +24,14 @@ class Debug(commands.Cog):
 
 	@commands.command()
 	@commands.is_owner()
+	async def restart(self, ctx):
+		"""
+		Uses pm2 to restart the bot. Will not work if the bot is not hosted with pm2.
+		"""
+		await ctx.send("soon:tm:")
+
+	@commands.command()
+	@commands.is_owner()
 	async def git(self, ctx, *, message=""):
 		"""
 		Upload code to github.
