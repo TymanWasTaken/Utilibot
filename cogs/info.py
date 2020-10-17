@@ -40,9 +40,20 @@ class Info(commands.Cog):
 		"""
 		Get the invite for the bot, and support server.
 		"""
+		bot = self.bot
+		invitelink = f"https://discord.gg/"
+		for invite in await bot.get_guild(755887706386726932).invites():
+			if invite.temporary == True:
+				pass
+			else:
+				invitelink = invitelink + invite.code
+				break
+		else:
+			newinvite = await bot.get_channel(755910440533491773).create_invite(reason="Creating invite to the server for an invite command.")
+			invitelink = invitelink + newinvite.code
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have permission to `Link embeds` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")
-		embed = discord.Embed(title="Invite link", description="Click the links below to invite the bot to your server, or join our support server!\n[Click me to invite the bot!](https://discord.com/api/oauth2/authorize?client_id=755084857280954550&permissions=2147483639&redirect_uri=https%3A%2F%2Fdiscord.com&scope=bot)\n[Click me to join the support server!](https://discord.gg/Tbg3HDW)", color=randcolor())
+		embed = discord.Embed(title="Invite link", description=f"Click the links below to invite the bot to your server, or join our support server!\n[Click me to invite the bot!](https://discord.com/api/oauth2/authorize?client_id=755084857280954550&permissions=2147483639&redirect_uri=https%3A%2F%2Fdiscord.com&scope=bot)\n[Click me to join the support server!]({invitelink})", color=randcolor())
 		await ctx.send(embed=embed)
 	
 	@commands.command(name="botperms", aliases=['botpermissions'])

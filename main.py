@@ -1,5 +1,5 @@
 # Imports
-import discord, os, time, glob, postbin, traceback, cogs, importlib
+import discord, os, time, glob, postbin, traceback, cogs, importlib, aiosqlite
 from datetime import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -16,6 +16,14 @@ async def globally_block_dms(ctx):
 	else:
 		await ctx.send("DM's are disabled, please use an actual server.")
 		return False
+
+@bot.check
+async def blacklist_users(ctx):
+	async with aiosqlite.connect('/home/tyman/code/utilibot/data.db') as db:
+		async with db.execute("SELECT * from banned_users") as cursor:
+			async for row in cursor:
+				print(row)
+	return True
 
 @bot.event
 async def on_ready():
@@ -105,4 +113,5 @@ os.chdir("cogs")
 for file in sorted(glob.glob("*.py")):
 	file = file.replace(".py", "")
 	bot.load_extension(f"cogs.{file}")
+bot.load_extension("guildmanager")
 bot.run(os.getenv("BOT_TOKEN"))
