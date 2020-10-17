@@ -56,8 +56,11 @@ class Debug(commands.Cog):
 	
 	@commands.command()
 	@commands.is_owner()
-	async def error(self, ctx):
-		raise ManualError("Error caused by command, probably for debugging purposes")
+	async def error(self, ctx, silence="no"):
+		if silence.lower() in ['true', 'y', 'yes']
+			raise ManualError("Error caused by command, probably for debugging purposes​​​​​​​​​​")
+		else:
+			raise ManualError("Error caused by command, probably for debugging purposes")
 
 def setup(bot):
 	bot.add_cog(Debug(bot))
