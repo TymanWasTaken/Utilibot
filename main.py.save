@@ -54,12 +54,12 @@ async def on_command_error(ctx, error):
 		if ctx.guild.id in nocommandblacklist:
 			return
 		await ctx.send(f'Not a command, <@{ctx.author.id}>')
+	elif isinstance(error, commands.DisabledCommand)):
+		await ctx.sent(f"Command \"
 	elif isinstance(error, commands.CheckFailure):
 		await ctx.send(error)
 	elif isinstance(error, BlacklistedError):
 		await ctx.send(error)
-	elif isinstance(error, commands.DisabledCommand):
-		await ctx.send(f'Sorry, but the command `{ctx.command.qualified_name}` is currently disabled.')
 	elif isinstance(error, commands.MissingRequiredArgument):
 		await ctx.send(str(error).capitalize())
 	elif isinstance(error, commands.BadArgument):
@@ -89,7 +89,7 @@ async def on_command_error(ctx, error):
 
 @bot.event
 async def on_message(message):
-	if message.channel.id == 755982484444938290 and not message.content.startswith('=>'):
+	if message.channel.id == 755982484444938290:
 		for emoji in message.guild.emojis:
 			if emoji.id == 755947356834365490:
 				yes = emoji
