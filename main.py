@@ -7,7 +7,10 @@ music = importlib.import_module("cogs.music")
 load_dotenv(verbose=True)
 intents = discord.Intents()
 intents.value = 32511
-bot = commands.Bot(command_prefix=commands.when_mentioned_or('u!'), case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
+
+# async def prefix()
+
+bot = commands.Bot(command_prefix=commands.when_mentioned_or('u!', 'U!'), case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
 
 class BlacklistedError(commands.CommandError):
 	pass
@@ -20,14 +23,23 @@ async def globally_block_dms(ctx):
 		await ctx.send("DM's are disabled, please use an actual server.")
 		return False
 
-async def is_blacklisted(id: str):
+async def is_blacklisted(id: int):
+	# Check if user is owner, if so ignore everthing
+	if id in bot.owner_ids:
+		return False
 	async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
-                data = await f.read()
-                data = json.loads(data)
-                if id in data["banned_users"]:
-                        return True
-                else:
-                        return False
+				data = await f.read()
+				try:
+					data = json.loads(data)
+				# If the file is malformed or corrupted, overwrited it to the blank thing. (might make it have backups later but idk if it it nessicary)
+				except json.JSONDecodeError:
+					async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='w') as f_write:
+						await f_write.write('{"banned_users": []}')
+						data = json.loads('{"banned_users": []}')
+				if id in data["banned_users"]:
+						return True
+				else:
+						return False
 
 @bot.check
 async def blacklist_users(ctx):
@@ -79,13 +91,11 @@ async def on_command_error(ctx, error):
 			invitelink = invitelink + newinvite.code
 		tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
 		tb = f"Command ran: {ctx.message.content}\n\n{tb}"
-		url = await postbin.postAsync(content=tb, retry=1)
 		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers, they just got a log of the error.\nYou can join the support server [here]({invitelink})\nError message: \n`{str(error)}`", color=0xff1100)
 		await ctx.send(embed=embed)
-		if "​​​​​​​​​​" in str(error):
-			await errorchannel.send(content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <{url}>", embed=embed)
-		else:
-			await errorchannel.send(allowed_mentions=discord.AllowedMentions(everyone=False, roles=True, users=False),content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <{url}>", embed=embed)
+		m = await errorchannel.send(allowed_mentions=discord.AllowedMentions(everyone=False, roles=True, users=False),content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <loading>", embed=embed)
+		url = await postbin.postAsync(content=tb, retry=2)
+		await m.edit(allowed_mentions=discord.AllowedMentions(everyone=False, roles=True, users=False),content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <{url}>", embed=embed)
 
 @bot.event
 async def on_message(message):

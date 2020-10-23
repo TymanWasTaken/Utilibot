@@ -1,4 +1,4 @@
-import discord, sys, os
+import discord, sys, os, json, aiofiles
 from discord.ext import commands
 from jishaku import models
 
@@ -61,6 +61,43 @@ class Debug(commands.Cog):
 			raise ManualError("Error caused by command, probably for debugging purposes​​​​​​​​​​")
 		else:
 			raise ManualError("Error caused by command, probably for debugging purposes")
+
+	@commands.command()
+	@commands.is_owner()
+	async def blacklist(self, ctx, id: int):
+		data = ""
+		async with aiofiles.open("/home/tyman/code/utilibot/data.json", mode="r") as f_read:
+			data = json.loads(await f_read.read())
+			try:
+				user = await self.bot.fetch_user(id)
+			except:
+				user = None
+			if user is None:
+				return await ctx.send("User does not exist.")
+			elif id in data["banned_users"]:
+				return await ctx.send("User is already blacklisted.")
+			else:
+				async with aiofiles.open("/home/tyman/code/utilibot/data.json", mode="w") as f_write:
+					data["banned_users"].append(id)
+					await f_write.write(json.dumps(data))
+					await ctx.send(f"Successfully blacklisted {str(user)}.")
+	
+	@commands.command()
+	@commands.is_owner()
+	async def unblacklist(self, ctx, id: int):
+		data = ""
+		async with aiofiles.open("/home/tyman/code/utilibot/data.json", mode="r") as f_read:
+			data = json.loads(await f_read.read())
+			user = await self.bot.fetch_user(id)
+			if user is None:
+				return await ctx.send("User does not exist.")
+			elif not id in data["banned_users"]:
+				return await ctx.send("User is not blacklisted.")
+			else:
+				async with aiofiles.open("/home/tyman/code/utilibot/data.json", mode="w") as f_write:
+					data["banned_users"].remove(id)
+					await f_write.write(json.dumps(data))
+					await ctx.send(f"Successfully unblacklisted {str(user)}.")
 
 def setup(bot):
 	bot.add_cog(Debug(bot))
