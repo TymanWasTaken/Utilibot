@@ -35,6 +35,7 @@ class Moderation(commands.Cog):
 	@commands.command()
 	@commands.has_permissions(manage_messages=True)
 	@commands.bot_has_permissions(manage_messages=True)
+	@commands.guild_only()
 	async def purge(self, ctx, number, mode="all"):
 		"""
 		Purge a specified amount of messages from the current channel.
@@ -64,6 +65,7 @@ class Moderation(commands.Cog):
 	@commands.command(name="kick")
 	@commands.bot_has_permissions(kick_members=True)
 	@commands.has_permissions(kick_members=True)
+	@commands.guild_only()
 	async def kick(self, ctx, member: discord.Member, *, reason=None):
 		"""
 		Does what it says, kicks them from the server.
@@ -85,6 +87,7 @@ class Moderation(commands.Cog):
 	@commands.command(name="ban")
 	@commands.bot_has_permissions(ban_members=True)
 	@commands.has_permissions(ban_members=True)
+	@commands.guild_only()
 	async def ban(self, ctx, member: discord.Member, *, reason=None):
 		"""
 		Does what it says, bans them from the server.
@@ -105,6 +108,7 @@ class Moderation(commands.Cog):
 	@commands.command()
 	@commands.has_permissions(manage_messages=True)
 	@commands.bot_has_permissions(manage_roles=True)
+	@commands.guild_only()
 	async def mute(self, ctx, member: discord.Member):
 		"""
 		Mutes a member so they cannot speak in the server. This command uses the first role it finds named "muted", ignoring case.

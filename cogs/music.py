@@ -63,6 +63,7 @@ class Music(commands.Cog):
 		self.bot = bot
 
 	@commands.command()
+	@commands.guild_only()
 	async def join(self, ctx, *, channel: discord.VoiceChannel):
 		"""Joins a voice channel"""
 
@@ -72,6 +73,7 @@ class Music(commands.Cog):
 		await channel.connect()
 
 	@commands.command()
+	@commands.guild_only()
 	async def play(self, ctx, *, url):
 		"""
 		Plays a youtube video (Must be in the format "https://www.youtube.com/watch?v={Video ID}"
@@ -110,6 +112,7 @@ class Music(commands.Cog):
 	#     await ctx.send('Now playing: {}'.format(player.title))
 
 	@commands.command()
+	@commands.guild_only()
 	async def volume(self, ctx, volume: int=None):
 		"""Changes the player's volume"""
 
@@ -123,6 +126,7 @@ class Music(commands.Cog):
 		await ctx.send("Changed volume to {}%".format(volume))
 
 	@commands.command()
+	@commands.guild_only()
 	async def stop(self, ctx):
 		"""Stops and disconnects the bot from voice"""
 

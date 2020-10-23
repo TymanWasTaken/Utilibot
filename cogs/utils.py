@@ -23,6 +23,7 @@ class Utils(commands.Cog):
 	@commands.command(name="allperms")
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
+	@commands.guild_only()
 	async def loop_channels(self, ctx, permission, state, role: discord.Role):
 		"""
 		Change permission overrides for all channels.
@@ -43,6 +44,7 @@ class Utils(commands.Cog):
 		await m.edit(content=f"Changed permission `{permission}` to state `{state}` for role {role.name} on all channels.")
 
 	@commands.command()
+	@commands.guild_only()
 	async def findrole(self, ctx, role: discord.Role):
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have permission to `Link embeds` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")

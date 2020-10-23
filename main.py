@@ -8,38 +8,50 @@ load_dotenv(verbose=True)
 intents = discord.Intents()
 intents.value = 32511
 
-# async def prefix()
+async def readDB():
+	try:
+		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
+			return json.loads(await f.read())
+	except Exception as e:
+		print(f"An error occured, {e}")
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or('u!', 'U!'), case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
+async def writeDB(data: dict):
+	try:
+		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f_main:
+			async with aiofiles.open('/home/tyman/code/utilibot/data.json.bak', mode='w') as f_bak:
+				await f_bak.write(await f_main.read())
+		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='w') as f:
+			d = json.dumps(data)
+			await f.write(d)
+	except Exception as e:
+		print(f"An error occured, {e}")
+
+async def getprefixes(bot, message):
+	prefixes = ['<@755084857280954550> ', '<@!755084857280954550> ']
+	defaults = ['<@755084857280954550> ', '<@!755084857280954550> ', 'u!', 'U!']
+	data = await readDB()
+	if not message.guild:
+		return ""
+	elif str(message.guild.id) in data['prefixes']:
+		prefixes.append(data['prefixes'][str(message.guild.id)])
+		return prefixes
+	else:
+		return defaults
+
+bot = commands.Bot(command_prefix=getprefixes, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
 
 class BlacklistedError(commands.CommandError):
 	pass
-
-@bot.check
-async def globally_block_dms(ctx):
-	if ctx.guild is not None:
-		return True
-	else:
-		await ctx.send("DM's are disabled, please use an actual server.")
-		return False
 
 async def is_blacklisted(id: int):
 	# Check if user is owner, if so ignore everthing
 	if id in bot.owner_ids:
 		return False
-	async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
-				data = await f.read()
-				try:
-					data = json.loads(data)
-				# If the file is malformed or corrupted, overwrited it to the blank thing. (might make it have backups later but idk if it it nessicary)
-				except json.JSONDecodeError:
-					async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='w') as f_write:
-						await f_write.write('{"banned_users": []}')
-						data = json.loads('{"banned_users": []}')
-				if id in data["banned_users"]:
-						return True
-				else:
-						return False
+	data = await readDB()
+	if id in data["banned_users"]:
+			return True
+	else:
+			return False
 
 @bot.check
 async def blacklist_users(ctx):
@@ -63,9 +75,9 @@ async def on_command_error(ctx, error):
 		await ctx.send('Nice try but you are not the owner.')
 		await errorchannel.send(f"{ctx.author} tried to run `{ctx.command.qualified_name}`, but they are not owner.")
 	elif isinstance(error, commands.CommandNotFound):
-		if ctx.guild.id in nocommandblacklist:
+		if ctx.guild and ctx.guild.id in nocommandblacklist:
 			return
-		await ctx.send(f'Not a command, <@{ctx.author.id}>')
+		await ctx.send(f'`{ctx.message.content}` is not a command, <@{ctx.author.id}>')
 	elif isinstance(error, commands.CheckFailure):
 		await ctx.send(error)
 	elif isinstance(error, BlacklistedError):
@@ -94,7 +106,7 @@ async def on_command_error(ctx, error):
 		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers, they just got a log of the error.\nYou can join the support server [here]({invitelink})\nError message: \n`{str(error)}`", color=0xff1100)
 		await ctx.send(embed=embed)
 		m = await errorchannel.send(allowed_mentions=discord.AllowedMentions(everyone=False, roles=True, users=False),content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <loading>", embed=embed)
-		url = await postbin.postAsync(content=tb, retry=2)
+		url = await postbin.postAsync(content=tb, retry=2, find_fallback_on_retry_runout=True)
 		await m.edit(allowed_mentions=discord.AllowedMentions(everyone=False, roles=True, users=False),content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <{url}>", embed=embed)
 
 @bot.event
