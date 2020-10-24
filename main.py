@@ -119,8 +119,18 @@ async def on_message(message):
 				no = emoji
 		await message.add_reaction(yes)
 		await message.add_reaction(no)
-
-	await bot.process_commands(message)
+	if message.content == "utilibot prefix?" and message.guild:
+		ps = await getprefixes(bot, message)
+		ps_formatted = [f"`{x}`" for x in ps]
+		ps_formatted.remove(f"`<@{bot.user.id}> `")
+		ps_formatted.remove(f"`<@!{bot.user.id}> `")
+		ps_formatted = str(ps_formatted).replace("[", "").replace("]", "").replace("'", "")
+		embed = discord.Embed(title=f"Prefixes for the server \"{message.guild.name}\":", description=ps_formatted).set_footer(text="Note: if you ping the bot with a space after the ping but before the command, it will always work as a prefix. For example: \"@Utilibot ping\"")
+		await message.channel.send(embed=embed)
+	elif message.content == "utilibot prefix?" and not message.guild:
+		await message.channel.send("As this is a dm channel, there is no prefix. Just say the name of the command and it will run. For example, `ping`.")
+	else:
+		await bot.process_commands(message)
 
 @bot.event
 async def on_guild_join(guild):

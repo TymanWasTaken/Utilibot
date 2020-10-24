@@ -75,6 +75,7 @@ class Info(commands.Cog):
 		await ctx.send(embed=embed)
 	
 	@commands.command(name="botperms", aliases=['botpermissions'])
+	@commands.guild_only()
 	@commands.has_permissions(manage_guild=True)
 	async def _bot_permissions(self, ctx, channel_permissions="False"):
 		"""
@@ -102,11 +103,13 @@ class Info(commands.Cog):
 		await ctx.send(embed=embed)
 
 	@commands.command()
-	@commands.has_permissions(manage_guild=True)
 	@commands.guild_only()
+	@commands.has_permissions(manage_guild=True)
 	async def setprefix(self, ctx, *, prefix=None):
 		if prefix == None:
 			d = await readDB()
+			if not str(ctx.guild.id) in d["prefixes"]:
+				return await ctx.send("I can't remove the custom prefix because it doesn't exist!")
 			del d["prefixes"][str(ctx.guild.id)]
 			await writeDB(d)
 			await ctx.send("Reset the prefix for this server!")
