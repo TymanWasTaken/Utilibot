@@ -1,5 +1,8 @@
-import discord, random, asyncio
+import discord, random, asyncio, aiohttp, os, json
 from discord.ext import commands
+from pytz import timezone
+from dotenv import load_dotenv
+load_dotenv(dotenv_path="/home/tyman/code/utilibot/.env")
 
 def randcolor():
 	return int("%06x" % random.randint(0, 0xFFFFFF), 16)
@@ -93,6 +96,77 @@ class Utils(commands.Cog):
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have permission to `Link embeds` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")
 		await ctx.send(embed=discord.Embed(title=f"Permissions for value {value}:", description=permsfromvalue(value), color=randcolor()))
+
+	@commands.command(name="userinfo", aliases=['ui', 'user', 'info'])
+	async def userinfo(self, ctx, user: discord.Member=None):
+		bot = self.bot
+		if user is None:
+			user = ctx.guild.get_member(ctx.author.id)
+		if user.status == discord.Status.online:
+			status = bot.get_emoji(774816041632137226)
+		elif user.status == discord.Status.idle:
+			status = bot.get_emoji(774816228739907624)
+		elif user.status == discord.Status.dnd:
+			status = bot.get_emoji(774816849908727888)
+		elif user.status == discord.Status.offline:
+			status = bot.get_emoji(774816333912473611)
+		if user.is_on_mobile():
+			mobile = "✅"
+		else:
+			mobile = "❌"
+		embed = discord.Embed(
+			title=f"{str(user)}'s info:", 
+			description=f"""{user.mention}
+			User id: `{user.id}`
+			Bot: {'✅' if user.bot else '❌'}
+			Role count: {len(user.roles)}
+			Joined server: {user.joined_at.astimezone(timezone('US/Mountain')).strftime("%a %B %d %Y %I:%M%p MST")}
+			Account created: {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a %B %d %Y %I:%M%p MST")}
+			Status: {status}
+			Mobile: {mobile}"""
+			.replace("	", "")
+			)
+		await ctx.send(embed=embed)
+
+	@commands.command(aliases=["tr"])
+	async def translate(self, ctx, lang, *, text):
+		async with aiohttp.ClientSession() as s:
+			async with ctx.typing():
+				async with s.get("https://api.cognitive.microsofttranslator.com/languages?api-version=3.0") as resp:
+					langs = await resp.json()
+					langs = langs["translation"]
+				if not lang in langs:
+					return await ctx.send("Not a valid language code.")
+				async with s.post(f"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to={lang}", headers={"Ocp-Apim-Subscription-Key": os.getenv('TRANSLATE_TOKEN'), "Ocp-Apim-Subscription-Region": "centralus", "Content-Type": "application/json"}, data="[{'Text':'"+text+"'}]") as resp:
+					response = await resp.json()
+					await ctx.send(f'Translated from:\n - Lang: `{langs[response[0]["detectedLanguage"]["language"]]["name"]}`\n - Certainty: `{response[0]["detectedLanguage"]["score"]*100}%`\n\nTranslation:\n - `{response[0]["translations"][0]["text"]}`')
+
+	@commands.command(aliases=["ftr"])
+	async def fromtranslate(self, ctx, fromlang, tolang, *, text):
+		async with aiohttp.ClientSession() as s:
+			async with ctx.typing():
+				async with s.get("https://api.cognitive.microsofttranslator.com/languages?api-version=3.0") as resp:
+					langs = await resp.json()
+					langs = langs["translation"]
+				if not (tolang in langs and fromlang in langs):
+					return await ctx.send("Not a valid language code.")
+				async with s.post(f"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to={tolang}&from={fromlang}", headers={"Ocp-Apim-Subscription-Key": os.getenv('TRANSLATE_TOKEN'), "Ocp-Apim-Subscription-Region": "centralus", "Content-Type": "application/json"}, data="[{'Text':'"+text+"'}]") as resp:
+					response = await resp.json()
+					await ctx.send(f'Translation:\n - `{response[0]["translations"][0]["text"]}`')
+
+	@commands.command()
+	async def langs(self, ctx):
+		async with aiohttp.ClientSession() as s:
+			async with ctx.typing():
+				async with s.get("https://api.cognitive.microsofttranslator.com/languages?api-version=3.0") as resp:
+					langs = await resp.json()
+					langsDict = langs["translation"]
+					niceLangs = ""
+					for key, value in langsDict.items():
+						niceLangs = niceLangs + f"`{key}`: `{value['name']}`, "
+					await ctx.send(niceLangs)
+				
+
 
 def setup(bot):
 	bot.add_cog(Utils(bot))

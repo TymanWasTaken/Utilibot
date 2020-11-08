@@ -80,13 +80,13 @@ class Music(commands.Cog):
 		"""
 		url = url.lstrip("<").rstrip(">")
 		if not re.search(r"https:\/\/www\.youtube\.com\/watch\?v=(?:.){11}$", url):
-				return await ctx.send('Not a valid youtube URL!')
+				return await ctx.send('❌ Not a valid youtube URL!')
 		if ctx.voice_client is None:
 			if ctx.author.voice:
 				await ctx.author.voice.channel.connect()
 			else:
-				await ctx.send('You are not connected to a voice channel.')
-				raise VoiceError("You are not connected to a voice channel.")
+				await ctx.send('❌ You are not connected to a voice channel.')
+				raise VoiceError("❌ You are not connected to a voice channel.")
 		elif ctx.voice_client.is_playing():
 			await ctx.send("Music is already playing!")
 			raise VoiceError("Music is already playing!")
