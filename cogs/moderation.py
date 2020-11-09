@@ -119,6 +119,7 @@ class Moderation(commands.Cog):
 		if option == "server":
 			locked = ""
 			for chan in ctx.guild.text_channels:
+				chan = ctx.guild.get_channel(chan)
 				perms = chan.overwrites_for(ctx.guild_default_role)
 				if perms.send_messages == False:
 					pass
