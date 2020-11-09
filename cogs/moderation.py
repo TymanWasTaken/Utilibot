@@ -109,8 +109,7 @@ class Moderation(commands.Cog):
 		Locks down a channel by denying @everyone send messages permission.
 		"""
 		ch = channel or ctx.channel
-			ch = ctx.guild.get_channel(ch)
-			perms = ch.overwrites_for(ctx.guild.default_role)
+		perms = ch.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages == False:
 				await ctx.send(f"❌ <#{ch.id}> is already locked!")
 			else:
@@ -125,9 +124,10 @@ class Moderation(commands.Cog):
 	@commands.has_permissions(manage_channels=True)
 	async def unhardlock(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None, *, reason="None given"):
 		"""
-		Unlocks a channel by setting @everyone's send message permissions to neutral
+		Unlocks a channel by setting @everyone's send message permissions to neutral.
 		"""
 		ch = channel or ctx.channel
+
 		perms = ch.overwrites_for(ctx.guild.default_role)
 		if perms.send_messages != False:
 			await ctx.send(f"❌ <#{ch.id}> is not locked!")
@@ -142,6 +142,21 @@ class Moderation(commands.Cog):
 #	@commands.bot_has_permissions(manage_channels=True)
 #	@commands.has_permissions(manage_channels=True, manage_guild=True)
 #	async def serverhardlock(self, ctx, *, reason='None given.')
+#		"""
+#		Locks the entire server by setting all channels' send messages permissions to false.
+#		"""
+#		ch = ctx.guild.get_channel()
+#		locked = ""
+#		for chan in ctx.guild.text_channels:
+#			chan = ctx.guild.get_channel(chan)
+#			perms = chan.overwrites_for(ctx.guild_default_role)
+#			if perms.send_messages == False:
+#				pass
+#			else:
+#				perms.send_messages = False
+#				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author.name}#{ctx.author.discriminator}.")
+#				locked = f"{locked} `||` <#{ch.id}>"
+#		await ctx.send(f"Locked down the server!\nChannels locked: {locked}\n**Reason:** {reason}")
 
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
 	@commands.bot_has_permissions(manage_messages=True)
