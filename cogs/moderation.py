@@ -131,9 +131,12 @@ class Moderation(commands.Cog):
 		Unlocks a channel by setting @everyone's send message permissions to neutral
 		"""
 		perms = ctx.channel.overwrites_for(ctx.guild.default_role)
-		perms.send_messages = None
-		await ctx.channel.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel unlocked by {ctx.author.name}#{ctx.author.discriminator}!")
-		await ctx.send(f"Successfully unlocked <#{ctx.channel.id}>!")
+		if perms.send_messages != False:
+			await ctx.send(f"<#{ctx.channel.id}> is not locked!")
+		else:
+			perms.send_messages = None
+			await ctx.channel.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel unlocked by {ctx.author.name}#{ctx.author.discriminator}!")
+			await ctx.send(f"Successfully unlocked <#{ctx.channel.id}>!")
 
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
 	@commands.bot_has_permissions(manage_messages=True)
