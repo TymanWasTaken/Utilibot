@@ -97,7 +97,7 @@ class Moderation(commands.Cog):
 				await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
 				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
 			except:
-				await ctx.send(f"Eror: Could Not DM user")
+				await ctx.send(f"Error: Could Not DM user")
 				await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
 				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
 
@@ -110,14 +110,14 @@ class Moderation(commands.Cog):
 		"""
 		ch = channel or ctx.channel
 		perms = ch.overwrites_for(ctx.guild.default_role)
-			if perms.send_messages == False:
-				await ctx.send(f"❌ <#{ch.id}> is already locked!")
-			else:
-				perms.send_messages = False
-				await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author.name}#{ctx.author.discriminator}!")
-				await ctx.send(f"✅ Successfully locked down <#{ch.id}> by removing send messages permission for @everyone.\n**Reason**: {reason}", allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
-				if ch != ctx.channel:
-					await ch.send(f"This channel was locked by {ctx.author.mention}!\n**Reason:** {reason}")
+		if perms.send_messages == False:
+			await ctx.send(f"❌ <#{ch.id}> is already locked!")
+		else:
+			perms.send_messages = False
+			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author.name}#{ctx.author.discriminator}!")
+			await ctx.send(f"✅ Successfully locked down <#{ch.id}> by removing send messages permission for @everyone.\n**Reason**: {reason}", allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
+			if ch != ctx.channel:
+				await ch.send(f"This channel was locked by {ctx.author.mention}!\n**Reason:** {reason}")
 		
 	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
 	@commands.bot_has_permissions(manage_channels=True)
@@ -138,25 +138,24 @@ class Moderation(commands.Cog):
 			if ch != ctx.channel:
 				await ch.send(f"This channel was unlocked by {ctx.author.mention}!\n**Reason:** {reason}")
 
-#	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
-#	@commands.bot_has_permissions(manage_channels=True)
-#	@commands.has_permissions(manage_channels=True, manage_guild=True)
-#	async def serverhardlock(self, ctx, *, reason='None given.')
-#		"""
-#		Locks the entire server by setting all channels' send messages permissions to false.
-#		"""
-#		ch = ctx.guild.get_channel()
-#		locked = ""
-#		for chan in ctx.guild.text_channels:
-#			chan = ctx.guild.get_channel(chan)
-#			perms = chan.overwrites_for(ctx.guild_default_role)
-#			if perms.send_messages == False:
-#				pass
-#			else:
-#				perms.send_messages = False
-#				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author.name}#{ctx.author.discriminator}.")
-#				locked = f"{locked} `||` <#{ch.id}>"
-#		await ctx.send(f"Locked down the server!\nChannels locked: {locked}\n**Reason:** {reason}")
+	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
+	@commands.bot_has_permissions(manage_channels=True)
+	@commands.has_permissions(manage_channels=True, manage_guild=True)
+	async def serverhardlock(self, ctx, *, reason='None given.')
+		"""
+		Locks the entire server by setting all channels' send messages permissions to false.
+		"""
+		locked = ""
+		for chan in ctx.guild.text_channels:
+			chan = ctx.guild.get_channel(chan)
+			perms = chan.overwrites_for(ctx.guild_default_role)
+			if perms.send_messages == False:
+				pass
+			else:
+				perms.send_messages = False
+				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author.name}#{ctx.author.discriminator}.")
+				locked = f"{locked} `||` <#{ch.id}>"
+		await ctx.send(f"Locked down the server!\nChannels locked: {locked}\n**Reason:** {reason}")
 
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
 	@commands.bot_has_permissions(manage_messages=True)
