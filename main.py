@@ -5,7 +5,8 @@ from discord.ext import commands
 from dotenv import load_dotenv
 music = importlib.import_module("cogs.music")
 load_dotenv(verbose=True)
-intents = discord.Intents().all()
+intents = discord.Intents()
+intents.value = 32511
 
 async def readDB():
 	try:
@@ -89,7 +90,7 @@ async def on_command_error(ctx, error):
 	elif isinstance(error, commands.CommandNotFound):
 		if ctx.guild and ctx.guild.id in nocommandblacklist:
 			return
-		await ctx.send(f'`{ctx.message.clean_content}` is not a command, <@{ctx.author.id}>')
+		await ctx.send(f'`{ctx.message.content}` is not a command, <@{ctx.author.id}>')
 	elif isinstance(error, commands.CheckFailure):
 		await ctx.send(error)
 	elif isinstance(error, BlacklistedError):
@@ -100,12 +101,8 @@ async def on_command_error(ctx, error):
 		await ctx.send(str(error).capitalize())
 	elif isinstance(error, commands.BadArgument):
 		await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
-	elif "VoiceError: ❌ You are not connected to a voice channel." in str(error):
+	elif isinstance(error, music.VoiceError):
 		pass
-	elif "404 Not Found (error code: 10008): Unknown Message" in str(error):
-		pass
-	elif "Must be 2000 or fewer in length." in str(error):
-		await ctx.send("[Message was too long to send]")
 	else:
 		invitelink = f"https://discord.gg/"
 		for invite in await bot.get_guild(755887706386726932).invites():
@@ -137,8 +134,6 @@ async def on_command_error(ctx, error):
 				await errorchannel.send(message)
 @bot.event
 async def on_message(message):
-	db = await readDB()
-	user = message.author
 	if message.channel.id == 755982484444938290 and not message.content.startswith('=>'):
 		for emoji in message.guild.emojis:
 			if emoji.id == 755947356834365490:
@@ -147,14 +142,6 @@ async def on_message(message):
 				no = emoji
 		await message.add_reaction(yes)
 		await message.add_reaction(no)
-	if message.channel.id == 758467234912927754 and message.author.id == 764868481371602975 and "online please leave me alone" in message.content:
-		await message.channel.send("no")
-	if str(message.channel.id) in db["softlocked_channels"] and (not bot.user.id == user.id) and (not db["softlocked_channels"][str(message.channel.id)]["user"] == str(user.id)) and (not message.author.id in db["softlocked_channels"][str(message.channel.id)]["whitelist"]):
-		for webhook in await message.channel.webhoks():
-			if webhook.id == message.author.id:
-				return
-		await message.delete()
-		return
 	if message.content == "utilibot prefix?" and message.guild:
 		ps = await getprefixes(bot, message)
 		ps_formatted = [f"`{x}`" for x in ps]
@@ -163,11 +150,10 @@ async def on_message(message):
 		ps_formatted = str(ps_formatted).replace("[", "").replace("]", "").replace("'", "")
 		embed = discord.Embed(title=f"Prefixes for the server \"{message.guild.name}\":", description=ps_formatted).set_footer(text="Note: if you ping the bot with a space after the ping but before the command, it will always work as a prefix. For example: \"@Utilibot ping\"")
 		await message.channel.send(embed=embed)
-		return
 	elif message.content == "utilibot prefix?" and not message.guild:
 		await message.channel.send("As this is a dm channel, there is no prefix. Just say the name of the command and it will run. For example, `ping`.")
-		return
-	await bot.process_commands(message)
+	else:
+		await bot.process_commands(message)
 
 @bot.event
 async def on_guild_join(guild):
@@ -199,9 +185,8 @@ bot.load_extension("jishaku")
 # This loads all cogs in the directory, so I don't have to manually add cogs when I make/change them
 os.chdir("cogs")
 for file in sorted(glob.glob("*.py")):
-	if ".py" in file:
-		file = file.replace(".py", "")
-		bot.load_extension(f"cogs.{file}")
+	file = file.replace(".py", "")
+	bot.load_extension(f"cogs.{file}")
 bot.load_extension("guildmanager")
 bot.load_extension("riftgun")
 =======

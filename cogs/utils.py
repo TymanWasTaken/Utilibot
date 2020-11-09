@@ -1,8 +1,5 @@
-import discord, random, asyncio, aiohttp, os, json
+import discord, random, asyncio
 from discord.ext import commands
-from pytz import timezone
-from dotenv import load_dotenv
-load_dotenv(dotenv_path="/home/tyman/code/utilibot/.env")
 
 def randcolor():
 	return int("%06x" % random.randint(0, 0xFFFFFF), 16)
@@ -97,6 +94,7 @@ class Utils(commands.Cog):
 			return await ctx.send("It appears I do not have permission to `Link embeds` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")
 		await ctx.send(embed=discord.Embed(title=f"Permissions for value {value}:", description=permsfromvalue(value), color=randcolor()))
 
+<<<<<<< HEAD
 	@commands.command(name="userinfo", aliases=['ui', 'user', 'info'])
 	async def userinfo(self, ctx, user: discord.Member=None):
 		bot = self.bot
@@ -175,6 +173,8 @@ class Utils(commands.Cog):
 					website = (await r.json())["snapshot"]
 					await ctx.send(embed=discord.Embed(color=discord.Color.blurple()).set_image(url=website))
 
+=======
+>>>>>>> parent of c45e514... No message specified
 def setup(bot):
 	bot.add_cog(Utils(bot))
 	print('[UtilsCog] Utils cog loaded')
