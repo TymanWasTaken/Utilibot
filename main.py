@@ -63,6 +63,19 @@ async def blacklist_users(ctx):
 async def on_ready():
 	print(f'Bot logged in as {bot.user}')
 	await bot.get_channel(755979601788010527).send(content=datetime.now().strftime("[%m/%d/%Y %I:%M:%S] ") + "Bot online")
+	bot.load_extension("jishaku")
+	os.chdir("cogs")
+	for file in sorted(glob.glob("*.py")):
+		if ".py" in file:
+			file = file.replace(".py", "")
+			try:
+				bot.load_extension(f"cogs.{file}")
+			except Exception as e:
+				errorchanel = await bot.fetch_channel(764333133738541056)
+				tb = "".join(traceback.format_exception(type(e), e, e.__traceback__))
+				await errorchannel.send(f"Extention/cog {file} failed to load on start: ```py\n{tb}```")
+	bot.load_extention("riftgun")
+	bot.load_extension("guildmanager")
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -179,14 +192,4 @@ async def on_voice_state_update(member, before, after):
 			await vc.disconnect()
 			vc.cleanup()
 """
-bot.load_extension("jishaku")
-# bot.load_extension("riftgun")
-# bot.load_extension("guildmanager")
-# This loads all cogs in the directory, so I don't have to manually add cogs when I make/change them
-os.chdir("cogs")
-for file in sorted(glob.glob("*.py")):
-	if ".py" in file:
-		file = file.replace(".py", "")
-		bot.load_extension(f"cogs.{file}")
-bot.load_extension("guildmanager")
 bot.run(os.getenv("BOT_TOKEN"))
