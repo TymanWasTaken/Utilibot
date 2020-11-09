@@ -124,7 +124,7 @@ class Moderation(commands.Cog):
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author.name}#{ctx.author.discriminator}!")
 			await ctx.send(f"✅ Successfully locked down <#{ch.id}> by removing send messages permission for @everyone.\n**Reason**: {reason}", allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
 			if ch != ctx.channel:
-				await ch.send(f"This channel was locked by {author.mention}!\n**Reason:** {reason}")
+				await ch.send(f"This channel was locked by {ctx.author.mention}!\n**Reason:** {reason}")
 		
 	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
 	@commands.bot_has_permissions(manage_channels=True)
@@ -142,7 +142,7 @@ class Moderation(commands.Cog):
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel unlocked by {ctx.author.name}#{ctx.author.discriminator}!")
 			await ctx.send(f"✅ Successfully unlocked <#{ch.id}>!\n**Reason:** {reason}")
 			if ch != ctx.channel:
-				await ch.send(f"This channel was unlocked by {author.mention}!\n**Reason:** {reason}")
+				await ch.send(f"This channel was unlocked by {ctx.author.mention}!\n**Reason:** {reason}")
 
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
 	@commands.bot_has_permissions(manage_messages=True)
