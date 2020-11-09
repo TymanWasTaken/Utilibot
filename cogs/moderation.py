@@ -130,7 +130,7 @@ class Moderation(commands.Cog):
 		perms = ctx.channel.overwrites_for(ctx.guild.default_role)
 		perms.send_messages = None
 		await ctx.channel.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel unlocked by {ctx.author.name}#{ctx.author.discriminator}!")
-		await ctx.send(f"Successfully unlocked <#{ctx.channel.id}>!)
+		await ctx.send(f"Successfully unlocked <#{ctx.channel.id}>!")
 
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
 	@commands.bot_has_permissions(manage_messages=True)
