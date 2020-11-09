@@ -112,7 +112,7 @@ class Moderation(commands.Cog):
 		"""
 		lol idk why this is in moderation
 		"""
-		for c in ctx.guild.channels:
+		for c in ctx.guild.text_channels:
 			await c.send(message)
 
 	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
