@@ -107,6 +107,13 @@ class Moderation(commands.Cog):
 				await ctx.send(f"Eror: Could Not DM user")
 				await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
 				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
+	@commands.command(name="allsend")
+	async def allsend(self, ctx, *, message=None)
+		"""
+		lol idk why this is in moderation
+		"""
+		for c in guild.channels:
+			await ctx.send(message)
 
 	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
 	@commands.bot_has_permissions(manage_channels=True)
