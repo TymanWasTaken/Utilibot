@@ -58,10 +58,23 @@ class Utils(commands.Cog):
 		if members == "":
 			await ctx.send("No members found.")
 		elif len(members) > 2048:
-			await ctx.send("List is to big to send.")
+			await ctx.send("List is too big to send.")
 		else:
 			embed=discord.Embed(title=f"Members with role {role.name}:", description=members, color=randcolor())
 			await ctx.send(embed=embed)
+
+	@commands.command(name="rolemembers", aliases=['members'])
+	@commands.guild_only()
+	async def rolemembers(self, ctx, role: discord.Role):
+	if ctx.channel.permissions_for(ctx.me).embed_links == False:
+		return await ctx.send("It appears I do not have the `Embed Links` permission in this channel. Please give me this permission or try again in a channel where I do have it, as it is necessary to run this command.")
+	color = role.color
+	name = ""	
+	embed = discord.Embed(title=f"Members with the role __{role.name}__", color=color.value)
+	for member in role.members:
+		name = f"{name}\n• [{m.name}#{m.discriminator}](https://discord.com/users/{m.id})"
+	embed.description=name
+	await ctx.send(embed=embed)
 
 
 	# @commands.command(name="allroles")
