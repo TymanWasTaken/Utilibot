@@ -145,8 +145,8 @@ class Moderation(commands.Cog):
 		Locks the entire server by setting all channels' send messages permissions to false.
 		"""
 		locked = ""
-		for chan in ctx.guild.text_channels:
-			chan = ctx.guild.get_channel(chan)
+		for chan in ctx.guild.channels:
+			chan = await bot.fetch_channel(chan)
 			perms = chan.overwrites_for(ctx.guild_default_role)
 			if perms.send_messages == False:
 				pass
