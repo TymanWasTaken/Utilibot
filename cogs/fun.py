@@ -15,14 +15,14 @@ class Fun(commands.Cog):
 	@commands.command()
 	async def say(self, ctx, *, message):
 		"""
-		Says what you tell it to, self-explanitory (pings won't actually ping)
+		Says what you tell it to, self-explanitory
 		"""
-		# await ctx.message.delete()
-		await ctx.send(f"{str(ctx.author)} says:\n{message}", allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
+		await ctx.message.delete()
+		await ctx.send(message)
 
 	@commands.command()
 	async def paroot(self, ctx):
-		await ctx.send(self.bot.get_emoji(755947816165048431))
+		await ctx.send("<a:paroot:755947816165048431>")
 
 	@commands.command()
 	async def choose(self, ctx, *, choices: str):

@@ -116,4 +116,4 @@ class Debug(commands.Cog):
 
 def setup(bot):
 	bot.add_cog(Debug(bot))
-	print('[DevCog] Dev cog loaded')
+	print('[DebugCog] Debug cog loaded')

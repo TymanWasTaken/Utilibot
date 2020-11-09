@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import discord, random, asyncio, aiofiles, json, typing
+=======
+import discord, random, asyncio
+>>>>>>> parent of c45e514... No message specified
 from discord.ext import commands
 
 # PurgeError
@@ -10,60 +14,54 @@ def is_bot(m):
 	return 	m.author.bot
 def is_not_bot(m):
 	return 	not(m.author.bot)
+async def purge_messages(number, channel, mode, check=None):
+	if check is None:
+		return await channel.purge(limit=number)
+	diff_message = 0
+	total_message = 0
+	async for message in channel.history(limit=None):
+		if diff_message == number:
+			break
+		if check(message):
+			diff_message += 1
+		total_message += 1
+	else:
+		e = PurgeError(f'Could not find enough messages with mode {mode}')
+		raise e
 
-async def readDB():
-	try:
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
-			return json.loads(await f.read())
-	except Exception as e:
-		print(f"An error occured, {e}")
+	return await channel.purge(limit=total_message, check=check)
 
-async def writeDB(data: dict):
-	try:
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f_main:
-			async with aiofiles.open('/home/tyman/code/utilibot/data.json.bak', mode='w') as f_bak:
-				await f_bak.write(await f_main.read())
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='w') as f:
-			d = json.dumps(data)
-			await f.write(d)
-	except Exception as e:
-		print(f"An error occured, {e}")
 
 class Moderation(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.group(invoke_without_command=True)
+	@commands.command()
 	@commands.has_permissions(manage_messages=True)
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.guild_only()
-	async def purge(self, ctx, number: int=10):
+	async def purge(self, ctx, number, mode="all"):
 		"""
 		Purge a specified amount of messages from the current channel.
 
-		Number = The number of messages to delete.
+		Number = The number of messages to delete, depending on the mode. If the mode is all, it will just delete this number of messages. If the mode is bot, it will delete this number of messages made by bots.
+		Mode = The mode of deleteing messages, can be all (defualt), bot, or humans (opposite of bot)
 		"""
-		if ctx.invoked_subcommand is None:
-			async with ctx.typing():
-				await ctx.message.delete()
-				deleted = await ctx.channel.purge(limit=number)
-			message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
-			await asyncio.sleep(2.5)
-			await message.delete()
+		await ctx.message.delete()
+		mode = str(mode).lower()
+		number = int(number)
+		try:
+			if mode == "all":
+				deleted = await purge_messages(number, ctx.channel, mode)
+			elif mode == "bot":
+				deleted = await purge_messages(number, ctx.channel, mode, is_bot)
+			elif mode == "human":
+				deleted = await purge_messages(number, ctx.channel, mode, is_not_bot)
+			else:
+				return await ctx.send('Mode must be one of: all (default), bot, or human')
+		except PurgeError as e:
+			return await ctx.send(e)
 
-	@purge.command()
-	@commands.has_permissions(manage_messages=True)
-	@commands.bot_has_permissions(manage_messages=True)
-	@commands.guild_only()
-	async def bot(self, ctx, number:int =10):
-		"""
-		Purge a specified amount of messages from the current channel. It will only delete messages made by bots.
-
-		Number = The number of messages to delete.
-		"""
-		async with ctx.typing():
-			await ctx.message.delete()
-			deleted = await ctx.channel.purge(limit=number, check=is_bot)
 		message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
 		await asyncio.sleep(2.5)
 		await message.delete()
@@ -107,6 +105,7 @@ class Moderation(commands.Cog):
 				await ctx.send(f"Eror: Could Not DM user")
 				await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
 				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
+<<<<<<< HEAD
 
 	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
 	@commands.bot_has_permissions(manage_channels=True)
@@ -213,6 +212,8 @@ class Moderation(commands.Cog):
 				await ctx.send("❌ You cannot unlock this, as you are not the one who locked it.")
 		else:
 			await ctx.send(f"❌ <#{ch.id}> is not softlocked.")
+=======
+>>>>>>> parent of c45e514... No message specified
 	
 	@commands.command(name="ban")
 	@commands.bot_has_permissions(ban_members=True)
