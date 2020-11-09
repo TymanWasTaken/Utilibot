@@ -111,20 +111,32 @@ class Moderation(commands.Cog):
 	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True)
-	async def hardlock(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None, *, reason="None given"):
+	async def hardlock(self, ctx: commands.Context, option: typing.Optional[discord.TextChannel]=None or "server".lower, *, reason="None given"):
 		"""
 		Locks down a channel by denying @everyone send messages permission.
 		"""
-		ch = channel or ctx.channel
-		perms = ch.overwrites_for(ctx.guild.default_role)
-		if perms.send_messages == False:
-			await ctx.send(f"❌ <#{ch.id}> is already locked!")
+		ch = option or ctx.channel
+		if option == "server":
+			locked = ""
+			for ch in ctx.guild.channels:
+				perms = ch.overwrites_for(ctx.guild_default_role)
+				if perms.send_messages == False:
+					pass
+				else:
+					perms.send_messages = False
+					await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author.name}#{ctx.author.discriminator}.")
+					locked = f"{locked} `||` <#{ch.id}>"
+			await ctx.send(f"Locked down the server!\nChannels locked: {locked}\n**Reason:** {reason}")
 		else:
-			perms.send_messages = False
-			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author.name}#{ctx.author.discriminator}!")
-			await ctx.send(f"✅ Successfully locked down <#{ch.id}> by removing send messages permission for @everyone.\n**Reason**: {reason}", allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
-			if ch != ctx.channel:
-				await ch.send(f"This channel was locked by {ctx.author.mention}!\n**Reason:** {reason}")
+			perms = ch.overwrites_for(ctx.guild.default_role)
+			if perms.send_messages == False:
+				await ctx.send(f"❌ <#{ch.id}> is already locked!")
+			else:
+				perms.send_messages = False
+				await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author.name}#{ctx.author.discriminator}!")
+				await ctx.send(f"✅ Successfully locked down <#{ch.id}> by removing send messages permission for @everyone.\n**Reason**: {reason}", allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
+				if ch != ctx.channel:
+					await ch.send(f"This channel was locked by {ctx.author.mention}!\n**Reason:** {reason}")
 		
 	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
 	@commands.bot_has_permissions(manage_channels=True)
