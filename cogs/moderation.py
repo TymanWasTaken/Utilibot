@@ -117,8 +117,20 @@ class Moderation(commands.Cog):
 		"""
 		perms = ctx.channel.overwrites_for(ctx.guild.default_role)
 		perms.send_messages = False
-		await ctx.channel.set_permissions(ctx.guild.default_role, overwrite=perms, reason="Muted!")
-		await ctx.send("Successfully locked down this channel by removing send messages permission for @everyone.", allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
+		await ctx.channel.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author.name}#{ctx.author.discriminator}!")
+		await ctx.send(f"Successfully locked down <#{ctx.channel.id}> by removing send messages permission for @everyone.", allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
+		
+	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld']
+	@commands.bot_has_permissions(manage_channels=True)
+	@commands.has_permissions(manage_channels=True)
+	async def unhardlock(self, ctx):
+		"""
+		Unlocks a channel by setting @everyone's send message permissions to neutral
+		"""
+		perms = ctx.channel.overwrites_for(ctx.guild.default_role)
+		perms.send_messages = None
+		await ctx.channel.set_permissions(ctx.guild.default_role overwrite=perms, reason=f"Channel unlocked by {ctx.author.name}#{ctx.author.discriminator}!")
+		await ctx.send(f"Successfully unlocked <#{ctx.channel.id}>!)
 
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
 	@commands.bot_has_permissions(manage_messages=True)
@@ -145,7 +157,7 @@ class Moderation(commands.Cog):
 	@commands.has_permissions(manage_messages=True)
 	async def whitelist(self, ctx, user: discord.Member):
 		"""
-		Whitelists a user from the softlock in the current channel.
+		Whitelists a user from the softlock in the current channel, allowing them to speak but not unlock.
 		"""
 		db = await readDB()
 		if not str(ctx.channel.id) in db["softlocked_channels"]:
