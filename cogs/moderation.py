@@ -146,7 +146,7 @@ class Moderation(commands.Cog):
 		"""
 		locked = ""
 		for chan in ctx.guild.channels:
-			chan = await bot.fetch_channel(chan)
+			chan = await self.bot.fetch_channel(chan)
 			perms = chan.overwrites_for(ctx.guild_default_role)
 			if perms.send_messages == False:
 				pass
