@@ -64,19 +64,6 @@ async def blacklist_users(ctx):
 async def on_ready():
 	print(f'Bot logged in as {bot.user}')
 	await bot.get_channel(755979601788010527).send(content=datetime.now().strftime("[%m/%d/%Y %I:%M:%S] ") + "Bot online")
-	bot.load_extension("jishaku")
-	os.chdir("cogs")
-	for file in sorted(glob.glob("*.py")):
-		if ".py" in file:
-			file = file.replace(".py", "")
-			try:
-				bot.load_extension(f"cogs.{file}")
-			except Exception as e:
-				errorchanel = await bot.fetch_channel(764333133738541056)
-				tb = "".join(traceback.format_exception(type(e), e, e.__traceback__))
-				await errorchannel.send(f"Extention/cog {file} failed to load on start: ```py\n{tb}```")
-	bot.load_extention("riftgun")
-	bot.load_extension("guildmanager")
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -178,7 +165,6 @@ async def on_voice_state_update(member, before, after):
 			await vc.disconnect()
 			vc.cleanup()
 """
-<<<<<<< HEAD
 bot.load_extension("jishaku")
 # bot.load_extension("riftgun")
 # bot.load_extension("guildmanager")
@@ -189,6 +175,4 @@ for file in sorted(glob.glob("*.py")):
 	bot.load_extension(f"cogs.{file}")
 bot.load_extension("guildmanager")
 bot.load_extension("riftgun")
-=======
->>>>>>> 3e8441ae0cc5184a1de297c6fbb628d35867a9b1
 bot.run(os.getenv("BOT_TOKEN"))
