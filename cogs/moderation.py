@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import discord, random, asyncio, aiofiles, json, typing
-=======
-import discord, random, asyncio
->>>>>>> parent of c45e514... No message specified
 from discord.ext import commands
 
 # PurgeError
@@ -105,7 +101,6 @@ class Moderation(commands.Cog):
 				await ctx.send(f"Eror: Could Not DM user")
 				await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
 				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
-<<<<<<< HEAD
 
 	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
 	@commands.bot_has_permissions(manage_channels=True)
@@ -212,8 +207,6 @@ class Moderation(commands.Cog):
 				await ctx.send("❌ You cannot unlock this, as you are not the one who locked it.")
 		else:
 			await ctx.send(f"❌ <#{ch.id}> is not softlocked.")
-=======
->>>>>>> parent of c45e514... No message specified
 	
 	@commands.command(name="ban")
 	@commands.bot_has_permissions(ban_members=True)
