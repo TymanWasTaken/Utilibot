@@ -128,6 +128,7 @@ class Moderation(commands.Cog):
 					locked = f"{locked} `||` <#{ch.id}>"
 			await ctx.send(f"Locked down the server!\nChannels locked: {locked}\n**Reason:** {reason}")
 		else:
+			ch = ctx.guild.get_channel(ch)
 			perms = ch.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages == False:
 				await ctx.send(f"❌ <#{ch.id}> is already locked!")
