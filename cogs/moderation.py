@@ -68,6 +68,24 @@ class Moderation(commands.Cog):
 		await asyncio.sleep(2.5)
 		await message.delete()
 
+	@purge.command()
+	@commands.has_permissions(manage_messages=True)
+	@commands.bot_has_permissions(manage_messages=True)
+	@commands.guild_only()
+	async def user(self, ctx, user: discord.Member, number:int =10):
+		"""
+		Purge a specified amount of messages from the current channel. It will only delete messages made by the mentioned user.
+
+		Number = The number of messages to delete.
+		"""
+		is_user = lambda msg: msg.author == user
+		async with ctx.typing():
+			await ctx.message.delete()
+			deleted = await ctx.channel.purge(limit=number, check=is_user)
+		message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
+		await asyncio.sleep(2.5)
+		await message.delete()
+
 	@commands.command(name="kick")
 	@commands.bot_has_permissions(kick_members=True)
 	@commands.has_permissions(kick_members=True)

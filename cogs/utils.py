@@ -165,8 +165,15 @@ class Utils(commands.Cog):
 					for key, value in langsDict.items():
 						niceLangs = niceLangs + f"`{key}`: `{value['name']}`, "
 					await ctx.send(niceLangs)
-				
 
+	@commands.command()
+	@commands.cooldown(1, 5, commands.BucketType.guild)
+	async def web(self, ctx, *, url: str):
+		async with ctx.typing():
+			async with aiohttp.ClientSession() as s:
+				async with s.post("http://magmachain.herokuapp.com/api/v1", headers=dict(website=url)) as r:
+					website = (await r.json())["snapshot"]
+					await ctx.send(embed=discord.Embed(color=discord.Color.blurple()).set_image(url=website))
 
 def setup(bot):
 	bot.add_cog(Utils(bot))
