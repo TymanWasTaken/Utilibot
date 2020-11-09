@@ -154,9 +154,9 @@ class Moderation(commands.Cog):
 				"whitelist": []
 			}
 			await writeDB(db)
-			await ctx.send("Successfully softlocked.")
+			await ctx.send(f"Successfully softlocked <#{ch.id}>.")
 		else:
-			await ctx.send("Channel is already softlocked.")
+			await ctx.send(f"<#{ch.id}> is already softlocked.")
 
 	@commands.command(aliases=['wh'])
 	@commands.bot_has_permissions(manage_messages=True)
