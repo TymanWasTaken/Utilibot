@@ -1,6 +1,8 @@
-import discord, random, asyncio, aiohttp
+import discord, random, asyncio, aiohttp, os
 from discord.ext import commands
 from pytz import timezone
+from dotenv import load_dotenv
+load_dotenv(dotenv_path="/home/tyman/code/utilibot/.env")
 
 def randcolor():
 	return int("%06x" % random.randint(0, 0xFFFFFF), 16)
