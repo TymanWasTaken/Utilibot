@@ -116,9 +116,12 @@ class Moderation(commands.Cog):
 		Locks down a channel by denying @everyone send messages permission.
 		"""
 		perms = ctx.channel.overwrites_for(ctx.guild.default_role)
-		perms.send_messages = False
-		await ctx.channel.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author.name}#{ctx.author.discriminator}!")
-		await ctx.send(f"Successfully locked down <#{ctx.channel.id}> by removing send messages permission for @everyone.", allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
+		if perms.send_messages == False:
+			await ctx.send(f"<#{ctx.channel.id}> is already locked!")
+		else:
+			perms.send_messages = False
+			await ctx.channel.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author.name}#{ctx.author.discriminator}!")
+			await ctx.send(f"Successfully locked down <#{ctx.channel.id}> by removing send messages permission for @everyone.", allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
 		
 	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
 	@commands.bot_has_permissions(manage_channels=True)
