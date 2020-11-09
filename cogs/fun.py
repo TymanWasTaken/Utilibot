@@ -30,6 +30,12 @@ class Fun(commands.Cog):
 			return await ctx.send("Please seperate the choices with a |.")
 		choices = choices.split("|")
 		await ctx.send(random.choice(choices))
+		
+	@commands.command(name="randomnumber", aliases=['pick','rannum'])
+	@commandds.bot_has_permissions(embed_links=True, send_messages=True)
+	async def randomnumber(self, ctx, maxnumber: int):
+		numb = random.randrange([maxnumber+1])
+		await ctx.send(embed=discord.Embed(title="Random Number Picked", description=f"{e}", color=0x7289da
 
 def setup(bot):
 	bot.add_cog(Fun(bot))
