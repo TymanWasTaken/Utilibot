@@ -108,7 +108,7 @@ class Moderation(commands.Cog):
 				await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
 				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
 	@commands.command(name="allsend")
-	async def allsend(self, ctx, *, message=None)
+	async def allsend(self, ctx, *, message=None):
 		"""
 		lol idk why this is in moderation
 		"""
