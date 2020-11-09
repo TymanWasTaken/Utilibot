@@ -120,7 +120,7 @@ class Moderation(commands.Cog):
 		await ctx.channel.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author.name}#{ctx.author.discriminator}!")
 		await ctx.send(f"Successfully locked down <#{ctx.channel.id}> by removing send messages permission for @everyone.", allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
 		
-	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld']
+	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True)
 	async def unhardlock(self, ctx):
