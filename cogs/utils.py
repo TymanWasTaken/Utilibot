@@ -65,7 +65,7 @@ class Utils(commands.Cog):
 
 	@commands.command(name="rolemembers", aliases=['members'])
 	@commands.guild_only()
-	async def rolemembers(self, ctx, role: discord.Role):
+	async def rolemembers(self, ctx, *, role: discord.Role):
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have the `Embed Links` permission in this channel. Please give me this permission or try again in a channel where I do have it, as it is necessary to run this command.")
 		color = role.color
