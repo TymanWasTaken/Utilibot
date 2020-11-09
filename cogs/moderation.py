@@ -127,7 +127,6 @@ class Moderation(commands.Cog):
 		Unlocks a channel by setting @everyone's send message permissions to neutral.
 		"""
 		ch = channel or ctx.channel
-
 		perms = ch.overwrites_for(ctx.guild.default_role)
 		if perms.send_messages != False:
 			await ctx.send(f"❌ <#{ch.id}> is not locked!")
@@ -141,7 +140,7 @@ class Moderation(commands.Cog):
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True, manage_guild=True)
-	async def serverhardlock(self, ctx, *, reason='None given.')
+	async def serverhardlock(self, ctx, *, reason='None given.'):
 		"""
 		Locks the entire server by setting all channels' send messages permissions to false.
 		"""
