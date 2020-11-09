@@ -113,7 +113,7 @@ class Moderation(commands.Cog):
 		lol idk why this is in moderation
 		"""
 		for c in ctx.guild.text_channels:
-			m = c.last_message_id
+			m = c.fetch_message(last_message_id)
 			await m.delete(1)
 
 	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
