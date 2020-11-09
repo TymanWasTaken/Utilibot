@@ -50,7 +50,7 @@ class Utils(commands.Cog):
 	@commands.guild_only()
 	async def findrole(self, ctx, role: discord.Role):
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
-			return await ctx.send("It appears I do not have permission to `Link embeds` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")
+			return await ctx.send("It appears I do not have the `Embed Links` permission in this channel. Please give me this permission or try again in a channel where I do have it, as it is necessary to run this command.")
 		members = ""
 		for member in ctx.guild.members:
 			if role in member.roles:
@@ -116,15 +116,17 @@ class Utils(commands.Cog):
 			mobile = "❌"
 		embed = discord.Embed(
 			title=f"{str(user)}'s info:", 
-			description=f"""{user.mention}
-			User id: `{user.id}`
-			Bot: {'✅' if user.bot else '❌'}
-			Role count: {len(user.roles)}
-			Joined server: {user.joined_at.astimezone(timezone('US/Mountain')).strftime("%a %B %d %Y %I:%M%p MST")}
-			Account created: {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a %B %d %Y %I:%M%p MST")}
-			Status: {status}
-			Mobile: {mobile}"""
-			.replace("	", "")
+			description=f"""**Nickname:** {user.nick}
+			**User ID:** `{user.id}`
+			**Role count:** {len(user.roles)}
+			**Joined Server on:** {user.joined_at.astimezone(timezone('US/Mountain')).strftime("%a %B %d %Y %I:%M%p MST")}
+			**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a %B %d %Y %I:%M%p MST")}
+			**Status:** {status}
+			**Bot:** {'✅' if user.bot else '❌'}
+			**Mobile:** {mobile}"""
+			.replace("	", ""),
+			thumbnail=user.avatar_url,
+			color=user.color
 			)
 		await ctx.send(embed=embed)
 
