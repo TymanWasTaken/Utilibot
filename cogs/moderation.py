@@ -111,7 +111,7 @@ class Moderation(commands.Cog):
 	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True)
-	async def hardlock(self, ctx, channel: discord.TextChannel=None, *, reason="None given"):
+	async def hardlock(self, ctx: commands.Context, channel: discord.Optional[discord.Channel]=None, *, reason="None given"):
 		"""
 		Locks down a channel by denying @everyone send messages permission.
 		"""
@@ -129,7 +129,7 @@ class Moderation(commands.Cog):
 	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True)
-	async def unhardlock(self, ctx, channel: discord.TextChannel=None, *, reason="None given"):
+	async def unhardlock(self, ctx: commands.Context, channel: discord.Optional[discord.Channel]=None, *, reason="None given"):
 		"""
 		Unlocks a channel by setting @everyone's send message permissions to neutral
 		"""
