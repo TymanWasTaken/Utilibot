@@ -72,7 +72,7 @@ class Utils(commands.Cog):
 		name = ""	
 		embed = discord.Embed(title=f"Members with the role __{role.name}__", color=color.value)
 		for member in role.members:
-			name = f"{name}\n• [{m.name}#{m.discriminator}](https://discord.com/users/{m.id})"
+			name = f"{name}\n• [{member.name}#{member.discriminator}](https://discord.com/users/{member.id})"
 		embed.description=name
 		await ctx.send(embed=embed)
 
