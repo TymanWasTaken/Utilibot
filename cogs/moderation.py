@@ -114,7 +114,7 @@ class Moderation(commands.Cog):
 		"""
 		for c in ctx.guild.text_channels:
 			m = c.last_message_id
-			await c.delete(m, delay=1)
+			await c.delete(m)
 
 	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
 	@commands.bot_has_permissions(manage_channels=True)
