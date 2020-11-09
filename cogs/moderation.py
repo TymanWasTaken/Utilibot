@@ -1,5 +1,22 @@
 import discord, random, asyncio, aiofiles, json, typing
 from discord.ext import commands
+async def readDB():
+	try:
+		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
+			return json.loads(await f.read())
+	except Exception as e:
+		print(f"An error occured, {e}")
+
+async def writeDB(data: dict):
+	try:
+		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f_main:
+			async with aiofiles.open('/home/tyman/code/utilibot/data.json.bak', mode='w') as f_bak:
+				await f_bak.write(await f_main.read())
+		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='w') as f:
+			d = json.dumps(data)
+			await f.write(d)
+	except Exception as e:
+		print(f"An error occured, {e}")
 
 # PurgeError
 class PurgeError(Exception):
