@@ -62,23 +62,22 @@ class Moderation(commands.Cog):
 		await asyncio.sleep(2.5)
 		await message.delete()
 
-	@purge.command()
-	@commands.has_permissions(manage_messages=True)
-	@commands.bot_has_permissions(manage_messages=True)
-	@commands.guild_only()
-	async def user(self, ctx, user: discord.Member, number:int =10):
-		"""
-		Purge a specified amount of messages from the current channel. It will only delete messages made by the mentioned user.
-
-		Number = The number of messages to delete.
-		"""
-		is_user = lambda msg: msg.author == user
-		async with ctx.typing():
-			await ctx.message.delete()
-			deleted = await ctx.channel.purge(limit=number, check=is_user)
-		message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
-		await asyncio.sleep(2.5)
-		await message.delete()
+#	@purge.command()
+#	@commands.has_permissions(manage_messages=True)
+#	@commands.bot_has_permissions(manage_messages=True)
+#	@commands.guild_only()
+#	async def user(self, ctx, user: discord.Member, number:int =10):
+#		"""
+#		Purge a specified amount of messages from the current channel. It will only delete messages made by the mentioned user.
+#
+#		Number = The number of messages to delete.
+#		"""
+#		is_user = lambda msg: msg.author == user
+#		async with ctx.typing():
+#			await ctx.message.delete()
+#			deleted = await ctx.channel.purge(limit=number, check=is_user)
+#		message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
+#		await message.delete()
 
 	@commands.command(name="kick")
 	@commands.bot_has_permissions(kick_members=True)
@@ -105,24 +104,11 @@ class Moderation(commands.Cog):
 	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True)
-	async def hardlock(self, ctx: commands.Context, option: typing.Optional[discord.TextChannel]=None or "server".lower, *, reason="None given"):
+	async def hardlock(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None, *, reason="None given"):
 		"""
 		Locks down a channel by denying @everyone send messages permission.
 		"""
-		ch = option or ctx.channel
-		if option == "server":
-			locked = ""
-			for chan in ctx.guild.text_channels:
-				chan = ctx.guild.get_channel(chan)
-				perms = chan.overwrites_for(ctx.guild_default_role)
-				if perms.send_messages == False:
-					pass
-				else:
-					perms.send_messages = False
-					await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author.name}#{ctx.author.discriminator}.")
-					locked = f"{locked} `||` <#{ch.id}>"
-			await ctx.send(f"Locked down the server!\nChannels locked: {locked}\n**Reason:** {reason}")
-		else:
+		ch = channel or ctx.channel
 			ch = ctx.guild.get_channel(ch)
 			perms = ch.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages == False:
@@ -151,6 +137,11 @@ class Moderation(commands.Cog):
 			await ctx.send(f"✅ Successfully unlocked <#{ch.id}>!\n**Reason:** {reason}")
 			if ch != ctx.channel:
 				await ch.send(f"This channel was unlocked by {ctx.author.mention}!\n**Reason:** {reason}")
+
+#	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
+#	@commands.bot_has_permissions(manage_channels=True)
+#	@commands.has_permissions(manage_channels=True, manage_guild=True)
+#	async def serverhardlock(self, ctx, *, reason='None given.')
 
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
 	@commands.bot_has_permissions(manage_messages=True)
