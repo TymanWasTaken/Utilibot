@@ -32,7 +32,7 @@ class Fun(commands.Cog):
 		await ctx.send(random.choice(choices))
 		
 	@commands.command(name="randomnumber", aliases=['pick','rannum'])
-	@commandds.bot_has_permissions(embed_links=True, send_messages=True)
+	@commands.bot_has_permissions(embed_links=True, send_messages=True)
 	async def randomnumber(self, ctx, maxnumber: int):
 		numb = random.randint(0, maxnumber)
 		await ctx.send(embed=discord.Embed(title="Random Number Picked", description=numb, color=0x7289da))
