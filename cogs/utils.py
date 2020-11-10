@@ -67,7 +67,7 @@ class Utils(commands.Cog):
 	@commands.command(name="publish")
 	@commands.has_permissions(manage_messages=True)
 	@commands.bot_has_permissions(manage_messages=True)
-	async def publish(self, ctx: commands.Context, channel: typing.Optional[discord.ChannelType.news]=None, message=channel.last_message_id):
+	async def publish(self, ctx: commands.Context, channel: typing.Optional[discord.ChannelType.news]=None, message=None):
 		"""
 		Publishes a message.
 		"""
