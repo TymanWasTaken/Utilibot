@@ -53,7 +53,7 @@ class Utils(commands.Cog):
 		"""
 		Convert channels between news and text.
 		"""
-		if "NEWS" in guild.features:
+		if "NEWS" in ctx.guild.features:
 			c = channel or ctx.channel
 			curtype = ctx.channel.type
 			newtype = discord.ChannelType.news
