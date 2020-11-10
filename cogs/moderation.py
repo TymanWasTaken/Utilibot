@@ -121,6 +121,7 @@ class Moderation(commands.Cog):
 	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True)
+	@commands.guild_only()
 	async def hardlock(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None, *, reason="None given"):
 		"""
 		Locks down a channel by denying @everyone send messages permission.
@@ -139,6 +140,7 @@ class Moderation(commands.Cog):
 	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True)
+	@commands.guild_only()
 	async def unhardlock(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None, *, reason="None given"):
 		"""
 		Unlocks a channel by setting @everyone's send message permissions to neutral.
@@ -157,6 +159,7 @@ class Moderation(commands.Cog):
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True, manage_guild=True)
+	@commands.guild_only()
 	async def serverhardlock(self, ctx, *, reason='Refer to '):
 		"""
 		Locks the entire server by setting all channels' send messages permissions for @everyone to false.
@@ -180,6 +183,7 @@ class Moderation(commands.Cog):
 	@commands.command(name="unserverhardlock", aliases=['unserverlockdown', 'ushl', 'usld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True, manage_guild=True)
+	@commands.guild_only()
 	async def serverunhardlock(self, ctx, *, reason='None given.'):
 		"""
 		Unlocks the entire server by setting all channels' send messages permissions for @everyone to neutral.
@@ -199,6 +203,7 @@ class Moderation(commands.Cog):
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.has_permissions(manage_messages=True)
+	@commands.guild_only()
 	async def softlock(self, ctx, channel: discord.TextChannel=None, *, reason=None):
 		"""
 		Locks down a channel by deleting messages that people send.
@@ -219,6 +224,7 @@ class Moderation(commands.Cog):
 	@commands.command(aliases=['wh'])
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.has_permissions(manage_messages=True)
+	@commands.guild_only()
 	async def whitelist(self, ctx, user: discord.Member):
 		"""
 		Whitelists a user from the softlock in the current channel, allowing them to speak but not unlock.
@@ -236,6 +242,7 @@ class Moderation(commands.Cog):
 	@commands.command(name="unsoftlock", aliases=['unlock', 'usl'])
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.has_permissions(manage_messages=True)
+	@commands.guild_only()
 	async def unsoftlock(self, ctx, channel: discord.TextChannel=None):
 		"""
 		Unsoftlocks a channel.
