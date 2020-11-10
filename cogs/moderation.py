@@ -106,16 +106,16 @@ class Moderation(commands.Cog):
 		"""
 		if member.top_role >= ctx.author.top_role:
 			await ctx.message.delete()
-			await ctx.send("This user can't be kicked due to hierachry.")
+			await ctx.send("This user can't be kicked due to hierarchy.")
 		else:
 			await ctx.message.delete()
 			try:
 				await member.send(f"You were kicked from {ctx.guild} for the reason: `{reason}`")
-				await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
+				await member.kick(reason=f"{member.name} was kicked by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
 				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
 			except:
 				await ctx.send(f"Error: Could Not DM user")
-				await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
+				await member.kick(reason=f"{member.name} was kicked by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
 				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
 
 	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
@@ -132,7 +132,7 @@ class Moderation(commands.Cog):
 			await ctx.send(f"❌ <#{ch.id}> is already locked!")
 		else:
 			perms.send_messages = False
-			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author.name}#{ctx.author.discriminator}!")
+			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author} ({ctx.author.id}.")
 			await ctx.send(f"✅ Successfully locked down <#{ch.id}> by removing send messages permission for @everyone.\n**Reason**: {reason}", allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False))
 			if ch != ctx.channel:
 				await ch.send(f"This channel was locked by {ctx.author.mention}!\n**Reason:** {reason}")
@@ -151,7 +151,7 @@ class Moderation(commands.Cog):
 			await ctx.send(f"❌ <#{ch.id}> is not locked!")
 		else:
 			perms.send_messages = None
-			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel unlocked by {ctx.author.name}#{ctx.author.discriminator}!")
+			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel unlocked by {ctx.author} ({ctx.author.id}.")
 			await ctx.send(f"✅ Successfully unlocked <#{ch.id}>!\n**Reason:** {reason}")
 			if ch != ctx.channel:
 				await ch.send(f"This channel was unlocked by {ctx.author.mention}!\n**Reason:** {reason}")
@@ -172,7 +172,7 @@ class Moderation(commands.Cog):
 				pass
 			else:
 				perms.send_messages = False
-				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author.name}#{ctx.author.discriminator}.")
+				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}.")
 				locked = f"{locked} `||` <#{ch.id}>"
 				if ctx.channel.id == chan.id:
 					pass
@@ -196,7 +196,7 @@ class Moderation(commands.Cog):
 				pass
 			else:
 				perms.send_messages = None
-				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author.name}#{ctx.author.discriminator}.")
+				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}.")
 				unlocked = f"{unlocked} `||` <#{ch.id}>"
 		await ctx.send(f"Unlocked the server!\nChannels unlocked: {locked}\n**Reason:** {reason}")
 
@@ -268,16 +268,16 @@ class Moderation(commands.Cog):
 		Does what it says, bans them from the server.
 		"""
 		if member.top_role >= ctx.author.top_role:
-			await ctx.send("This user can't be banned due to hierachry.")
+			await ctx.send("This user can't be banned due to hierarchy.")
 		else:
 			await ctx.message.delete()
 			try:
 				await member.send(f"You were banned from {ctx.guild} for the reason: `{reason}`")
-				await member.ban(reason=f"{member.name} was banned by {ctx.author.name}, for the reason: {reason}")
+				await member.ban(reason=f"{member.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
 				await ctx.send(f"Banned {member} for the reason: `{reason}`")
 			except:
 				await ctx.send(f"Error: Could Not DM user")
-				await member.ban(reason=f"{member.name} was banned by {ctx.author.name}, for the reason: {reason}")
+				await member.ban(reason=f"{member.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
 				await ctx.send(f"Banned {member} for the reason: `{reason}`")
 	
 	@commands.command()

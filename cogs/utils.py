@@ -60,7 +60,7 @@ class Utils(commands.Cog):
 			newtype = discord.ChannelType.news
 			if curtype == discord.ChannelType.news:
 				newtype = discord.ChannelType.text
-			await c.edit(type=newtype, reason=f"{ctx.author.name}#{ctx.author.discriminator} converted this channel to type {newtype}.")
+			await c.edit(type=newtype, reason=f"{ctx.author} ({ctx.author.id}) converted this channel to type {newtype}.")
 			await ctx.send(f"Changed <#{c.id}> to type `{newtype}`!")
 		else:
 			await ctx.send("❌ This server can't have announcement channels! Ask somebody with the `Manage Server` permission to enable Community in Server Settings, then try again.\nPlease do not run this command again until community has been enabled.")
