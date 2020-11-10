@@ -270,7 +270,7 @@ class Utils(commands.Cog):
 
 @client.event
 async def on_reaction_add(reaction):
-	if reaction.emoji.name == "📣"
+	if reaction.emoji.name == "📣":
 		ch = reaction.channel.id
 		if ch.type != discord.ChannelType.news:
 			er = await ctx.send(f"<#{ch.id}> is not an announcement channel!")
