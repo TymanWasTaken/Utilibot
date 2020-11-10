@@ -10,5 +10,5 @@ class Logging(commands.Cog):
 		await ctx.send("Logging coming soon!")
 
 def setup(bot):
-	bot.add_cog(Loggging(bot))
+	bot.add_cog(Logging(bot))
 	print('[LoggingCog] Logging cog loaded')
