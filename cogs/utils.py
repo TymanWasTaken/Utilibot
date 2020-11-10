@@ -282,7 +282,7 @@ class Utils(commands.Cog):
 @commands.Cog.listener(name="react-publish")
 async def on_reaction_add(reaction):
 	if reaction.emoji.name == "📣":
-		ch = reaction.channel.id
+		ch = reaction.message.channel.id
 		if ch.type != discord.ChannelType.news:
 			er = await ch.send(f"<#{ch.id}> is not an announcement channel!")
 			await er.delete(delay=5)
