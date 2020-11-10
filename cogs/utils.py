@@ -49,6 +49,7 @@ class Utils(commands.Cog):
 	@commands.command(name="announcechannel", aliases=['ac', 'achan',])
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
+	@commands.guild_only()
 	async def annoucechannel(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None):
 		"""
 		Convert channels between news and text.
@@ -67,6 +68,7 @@ class Utils(commands.Cog):
 	@commands.command(name="publish")
 	@commands.has_permissions(manage_messages=True)
 	@commands.bot_has_permissions(manage_messages=True)
+	@commands.guild_only()
 	async def publish(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None, message=None):
 		"""
 		Publishes a message.
