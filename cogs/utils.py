@@ -79,9 +79,9 @@ class Utils(commands.Cog):
 				await ctx.send(f"<#{ch.id}> is not an announcement channel!")
 			else:
 				msg = ch.fetch_message(message)
-				msg.publish()
+				await msg.publish()
 				conf = await ctx.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}!")
-				conf.delete(5)
+				await conf.delete(5)
 
 
 	@commands.command(name="rolemembers", aliases=['members'])
