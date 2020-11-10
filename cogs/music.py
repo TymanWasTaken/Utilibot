@@ -61,7 +61,7 @@ class Music(commands.Cog):
 	status = {}
 	def __init__(self, bot):
 		self.bot = bot
-		self.editMessage.start()			
+		self.deafen.start()			
 
 	@tasks.loop(seconds=5)
 	async def deafen(self):
