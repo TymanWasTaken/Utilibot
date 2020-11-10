@@ -91,7 +91,7 @@ class Utils(commands.Cog):
 			if not member.bot:
 				pass
 			else:
-				bots = f"{bots}\n• Username: `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
+				bots = f"{bots}\n• Username: `{member.name}#{member.discriminator}` ~ ID: `{member.id}` ~ Nickname: `{member.nick}`"
 		if len(bots) > 2048:
 			url = await postbin.postAsync(bots)
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
@@ -106,7 +106,7 @@ class Utils(commands.Cog):
 		allmembers = ""
 		embed = discord.Embed(title=f"All members in __{ctx.guild.name}__")
 		for member in ctx.guild.members:
-			allmembers = f"{allmembers}\n• Username: `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
+			allmembers = f"{allmembers}\n• Username: `{member.name}#{member.discriminator}` ~ ID: `{member.id}` ~ Nickname: `{member.nick}`"
 		if len(allmembers) > 2048:
 			url = await postbin.postAsync(allmembers)
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
