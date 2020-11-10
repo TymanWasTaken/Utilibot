@@ -91,7 +91,8 @@ class Music(commands.Cog):
 		Plays a youtube video.
 		"""
 		url = url.lstrip("<").rstrip(">")
-		if not re.search(r"(?:https?:\/\/)?(?:www\.)?youtu(.be\/|be\.com\/watch\?v=)(.{8,})", url):
+		regex = re.search(r"(?:https?:\/\/)?(?:www\.)?youtu(?:.be\/|be\.com\/watch\?v=)(.{8,})", url)
+		if not regex:
 				return await ctx.send('Not a valid youtube URL!')
 		if ctx.voice_client is None:
 			if ctx.author.voice:
@@ -105,7 +106,7 @@ class Music(commands.Cog):
 
 		async with ctx.typing():
 			try:
-				player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+				player = await YTDLSource.from_url(f"https://www.youtube.com/watch?v={regex.group(1)}", loop=self.bot.loop, stream=True)
 				ctx.voice_client.play(player)
 				await ctx.send(f'Now playing: {player.title}')
 			except youtube_dl.utils.DownloadError:
