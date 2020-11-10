@@ -55,7 +55,7 @@ class Utils(commands.Cog):
 		name = ""	
 		embed = discord.Embed(title=f"Members with the role __{role.name}__", color=color.value)
 		for member in role.members:
-			name = f"{name}\n• `{member.name}#{member.discriminator}"
+			name = f"{name}\n• `{member.name}#{member.discriminator}`"
 		if len(name) > 2048:
 			await ctx.send("List is to big to send.")
 		else:
