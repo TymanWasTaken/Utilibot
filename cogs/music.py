@@ -68,7 +68,7 @@ class Music(commands.Cog):
 	async def deafen(self):
 		bot = self.bot
 		for g in bot.guilds:
-			if not g.me.voice.deaf:
+			if g.me.voice != None and (not g.me.voice.deaf):
 				g.me.edit(deafen=True)
 
 	@commands.command()
