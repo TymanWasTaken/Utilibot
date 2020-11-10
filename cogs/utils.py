@@ -84,7 +84,7 @@ class Utils(commands.Cog):
 	@commands.command(name="bots")
 	@commands.guild_only()
 	@commands.has_permissions(kick_members=True)
-	async def humans(self, ctx):
+	async def bots(self, ctx):
 		bots = ""
 		embed = discord.Embed(title=f"Bots in __{ctx.guild.name}__")
 		for member in ctx.guild.members:
