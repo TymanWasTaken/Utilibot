@@ -66,16 +66,16 @@ class Utils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(kick_members=True)
 	async def humans(self, ctx):
-	members = ""
-		for member in ctx.guild.members:
-			if member.bot:
-				pass
+		members = ""
+			for member in ctx.guild.members:
+				if member.bot:
+					pass
+				else:
+					members = f"{members}\n{member.nick}"
+			if len(members) > 2000:
+				await ctx.send("Too long.")
 			else:
-				members = f"{members}\n{member.nick}"
-		if len(members) > 2000:
-			await ctx.send("Too long.")
-		else:
-			await ctx.send(members)
+				await ctx.send(members)
 
 
 
