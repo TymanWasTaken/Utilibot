@@ -52,14 +52,12 @@ class Utils(commands.Cog):
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have the `Embed Links` permission in this channel. Please give me this permission or try again in a channel where I do have it, as it is necessary to run this command.")
 		color = role.color
-		name = ""	
+		members = ""	
 		embed = discord.Embed(title=f"Members with the role __{role.name}__", color=color.value)
 		for member in role.members:
-			name = f"{name}\n• `{member.name}#{member.discriminator}`"
+			members = f"{members}\n• `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
 		if len(name) > 2048:
-			for member in role.members:
-				name = f"{name}\n• `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
-			url = postbin.postAsync(name)
+			url = postbin.postAsync(members)
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
 		else:
 			embed.description=name
@@ -75,13 +73,8 @@ class Utils(commands.Cog):
 			if member.bot:
 				pass
 			else:
-				members = f"{members}\n• `{member.name}`#{member.discriminator}"
+				members = f"{members}\n• `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
 		if len(members) > 2048:
-			for member in ctx.guild.members:
-				if member.bot:
-					pass
-				else:
-					members = f"{members}\n• `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
 			url = await postbin.postAsync(members)
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
 		else:
