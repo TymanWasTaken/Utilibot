@@ -67,7 +67,7 @@ class Utils(commands.Cog):
 	@commands.command(name="publish")
 	@commands.has_permissions(manage_messages=True)
 	@commands.bot_has_permissions(manage_messages=True)
-	async def publish(self, ctx: commands.Context, channel: typing.Optional[discord.ChannelType.news]=None, message=None):
+	async def publish(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None, message=None):
 		"""
 		Publishes a message.
 		"""
@@ -75,10 +75,13 @@ class Utils(commands.Cog):
 			await ctx.send("This server has no announcement channels!")
 		else:
 			ch = channel or ctx.channel
-			msg = ch.fetch_message(message)
-			msg.publish()
-			conf = await ctx.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}!")
-			conf.delete(5)
+			if ch.type != "news":
+				await ctx.send(f"<#{ch.id}> is not an announcement channel!")
+			else:
+				msg = ch.fetch_message(message)
+				msg.publish()
+				conf = await ctx.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}!")
+				conf.delete(5)
 
 
 	@commands.command(name="rolemembers", aliases=['members'])
