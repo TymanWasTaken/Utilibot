@@ -49,7 +49,7 @@ class Utils(commands.Cog):
 	@commands.command(name="announcechannel")
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def annoucechannel(self, ctx: commands.Context, channel: typing.Optional[discord.Channel]=None, channeltype=bool)
+	async def annoucechannel(self, ctx: commands.Context, channel: typing.Optional[discord.Channel]=None, channeltype=bool):
 		"""
 		Convert channels between news and text.
 		"""
