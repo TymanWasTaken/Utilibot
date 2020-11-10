@@ -62,7 +62,7 @@ class Utils(commands.Cog):
 			embed.description=name
 			await ctx.send(embed=embed)
 
-	@commands.command(name="members")
+	@commands.command(name="humans")
 	@commands.guild_only()
 	@commands.has_permissions(kick_members=True)
 	async def humans(self, ctx):
