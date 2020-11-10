@@ -1,5 +1,6 @@
 import asyncio, discord, youtube_dl, os, glob, re
 from discord.ext import commands
+from discord.ext import tasks
 
 # Suppress noise about console usage from errors
 youtube_dl.utils.bug_reports_message = lambda: ''
