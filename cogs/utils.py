@@ -60,7 +60,7 @@ class Utils(commands.Cog):
 			url = postbin.postAsync(members)
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
 		else:
-			embed.description=name
+			embed.description=members
 			await ctx.send(embed=embed)
 
 	@commands.command(name="humans")
