@@ -67,15 +67,15 @@ class Utils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(kick_members=True)
 	async def humans(self, ctx):
-		members = ""
+		humans = ""
 		embed = discord.Embed(title=f"Humans in __{ctx.guild.name}__")
 		for member in ctx.guild.members:
 			if member.bot:
 				pass
 			else:
-				members = f"{members}\n• Username: `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
-		if len(members) > 2048:
-			url = await postbin.postAsync(members)
+				humans = f"{humans}\n• Username: `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
+		if len(humans) > 2048:
+			url = await postbin.postAsync(humans)
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
 		else:
 			embed.description=members
@@ -97,6 +97,21 @@ class Utils(commands.Cog):
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
 		else:
 			embed.description=bots
+			await ctx.send(embed=embed)
+
+	@commands.command(name="allmembers")
+	@commands.guild_only()
+	@commands.has_permissions(kick_members=True)
+	async def allmembers(self, ctx):
+		bots = ""
+		embed = discord.Embed(title=f"All members in __{ctx.guild.name}__")
+		for member in ctx.guild.members:
+			allmembers = f"{allmembers}\n• Username: `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
+		if len(allmembers) > 2048
+			url = await postbin.postAsync(allmembers)
+			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
+		else:
+			embed.description=allmembers
 			await ctx.send(embed=embed)
 
 
