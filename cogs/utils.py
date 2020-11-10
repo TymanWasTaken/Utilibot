@@ -281,12 +281,11 @@ class Utils(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_reaction_add(self, reaction, user):
-<<<<<<< HEAD
+
 		reaction.channel.send(reaction.emoji.name)
 		if reaction.emoji.name == "📣":
 			ch = reaction.message.channel.id
-=======
->>>>>>> 22f81a281792f738727719858b9f726fbe75c2dc
+
 		if reaction.emoji == "📣":
 			ch = reaction.message.channel
 			if ch.type != discord.ChannelType.news:
