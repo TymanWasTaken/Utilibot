@@ -5,8 +5,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 music = importlib.import_module("cogs.music")
 load_dotenv(verbose=True)
-intents = discord.Intents()
-intents.value = 32511
+intents = discord.Intents().all()
 
 async def readDB():
 	try:
