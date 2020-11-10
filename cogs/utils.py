@@ -279,18 +279,18 @@ class Utils(commands.Cog):
 					website = (await r.json())["snapshot"]
 					await ctx.send(embed=discord.Embed(color=discord.Color.blurple()).set_image(url=website))
 
-@commands.Cog.listener(on_reaction_add)
-async def on_reaction_add(reaction):
-	if reaction.emoji.name == "📣":
-		ch = reaction.message.channel.id
-		if ch.type != discord.ChannelType.news:
-			er = await reaction.message.channel.send(f"<#{ch.id}> is not an announcement channel!")
-			await er.delete(delay=5)
-		else:
-			msg = await ch.fetch_message(reaction.message.id)
-			await msg.publish()
-			conf = await reaction.message.channel.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}>!")
-			await conf.delete(delay=5)
+	@commands.Cog.listener()
+	async def on_reaction_add(self, reaction, user):
+		if reaction.emoji.name == "📣":
+			ch = reaction.message.channel.id
+			if ch.type != discord.ChannelType.news:
+				er = await reaction.message.channel.send(f"<#{ch.id}> is not an announcement channel!")
+				await er.delete(delay=5)
+			else:
+				msg = await ch.fetch_message(reaction.message.id)
+				await msg.publish()
+				conf = await reaction.message.channel.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}>!")
+				await conf.delete(delay=5)
 
 def setup(bot):
 	bot.add_listener(on_reaction_add)
