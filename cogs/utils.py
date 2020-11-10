@@ -1,4 +1,4 @@
-import discord, random, asyncio, aiohttp, os
+import discord, random, asyncio, aiohttp, os, postbin
 from discord.ext import commands
 from pytz import timezone
 from dotenv import load_dotenv
@@ -57,7 +57,8 @@ class Utils(commands.Cog):
 		for member in role.members:
 			name = f"{name}\n• `{member.name}#{member.discriminator}`"
 		if len(name) > 2048:
-			await ctx.send("List is to big to send.")
+			url = await postbin.postAsync(name)
+			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
 		else:
 			embed.description=name
 			await ctx.send(embed=embed)
@@ -74,7 +75,8 @@ class Utils(commands.Cog):
 			else:
 				members = f"{members}\n`{member.name}`"
 		if len(members) > 2048:
-			await ctx.send("Too long.")
+			url = await postbin.postAsync(name)
+			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
 		else:
 			embed.description=members
 			await ctx.send(embed=embed)
