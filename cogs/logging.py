@@ -6,6 +6,7 @@ class Logging(commands.Cog):
 		self.bot = bot
 
     @commands.command(name="log")
+    async def log(self, ctx):
         await ctx.send("Logging coming soon!")
 
 def setup(bot):
