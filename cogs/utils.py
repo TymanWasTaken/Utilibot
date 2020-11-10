@@ -293,6 +293,6 @@ async def on_reaction_add(reaction):
 			await conf.delete(delay=5)
 
 def setup(bot):
-	bot.add_cog(Utils(bot))
 	bot.add_listener(on_reaction_add)
+	bot.add_cog(Utils(bot))
 	print('[UtilsCog] Utils cog loaded')
