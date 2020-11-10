@@ -172,6 +172,5 @@ os.chdir("cogs")
 for file in sorted(glob.glob("*.py")):
 	file = file.replace(".py", "")
 	bot.load_extension(f"cogs.{file}")
-bot.load_extension("guildmanager")
 bot.load_extension("riftgun")
 bot.run(os.getenv("BOT_TOKEN"))
