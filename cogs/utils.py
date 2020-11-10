@@ -55,7 +55,7 @@ class Utils(commands.Cog):
 		"""
 		c = channel or ctx.channel
 		newtype = discord.ChannelType.news
-		if channeltype == false:
+		if channeltype == False:
 			newtype = discord.ChannelType.text
 		await c.edit(type=newtype)
 		await ctx.send(f"Changed <#{c.id}> to type {newtype}!")
