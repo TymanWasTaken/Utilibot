@@ -91,7 +91,7 @@ class Music(commands.Cog):
 		Plays a youtube video.
 		"""
 		url = url.lstrip("<").rstrip(">")
-		if not re.search(r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$", url):
+		if not re.search(r"(?:https?:\/\/)?(?:www\.)?youtu(.be\/|be\.com\/watch\?v=)(.{8,})", url):
 				return await ctx.send('Not a valid youtube URL!')
 		if ctx.voice_client is None:
 			if ctx.author.voice:
