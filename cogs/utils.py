@@ -103,11 +103,11 @@ class Utils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(kick_members=True)
 	async def allmembers(self, ctx):
-		bots = ""
+		allmembers = ""
 		embed = discord.Embed(title=f"All members in __{ctx.guild.name}__")
 		for member in ctx.guild.members:
 			allmembers = f"{allmembers}\n• Username: `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
-		if len(allmembers) > 2048
+		if len(allmembers) > 2048:
 			url = await postbin.postAsync(allmembers)
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
 		else:
