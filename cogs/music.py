@@ -71,6 +71,7 @@ class Music(commands.Cog):
 			return await ctx.voice_client.move_to(channel)
 
 		await channel.connect()
+		await guild.me.edit(deafen=True)
 
 	@commands.command()
 	@commands.guild_only()
