@@ -14,16 +14,8 @@ class pEATS(commands.Cog):
 		now = datetime.datetime.now()
 		days = (christmas - now).days
 		c = await bot.fetch_channel(774455963709079552)
-		ms = c.history(limit=None)
-		ms = await ms.flatten()
-		for message in ms:
-			if message.id == 774829498586890240:
-				await message.edit(content=f"Days until christmas: `{days}`")
-				break
-			else:
-				continue
-		else:
-			return await c.send(content=f"Days until christmas: `{days}`")
+		m = await c.fetch_message(774829498586890240)
+		await m.edit(content=f"Days until christmas: `{days}`")
 
 def setup(bot):
 	bot.add_cog(pEATS(bot))

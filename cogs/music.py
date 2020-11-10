@@ -1,5 +1,6 @@
 import asyncio, discord, youtube_dl, os, glob, re
 from discord.ext import commands
+from discord.ext import tasks
 
 # Suppress noise about console usage from errors
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -61,6 +62,14 @@ class Music(commands.Cog):
 	status = {}
 	def __init__(self, bot):
 		self.bot = bot
+		self.deafen.start()			
+
+	@tasks.loop(seconds=5)
+	async def deafen(self):
+		bot = self.bot
+		for g in bot.guilds:
+			if g.me.voice != None and (not g.me.voice.deaf):
+				g.me.edit(deafen=True)
 
 	@commands.command()
 	@commands.guild_only()
