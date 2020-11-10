@@ -46,26 +46,9 @@ class Utils(commands.Cog):
 			await channel.set_permissions(role, **{permission: state})
 		await m.edit(content=f"Changed permission `{permission}` to state `{state}` for role {role.name} on all channels.")
 
-	@commands.command()
-	@commands.guild_only()
-	async def findrole(self, ctx, role: discord.Role):
-		if ctx.channel.permissions_for(ctx.me).embed_links == False:
-			return await ctx.send("It appears I do not have the `Embed Links` permission in this channel. Please give me this permission or try again in a channel where I do have it, as it is necessary to run this command.")
-		members = ""
-		for member in ctx.guild.members:
-			if role in member.roles:
-				members = members + f"{member.name}\n"
-		if members == "":
-			await ctx.send("No members found.")
-		elif len(members) > 2048:
-			await ctx.send("List is too big to send.")
-		else:
-			embed=discord.Embed(title=f"Members with role {role.name}:", description=members, color=randcolor())
-			await ctx.send(embed=embed)
-
 	@commands.command(name="rolemembers", aliases=['members'])
 	@commands.guild_only()
-	async def rolemembers(self, ctx, role: discord.Role):
+	async def rolemembers(self, ctx, *, role: discord.Role):
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have the `Embed Links` permission in this channel. Please give me this permission or try again in a channel where I do have it, as it is necessary to run this command.")
 		color = role.color
@@ -73,8 +56,27 @@ class Utils(commands.Cog):
 		embed = discord.Embed(title=f"Members with the role __{role.name}__", color=color.value)
 		for member in role.members:
 			name = f"{name}\n• [{member.name}#{member.discriminator}](https://discord.com/users/{member.id})"
-		embed.description=name
-		await ctx.send(embed=embed)
+		if len(members) > 2048:
+			await ctx.send("List is to big to send.")
+		else:
+			embed.description=name
+			await ctx.send(embed=embed)
+
+	@commands.command(name="members")
+	@commands.guild_only()
+	@commands.has_permissions(kick_members=True)
+	async def humans(self, ctx)
+	members = ""
+		for member in ctx.guild.members:
+			if member.bot:
+				pass
+			else:
+				members = f"{members}\n{member.nick}"
+		if len(members) > 2000:
+			await ctx.send("Too long.")
+		else:
+			await ctx.send(members)
+
 
 
 	# @commands.command(name="allroles")

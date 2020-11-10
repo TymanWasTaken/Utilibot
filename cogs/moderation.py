@@ -1,5 +1,22 @@
 import discord, random, asyncio, aiofiles, json, typing
 from discord.ext import commands
+async def readDB():
+	try:
+		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
+			return json.loads(await f.read())
+	except Exception as e:
+		print(f"An error occured, {e}")
+
+async def writeDB(data: dict):
+	try:
+		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f_main:
+			async with aiofiles.open('/home/tyman/code/utilibot/data.json.bak', mode='w') as f_bak:
+				await f_bak.write(await f_main.read())
+		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='w') as f:
+			d = json.dumps(data)
+			await f.write(d)
+	except Exception as e:
+		print(f"An error occured, {e}")
 
 # PurgeError
 class PurgeError(Exception):
@@ -140,9 +157,9 @@ class Moderation(commands.Cog):
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True, manage_guild=True)
-	async def serverhardlock(self, ctx, *, reason='None given.'):
+	async def serverhardlock(self, ctx, *, reason='Refer to '):
 		"""
-		Locks the entire server by setting all channels' send messages permissions to false.
+		Locks the entire server by setting all channels' send messages permissions for @everyone to false.
 		"""
 		locked = ""
 		for chan in ctx.guild.channels:
@@ -154,7 +171,30 @@ class Moderation(commands.Cog):
 				perms.send_messages = False
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author.name}#{ctx.author.discriminator}.")
 				locked = f"{locked} `||` <#{ch.id}>"
+				if ctx.channel.id == chan.id:
+					pass
+				else:
+					chan.send(f"Server locked by {author.mention}!\n**Reason:**")
 		await ctx.send(f"Locked down the server!\nChannels locked: {locked}\n**Reason:** {reason}")
+
+	@commands.command(name="unserverhardlock", aliases=['unserverlockdown', 'ushl', 'usld'])
+	@commands.bot_has_permissions(manage_channels=True)
+	@commands.has_permissions(manage_channels=True, manage_guild=True)
+	async def serverunhardlock(self, ctx, *, reason='None given.'):
+		"""
+		Unlocks the entire server by setting all channels' send messages permissions for @everyone to neutral.
+		"""
+		unlocked = ""
+		for chan in ctx.guild.channels:
+			chan = await self.bot.fetch_channel(chan)
+			perms = chan.overwrites_for(ctx.guild_default_role)
+			if perms.send_messages != False:
+				pass
+			else:
+				perms.send_messages = None
+				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author.name}#{ctx.author.discriminator}.")
+				unlocked = f"{unlocked} `||` <#{ch.id}>"
+		await ctx.send(f"Unlocked the server!\nChannels unlocked: {locked}\n**Reason:** {reason}")
 
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
 	@commands.bot_has_permissions(manage_messages=True)
