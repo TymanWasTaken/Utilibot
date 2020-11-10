@@ -1,4 +1,4 @@
-import discord, random, asyncio, aiohttp, os, postbin
+import discord, random, asyncio, aiohttp, os, postbin, typing
 from discord.ext import commands
 from pytz import timezone
 from dotenv import load_dotenv
