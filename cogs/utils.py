@@ -75,7 +75,7 @@ class Utils(commands.Cog):
 			await ctx.send("This server has no announcement channels!")
 		else:
 			ch = channel or ctx.channel
-			if ch.type != "news":
+			if ch.type != discord.ChannelType.news:
 				await ctx.send(f"<#{ch.id}> is not an announcement channel!")
 			else:
 				msg = ch.fetch_message(message)
