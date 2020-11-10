@@ -49,16 +49,17 @@ class Utils(commands.Cog):
 	@commands.command(name="announcechannel")
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def annoucechannel(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None, channeltype=bool):
+	async def annoucechannel(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None):
 		"""
 		Convert channels between news and text.
 		"""
 		c = channel or ctx.channel
+		curtype = ctx.channel.type
 		newtype = discord.ChannelType.news
-		if channeltype == False:
+		if curtype == discord.ChannelType.news:
 			newtype = discord.ChannelType.text
 		await c.edit(type=newtype)
-		await ctx.send(f"Changed <#{c.id}> to type {newtype}!")
+		await ctx.send(f"Changed <#{c.id}> to type `{newtype}`!")
 
 	@commands.command(name="rolemembers", aliases=['members'])
 	@commands.guild_only()
