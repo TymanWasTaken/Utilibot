@@ -7,6 +7,9 @@ class Logging(commands.Cog):
 
 	@commands.command(name="log")
 	async def log(self, ctx):
+		"""
+		Will config logging eventually.
+		"""
 		await ctx.send("Logging coming soon!")
 
 def setup(bot):
