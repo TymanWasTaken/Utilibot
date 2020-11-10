@@ -56,7 +56,7 @@ class Utils(commands.Cog):
 		"""
 		if "NEWS" in ctx.guild.features:
 			c = channel or ctx.channel
-			curtype = c.channel.type
+			curtype = c.type
 			newtype = discord.ChannelType.news
 			if curtype == discord.ChannelType.news:
 				newtype = discord.ChannelType.text
