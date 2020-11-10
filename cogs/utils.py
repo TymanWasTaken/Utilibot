@@ -281,8 +281,19 @@ class Utils(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_reaction_add(self, reaction, user):
+<<<<<<< HEAD
 		if reaction.emoji == "📣":
 			ch = reaction.message.channel
+=======
+<<<<<<< HEAD
+		reaction.channel.send(reaction.emoji.name)
+		if reaction.emoji.name == "📣":
+			ch = reaction.message.channel.id
+=======
+		if reaction.emoji == "📣":
+			ch = reaction.message.channel
+>>>>>>> 3e2da2f6a3a4c4dcf325c4b148b61ea83f45094d
+>>>>>>> 7eacf782e0ce0d5ce8dfc70175175b797cf10b1c
 			if ch.type != discord.ChannelType.news:
 				er = await reaction.message.channel.send(f"<#{ch.id}> is not an announcement channel!")
 				await er.delete(delay=5)
