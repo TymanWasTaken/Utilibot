@@ -281,15 +281,18 @@ class Utils(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_reaction_add(self, reaction, user):
-		if reaction.emoji.name == "📣":
-			ch = reaction.message.channel.id
+		if reaction.emoji == "📣":
+			ch = reaction.message.channel
 			if ch.type != discord.ChannelType.news:
 				er = await reaction.message.channel.send(f"<#{ch.id}> is not an announcement channel!")
 				await er.delete(delay=5)
 			else:
 				msg = await ch.fetch_message(reaction.message.id)
-				await msg.publish()
-				conf = await reaction.message.channel.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}>!")
+				try:
+					await msg.publish()
+				except discord.HTTPException:
+					pass
+				conf = await reaction.message.channel.send(f"Sucessfully published <https://discord.com/channels/{msg.guild.id}/{ch.id}/{msg.id}>!")
 				await conf.delete(delay=5)
 
 def setup(bot):
