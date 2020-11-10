@@ -67,15 +67,17 @@ class Utils(commands.Cog):
 	@commands.has_permissions(kick_members=True)
 	async def humans(self, ctx):
 		members = ""
+		embed = discord.Embed(title=f"Humans in __{ctx.guild.name}__")
 		for member in ctx.guild.members:
 			if member.bot:
 				pass
 			else:
-				members = f"{members}\n{member.name}"
-		if len(members) > 2000:
+				members = f"{members}\n`{member.name}`"
+		if len(members) > 2048:
 			await ctx.send("Too long.")
 		else:
-			await ctx.send(members)
+			embed.description=members
+			await ctx.send(embed=embed)
 
 
 
