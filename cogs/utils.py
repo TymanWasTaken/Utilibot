@@ -65,7 +65,7 @@ class Utils(commands.Cog):
 	@commands.command(name="members")
 	@commands.guild_only()
 	@commands.has_permissions(kick_members=True)
-	async def humans(self, ctx)
+	async def humans(self, ctx):
 	members = ""
 		for member in ctx.guild.members:
 			if member.bot:
