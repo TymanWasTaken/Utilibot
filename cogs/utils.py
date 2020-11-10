@@ -80,8 +80,8 @@ class Utils(commands.Cog):
 			else:
 				msg = await ch.fetch_message(message)
 				await msg.publish()
-				conf = await ctx.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}!")
-				await conf.delete(5)
+				conf = await ctx.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}>!")
+				await conf.delete(delay=5)
 
 
 	@commands.command(name="rolemembers", aliases=['members'])
