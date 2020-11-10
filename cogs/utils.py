@@ -46,7 +46,7 @@ class Utils(commands.Cog):
 			await channel.set_permissions(role, **{permission: state})
 		await m.edit(content=f"Changed permission `{permission}` to state `{state}` for role {role.name} on all channels.")
 
-	@commands.command(name="announcechannel")
+	@commands.command(name="announcechannel", aliases=['ac', 'achan',])
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
 	async def annoucechannel(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None):
