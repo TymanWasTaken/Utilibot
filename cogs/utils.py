@@ -62,7 +62,7 @@ class Utils(commands.Cog):
 			await c.edit(type=newtype)
 			await ctx.send(f"Changed <#{c.id}> to type `{newtype}`!")
 		else:
-			await ctx.send("This server can't have announcement channels! If you have the `Manage Server` or `Administrator` permission, go enable Community features in the server settings, then try again. If you don't have these permissions, ask a member with one of those.\nPlease do not run this command until community has been enabled.")
+			await ctx.send("❌ This server can't have announcement channels! Ask somebody with the `Manage Server` permission to enable Community in Server Settings, then try again.\nPlease do not run this command again until community has been enabled.")
 
 	@commands.command(name="rolemembers", aliases=['members'])
 	@commands.guild_only()
