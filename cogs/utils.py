@@ -281,6 +281,7 @@ class Utils(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_reaction_add(self, reaction, user):
+		reaction.channel.send(reaction.emoji.name)
 		if reaction.emoji.name == "📣":
 			ch = reaction.message.channel.id
 			if ch.type != discord.ChannelType.news:
