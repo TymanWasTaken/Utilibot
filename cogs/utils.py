@@ -71,7 +71,7 @@ class Utils(commands.Cog):
 			if member.bot:
 				pass
 			else:
-				members = f"{members}\n{member.nick}"
+				members = f"{members}\n{member.name}"
 		if len(members) > 2000:
 			await ctx.send("Too long.")
 		else:
