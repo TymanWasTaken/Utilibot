@@ -87,7 +87,7 @@ async def on_command_error(ctx, error):
 		await ctx.send(str(error).capitalize())
 	elif isinstance(error, commands.BadArgument):
 		await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
-	elif isinstance(error, music.VoiceError):
+	elif "VoiceError: You are not connected to a voice channel." in str(error):
 		pass
 	else:
 		invitelink = f"https://discord.gg/"
