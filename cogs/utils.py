@@ -55,7 +55,7 @@ class Utils(commands.Cog):
 		members = ""	
 		embed = discord.Embed(title=f"Members with the role __{role.name}__", color=color.value)
 		for member in role.members:
-			members = f"{members}\n• Username: `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
+			members = f"{members}\n• Username: `{member.name}#{member.discriminator}` ~ ID: `{member.id}` ~ Nickname: `{member.nick}`"
 		if len(members) > 2048:
 			url = postbin.postAsync(members)
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
@@ -73,7 +73,7 @@ class Utils(commands.Cog):
 			if member.bot:
 				pass
 			else:
-				humans = f"{humans}\n• Username: `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
+				humans = f"{humans}\n• Username: `{member.name}#{member.discriminator}` ~ ID: `{member.id}` ~ Nickname: `{member.nick}`"
 		if len(humans) > 2048:
 			url = await postbin.postAsync(humans)
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
