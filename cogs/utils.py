@@ -293,6 +293,7 @@ class Utils(commands.Cog):
 				await conf.delete(delay=5)
 
 def setup(bot):
-	bot.add_listener(on_reaction_add)
-	bot.add_cog(Utils(bot))
+	cog = Utils(bot)
+	bot.add_listener(cog.on_reaction_add)
+	bot.add_cog(cog)
 	print('[UtilsCog] Utils cog loaded')
