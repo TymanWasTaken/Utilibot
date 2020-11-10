@@ -69,7 +69,7 @@ class Music(commands.Cog):
 		bot = self.bot
 		for g in bot.guilds:
 			try:
-				g.me.edit(deafen=True)
+				await g.me.edit(deafen=True)
 			except:
 				pass
 
