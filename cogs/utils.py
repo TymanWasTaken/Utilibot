@@ -52,7 +52,7 @@ class Utils(commands.Cog):
 	@commands.guild_only()
 	async def annoucechannel(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None):
 		"""
-		Convert channels between news and text.
+		A simple toggle to convert channels between Text and Announcements.
 		"""
 		if "NEWS" in ctx.guild.features:
 			c = channel or ctx.channel
