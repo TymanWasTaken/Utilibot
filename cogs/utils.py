@@ -64,6 +64,23 @@ class Utils(commands.Cog):
 		else:
 			await ctx.send("❌ This server can't have announcement channels! Ask somebody with the `Manage Server` permission to enable Community in Server Settings, then try again.\nPlease do not run this command again until community has been enabled.")
 
+	@commands.command(name="publish")
+	@commands.has_permissions(manage_messages=True)
+	@commands.bot_has_permissions(manage_messages=True)
+	async def publish(self, ctx: commands.Context, channel: typing.Optional[discord.ChannelType.news]=None, message: int):
+		"""
+		Publishes a message.
+		"""
+		if not "NEWS" in ctx.guild.features:
+			await ctx.send("This server has no announcement channels!")
+		else:
+			ch = channel or ctx.channel
+			msg = ch.fetch_message(message)
+			msg.publish()
+			conf = await ctx.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}!")
+			conf.delete(5)
+
+
 	@commands.command(name="rolemembers", aliases=['members'])
 	@commands.guild_only()
 	async def rolemembers(self, ctx, *, role: discord.Role):
