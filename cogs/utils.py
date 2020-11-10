@@ -279,7 +279,7 @@ class Utils(commands.Cog):
 					website = (await r.json())["snapshot"]
 					await ctx.send(embed=discord.Embed(color=discord.Color.blurple()).set_image(url=website))
 
-@commands.Utils.listener(name="react-publish")
+@commands.Cog.listener(name="react-publish")
 async def on_reaction_add(reaction):
 	if reaction.emoji.name == "📣":
 		ch = reaction.message.channel.id
