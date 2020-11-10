@@ -269,7 +269,7 @@ class Utils(commands.Cog):
 					await ctx.send(embed=discord.Embed(color=discord.Color.blurple()).set_image(url=website))
 
 @client.event
-async def on_reaction_add(reaction)
+async def on_reaction_add(reaction):
 	if reaction.emoji.name == "📣"
 		ch = reaction.channel.id
 		if ch.type != discord.ChannelType.news:
