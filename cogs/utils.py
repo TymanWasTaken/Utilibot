@@ -284,12 +284,12 @@ async def on_reaction_add(reaction):
 	if reaction.emoji.name == "📣":
 		ch = reaction.channel.id
 		if ch.type != discord.ChannelType.news:
-			er = await ctx.send(f"<#{ch.id}> is not an announcement channel!")
+			er = await ch.send(f"<#{ch.id}> is not an announcement channel!")
 			await er.delete(delay=5)
 		else:
 			msg = await ch.fetch_message(reaction.message.id)
 			await msg.publish()
-			conf = await ctx.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}>!")
+			conf = await ch.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}>!")
 			await conf.delete(delay=5)
 
 def setup(bot):
