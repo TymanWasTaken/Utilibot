@@ -58,7 +58,7 @@ class Utils(commands.Cog):
 			name = f"{name}\n• `{member.name}#{member.discriminator}`"
 		if len(name) > 2048:
 			for member in role.members:
-					name = f"{name}\n• `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
+				name = f"{name}\n• `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
 			url = postbin.postAsync(name)
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
 		else:
@@ -81,8 +81,8 @@ class Utils(commands.Cog):
 				if member.bot:
 					pass
 				else:
-					name = f"{name}\n• `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
-			url = await postbin.postAsync(name)
+					members = f"{members}\n• `{member.name}#{member.discriminator}` ~~ ID: `{member.id}` ~~ Nickname: `{member.nick}`"
+			url = await postbin.postAsync(members)
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
 		else:
 			embed.description=members
