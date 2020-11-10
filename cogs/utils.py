@@ -78,7 +78,7 @@ class Utils(commands.Cog):
 			if ch.type != discord.ChannelType.news:
 				await ctx.send(f"<#{ch.id}> is not an announcement channel!")
 			else:
-				msg = ch.fetch_message(message)
+				msg = await ch.fetch_message(message)
 				await msg.publish()
 				conf = await ctx.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}!")
 				await conf.delete(5)
