@@ -73,6 +73,7 @@ class Utils(commands.Cog):
 		"""
 		Publishes a message.
 		"""
+		publishing = False
 		if not "NEWS" in ctx.guild.features:
 			await ctx.send("This server has no announcement channels!")
 		else:
@@ -82,9 +83,17 @@ class Utils(commands.Cog):
 				await er.delete(delay=5)
 			else:
 				msg = await ch.fetch_message(message)
-				await msg.publish()
-				conf = await ctx.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}>!")
-				await conf.delete(delay=5)
+				if msg.author.id != ctx.author.id:
+					if ctx.channel.permissions_for(ctx.author).manage_messages == False:
+						return await ctx.send("You can't publish this message as you did not write it and you do not have manage messages permissions!")
+					else:
+						publishing = True
+				else:
+					publishing = True
+				if publishing == True:
+					await msg.publish()
+					conf = await ctx.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}>!")
+					await conf.delete(delay=5)
 
 
 	@commands.command(name="rolemembers", aliases=['members'])

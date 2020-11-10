@@ -27,7 +27,7 @@ class Fun(commands.Cog):
 	@commands.command()
 	async def choose(self, ctx, *, choices: str):
 		if not "|" in choices:
-			return await ctx.send("Please seperate the choices with a |.")
+			return await ctx.send("Please separate the choices with a |.")
 		choices = choices.split("|")
 		await ctx.send(random.choice(choices))
 		
