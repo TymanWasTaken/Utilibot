@@ -56,8 +56,27 @@ class Utils(commands.Cog):
 		embed = discord.Embed(title=f"Members with the role __{role.name}__", color=color.value)
 		for member in role.members:
 			name = f"{name}\n• [{member.name}#{member.discriminator}](https://discord.com/users/{member.id})"
-		embed.description=name
-		await ctx.send(embed=embed)
+		if len(members) > 2048:
+			await ctx.send("List is to big to send.")
+		else:
+			embed.description=name
+			await ctx.send(embed=embed)
+
+	@commands.command(name="members")
+	@commands.guild_only()
+	@commands.has_permissions(kick_members=True)
+	async def humans(self, ctx)
+	members = ""
+		for member in ctx.guild.members:
+			if member.bot:
+				pass
+			else:
+				members = f"{members}\n{member.nick}"
+		if len(members) > 2000:
+			await ctx.send("Too long.")
+		else:
+			await ctx.send(members)
+
 
 
 	# @commands.command(name="allroles")
