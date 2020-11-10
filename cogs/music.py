@@ -61,6 +61,14 @@ class Music(commands.Cog):
 	status = {}
 	def __init__(self, bot):
 		self.bot = bot
+		self.editMessage.start()			
+
+	@tasks.loop(seconds=5)
+	async def deafen(self):
+		bot = self.bot
+		for g in bot.guilds:
+			if not g.me.voice.deaf:
+				g.me.edit(deafen=True)
 
 	@commands.command()
 	@commands.guild_only()
