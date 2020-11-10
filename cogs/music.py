@@ -88,10 +88,10 @@ class Music(commands.Cog):
 	@commands.guild_only()
 	async def play(self, ctx, *, url):
 		"""
-		Plays a youtube video (Must be in the format "https://www.youtube.com/watch?v={Video ID}"
+		Plays a youtube video.
 		"""
 		url = url.lstrip("<").rstrip(">")
-		if not re.search(r"https:\/\/www\.youtube\.com\/watch\?v=(?:.){11}$", url):
+		if not re.search(r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$", url):
 				return await ctx.send('Not a valid youtube URL!')
 		if ctx.voice_client is None:
 			if ctx.author.voice:
