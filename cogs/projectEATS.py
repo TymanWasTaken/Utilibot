@@ -10,7 +10,6 @@ class pEATS(commands.Cog):
 	@tasks.loop(seconds=30)
 	async def editMessage(self):
 		bot = self.bot
-		print("a")
 		christmas = datetime.datetime(2020, 12, 25)
 		now = datetime.datetime.now()
 		days = (christmas - now).days
