@@ -46,6 +46,20 @@ class Utils(commands.Cog):
 			await channel.set_permissions(role, **{permission: state})
 		await m.edit(content=f"Changed permission `{permission}` to state `{state}` for role {role.name} on all channels.")
 
+	@commands.command(name="announcechannel")
+	@commands.has_permissions(manage_channels=True)
+	@commands.bot_has_permissions(manage_channels=True)
+	async def annoucechannel(self, ctx: commands.Context, channel: typing.Optional[discord.Channel]=None, channeltype=bool)
+		"""
+		Convert channels between news and text.
+		"""
+		c = channel or ctx.channel
+		newtype = discord.ChannelType.news
+		if channeltype == false:
+			newtype = discord.ChannelType.text
+		await c.edit(type=newtype)
+		await ctx.send(f"Changed <#{c.id}> to type {newtype}!")
+
 	@commands.command(name="rolemembers", aliases=['members'])
 	@commands.guild_only()
 	async def rolemembers(self, ctx, *, role: discord.Role):
