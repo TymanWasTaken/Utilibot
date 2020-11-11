@@ -173,7 +173,7 @@ class Moderation(commands.Cog):
 			else:
 				perms.send_messages = False
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}.")
-				locked = f"{locked} `||` <#{ch.id}>"
+				locked = f"{locked} `||` <#{chan.id}>"
 				if ctx.channel.id == chan.id:
 					pass
 				else:
@@ -198,7 +198,7 @@ class Moderation(commands.Cog):
 			else:
 				perms.send_messages = None
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}.")
-				unlocked = f"{unlocked} `||` <#{ch.id}>"
+				unlocked = f"{unlocked} `||` <#{chan.id}>"
 		await ctx.send(f"Unlocked the server!\nChannels unlocked: {locked}\n**Reason:** {reason}")
 
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
