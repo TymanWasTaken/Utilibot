@@ -92,7 +92,6 @@ class Music(commands.Cog):
 			return await ctx.send('You are not connected to a voice channel.')
 		url = url.lstrip("<").rstrip(">")
 		ytRegex = re.search(r"(?:https?:\/\/)?(?:www\.)?youtu(?:.be\/|be\.com\/watch\?v=)(.{8,})", url)
-		ID = ytRegex.group(1)
 		if not ytRegex:
 			loop = self.bot.loop
 			m = await ctx.send("Did not detect youtube url, searching youtube.")
@@ -113,7 +112,7 @@ class Music(commands.Cog):
 					ID = res.videos[0]['id']
 				elif str(reaction.emoji) == '❌':
 					return await ctx.send("Canceled.")
-		
+		ID = ytRegex.group(1)
 		if ctx.voice_client is None:
 			await ctx.author.voice.channel.connect()
 				
