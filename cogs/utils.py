@@ -106,7 +106,10 @@ class Utils(commands.Cog):
 		chan = channel or ctx.channel
 		c = await chan.clone(reason=f"Channel reset by {ctx.author} ({ctx.author.id})")
 		await c.edit(position=chan.position)
-		await chan.delete(reason=f"Channel reset by {ctx.author} ({ctx.author.id})")
+		try: 
+			await chan.delete(reason=f"Channel reset by {ctx.author} ({ctx.author.id})")
+		except:
+			await chan.send(f"{ctx.author.mention}, I cannot delete this channel! (most likely cause is that it's set as a channel required for community servers)")
 		await c.send(f"I reset this channel, {ctx.author.mention}!")
 
 	@commands.command(name="rolemembers", aliases=['members'])
