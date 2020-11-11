@@ -167,9 +167,6 @@ async def on_voice_state_update(member, before, after):
 			vc.cleanup()
 """
 bot.load_extension("jishaku")
-# bot.load_extension("riftgun")
-# bot.load_extension("guildmanager")
-# This loads all cogs in the directory, so I don't have to manually add cogs when I make/change them
 os.chdir("cogs")
 for file in sorted(glob.glob("*.py")):
 	file = file.replace(".py", "")
