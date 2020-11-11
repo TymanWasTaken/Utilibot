@@ -165,23 +165,20 @@ class Moderation(commands.Cog):
 		Locks the entire server by setting all channels' send messages permissions for @everyone to false.
 		"""
 		locked = ""
-		ch = ""
 		for chan in ctx.guild.channels:
-			ch = str(ch) + "\n" + str(chan.id)
-#			chan = await self.bot.fetch_channel(chan.id)
-#			perms = chan.overwrites_for(ctx.guild_default_role)
-#			if perms.send_messages == False:
-#				pass
-#			else:
-#				perms.send_messages = False
-#				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}.")
-#				locked = f"{locked} `||` <#{ch.id}>"
-#				if ctx.channel.id == chan.id:
-#					pass
-#				else:
-#					chan.send(f"Server locked by {author.mention}!\n**Reason:**")
-#		await ctx.send(f"Locked down the server!\nChannels locked: {locked}\n**Reason:** {reason}")
-		await ctx.send(ch)
+			chan = await self.bot.fetch_channel(chan.id)
+			perms = chan.overwrites_for(ctx.guild_default_role)
+			if perms.send_messages == False:
+				pass
+			else:
+				perms.send_messages = False
+				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}.")
+				locked = f"{locked} `||` <#{ch.id}>"
+				if ctx.channel.id == chan.id:
+					pass
+				else:
+					chan.send(f"Server locked by {author.mention}!\n**Reason:**")
+		await ctx.send(f"Locked down the server!\nChannels locked: {locked}\n**Reason:** {reason}")
 
 
 	@commands.command(name="unserverhardlock", aliases=['unserverlockdown', 'ushl', 'usld'])
@@ -194,7 +191,7 @@ class Moderation(commands.Cog):
 		"""
 		unlocked = ""
 		for chan in ctx.guild.channels:
-			chan = await self.bot.fetch_channel(chan)
+			chan = await self.bot.fetch_channel(chan.id)
 			perms = chan.overwrites_for(ctx.guild_default_role)
 			if perms.send_messages != False:
 				pass
