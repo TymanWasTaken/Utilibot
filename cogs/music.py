@@ -112,7 +112,8 @@ class Music(commands.Cog):
 					ID = res.videos[0]['id']
 				elif str(reaction.emoji) == '❌':
 					return await ctx.send("Canceled.")
-		ID = ytRegex.group(1)
+		else:
+			ID = ytRegex.group(1)
 		if ctx.voice_client is None:
 			await ctx.author.voice.channel.connect()
 				
