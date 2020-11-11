@@ -71,7 +71,7 @@ class Locking(commands.Cog):
 		Adds (text) channels to the list of channels that can be affected by server hardlock/unhardlock.
 		"""
 		if len(channels) == 0:
-			await ctx.send("Please provide 1 or more channels to add to the list!")
+			await ctx.send(f"Please provide 1 or more channels to add to the list!\nCurrent list: ")
 		else:
 			if action == True:
 				#this will be for adding to the db'
