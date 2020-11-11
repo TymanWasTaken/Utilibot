@@ -102,9 +102,9 @@ class Music(commands.Cog):
 			def check(reaction, user):
 				return user == ctx.message.author and (str(reaction.emoji) == '✅' or str(reaction.emoji) == '❌') and reaction.message.id == mr.id
 			try:
-		   		reaction, user = await bot.wait_for('reaction_add', timeout=30.0, check=check)
-	 		except asyncio.TimeoutError:
-	  			return await ctx.send('Timed out.')
+				reaction, user = await bot.wait_for('reaction_add', timeout=30.0, check=check)
+			except asyncio.TimeoutError:
+				return await ctx.send('Timed out.')
 			else:
 				if str(reaction.emoji) == '✅':
 					url = f"https://youtu.be/{res.videos[0]['id']}"
