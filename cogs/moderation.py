@@ -177,8 +177,8 @@ class Moderation(commands.Cog):
 				if ctx.channel.id == chan.id:
 					pass
 				else:
-					chan.send(f"Server locked by {author.mention}!\n**Reason:**")
-		await ctx.send(f"Locked down the server!\nChannels locked: {locked}\n**Reason:** {reason}")
+					chan.send(f"🔒 Server locked by {ctx.author.mention}!\n**Reason:** {reason}")
+		await ctx.send(f"🔒 Locked down the server!\nChannels locked: {locked}\n**Reason:** {reason}")
 
 
 	@commands.command(name="unserverhardlock", aliases=['unserverlockdown', 'ushl', 'usld'])
@@ -199,7 +199,11 @@ class Moderation(commands.Cog):
 				perms.send_messages = None
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}.")
 				unlocked = f"{unlocked} `||` <#{chan.id}>"
-		await ctx.send(f"Unlocked the server!\nChannels unlocked: {locked}\n**Reason:** {reason}")
+				if ctx.channel.id == chan.id:
+					pass
+				else:
+					chan.send(f"🔓 Server unlocked by {ctx.author.mention}!\n**Reason:** {reason}")
+		await ctx.send(f"🔓 Unlocked the server!\nChannels unlocked: {locked}\n**Reason:** {reason}")
 
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
 	@commands.bot_has_permissions(manage_messages=True)
