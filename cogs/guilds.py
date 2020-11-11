@@ -8,7 +8,13 @@ class Guilds(commands.Cog):
 	@commands.group(invoke_without_command=True)
 	@commands.is_owner()
 	async def guilds(self, ctx):
-		await ctx.send("Soon:tm:")
+		guilds = len(self.bot.guilds)
+		users = len(self.bot.users)
+		await ctx.send(embed=discord.Embed(title="Guild data", description=f"""
+		Guild count: {guilds}
+		Total user count: {users}
+		""".replace("	", "")
+		))
 
 	@guilds.command()
 	@commands.is_owner()
