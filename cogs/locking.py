@@ -74,13 +74,13 @@ class Locking(commands.Cog):
 		if len(channels) == 0:
 			await ctx.send("Please provide 1 or more channels to add to the list!")
 		else:
-            if action == True:
-                #this will be for adding to the db'
-                pass
-            else:
-                #this will be for removing from db
-                pass
-			await ctx.send("lol that didn't do anything (yet) :joy:")
+		    if action == True:
+			#this will be for adding to the db'
+			pass
+		    else:
+			#this will be for removing from db
+			pass
+		await ctx.send("lol that didn't do anything (yet) :joy:")
 
 
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
