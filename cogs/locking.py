@@ -66,7 +66,7 @@ class Locking(commands.Cog):
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True)
 	@commands.guild_only()
-	@commands.owner_only()
+	@commands.is_owner()
 	async def serverhardlockable(self, ctx, *channels: discord.TextChannel, action=bool):
 		"""
 		Adds (text) channels to the list of channels that can be affected by server hardlock/unhardlock.
@@ -87,7 +87,7 @@ class Locking(commands.Cog):
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True, manage_guild=True)
 	@commands.guild_only()
-	@commands.owner_only()
+	@commands.is_owner()
 	async def serverhardlock(self, ctx, *, reason=f'None given.'):
 		"""
 		Locks the entire server by setting all channels' send messages permissions for @everyone to false.
@@ -110,7 +110,7 @@ class Locking(commands.Cog):
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True, manage_guild=True)
 	@commands.guild_only()
-	@commands.owner_only()
+	@commands.is_owner()
 	async def serverunhardlock(self, ctx, *, reason='None given.'):
 		"""
 		Unlocks the entire server by setting all channels' send messages permissions for @everyone to neutral.
