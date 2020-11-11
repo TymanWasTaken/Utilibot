@@ -197,7 +197,7 @@ class Moderation(commands.Cog):
 				pass
 			else:
 				perms.send_messages = None
-				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}.")
+				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server unlocked by {ctx.author} ({ctx.author.id}.")
 				unlocked = f"{unlocked} `||` <#{chan.id}>"
 				if ctx.channel.id == chan.id:
 					pass
