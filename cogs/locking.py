@@ -61,19 +61,19 @@ class Locking(commands.Cog):
 			if ch != ctx.channel:
 				await ch.send(f"This channel was unlocked by {ctx.author.mention}!\n**Reason:** {reason}")
 
-    @commands.command(name="serverhardlockable", aliases=['shlockable', 'shlable'])
-    @commands.bot_has_permissions(manage_channels=True)
-    @commands.has_permissons(manage_channels=True)
-    @commands.guild_only()
-    async def serverhardlockable(self, ctx, *channels: discord.TextChannel):
-        """
-        Adds (text) channels to the list of channels that can be affected by server hardlock/unhardlock.
-        """
-        await ctx.send("Coming soon:tm:! (as soon as Clari figures out db")
-        if len(channels) == 0:
-            await ctx.send("Please provide 1 or more channels to add to the list!")
-        else:
-            await ctx.send("lol that didn't do anything :joy:")
+	@commands.command(name="serverhardlockable", aliases=['shlockable', 'shlable'])
+	@commands.bot_has_permissions(manage_channels=True)
+	@commands.has_permissons(manage_channels=True)
+	@commands.guild_only()
+	async def serverhardlockable(self, ctx, *channels: discord.TextChannel):
+		"""
+		Adds (text) channels to the list of channels that can be affected by server hardlock/unhardlock.
+		"""
+		await ctx.send("Coming soon:tm:! (as soon as Clari figures out db")
+		if len(channels) == 0:
+			await ctx.send("Please provide 1 or more channels to add to the list!")
+		else:
+			await ctx.send("lol that didn't do anything :joy:")
 
 
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
