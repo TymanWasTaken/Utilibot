@@ -64,7 +64,7 @@ class Locking(commands.Cog):
 
 	@commands.command(name="serverhardlockable", aliases=['shlockable', 'shlable'])
 	@commands.bot_has_permissions(manage_channels=True)
-	@commands.has_permissons(manage_channels=True)
+	@commands.has_permissions(manage_channels=True)
 	@commands.guild_only()
 	async def serverhardlockable(self, ctx, *channels: discord.TextChannel, action=bool):
 		"""
