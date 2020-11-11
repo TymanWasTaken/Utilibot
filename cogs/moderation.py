@@ -160,7 +160,7 @@ class Moderation(commands.Cog):
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True, manage_guild=True)
 	@commands.guild_only()
-	async def serverhardlock(self, ctx, *, reason=f'Refer to <#{channel.id}>'):
+	async def serverhardlock(self, ctx, *, reason=f'None given.'):
 		"""
 		Locks the entire server by setting all channels' send messages permissions for @everyone to false.
 		"""
