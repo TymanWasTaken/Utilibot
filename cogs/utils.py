@@ -250,6 +250,9 @@ class Utils(commands.Cog):
 
 	@commands.command(aliases=["tr"])
 	async def translate(self, ctx, lang, *, text):
+		"""
+		A command that will translate text you give it to the language code you give it. You can see language codes with u!langs.	
+		"""
 		async with aiohttp.ClientSession() as s:
 			async with ctx.typing():
 				async with s.get("https://api.cognitive.microsofttranslator.com/languages?api-version=3.0") as resp:
@@ -263,6 +266,9 @@ class Utils(commands.Cog):
 
 	@commands.command(aliases=["ftr"])
 	async def fromtranslate(self, ctx, fromlang, tolang, *, text):
+		"""
+		Same as u!translate, but takes a language to translate from.	
+		"""
 		async with aiohttp.ClientSession() as s:
 			async with ctx.typing():
 				async with s.get("https://api.cognitive.microsofttranslator.com/languages?api-version=3.0") as resp:
