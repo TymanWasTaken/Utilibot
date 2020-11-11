@@ -73,7 +73,7 @@ class Locking(commands.Cog):
         if len(channels) == 0:
             await ctx.send("Please provide 1 or more channels to add to the list!")
         else:
-            await ctx.send("lol that didn't do anything")
+            await ctx.send("lol that didn't do anything :joy:")
 
 
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
