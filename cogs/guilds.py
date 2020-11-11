@@ -2,10 +2,10 @@ import discord, random, datetime, asyncio, postbin, traceback
 from discord.ext import commands
 import concurrent.futures
 
-async def Average(bot, l):
-	def func(lst):
+def func(lst):
 		return sum(lst) / len(lst)
-	
+
+async def Average(bot, l):
 	with concurrent.futures.ProcessPoolExecutor() as pool:
 		return await bot.loop.run_in_executor(pool, func, l)
 		
