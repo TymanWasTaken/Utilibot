@@ -8,7 +8,7 @@ async def readDB():
 		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
 			return json.loads(await f.read())
 	except Exception as e:
-		print(f"An error occured, {e}")
+		print(f"An error occurred, {e}")
 
 async def writeDB(data: dict):
 	try:
@@ -95,11 +95,6 @@ class Info(commands.Cog):
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have the `Embed Links` permission in this channel. Please give me this permission or try again in a channel where I do have it, as it is necessary to run this command.")
 		embed=discord.Embed(title="Required permissions for the bot:", description="Necessary perms:\n`Read messages`, `Send messages`, `Embed links`\nPerms for commands to run:\n`Kick members`, `Ban members`, `Manage messages`, `Manage channels`", color=randcolor())
-		await ctx.send(embed=embed)
-	
-	@commands.command()
-	async def vote(self, ctx):
-		embed = discord.Embed(title="Vote link:", description="You can vote for me [here](https://top.gg/bot/755084857280954550/vote)!").set_footer(text="Currently does not work because the bot is not approved on top.gg")	
 		await ctx.send(embed=embed)
 
 	@commands.command()
