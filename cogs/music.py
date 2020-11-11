@@ -6,9 +6,6 @@ from youtube_search import YoutubeSearch as yt
 # Suppress noise about console usage from errors
 youtube_dl.utils.bug_reports_message = lambda: ''
 
-class VoiceError(Exception):
-	pass
-
 ytdl_format_options = {
 	'format': 'bestaudio/best',
 	'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
@@ -99,17 +96,27 @@ class Music(commands.Cog):
 			res = await loop.run_in_executor(None, yt, url, 1)
 			if len(res.videos) < 1:
 				return await ctx.send(f"Could not find any videos for the search `{url}`")
-			await ctx.send(f"Found https://youtu.be/{res.videos[0]['id']}")
-			return await ctx.send('Not a valid youtube URL!')
+			mr = await ctx.send(f"Found https://youtu.be/{res.videos[0]['id']}, is this correct?")
+			await mr.react("✅")
+			await mr.react("❌")
+			def check(reaction, user):
+				return user == ctx.message.author and (str(reaction.emoji) == '✅' or str(reaction.emoji) == '❌') and reaction.message.id == mr.id
+			try:
+		   		reaction, user = await bot.wait_for('reaction_add', timeout=30.0, check=check)
+	 		except asyncio.TimeoutError:
+	  			return await ctx.send('Timed out.')
+			else:
+				if str(reaction.emoji) == '✅':
+					url = f"https://youtu.be/{res.videos[0]['id']}"
+				elif str(reaction.emoji) == '❌':
+					return await ctx.send("Canceled.")
 		if ctx.voice_client is None:
 			if ctx.author.voice:
 				await ctx.author.voice.channel.connect()
 			else:
-				await ctx.send('You are not connected to a voice channel.')
-				raise VoiceError("You are not connected to a voice channel.")
+				return await ctx.send('You are not connected to a voice channel.')
 		elif ctx.voice_client.is_playing():
-			await ctx.send("Music is already playing!")
-			raise VoiceError("Music is already playing!")
+			return await ctx.send("Music is already playing!")
 
 		async with ctx.typing():
 			try:
