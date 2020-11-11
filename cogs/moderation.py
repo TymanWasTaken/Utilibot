@@ -167,7 +167,7 @@ class Moderation(commands.Cog):
 		locked = ""
 		for chan in ctx.guild.channels:
 			chan = await self.bot.fetch_channel(chan.id)
-			perms = chan.overwrites_for(ctx.guild_default_role)
+			perms = chan.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages == False:
 				pass
 			else:
@@ -192,7 +192,7 @@ class Moderation(commands.Cog):
 		unlocked = ""
 		for chan in ctx.guild.channels:
 			chan = await self.bot.fetch_channel(chan.id)
-			perms = chan.overwrites_for(ctx.guild_default_role)
+			perms = chan.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages != False:
 				pass
 			else:
