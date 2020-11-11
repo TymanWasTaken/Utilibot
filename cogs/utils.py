@@ -95,6 +95,19 @@ class Utils(commands.Cog):
 					conf = await ctx.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}>!")
 					await conf.delete(delay=5)
 
+	@commands.command(name="nuke", aliases=['nukechan', 'clone', 'resetchan'])
+	@commands.guild_only()
+	@commands.has_permissions(manage_channels=True)
+	@commands.bot_has_permissions(manage_channels=True)
+	async def nuke(self, ctx, channel: typing.Optional[discord.TextChannel]=None):
+		"""
+		Resets a channel- Clones it and deletes the old one. Useful for clearing all the messages in a channel quickly.
+		"""
+		chan = channel or ctx.channel
+		c = await chan.clone(reason=f"Channel reset by {author} ({author.id})")
+		await c.edit(position=chan.position)
+		await chan.delete(reason=f"Channel reset by {author} ({author.id})")
+		await c.send(f"I reset this channel, {author.mention}!")
 
 	@commands.command(name="rolemembers", aliases=['members'])
 	@commands.guild_only()
