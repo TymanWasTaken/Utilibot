@@ -3,6 +3,14 @@ from discord.ext import commands
 import datetime
 import importlib
 
+class HelpCommand(commands.MinimalHelpCommand):
+    async def send_pages(self):
+        destination = self.get_destination()
+        e = discord.Embed(color=discord.Color.blurple(), description='')
+        for page in self.paginator.pages:
+            e.description += page
+        await destination.send(embed=e)
+
 async def readDB():
 	try:
 		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
@@ -39,6 +47,7 @@ def permsfromvalue(value):
 class Info(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+		bot.help_command=HelpCommand()
 
 	@commands.command()
 	async def ping(self, ctx):
