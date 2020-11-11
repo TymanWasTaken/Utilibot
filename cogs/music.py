@@ -88,6 +88,8 @@ class Music(commands.Cog):
 		"""
 		Plays a youtube video.
 		"""
+		if not ctx.author.voice:
+			return await ctx.send('You are not connected to a voice channel.')
 		url = url.lstrip("<").rstrip(">")
 		ytRegex = re.search(r"(?:https?:\/\/)?(?:www\.)?youtu(?:.be\/|be\.com\/watch\?v=)(.{8,})", url)
 		if not ytRegex:
@@ -102,7 +104,7 @@ class Music(commands.Cog):
 			def check(reaction, user):
 				return user == ctx.message.author and (str(reaction.emoji) == '✅' or str(reaction.emoji) == '❌') and reaction.message.id == mr.id
 			try:
-				reaction, user = await bot.wait_for('reaction_add', timeout=30.0, check=check)
+				reaction, user = await self.bot.wait_for('reaction_add', timeout=30.0, check=check)
 			except asyncio.TimeoutError:
 				return await ctx.send('Timed out.')
 			else:
@@ -111,10 +113,8 @@ class Music(commands.Cog):
 				elif str(reaction.emoji) == '❌':
 					return await ctx.send("Canceled.")
 		if ctx.voice_client is None:
-			if ctx.author.voice:
-				await ctx.author.voice.channel.connect()
-			else:
-				return await ctx.send('You are not connected to a voice channel.')
+			await ctx.author.voice.channel.connect()
+				
 		elif ctx.voice_client.is_playing():
 			return await ctx.send("Music is already playing!")
 
