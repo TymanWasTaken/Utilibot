@@ -80,7 +80,7 @@ class Locking(commands.Cog):
 			else:
 				#this will be for removing from db
 				pass
-		await ctx.send("lol that didn't do anything (yet) :joy:")
+			await ctx.send("lol that didn't do anything (yet) :joy:")
 
 
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
