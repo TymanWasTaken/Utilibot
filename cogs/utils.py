@@ -104,10 +104,10 @@ class Utils(commands.Cog):
 		Resets a channel- Clones it and deletes the old one. Useful for clearing all the messages in a channel quickly.
 		"""
 		chan = channel or ctx.channel
-		c = await chan.clone(reason=f"Channel reset by {author} ({author.id})")
+		c = await chan.clone(reason=f"Channel reset by {ctx.author} ({ctx.author.id})")
 		await c.edit(position=chan.position)
-		await chan.delete(reason=f"Channel reset by {author} ({author.id})")
-		await c.send(f"I reset this channel, {author.mention}!")
+		await chan.delete(reason=f"Channel reset by {ctx.author} ({ctx.author.id})")
+		await c.send(f"I reset this channel, {ctx.author.mention}!")
 
 	@commands.command(name="rolemembers", aliases=['members'])
 	@commands.guild_only()
