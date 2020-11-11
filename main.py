@@ -173,6 +173,9 @@ bot.load_extension("jishaku")
 os.chdir("cogs")
 for file in sorted(glob.glob("*.py")):
 	file = file.replace(".py", "")
-	bot.load_extension(f"cogs.{file}")
+	try:
+		bot.load_extension(f"cogs.{file}")
+	except:
+		pass
 bot.load_extension("riftgun")
 bot.run(os.getenv("BOT_TOKEN"))
