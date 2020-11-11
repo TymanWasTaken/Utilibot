@@ -173,10 +173,8 @@ class Moderation(commands.Cog):
 				perms.send_messages = False
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}.")
 				locked = f"{locked} `||` <#{chan.id}>"
-				if ctx.channel.id == chan.id:
-					pass
-				else:
-					chan.send(f"🔒 Server locked by {ctx.author.mention}!\n**Reason:** {reason}", delete_after=600)
+				if ctx.channel.id != chan.id:
+					await chan.send(f"🔒 Server locked by {ctx.author.mention}!\n**Reason:** {reason}", delete_after=600)
 		await ctx.send(f"🔒 Locked down the server!\nChannels locked: {locked}\n**Reason:** {reason}")
 
 
@@ -197,10 +195,8 @@ class Moderation(commands.Cog):
 				perms.send_messages = None
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server unlocked by {ctx.author} ({ctx.author.id}.")
 				unlocked = f"{unlocked} `||` <#{chan.id}>"
-				if ctx.channel.id == chan.id:
-					pass
-				else:
-					chan.send(f"🔓 Server unlocked by {ctx.author.mention}!\n**Reason:** {reason}", delete_after=600)
+				if ctx.channel.id != chan.id:
+					await chan.send(f"🔓 Server unlocked by {ctx.author.mention}!\n**Reason:** {reason}", delete_after=600)
 		await ctx.send(f"🔓 Unlocked the server!\nChannels unlocked: {unlocked}\n**Reason:** {reason}")
 
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
