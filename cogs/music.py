@@ -93,6 +93,7 @@ class Music(commands.Cog):
 		url = url.lstrip("<").rstrip(">")
 		ytRegex = re.search(r"(?:https?:\/\/)?(?:www\.)?youtu(?:.be\/|be\.com\/watch\?v=)(.{8,})", url)
 		if not ytRegex:
+			ID = ytRegex.group(1)
 			loop = self.bot.loop
 			m = await ctx.send("Did not detect youtube url, searching youtube.")
 			res = await loop.run_in_executor(None, yt, url, 1)
@@ -109,9 +110,10 @@ class Music(commands.Cog):
 				return await ctx.send('Timed out.')
 			else:
 				if str(reaction.emoji) == '✅':
-					url = f"https://youtu.be/{res.videos[0]['id']}"
+					ID = res.videos[0]['id']
 				elif str(reaction.emoji) == '❌':
 					return await ctx.send("Canceled.")
+		
 		if ctx.voice_client is None:
 			await ctx.author.voice.channel.connect()
 				
@@ -120,7 +122,7 @@ class Music(commands.Cog):
 
 		async with ctx.typing():
 			try:
-				player = await YTDLSource.from_url(f"https://www.youtube.com/watch?v={regex.group(1)}", loop=self.bot.loop, stream=True)
+				player = await YTDLSource.from_url(f"https://www.youtube.com/watch?v={ID}", loop=self.bot.loop, stream=True)
 				ctx.voice_client.play(player)
 				await ctx.send(f'Now playing: {player.title}')
 			except youtube_dl.utils.DownloadError:
