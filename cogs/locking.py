@@ -1,5 +1,6 @@
 import discord, random, asyncio, aiofiles, json, typing
 from discord.ext import commands
+
 async def readDB():
 	try:
 		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
