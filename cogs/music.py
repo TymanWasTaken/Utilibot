@@ -1,6 +1,7 @@
 import asyncio, discord, youtube_dl, os, glob, re
 from discord.ext import commands
 from discord.ext import tasks
+from youtube_search import YoutubeSearch as yt
 
 # Suppress noise about console usage from errors
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -91,9 +92,13 @@ class Music(commands.Cog):
 		Plays a youtube video.
 		"""
 		url = url.lstrip("<").rstrip(">")
-		regex = re.search(r"(?:https?:\/\/)?(?:www\.)?youtu(?:.be\/|be\.com\/watch\?v=)(.{8,})", url)
-		if not regex:
-				return await ctx.send('Not a valid youtube URL!')
+		ytRegex = re.search(r"(?:https?:\/\/)?(?:www\.)?youtu(?:.be\/|be\.com\/watch\?v=)(.{8,})", url)
+		if not ytRegex:
+			loop = self.bot.loop
+			m = await ctx.send("Did not detect youtube url, searching youtube.")
+			res = await loop.run_in_executor(None, yt, url, 1)
+			await ctx.send(f"Found https://youtu.be/{res.videos[0].id}")
+			return await ctx.send('Not a valid youtube URL!')
 		if ctx.voice_client is None:
 			if ctx.author.voice:
 				await ctx.author.voice.channel.connect()
