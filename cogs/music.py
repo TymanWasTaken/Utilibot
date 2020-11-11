@@ -97,6 +97,8 @@ class Music(commands.Cog):
 			loop = self.bot.loop
 			m = await ctx.send("Did not detect youtube url, searching youtube.")
 			res = await loop.run_in_executor(None, yt, url, 1)
+			if len(res.videos) < 1:
+				return await ctx.send(f"Could not find any videos for the search `{url}`")
 			await ctx.send(f"Found https://youtu.be/{res.videos[0].id}")
 			return await ctx.send('Not a valid youtube URL!')
 		if ctx.voice_client is None:
