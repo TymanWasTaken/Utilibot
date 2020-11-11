@@ -30,7 +30,7 @@ async def getprefixes(bot, message):
 	defaults = ['<@755084857280954550> ', '<@!755084857280954550> ', 'u!', 'U!']
 	data = await readDB()
 	if not message.guild:
-		return ""
+		return defaults
 	elif str(message.guild.id) in data['prefixes']:
 		prefixes.append(data['prefixes'][str(message.guild.id)])
 		return prefixes
