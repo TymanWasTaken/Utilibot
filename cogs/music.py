@@ -97,8 +97,8 @@ class Music(commands.Cog):
 			if len(res.videos) < 1:
 				return await ctx.send(f"Could not find any videos for the search `{url}`")
 			mr = await ctx.send(f"Found https://youtu.be/{res.videos[0]['id']}, is this correct?")
-			await mr.react("✅")
-			await mr.react("❌")
+			await mr.add_reaction("✅")
+			await mr.add_reaction("❌")
 			def check(reaction, user):
 				return user == ctx.message.author and (str(reaction.emoji) == '✅' or str(reaction.emoji) == '❌') and reaction.message.id == mr.id
 			try:
