@@ -92,8 +92,8 @@ class Music(commands.Cog):
 			return await ctx.send('You are not connected to a voice channel.')
 		url = url.lstrip("<").rstrip(">")
 		ytRegex = re.search(r"(?:https?:\/\/)?(?:www\.)?youtu(?:.be\/|be\.com\/watch\?v=)(.{8,})", url)
+		ID = ytRegex.group(1)
 		if not ytRegex:
-			ID = ytRegex.group(1)
 			loop = self.bot.loop
 			m = await ctx.send("Did not detect youtube url, searching youtube.")
 			res = await loop.run_in_executor(None, yt, url, 1)
