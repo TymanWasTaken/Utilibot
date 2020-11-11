@@ -160,7 +160,7 @@ class Moderation(commands.Cog):
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True, manage_guild=True)
 	@commands.guild_only()
-	async def serverhardlock(self, ctx, *, reason='Refer to '):
+	async def serverhardlock(self, ctx, *, reason=f'Refer to <#{ctx.channel.id}>'):
 		"""
 		Locks the entire server by setting all channels' send messages permissions for @everyone to false.
 		"""
@@ -203,7 +203,7 @@ class Moderation(commands.Cog):
 					pass
 				else:
 					chan.send(f"🔓 Server unlocked by {ctx.author.mention}!\n**Reason:** {reason}")
-		await ctx.send(f"🔓 Unlocked the server!\nChannels unlocked: {locked}\n**Reason:** {reason}")
+		await ctx.send(f"🔓 Unlocked the server!\nChannels unlocked: {unlocked}\n**Reason:** {reason}")
 
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
 	@commands.bot_has_permissions(manage_messages=True)
