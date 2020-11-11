@@ -66,15 +66,21 @@ class Locking(commands.Cog):
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissons(manage_channels=True)
 	@commands.guild_only()
-	async def serverhardlockable(self, ctx, *channels: discord.TextChannel):
+	async def serverhardlockable(self, ctx, *channels: discord.TextChannel, action=bool):
 		"""
 		Adds (text) channels to the list of channels that can be affected by server hardlock/unhardlock.
 		"""
-		await ctx.send("Coming soon:tm:! (as soon as Clari figures out db")
+		await ctx.send("Coming soon:tm:! (as soon as Clari figures out db)")
 		if len(channels) == 0:
 			await ctx.send("Please provide 1 or more channels to add to the list!")
 		else:
-			await ctx.send("lol that didn't do anything :joy:")
+            if action == True:
+                #this will be for adding to the db'
+                pass
+            else:
+                #this will be for removing from db
+                pass
+			await ctx.send("lol that didn't do anything (yet) :joy:")
 
 
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
