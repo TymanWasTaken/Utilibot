@@ -181,14 +181,14 @@ class Guilds(commands.Cog):
 				else:
 					return await ctx.send("Sadly I could not access server invites, and I failed to make one in any of the channels.")
 
-	@guilds.command()
+	@guilds.command(name="list")
 	@commands.is_owner()
-	async def servers(self, ctx):
+	async def _list(self, ctx):
 		"""
 		A command that creates a hastebin with a list of the servers the bot is in, and their member count.
 		"""
 		text = ""
-		for g in self.bot.guilds:
+		for g in (self.bot.guilds, lambda guild: guild.member_count):
 			text = f"{text}{g.name}\n- Members: {g.member_count}\n\n"
 		return await ctx.send(embed=discord.Embed(title="Hastebin:", description="Hasebin link: " + await postbin.postAsync(text)))
 
