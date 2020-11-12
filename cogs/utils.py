@@ -112,6 +112,17 @@ class Utils(commands.Cog):
 			await chan.send(f"{ctx.author.mention}, I cannot delete this channel! (most likely cause is that it's set as a channel required for community servers)")
 		await c.send(f"I reset this channel, {ctx.author.mention}!")
 
+	@commands.command(name="resetinvites", aliases=['wipeinv', 'delinvs'])
+	@commands.guild_only()
+	@commands.has_permissions(manage_channels=True)
+	@commands.bot_has_permissions(manage_channels=True)
+	async def resetinvites(self, ctx)
+		"""
+		Deletes all invites in the server.
+		"""
+		for inv in await ctx.guild.invites:
+			await inv.delete(reason=f"Bulk delete by {ctx.author} ({ctx.author.id})")
+
 	@commands.command(name="rolemembers", aliases=['members'])
 	@commands.guild_only()
 	async def rolemembers(self, ctx, *, role: discord.Role):
