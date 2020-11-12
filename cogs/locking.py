@@ -1,4 +1,4 @@
-import discord, random, asyncio, aiofiles, json, typing
+import discord, random, asyncio, aiofiles, json, typing, postbin
 from discord.ext import commands
 
 async def readDB():
@@ -103,7 +103,8 @@ class Locking(commands.Cog):
 		embed = discord.Embed(title=f"🔒 Locked down the server!", description=f"**Channels Locked:**\n{' `||` '.join(locked)}", color=2937504)
 		embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
-			embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}"
+			url = postbin.postAsync(locked)
+			embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}\nList: {url}"
 		await m.edit(content="Done!", embed=embed, delete_after=60)
 
 
@@ -124,11 +125,12 @@ class Locking(commands.Cog):
 				perms.send_messages = None
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server unlocked by {ctx.author} ({ctx.author.id}).")
 				unlocked.append(f"<#{chan.id}>")
-				await chan.send(embed=discord.Embed(title="🔓 Server Unlocked! 🔓", description=f"🔓 Server unlocked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
+				await chan.send(embed=discord.Embed(title="🔓 Server Unlocked! 🔓", description=f"Server unlocked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
 		embed = discord.Embed(title=f"🔓 Unlocked the server! 🔓", description=f"**Channels Unlocked:**\n{' `||` '.join(unlocked)}", color=2937504)
 		embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
-			embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}"
+			url = postbin.postAsync(unlocked)
+			embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}\nList: {url}"
 		await m.edit(content="Done!", embed=embed, delete_after=60)
 
 # Softlock- Deletes messages.
