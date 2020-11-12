@@ -104,7 +104,7 @@ class Locking(commands.Cog):
 		embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
 			embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}"
-		await m.edit("Done!", embed=embed, delete_after=60)
+		await m.edit(content="Done!", embed=embed, delete_after=60)
 
 
 	@commands.command(name="unserverhardlock", aliases=['unserverlockdown', 'ushl', 'usld'])
@@ -129,7 +129,7 @@ class Locking(commands.Cog):
 		embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
 			embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}"
-		await m.edit(embed=embed, delete_after=60)
+		await m.edit(content="Done!", embed=embed, delete_after=60)
 
 # Softlock- Deletes messages.
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
