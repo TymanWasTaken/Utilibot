@@ -37,6 +37,10 @@ class Fun(commands.Cog):
 		numb = random.randint(0, maxnumber)
 		await ctx.send(embed=discord.Embed(title="Random Number Picked", description=str(numb), color=0x7289da))
 
+	@commands.command()
+	async def dogs(self, ctx):
+		await ctx.send("https://media.discordapp.net/attachments/499750909190864918/776309869946208266/unknown.png")
+
 def setup(bot):
 	bot.add_cog(Fun(bot))
 	print('[FunCog] Fun cog loaded')
