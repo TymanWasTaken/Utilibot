@@ -91,16 +91,16 @@ class Locking(commands.Cog):
 		"""
 		Locks the entire server by setting all channels' send messages permissions for @everyone to false.
 		"""
-		locked = ""
+		locked = []
 		for chan in ctx.guild.text_channels:
 			perms = chan.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages != False:
 				perms.send_messages = False
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}.")
-				locked = f"{locked} `||` <#{chan.id}>"
+				locked.append(f"<#{chan.id}>")
 				await chan.send(embed=discord.Embed(title=f"🔒 Server Locked! 🔒", description=f"Server locked by {ctx.author}!\n**Reason:** {reason}", color=2937504), delete_after=600)
 		embed = discord.Embed(title=f"🔒 Locked down the server!", description=f"**Reason:** {reason}", color=2937504)
-		embed.add_field(name="Channels Locked:", value={locked})
+		embed.add_field(name="Channels Locked:", value={" `||` ".join(locked)})
 		await ctx.send(embed=embed, delete_after=30)
 
 
@@ -113,16 +113,16 @@ class Locking(commands.Cog):
 		"""
 		Unlocks the entire server by setting all channels' send messages permissions for @everyone to neutral.
 		"""
-		unlocked = ""
+		unlocked = []
 		for chan in ctx.guild.text_channels:
 			perms = chan.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages == False:
 				perms.send_messages = None
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server unlocked by {ctx.author} ({ctx.author.id}.")
-				unlocked = f"{unlocked} `||` <#{chan.id}>"
+				unlocked.append(f"<#{chan.id}>")
 				await chan.send(embed=discord.Embed(title="🔓 Server Unlocked! 🔓", description=f"🔓 Server unlocked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
 		embed = discord.Embed(title=f"🔓 Unlocked the server! 🔓", description=f"**Reason:** {reason}", color=2937504)
-		embed.add_field(name="Channels Unlocked:", value={unlocked})
+		embed.add_field(name="Channels Unlocked:", value={" `||` ".join(unlocked)})
 		await ctx.send(embed=embed, delete_after=30)
 
 # Softlock- Deletes messages.
