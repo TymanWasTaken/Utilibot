@@ -289,9 +289,9 @@ class Utils(commands.Cog):
 			**Channels:** {bot.get_emoji(776340924506308608)} {len(g.category_channels)} categories, {bot.get_emoji(776341306577780777)} {len(g.text_channels)} text, {bot.get_emoji(776341401545211905)} {len(g.voice_channels)} voice
 			**Roles:** {len(g.roles)-1}
 			**Members:** Total- {g.member_count}, Humans- {humans}, Bots- {bots}"""
-			thumbnail=g.icon_url
 		)
 		embed.set_footer(text=f"ID: {g.id}. Created on {guild.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}")
+		embed.set_thumbnail=(g.icon_url)
 		await ctx.send(embed=embed)
 
 	@commands.command(name="giverole")
