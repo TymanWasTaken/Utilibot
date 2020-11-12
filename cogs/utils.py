@@ -116,7 +116,7 @@ class Utils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def resetinvites(self, ctx)
+	async def resetinvites(self, ctx):
 		"""
 		Deletes all invites in the server.
 		"""
