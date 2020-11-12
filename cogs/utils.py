@@ -135,7 +135,7 @@ class Utils(commands.Cog):
 					except: 
 						failed = f"`{inv.code}, {failed}"
 				else:
-					ignored = f"{ignored}, `{inv.code}`"
+					ignored = f"`{inv.code}`, {failed}"
 			embed.add_field(name="Deleted:", value=(deleted or "None"))
 			embed.add_field(name="Ignored:", value=(ignored or "None"))
 			embed.add_field(name="Couldn't Delete:", value=(failed or "None"))
