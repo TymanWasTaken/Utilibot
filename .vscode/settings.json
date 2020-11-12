@@ -1,10 +1,14 @@
 {
 	"python.pythonPath": "/usr/local/bin/python3.8",
 	"cSpell.words": [
+		"Unbans",
+		"aiofiles",
+		"asyncio",
 		"btmround",
 		"nocommandblacklist",
 		"roundnum",
 		"tyman",
+		"unban",
 		"utilibot"
 	]
 }
