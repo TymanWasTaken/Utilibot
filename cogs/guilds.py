@@ -71,7 +71,7 @@ class Guilds(commands.Cog):
 		guild = self.bot.get_guild(guild_id)
 		if guild is None:
 			return await ctx.send("I could not get the guild for the given id, am I in it?")
-		await ctx.send(f"Getting an invite for `{guild.name}`...")
+		m = await ctx.send(f"Getting an invite for `{guild.name}`...")
 		try:
 			invites = await guild.invites()
 			# Infinite and not temporary
@@ -132,7 +132,22 @@ class Guilds(commands.Cog):
 					except:
 						continue
 				else:
-					return await ctx.send("Sadly there were no invites made, and I failed to make one in any of the channels.")
+					if len(invites_inf_temp) > 0:
+						try:
+							await ctx.author.send(f"**TEMPORARY MEMBERSHIP**\nInfinite invite link to `{guild.name}`:\n{invites_inf_temp[0].url}")
+							return await ctx.message.add_reaction("✅")
+						except:
+							return await ctx.send("I could not DM you, do I have permission to?")
+					elif len(invites_not_inf_not_temp) > 0:
+						try:
+							await ctx.author.send(f"**TEMPORARY MEMBERSHIP**\nInvite link to `{guild.name}`:\n{invites_inf_temp[0].url}")
+							return await ctx.message.add_reaction("✅")
+						except:
+							return await ctx.send("I could not DM you, do I have permission to?")
+					elif len(invites) == 0:
+						return await ctx.send("Sadly there were no invites made, and I failed to make one in any of the channels.")
+					else:
+						await ctx.send("Something unexpected happened (somehow):/")
 		except:
 			# Gen invite unless silent
 			if silent:
