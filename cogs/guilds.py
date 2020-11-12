@@ -27,6 +27,7 @@ class Guilds(commands.Cog):
 		users = len(self.bot.users)
 		avg = await Average(self.bot, [g.member_count for g in self.bot.guilds])
 		avg = await Round(self.bot, avg, 0)
+		avg = int(avg)
 		await ctx.send(embed=discord.Embed(title="Guild data", description=f"""
 		Guild count: {guilds}
 		Total user count: {users}
