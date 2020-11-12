@@ -131,15 +131,31 @@ class Moderation(commands.Cog):
 			await ctx.send("This user can't be banned due to hierarchy.")
 		else:
 			await ctx.message.delete()
+			await member.ban(reason=f"{member.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
+			await ctx.send(f"🔨 Banned {member} for the reason: `{reason}`")
 			try:
-				await member.send(f"You were banned from {ctx.guild} for the reason: `{reason}`")
-				await member.ban(reason=f"{member.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
-				await ctx.send(f"Banned {member} for the reason: `{reason}`")
+				await member.send(f"🔨 You were banned from {ctx.guild} for the reason: `{reason}`")
 			except:
 				await ctx.send(f"Error: Could Not DM user")
-				await member.ban(reason=f"{member.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
-				await ctx.send(f"Banned {member} for the reason: `{reason}`")
-	
+
+
+	@commands.command(name="unban")
+	@commands.bot_has_permissions(ban_members=True)
+	@commands.has_permissions(ban_members=True)
+	@commands.guild_only()
+	async def unban(self, ctx, member: discord.Member, *, reason=None):
+		"""
+		Unbans a user from the server.
+		"""
+		await ctx.message.	()
+		await member.unban(reason=f"{member.name} was unbanned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
+		await ctx.send(f"🔓 Unbanned {member} for the reason: `{reason}`")
+		try:
+			await member.send(f"🔓 You were unbanned from {ctx.guild} for the reason: `{reason}``")
+		except:
+			await ctx.send("Could not DM user.")
+
+
 	@commands.command()
 	@commands.has_permissions(manage_messages=True)
 	@commands.bot_has_permissions(manage_roles=True)
