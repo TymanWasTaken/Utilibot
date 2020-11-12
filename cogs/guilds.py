@@ -9,12 +9,12 @@ async def Average(bot, l):
 	with concurrent.futures.ProcessPoolExecutor() as pool:
 		return await bot.loop.run_in_executor(pool, func, l)
 
-def func2(num):
-	return round(num, 2)
+def func2(num, roundnum):
+	return round(num, roundnum)
 
-async def Round(bot, num):
+async def Round(bot, num, roundnum):
 	with concurrent.futures.ProcessPoolExecutor() as pool:
-		return await bot.loop.run_in_executor(pool, func2, num)
+		return await bot.loop.run_in_executor(pool, func2, num, roundnum)
 
 class Guilds(commands.Cog):
 	def __init__(self, bot):
@@ -26,7 +26,7 @@ class Guilds(commands.Cog):
 		guilds = len(self.bot.guilds)
 		users = len(self.bot.users)
 		avg = await Average(self.bot, [g.member_count for g in self.bot.guilds])
-		avg = await Round(avg, 0)
+		avg = await Round(self.bot, avg, 0)
 		await ctx.send(embed=discord.Embed(title="Guild data", description=f"""
 		Guild count: {guilds}
 		Total user count: {users}
@@ -59,7 +59,7 @@ class Guilds(commands.Cog):
 				if m.bot:
 					bots.append(m.id)
 			btm = (len(bots)/g.member_count)*100
-			btmround = await Round(self.bot, btm)
+			btmround = await Round(self.bot, btm, 2)
 			if btm >= 75 and g.member_count > 20:
 				e.add_field(name=g.name+":", value=f"- Bot %: `{btmround}%`\n- Bots/membercount: `{len(bots)}/{g.member_count}`\n- Guild ID: `{g.id}`\n\n")
 		await message.edit(content="", embed=e)
