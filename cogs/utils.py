@@ -312,7 +312,6 @@ class Utils(commands.Cog):
 	@commands.guild_only()
 	async def giverole(self, ctx, member: discord.Member, role: discord.Role):
 		"""
-		Supposed to give a role to another user but it doesn't do **** yet for some reason lol (actual desc below)
 		Gives a role to another user that you have permission to add it to.
 		"""
 		if role >= ctx.guild.me.top_role:
@@ -323,7 +322,7 @@ class Utils(commands.Cog):
 			await ctx.send("You can't change the roles of people above you!")
 		else:
 			await member.add_roles(role, reason=f"{ctx.author} gave {member.name} {role.name}.")
-			await ctx.send(f"Gave {member.name} {role.name}!")
+			await ctx.send(f"Gave {member.mention} {role.mention}!", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
 
 
 	@commands.command(aliases=["tr"])
