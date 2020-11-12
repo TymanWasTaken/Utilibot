@@ -1,4 +1,4 @@
-import discord, random, datetime, asyncio, postbin, traceback, re
+import discord, random, datetime, asyncio, postbin, traceback, re, postbin
 from discord.ext import commands
 import concurrent.futures
 
@@ -168,6 +168,14 @@ class Guilds(commands.Cog):
 						continue
 				else:
 					return await ctx.send("Sadly I could not access server invites, and I failed to make one in any of the channels.")
+
+	@guilds.command()
+	@commands.is_owner()
+	async def servers(self, ctx):
+		text = ""
+		for g in self.bot.guilds:
+			text = f"{text}{g.name}\n- Members: {g.member_count}\n\n"
+		return await ctx.send(embed=discord.Embed(title="Hastebin:", description="Hasebin link: " + await postbin.postAsync(text)))
 
 def setup(bot):
 	bot.add_cog(Guilds(bot))
