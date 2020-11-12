@@ -116,12 +116,18 @@ class Utils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def resetinvites(self, ctx):
+	async def resetinvites(self, ctx, *ignore: discord.Invite):
 		"""
-		Deletes all invites in the server.
+		Deletes all invites in the server, pass invite arguments after the command to ignore said invite.
 		"""
 		for inv in await ctx.guild.invites:
-			await inv.delete(reason=f"Bulk delete by {ctx.author} ({ctx.author.id})")
+			if not inv in ignore:
+				try:
+					await inv.delete(reason=f"Bulk delete by {ctx.author} ({ctx.author.id})")
+				except: 
+					await ctx.send(f"Couldn't delete `{inv.code}`.")
+			else:
+				await ctx.send(f"Ignored invite with the code `{inv.code}`")
 
 	@commands.command(name="rolemembers", aliases=['members'])
 	@commands.guild_only()
