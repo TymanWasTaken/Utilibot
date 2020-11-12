@@ -133,7 +133,7 @@ class Utils(commands.Cog):
 			else:
 				ignored = f"{ignored}, `{inv.code}`"
 		embed = discord.Embed(title=f"Bulk Deleted {ctx.guild}'s Invites!")
-		embed.add_field(name="Deleted:", value=deleted)
+		embed.add_field(name="Deleted:", value=(deleted or "None"))
 		embed.add_field(name="Ignored:", value=(ignored or "None"))
 		embed.add_field(name="Couldn't Delete:", value=(failed or "None"))
 		await ctx.send(embed=embed)
