@@ -68,6 +68,9 @@ class Guilds(commands.Cog):
 	@guilds.command()
 	@commands.is_owner()
 	async def invite(self, ctx, guild_id: int, silent: bool=False):
+		"""
+		Will attempt to get an invite to the current server. If silent is true, it will not try to generate new invites, only get existing ones. Keep in mind that if this ends up trying to loop through channels to generate an invite, it could take a while. The bot is not broken, just taking a long time.
+		"""
 		guild = self.bot.get_guild(guild_id)
 		if guild is None:
 			return await ctx.send("I could not get the guild for the given id, am I in it?")
