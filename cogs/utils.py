@@ -120,14 +120,23 @@ class Utils(commands.Cog):
 		"""
 		Deletes all invites in the server, pass invite arguments after the command to ignore said invite.
 		"""
+		deleted = ""
+		ignored = ""
+		failed = ""
 		for inv in await ctx.guild.invites():
 			if not inv in ignore:
 				try:
 					await inv.delete(reason=f"Bulk delete by {ctx.author} ({ctx.author.id})")
+					deleted = f"{deleted}, `{inv.code}`"
 				except: 
-					await ctx.send(f"Couldn't delete `{inv.code}`.")
+					failed = f"{failed}, `{inv.code}`"
 			else:
-				await ctx.send(f"Ignored invite with the code `{inv.code}`")
+				ignored = f"{ignored}, `{invcode}`"
+		embed = discord.Embed(title=f"Bulk Deleted {ctx.guild}'s Invites!")
+		embed.add_field(name="Deleted:", value=deleted)
+		embed.add_field(name="Ignored:", value=ignored)
+		embed.add_field(name="Couldn't Delete:", value=(failed or "None"))
+		await ctx.send(embed=embed)
 
 	@commands.command(name="rolemembers", aliases=['members'])
 	@commands.guild_only()
