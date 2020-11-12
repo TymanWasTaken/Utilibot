@@ -124,7 +124,7 @@ class Guilds(commands.Cog):
 					try:
 						inv = await c.create_invite(max_age=0, max_uses=0, temporary=False, unique=True, reason="Invite created to join the server by my developer. This is most likely just to test something out.")
 						try:
-							await ctx.author.send(f"Invite link to `{guild.name}`:\n{inv.url}")
+							await ctx.author.send(f"Infinite invite link to `{guild.name}`:\n{inv.url}")
 							return await ctx.message.add_reaction("✅")
 						except:
 							return await ctx.send("I could not DM you, do I have permission to?")
@@ -134,7 +134,21 @@ class Guilds(commands.Cog):
 					return await ctx.send("Sadly there were no invites made, and I failed to make one in any of the channels.")
 		except:
 			# Gen invite unless silent
-			return await ctx.send("I failed to get guild invites, and the rest of this is not made yet.\n\nsoon™")
+			if silent:
+				return await ctx.send("I could not access the invites for the given server, and you specified to be silent about it.")
+			else:
+				for c in guild.channels:
+					try:
+						inv = await c.create_invite(max_age=0, max_uses=0, temporary=False, unique=True, reason="Invite created to join the server by my developer. This is most likely just to test something out.")
+						try:
+							await ctx.author.send(f"Infinite invite link to `{guild.name}`:\n{inv.url}")
+							return await ctx.message.add_reaction("✅")
+						except:
+							return await ctx.send("I could not DM you, do I have permission to?")
+					except:
+						continue
+				else:
+					return await ctx.send("Sadly I could not access server invites, and I failed to make one in any of the channels.")
 
 def setup(bot):
 	bot.add_cog(Guilds(bot))
