@@ -5,7 +5,7 @@ async def readDB():
 		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
 			return json.loads(await f.read())
 	except Exception as e:
-		print(f"An error occured, {e}")
+		print(f"An error occurred, {e}")
 
 async def writeDB(data: dict):
 	try:
@@ -16,7 +16,7 @@ async def writeDB(data: dict):
 			d = json.dumps(data)
 			await f.write(d)
 	except Exception as e:
-		print(f"An error occured, {e}")
+		print(f"An error occurred, {e}")
 
 # PurgeError
 class PurgeError(Exception):
@@ -27,74 +27,61 @@ def is_bot(m):
 	return 	m.author.bot
 def is_not_bot(m):
 	return 	not(m.author.bot)
-async def purge_messages(number, channel, mode, check=None):
-	if check is None:
-		return await channel.purge(limit=number)
-	diff_message = 0
-	total_message = 0
-	async for message in channel.history(limit=None):
-		if diff_message == number:
-			break
-		if check(message):
-			diff_message += 1
-		total_message += 1
-	else:
-		e = PurgeError(f'Could not find enough messages with mode {mode}')
-		raise e
-
-	return await channel.purge(limit=total_message, check=check)
 
 
 class Moderation(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command()
+	@commands.group(invoke_without_command=True)
 	@commands.has_permissions(manage_messages=True)
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.guild_only()
-	async def purge(self, ctx, number, mode="all"):
+	async def purge(self, ctx, number: int=10):
 		"""
 		Purge a specified amount of messages from the current channel.
-
-		Number = The number of messages to delete, depending on the mode. If the mode is all, it will just delete this number of messages. If the mode is bot, it will delete this number of messages made by bots.
-		Mode = The mode of deleteing messages, can be all (defualt), bot, or humans (opposite of bot)
+		Number = The number of messages to delete.
 		"""
-		await ctx.message.delete()
-		mode = str(mode).lower()
-		number = int(number)
-		try:
-			if mode == "all":
-				deleted = await purge_messages(number, ctx.channel, mode)
-			elif mode == "bot":
-				deleted = await purge_messages(number, ctx.channel, mode, is_bot)
-			elif mode == "human":
-				deleted = await purge_messages(number, ctx.channel, mode, is_not_bot)
-			else:
-				return await ctx.send('Mode must be one of: all (default), bot, or human')
-		except PurgeError as e:
-			return await ctx.send(e)
+		if ctx.invoked_subcommand is None:
+			async with ctx.typing():
+				await ctx.message.delete()
+				deleted = await ctx.channel.purge(limit=number)
+			message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
+			await asyncio.sleep(2.5)
+			await message.delete()
 
+	@purge.command()
+	@commands.has_permissions(manage_messages=True)
+	@commands.bot_has_permissions(manage_messages=True)
+	@commands.guild_only()
+	async def bot(self, ctx, number:int =10):
+		"""
+		Purge a specified amount of messages from the current channel. It will only delete messages made by bots.
+		Number = The number of messages to delete.
+		"""
+		async with ctx.typing():
+			await ctx.message.delete()
+			deleted = await ctx.channel.purge(limit=number, check=is_bot)
 		message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
 		await asyncio.sleep(2.5)
 		await message.delete()
 
-#	@purge.command()
-#	@commands.has_permissions(manage_messages=True)
-#	@commands.bot_has_permissions(manage_messages=True)
-#	@commands.guild_only()
-#	async def user(self, ctx, user: discord.Member, number:int =10):
-#		"""
-#		Purge a specified amount of messages from the current channel. It will only delete messages made by the mentioned user.
-#
-#		Number = The number of messages to delete.
-#		"""
-#		is_user = lambda msg: msg.author == user
-#		async with ctx.typing():
-#			await ctx.message.delete()
-#			deleted = await ctx.channel.purge(limit=number, check=is_user)
-#		message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
-#		await message.delete()
+	@purge.command()
+	@commands.has_permissions(manage_messages=True)
+	@commands.bot_has_permissions(manage_messages=True)
+	@commands.guild_only()
+	async def user(self, ctx, user: discord.Member, number:int =10):
+		"""
+		Purge a specified amount of messages from the current channel. It will only delete messages made by the mentioned user.
+		Number = The number of messages to delete.
+		"""
+		is_user = lambda msg: msg.author == user
+		async with ctx.typing():
+			await ctx.message.delete()
+			deleted = await ctx.channel.purge(limit=number, check=is_user)
+		message = await ctx.channel.send(f'Deleted {len(deleted)} message(s)')
+		await asyncio.sleep(2.5)
+		await message.delete()
 
 	@commands.command(name="kick")
 	@commands.bot_has_permissions(kick_members=True)
@@ -125,7 +112,7 @@ class Moderation(commands.Cog):
 		"""
 		Does what it says, bans them from the server.
 		"""
-		member = guild.get_member(user)
+		member = ctx.guild.get_member(user)
 		if member in ctx.guild.members:
 			if member.top_role >= ctx.author.top_role:
 				await ctx.send("This user can't be banned due to hierarchy.")
@@ -158,7 +145,7 @@ class Moderation(commands.Cog):
 		"""
 		await ctx.message.delete()
 		await user.unban(reason=f"{user.name} was unbanned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
-		await ctx.send(f"🔓 Unbanned {member} for the reason: `{reason}`")
+		await ctx.send(f"🔓 Unbanned {user} for the reason: `{reason}`")
 		try:
 			await user.send(f"🔓 You were unbanned from {ctx.guild} for the reason: `{reason}``")
 		except:
