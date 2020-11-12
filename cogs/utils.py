@@ -290,7 +290,7 @@ class Utils(commands.Cog):
 			**Roles:** {len(g.roles)-1}
 			**Members:** Total- {g.member_count}, Humans- {humans}, Bots- {bots}"""
 		)
-		embed.set_footer(text=f"ID: {g.id}. Created on {guild.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}")
+		# embed.set_footer(text=f"ID: {g.id}. Created on {guild.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}")
 		embed.set_thumbnail=(g.icon_url)
 		await ctx.send(embed=embed)
 
