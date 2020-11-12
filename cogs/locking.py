@@ -100,7 +100,7 @@ class Locking(commands.Cog):
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}).")
 				locked.append(f"<#{chan.id}>")
 				await chan.send(embed=discord.Embed(title=f"🔒 Server Locked! 🔒", description=f"Server locked by {ctx.author}!\n**Reason:** {reason}", color=2937504), delete_after=600)
-		embed = discord.Embed(title=f"🔒 Locked down the server!", description=f"**Channels Locked:\n{" `||` ".join(locked)}", color=2937504)
+		embed = discord.Embed(title=f"🔒 Locked down the server!", description=f"**Channels Locked:\n{' `||` '.join(locked)}", color=2937504)
 		embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
 			embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}"
@@ -125,7 +125,7 @@ class Locking(commands.Cog):
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server unlocked by {ctx.author} ({ctx.author.id}).")
 				unlocked.append(f"<#{chan.id}>")
 				await chan.send(embed=discord.Embed(title="🔓 Server Unlocked! 🔓", description=f"🔓 Server unlocked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
-		embed = discord.Embed(title=f"🔓 Unlocked the server! 🔓", description=f"**Channels Unlocked:\n{" `||` ".join(unlocked)}", color=2937504)
+		embed = discord.Embed(title=f"🔓 Unlocked the server! 🔓", description=f"**Channels Unlocked:\n{'' `||` '.join(unlocked)}", color=2937504)
 		embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
 			embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}"
