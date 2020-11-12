@@ -136,9 +136,9 @@ class Utils(commands.Cog):
 						failed.append(f"`{inv.code}`")
 				else:
 					ignored.append(f"`{inv.code}`")
-			embed.add_field(name="Deleted:", value=((", ".join(deleted)) or "None")
-			embed.add_field(name="Ignored:", value=((", ".join(ignored)) or "None")
-			embed.add_field(name="Couldn't Delete:", value=((", ".join(failed)) or "None")
+			embed.add_field(name="Deleted:", value=((", ".join(deleted)) or "None"))
+			embed.add_field(name="Ignored:", value=((", ".join(ignored)) or "None"))
+			embed.add_field(name="Couldn't Delete:", value=((", ".join(failed)) or "None"))
 		await ctx.send(embed=embed)
 
 	@commands.command(name="rolemembers", aliases=['members'])
