@@ -265,6 +265,22 @@ class Utils(commands.Cog):
 			)
 		await ctx.send(embed=embed)
 
+	@commands.command(name="giverole")
+	@commands.has_permissions(manage_roles=True)
+	@commands.bot_has_permissions(manage_roles=True)
+	@commands.guild_only()
+	async def giverole(self, ctx, member=discord.Member, role = discord.Role):
+		if role >= self.top_role:
+			await ctx.send(f"I can't give {role.name} to other users as it is above my highest role!")
+		elif role > ctx.author.top_role:
+			await ctx.send("You can't give roles above your highest role!")
+		elif member.top_role > ctx.author.top_role:
+			await ctx.send("You can't change the roles of people above you!")
+		else:
+			await member.add_roles(role, reason=f"{ctx.author} gave {member.name} {role.name}.")
+			await ctx.send(f"Gave {member.name} {role.name}!")
+
+
 	@commands.command(aliases=["tr"])
 	async def translate(self, ctx, lang, *, text):
 		"""
