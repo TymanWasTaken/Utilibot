@@ -234,6 +234,9 @@ class Utils(commands.Cog):
 
 	@commands.command(name="userinfo", aliases=['ui', 'user', 'info'])
 	async def userinfo(self, ctx, user: discord.Member=None):
+		"""
+		Shows some info about a user. Defaults to self.
+		"""
 		bot = self.bot
 		if user is None:
 			user = ctx.guild.get_member(ctx.author.id)
@@ -250,12 +253,12 @@ class Utils(commands.Cog):
 		else:
 			mobile = "❌"
 		embed = discord.Embed(
-			title=f"{str(user)}'s info:", 
+			title=f"{str(user)}'s Info:", 
 			description=f"""**Nickname:** {user.nick}
 			**User ID:** `{user.id}`
 			**Role count:** {len(user.roles)}
-			**Joined Server on:** {user.joined_at.astimezone(timezone('US/Mountain')).strftime("%a %B %d %Y %I:%M%p MST")}
-			**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a %B %d %Y %I:%M%p MST")}
+			**Joined Server on:** {user.joined_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
+			**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
 			**Status:** {status}
 			**Bot:** {'✅' if user.bot else '❌'}
 			**Mobile:** {mobile}"""
@@ -265,11 +268,41 @@ class Utils(commands.Cog):
 			)
 		await ctx.send(embed=embed)
 
+	@commands.command(name="serverinfo", aliases=['si', 'server'])
+	@commands.guild_only()
+	async def serverinfo(self, ctx):
+		"""
+		Shows some info about the server.
+		"""
+		bot = self.bot
+		g = ctx.guild
+		humans = 0
+		bots = 0
+		for m in g.members
+			if m.bot:
+				bots = bots + 1
+			else:
+				humans = humans + 1
+		embed = discord.Embed(
+			title=f"{g.name}'s Info",
+			description=f"""**Owner:** {g.owner}
+			**Channels:** {bot.get_emoji(776340924506308608)} {len(g.category_channels)} categories, {bot.get_emoji(776341306577780777)} {len(g.text_channels)} text, {bot.get_emoji(776341401545211905)} {len(g.voice_channels)} voice
+			**Roles:** {len(g.roles)-1}
+			**Members:** Total- {g.member_count}, Humans- {humans}, Bots- {bots}"""
+			thumbnail=g.icon_url
+		)
+		embed.set_footer(text=f"ID: {g.id}. Created on {guild.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}")
+		await ctx.send(embed=embed)
+
 	@commands.command(name="giverole")
 	@commands.has_permissions(manage_roles=True)
 	@commands.bot_has_permissions(manage_roles=True)
 	@commands.guild_only()
-	async def giverole(self, ctx, member=discord.Member, role = discord.Role):
+	async def giverole(self, ctx, member=discord.Member, role=discord.Role):
+		"""
+		Supposed to give a role to another user but it doesn't do **** yet for some reason lol (actual desc below)
+		Gives a role to another user that you have permission to add it to.
+		"""
 		if role >= self.top_role:
 			await ctx.send(f"I can't give {role.name} to other users as it is above my highest role!")
 		elif role > ctx.author.top_role:
