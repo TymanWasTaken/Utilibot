@@ -41,7 +41,7 @@ class Locking(commands.Cog):
 			perms.send_messages = False
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author} ({ctx.author.id}.")
 			await ctx.send(f"Successfully locked down <#{ch.id}> \n**Reason**: {reason}", delete_after=10)
-				await ch.send(embed=discord.Embed(title=f"🔒 Channel Locked 🔒", description=f"This channel was locked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
+			await ch.send(embed=discord.Embed(title=f"🔒 Channel Locked 🔒", description=f"This channel was locked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
 		
 	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
 	@commands.bot_has_permissions(manage_channels=True)
@@ -59,7 +59,7 @@ class Locking(commands.Cog):
 			perms.send_messages = None
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel unlocked by {ctx.author} ({ctx.author.id}.")
 			await ctx.send(f"✅ Successfully unlocked <#{ch.id}>!\n**Reason:** {reason}", delete_after=10)
-				await ch.send(embed=discord.Embed(title=f"🔓 Channel Unlocked 🔓", description=f"This channel was unlocked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
+			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unlocked 🔓", description=f"This channel was unlocked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
 
 	@commands.command(name="serverhardlockable", aliases=['shlockable', 'shlable'])
 	@commands.bot_has_permissions(manage_channels=True)
