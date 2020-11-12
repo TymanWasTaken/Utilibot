@@ -103,8 +103,7 @@ class Locking(commands.Cog):
 		embed = discord.Embed(title=f"🔒 Locked down the server!", description=f"**Channels Locked:**\n{' `||` '.join(locked)}", color=2937504)
 		embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
-			url = await postbin.postAsync(locked)
-			embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}\nList: {url}"
+			embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}"
 		await m.delete()
 		await ctx.send(content="Done!", embed=embed, delete_after=60)
 
@@ -130,8 +129,7 @@ class Locking(commands.Cog):
 		embed = discord.Embed(title=f"🔓 Unlocked the server! 🔓", description=f"**Channels Unlocked:**\n{' `||` '.join(unlocked)}", color=2937504)
 		embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
-			url = await postbin.postAsync(unlocked)
-			embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}\nList: {url}"
+			embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}"
 		await m.delete()
 		await ctx.send(content="Done!", embed=embed, delete_after=60)
 
