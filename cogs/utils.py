@@ -286,7 +286,7 @@ class Utils(commands.Cog):
 		embed = discord.Embed(
 			title=f"{g.name}'s Info",
 			description=f"""**Owner:** {g.owner}
-			**Channels:** {bot.get_emoji(776340924506308608)} {len(g.category_channels)} categories, {bot.get_emoji(776341306577780777)} {len(g.text_channels)} text, {bot.get_emoji(776341401545211905)} {len(g.voice_channels)} voice
+			**Channels:** {bot.get_emoji(776340924506308608)} {len(g.categories)} categories, {bot.get_emoji(776341306577780777)} {len(g.text_channels)} text, {bot.get_emoji(776341401545211905)} {len(g.voice_channels)} voice
 			**Roles:** {len(g.roles)-1}
 			**Members:** Total- {g.member_count}, Humans- {humans}, Bots- {bots}"""
 		)
