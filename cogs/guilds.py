@@ -23,6 +23,9 @@ class Guilds(commands.Cog):
 	@commands.group(invoke_without_command=True)
 	@commands.is_owner()
 	async def guilds(self, ctx):
+		"""
+		Will give basic stats about the bot an the servers it is in.
+		"""
 		guilds = len(self.bot.guilds)
 		users = len(self.bot.users)
 		avg = await Average(self.bot, [g.member_count for g in self.bot.guilds])
@@ -37,7 +40,13 @@ class Guilds(commands.Cog):
 
 	@guilds.command()
 	@commands.is_owner()
-	async def leave(self, ctx, guild: discord.Guild):
+	async def leave(self, ctx, guild_id: int):
+		"""
+		Will leave the given guild.
+		"""
+		guild = self.bot.get_guild(guild_id)
+		if guild is None:
+			return await ctx.send("I could not get the guild for the given id, am I in it?")
 		async with ctx.typing():
 			try:
 				await guild.leave()
@@ -50,6 +59,9 @@ class Guilds(commands.Cog):
 	@guilds.command()
 	@commands.is_owner()
 	async def botfarms(self, ctx):
+		"""
+		Will display servers that have both over 75% bots, and more than 20 members.
+		"""
 		message = await ctx.send("Calculating...")
 		text = ""
 		e = discord.Embed(title="Bot farms detected:")
@@ -172,6 +184,9 @@ class Guilds(commands.Cog):
 	@guilds.command()
 	@commands.is_owner()
 	async def servers(self, ctx):
+		"""
+		A command that creates a hastebin with a list of the servers the bot is in, and their member count.
+		"""
 		text = ""
 		for g in self.bot.guilds:
 			text = f"{text}{g.name}\n- Members: {g.member_count}\n\n"
