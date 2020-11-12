@@ -123,6 +123,7 @@ class Utils(commands.Cog):
 		deleted = ""
 		ignored = ""
 		failed = ""
+		embed = discord.Embed(title=f"Bulk Deleted {ctx.guild}'s Invites!")
 		for inv in await ctx.guild.invites():
 			if not inv in ignore:
 				try:
@@ -132,7 +133,6 @@ class Utils(commands.Cog):
 					failed = f"{failed}, `{inv.code}`"
 			else:
 				ignored = f"{ignored}, `{inv.code}`"
-		embed = discord.Embed(title=f"Bulk Deleted {ctx.guild}'s Invites!")
 		embed.add_field(name="Deleted:", value=(deleted or "None"))
 		embed.add_field(name="Ignored:", value=(ignored or "None"))
 		embed.add_field(name="Couldn't Delete:", value=(failed or "None"))
