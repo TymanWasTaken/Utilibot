@@ -27,6 +27,16 @@ class Debug(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
+	@commands.Cog.listener()
+	async def on_command(self, ctx):
+		log = self.bot.get_channel(776466538156130314)
+		e = discord.Embed(title="Command ran", descripton=f"""
+		User: {str(ctx.author)}
+		Guild: {ctx.guild.name}
+		Command: {ctx.command.name}
+		""".replace("	", "")
+		)
+
 	@commands.command()
 	@commands.is_owner()
 	async def quit(self, ctx):
