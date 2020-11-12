@@ -118,24 +118,24 @@ class Utils(commands.Cog):
 	@commands.bot_has_permissions(manage_channels=True)
 	async def resetinvites(self, ctx, *ignore: discord.Invite):
 		"""
-		Deletes all invites in the server, pass invite arguments after the command to ignore said invite.
+		Deletes all invites in the server, pass invite arguments after the command to ignore said invites.
 		"""
 		deleted = ""
 		ignored = ""
 		failed = ""
 		embed = discord.Embed(title=f"Bulk Deleted {ctx.guild}'s Invites!")
-		for inv in await ctx.guild.invites():
-			if not inv in ignore:
-				try:
-					await inv.delete(reason=f"Bulk delete by {ctx.author} ({ctx.author.id})")
-					deleted = f"{deleted}, `{inv.code}`"
-				except: 
-					failed = f"{failed}, `{inv.code}`"
-			else:
-				ignored = f"{ignored}, `{inv.code}`"
 		if len(await ctx.guild.invites()) == 0:
 			embed.description=f"{ctx.guild} has no invites!"
 		else:
+			for inv in await ctx.guild.invites():
+				if not inv in ignore:
+					try:
+						await inv.delete(reason=f"Bulk delete by {ctx.author} ({ctx.author.id})")
+						deleted = f"`{inv.code}`, {deleted}"
+					except: 
+						failed = f"`{inv.code}, {failed}"
+				else:
+					ignored = f"{ignored}, `{inv.code}`"
 			embed.add_field(name="Deleted:", value=(deleted or "None"))
 			embed.add_field(name="Ignored:", value=(ignored or "None"))
 			embed.add_field(name="Couldn't Delete:", value=(failed or "None"))
