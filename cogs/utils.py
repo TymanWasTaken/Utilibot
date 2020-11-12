@@ -310,7 +310,7 @@ class Utils(commands.Cog):
 	@commands.has_permissions(manage_roles=True)
 	@commands.bot_has_permissions(manage_roles=True)
 	@commands.guild_only()
-	async def giverole(self, ctx, member=discord.Member, role=discord.Role):
+	async def giverole(self, ctx, member: discord.Member, role: discord.Role):
 		"""
 		Supposed to give a role to another user but it doesn't do **** yet for some reason lol (actual desc below)
 		Gives a role to another user that you have permission to add it to.
