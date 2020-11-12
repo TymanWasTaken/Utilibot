@@ -21,7 +21,7 @@ async def writeDB(data: dict):
 			d = json.dumps(data)
 			await f.write(d)
 	except Exception as e:
-		print(f"An error occured, {e}")
+		print(f"An error occurred, {e}")
 
 class Debug(commands.Cog):
 	def __init__(self, bot):
@@ -30,12 +30,13 @@ class Debug(commands.Cog):
 	@commands.Cog.listener()
 	async def on_command(self, ctx):
 		log = self.bot.get_channel(776466538156130314)
-		e = discord.Embed(title="Command ran", descripton=f"""
+		e = discord.Embed(title="Command ran", description=f"""
 		User: {str(ctx.author)}
 		Guild: {ctx.guild.name}
 		Command: {ctx.command.name}
 		""".replace("	", "")
 		)
+		await log.send(embed=e)
 
 	@commands.command()
 	@commands.is_owner()
@@ -44,7 +45,7 @@ class Debug(commands.Cog):
 		Kill the bot.
 		"""
 		await ctx.send('Shutting down...')
-		print('Recived quit command, shutting down.')
+		print('Received quit command, shutting down.')
 		sys.exit()
 
 	@commands.command()
@@ -125,5 +126,6 @@ class Debug(commands.Cog):
 					await ctx.send(f"Successfully unblacklisted {str(user)}.")
 
 def setup(bot):
-	bot.add_cog(Debug(bot))
+	cog = Debug(bot)
+	bot.add_cog(cog)
 	print('[DebugCog] Debug cog loaded')
