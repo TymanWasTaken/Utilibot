@@ -1,4 +1,4 @@
-import discord, random, datetime, asyncio, postbin, traceback, re
+import discord, random, datetime, asyncio, postbin, traceback, re, postbin
 from discord.ext import commands
 import concurrent.futures
 
@@ -68,6 +68,9 @@ class Guilds(commands.Cog):
 	@guilds.command()
 	@commands.is_owner()
 	async def invite(self, ctx, guild_id: int, silent: bool=False):
+		"""
+		Will attempt to get an invite to the current server. If silent is true, it will not try to generate new invites, only get existing ones. Keep in mind that if this ends up trying to loop through channels to generate an invite, it could take a while. The bot is not broken, just taking a long time.
+		"""
 		guild = self.bot.get_guild(guild_id)
 		if guild is None:
 			return await ctx.send("I could not get the guild for the given id, am I in it?")
@@ -165,6 +168,14 @@ class Guilds(commands.Cog):
 						continue
 				else:
 					return await ctx.send("Sadly I could not access server invites, and I failed to make one in any of the channels.")
+
+	@guilds.command()
+	@commands.is_owner()
+	async def servers(self, ctx):
+		text = ""
+		for g in self.bot.guilds:
+			text = f"{text}{g.name}\n- Members: {g.member_count}\n\n"
+		return await ctx.send(embed=discord.Embed(title="Hastebin:", description="Hasebin link: " + await postbin.postAsync(text)))
 
 def setup(bot):
 	bot.add_cog(Guilds(bot))
