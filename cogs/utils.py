@@ -315,7 +315,7 @@ class Utils(commands.Cog):
 		Supposed to give a role to another user but it doesn't do **** yet for some reason lol (actual desc below)
 		Gives a role to another user that you have permission to add it to.
 		"""
-		if role >= self.top_role:
+		if role >= ctx.guild.me.top_role:
 			await ctx.send(f"I can't give {role.name} to other users as it is above my highest role!")
 		elif role > ctx.author.top_role:
 			await ctx.send("You can't give roles above your highest role!")
