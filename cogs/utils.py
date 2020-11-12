@@ -152,7 +152,7 @@ class Utils(commands.Cog):
 		for member in role.members:
 			members = f"{members}\n• Username: `{member.name}#{member.discriminator}` ~ ID: `{member.id}` ~ Nickname: `{member.nick}`"
 		if len(members) > 2048:
-			url = postbin.postAsync(members)
+			url = await postbin.postAsync(members)
 			await ctx.send(f"List is too big to send, view the hastebin link below.\n{url}")
 		else:
 			embed.description=members
