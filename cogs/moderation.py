@@ -109,34 +109,38 @@ class Moderation(commands.Cog):
 			await ctx.send("This user can't be kicked due to hierarchy.")
 		else:
 			await ctx.message.delete()
+			await member.kick(reason=f"{member.name} was kicked by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
+			await ctx.send(f"Kicked {member} for the reason: `{reason}`")
 			try:
 				await member.send(f"You were kicked from {ctx.guild} for the reason: `{reason}`")
-				await member.kick(reason=f"{member.name} was kicked by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
-				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
 			except:
 				await ctx.send(f"Error: Could Not DM user")
-				await member.kick(reason=f"{member.name} was kicked by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
-				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
 
 
 	@commands.command(name="ban")
 	@commands.bot_has_permissions(ban_members=True)
 	@commands.has_permissions(ban_members=True)
 	@commands.guild_only()
-	async def 	ban(self, ctx, user: discord.User, *, reason=None):
+	async def ban(self, ctx, user: discord.User, *, reason=None):
 		"""
 		Does what it says, bans them from the server.
 		"""
-		if user.top_role >= ctx.author.top_role:
-			await ctx.send("This user can't be banned due to hierarchy.")
+		def banfunc:
+				await ctx.message.delete()
+				await user.ban(reason=f"{user.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
+				await ctx.send(f"🔨 Banned {user} for the reason: `{reason}`")
+				try:
+					await user.send(f"🔨 You were banned from {ctx.guild} for the reason: `{reason}`")
+				except:
+					await ctx.send(f"Error: Could Not DM user")
+		if user in ctx.guild.members:
+			if user.top_role >= ctx.author.top_role:
+				await ctx.send("This user can't be banned due to hierarchy.")
+			else:
+				banfunc
 		else:
-			await ctx.message.delete()
-			await user.ban(reason=f"{user.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
-			await ctx.send(f"🔨 Banned {user} for the reason: `{reason}`")
-			try:
-				await user.send(f"🔨 You were banned from {ctx.guild} for the reason: `{reason}`")
-			except:
-				await ctx.send(f"Error: Could Not DM user")
+			banfunc
+
 
 
 	@commands.command(name="unban")
@@ -170,7 +174,7 @@ class Moderation(commands.Cog):
 		if channels != []:
 			await ctx.send(f"I have detected that {str(member)} still has permission to talk in some channels, attempting to apply a fix.")
 			for channel in channels:
-				await channel.set_permissions(muterole, send_messages=False, reason="Applying overrites for muted role")
+				await channel.set_permissions(muterole, send_messages=False, reason="Applying overwrites for Muted role")
 		await ctx.send(f"Successfully muted {str(member)}.")
 
 def setup(bot):
