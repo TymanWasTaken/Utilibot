@@ -278,7 +278,7 @@ class Utils(commands.Cog):
 		g = ctx.guild
 		humans = 0
 		bots = 0
-		for m in g.members
+		for m in g.members:
 			if m.bot:
 				bots = bots + 1
 			else:
