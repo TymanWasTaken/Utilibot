@@ -40,7 +40,7 @@ class Locking(commands.Cog):
 		else:
 			perms.send_messages = False
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author} ({ctx.author.id}.")
-			await ctx.send(f"Successfully locked down <#{ch.id}> \n**Reason**: {reason}", delete_after=10)
+			await ctx.send(f"✅ Successfully locked down <#{ch.id}> \n**Reason**: {reason}", delete_after=10)
 			await ch.send(embed=discord.Embed(title=f"🔒 Channel Locked 🔒", description=f"This channel was locked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
 		
 	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
