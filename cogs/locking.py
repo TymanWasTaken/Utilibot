@@ -92,7 +92,7 @@ class Locking(commands.Cog):
 		Locks the entire server by setting all channels' send messages permissions for @everyone to false.
 		"""
 		locked = []
-		m = await ctx.send("Locking server...")
+		m = await ctx.send("Locking server...", delete_after=120)
 		for chan in ctx.guild.text_channels:
 			perms = chan.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages != False:
@@ -105,7 +105,7 @@ class Locking(commands.Cog):
 		if len(embed.description) > 2048:
 			url = await postbin.postAsync(locked)
 			embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}\nList: {url}"
-		await m.edit(content="Done!", embed=embed, delete_after=60)
+		await m.edit(content="Done!", embed=embed)
 
 
 	@commands.command(name="unserverhardlock", aliases=['unserverlockdown', 'ushl', 'usld'])
@@ -118,7 +118,7 @@ class Locking(commands.Cog):
 		Unlocks the entire server by setting all channels' send messages permissions for @everyone to neutral.
 		"""
 		unlocked = []
-		m = await ctx.send("Unlocking server...")
+		m = await ctx.send("Unlocking server...", delete_after=120)
 		for chan in ctx.guild.text_channels:
 			perms = chan.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages == False:
@@ -131,7 +131,7 @@ class Locking(commands.Cog):
 		if len(embed.description) > 2048:
 			url = await postbin.postAsync(unlocked)
 			embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}\nList: {url}"
-		await m.edit(content="Done!", embed=embed, delete_after=60)
+		await m.edit(content="Done!", embed=embed)
 
 # Softlock- Deletes messages.
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
