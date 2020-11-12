@@ -120,7 +120,7 @@ class Utils(commands.Cog):
 		"""
 		Deletes all invites in the server, pass invite arguments after the command to ignore said invite.
 		"""
-		for inv in ctx.guild.invites:
+		for inv in await ctx.guild.invites():
 			if not inv in ignore:
 				try:
 					await inv.delete(reason=f"Bulk delete by {ctx.author} ({ctx.author.id})")
