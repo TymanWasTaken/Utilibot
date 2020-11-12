@@ -126,7 +126,10 @@ class Moderation(commands.Cog):
 		Does what it says, bans them from the server.
 		"""
 		member = guild.get_member(user)
-		def banfunc():
+		if member in ctx.guild.members:
+			if member.top_role >= ctx.author.top_role:
+				await ctx.send("This user can't be banned due to hierarchy.")
+			else:
 				await ctx.message.delete()
 				await user.ban(reason=f"{user.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
 				await ctx.send(f"🔨 Banned {user} for the reason: `{reason}`")
@@ -134,13 +137,14 @@ class Moderation(commands.Cog):
 					await user.send(f"🔨 You were banned from {ctx.guild} for the reason: `{reason}`")
 				except:
 					await ctx.send(f"Error: Could Not DM user")
-		if member in ctx.guild.members:
-			if member.top_role >= ctx.author.top_role:
-				await ctx.send("This user can't be banned due to hierarchy.")
-			else:
-				banfunc
 		else:
-			banfunc
+			await ctx.message.delete()
+			await user.ban(reason=f"{user.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
+			await ctx.send(f"🔨 Banned {user} for the reason: `{reason}`")
+			try:
+				await user.send(f"🔨 You were banned from {ctx.guild} for the reason: `{reason}`")
+			except:
+				await ctx.send(f"Error: Could Not DM user")
 
 
 
