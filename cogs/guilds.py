@@ -59,7 +59,7 @@ class Guilds(commands.Cog):
 					bots.append(m.id)
 			btm = (len(bots)/g.member_count)*100
 			btmround = await Round(self.bot, btm)
-			if btm >= 75:
+			if btm >= 75 and g.member_count > 20:
 				e.add_field(name=g.name+":", value=f"- Bot %: `{btmround}%`\n- Bots/membercount: `{len(bots)}/{g.member_count}`\n- Guild ID: `{g.id}`\n\n")
 		await message.edit(content="", embed=e)
 
