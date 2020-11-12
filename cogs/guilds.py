@@ -50,6 +50,7 @@ class Guilds(commands.Cog):
 	async def botfarms(self, ctx):
 		message = await ctx.send("Calculating...")
 		text = ""
+		e = discord.Embed(title="Bot farms detected:")
 		for g in self.bot.guilds:
 			await g.chunk()
 			bots = []
@@ -59,8 +60,8 @@ class Guilds(commands.Cog):
 			btm = (len(bots)/g.member_count)*100
 			btmround = await Round(self.bot, btm)
 			if btm >= 75:
-				text = text + f"**{g.name}**:\n- Bot %: `{btmround}%`\n- Bots/membercount: `{len(bots)}/{g.member_count}`\n- Guild ID: `{g.id}`\n\n"
-		await message.edit(content="", embed=discord.Embed(title="Bot farms detected:", description=text))
+				e.add_field(name=g.name+":", value=f"- Bot %: `{btmround}%`\n- Bots/membercount: `{len(bots)}/{g.member_count}`\n- Guild ID: `{g.id}`\n\n")
+		await message.edit(content="", embed=e)
 
 
 def setup(bot):
