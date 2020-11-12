@@ -125,7 +125,7 @@ class Moderation(commands.Cog):
 		"""
 		Does what it says, bans them from the server.
 		"""
-		def banfunc:
+		def banfunc():
 				await ctx.message.delete()
 				await user.ban(reason=f"{user.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
 				await ctx.send(f"🔨 Banned {user} for the reason: `{reason}`")
