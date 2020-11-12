@@ -71,6 +71,7 @@ class Guilds(commands.Cog):
 		guild = self.bot.get_guild(guild_id)
 		if guild is None:
 			return await ctx.send("I could not get the guild for the given id, am I in it?")
+		await ctx.send(f"Getting an invite for `{guild.name}`...")
 		try:
 			invites = await guild.invites()
 			# Infinite and not temporary
