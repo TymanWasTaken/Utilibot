@@ -131,7 +131,7 @@ class Utils(commands.Cog):
 				except: 
 					failed = f"{failed}, `{inv.code}`"
 			else:
-				ignored = f"{ignored}, `{invcode}`"
+				ignored = f"{ignored}, `{inv.code}`"
 		embed = discord.Embed(title=f"Bulk Deleted {ctx.guild}'s Invites!")
 		embed.add_field(name="Deleted:", value=deleted)
 		embed.add_field(name="Ignored:", value=ignored)
