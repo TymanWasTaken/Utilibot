@@ -134,7 +134,8 @@ class Moderation(commands.Cog):
 				except:
 					await ctx.send(f"Error: Could Not DM user")
 		if user in ctx.guild.members:
-			if user.top_role >= ctx.author.top_role:
+			member = guild.get_member(user)
+			if member.top_role >= ctx.author.top_role:
 				await ctx.send("This user can't be banned due to hierarchy.")
 			else:
 				banfunc
