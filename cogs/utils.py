@@ -133,9 +133,12 @@ class Utils(commands.Cog):
 					failed = f"{failed}, `{inv.code}`"
 			else:
 				ignored = f"{ignored}, `{inv.code}`"
-		embed.add_field(name="Deleted:", value=(deleted or "None"))
-		embed.add_field(name="Ignored:", value=(ignored or "None"))
-		embed.add_field(name="Couldn't Delete:", value=(failed or "None"))
+		if len(await ctx.guild.invites()) == 0:
+			embed.description=f"{ctx.guild} has no invites!"
+		else:
+			embed.add_field(name="Deleted:", value=(deleted or "None"))
+			embed.add_field(name="Ignored:", value=(ignored or "None"))
+			embed.add_field(name="Couldn't Delete:", value=(failed or "None"))
 		await ctx.send(embed=embed)
 
 	@commands.command(name="rolemembers", aliases=['members'])
