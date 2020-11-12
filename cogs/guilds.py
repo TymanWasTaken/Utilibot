@@ -63,6 +63,73 @@ class Guilds(commands.Cog):
 				e.add_field(name=g.name+":", value=f"- Bot %: `{btmround}%`\n- Bots/membercount: `{len(bots)}/{g.member_count}`\n- Guild ID: `{g.id}`\n\n")
 		await message.edit(content="", embed=e)
 
+	@guilds.command()
+	@commands.is_owner()
+	async def invite(self, ctx, guild: discord.Guild, silent: bool=False):
+		try:
+			invites = await guild.invites()
+			# Infinite and not temporary
+			invites_inf_not_temp = [inv for inv in invites if inv.temporary == False and inv.max_age == 0]
+			# Not infinite and not temporary
+			invites_not_temp_not_inf = [inv for inv in invites if inv.temporary == False and inv.max_age != 0]
+			# Infinite and temporary
+			invites_inf_temp = [inv for inv in invites if inv.temporary == True and inv.max_age == 0]
+			# Not infinite and temporary
+			invites_not_inf_not_temp = [inv for inv in invites if inv.temporary == True and inv.max_age != 0]
+			"""
+			Invite priority:
+			1. Infinite and not temporary
+			2. Not infinite and not temporary
+			3. Infinite and temporary
+			4. Not infinite and temporary
+			"""
+			if len(invites_inf_not_temp) > 0:
+				try:
+					await ctx.author.send(f"Infinite invite link to `{guild.name}`:\n{invites_inf_not_temp[0].url}")
+					return await ctx.message.add_reaction("✅")
+				except:
+					return await ctx.send("I could not DM you, do I have permission to?")
+			elif len(invites_not_temp_not_inf) > 0:
+				try:
+					await ctx.author.send(f"Invite link to `{guild.name}`:\n{invites_not_temp_not_inf[0].url}")
+					return await ctx.message.add_reaction("✅")
+				except:
+					return await ctx.send("I could not DM you, do I have permission to?")
+			# After this, it means the only invites it could find were temporary permissions (or it couldn't find any), so attempt to generate an invite instead, unless "silent" is True
+			if silent == True:
+				if len(invites_inf_temp) > 0:
+					try:
+						await ctx.author.send(f"**TEMPORARY MEMBERSHIP**\nInfinite invite link to `{guild.name}`:\n{invites_inf_temp[0].url}")
+						return await ctx.message.add_reaction("✅")
+					except:
+						return await ctx.send("I could not DM you, do I have permission to?")
+				elif len(invites_not_inf_not_temp) > 0:
+					try:
+						await ctx.author.send(f"**TEMPORARY MEMBERSHIP**\nInvite link to `{guild.name}`:\n{invites_inf_temp[0].url}")
+						return await ctx.message.add_reaction("✅")
+					except:
+						return await ctx.send("I could not DM you, do I have permission to?")
+				elif len(invites) == 0:
+					return await ctx.send("You specified this to be silent, and there were no invites.")
+				else:
+					await ctx.send("Something unexpected happened (somehow):/")
+			else:
+				# Gen invite
+				for c in guild.channels:
+					try:
+						inv = await c.create_invite(max_age=0, max_uses=0, temporary=False, unique=True, reason="Invite created to join the server by my developer. This is most likely just to test something out.")
+						try:
+							await ctx.author.send(f"Invite link to `{guild.name}`:\n{inv.url}")
+							return await ctx.message.add_reaction("✅")
+						except:
+							return await ctx.send("I could not DM you, do I have permission to?")
+					except:
+						continue
+				else:
+					return await ctx.send("Sadly there were no invites made, and I failed to make one in any of the channels.")
+		except:
+			# Gen invite unless silent
+			return await ctx.send("I failed to get guild invites, and the rest of this is not made yet.\n\nsoon™")
 
 def setup(bot):
 	bot.add_cog(Guilds(bot))

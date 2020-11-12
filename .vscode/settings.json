@@ -1,6 +1,7 @@
 {
 	"python.pythonPath": "/usr/local/bin/python3.8",
 	"cSpell.words": [
+		"btmround",
 		"nocommandblacklist"
 	]
 }
