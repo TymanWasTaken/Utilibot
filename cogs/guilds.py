@@ -65,7 +65,10 @@ class Guilds(commands.Cog):
 
 	@guilds.command()
 	@commands.is_owner()
-	async def invite(self, ctx, guild: discord.Guild, silent: bool=False):
+	async def invite(self, ctx, guild_id: int, silent: bool=False):
+		guild = self.bot.get_guild(guild_id)
+		if guild is None:
+			return await ctx.send("I could not get the guild for the given id, am I in it?")
 		try:
 			invites = await guild.invites()
 			# Infinite and not temporary
