@@ -147,7 +147,7 @@ class Moderation(commands.Cog):
 		"""
 		Unbans a user from the server.
 		"""
-		await ctx.message.	()
+		await ctx.message.delete()
 		await member.unban(reason=f"{member.name} was unbanned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
 		await ctx.send(f"🔓 Unbanned {member} for the reason: `{reason}`")
 		try:
