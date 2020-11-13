@@ -315,17 +315,24 @@ class Utils(commands.Cog):
 		Gives a role or list of roles to another user that you have permission to add them to.
 		"""
 		given = []
-		for role in roles:
-			if role >= ctx.guild.me.top_role:
-				await ctx.send(f"I can't give {role.name} to other users as it is above my highest role!")
-			elif role > ctx.author.top_role:
-				await ctx.send("You can't give roles above your highest role!")
-			elif member.top_role > ctx.author.top_role:
-				await ctx.send("You can't change the roles of people above you!")
-			else:
-				await member.add_roles(role, reason=f"{ctx.author} gave {member.name} {role.name}.")
-				given.append(role)
-		await ctx.send(f"Gave {member.mention} some roles!\nRoles given: {', '.join([x.mention for x in given])}", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
+		failed = []
+		if len(roles) == 0:
+			await ctx.send("You have to specify at least one role to give!")
+		else:
+			for role in roles:
+				if role >= ctx.guild.me.top_role:
+					await ctx.send(f"I can't give {role.name} to other users as it is above my highest role!")
+					failed.append(role)
+				elif role > ctx.author.top_role:
+					await ctx.send("You can't give roles above your highest role!")
+					failed.append(role)
+				elif member.top_role > ctx.author.top_role:
+					await ctx.send("You can't change the roles of people above you!")
+					failed.append(role)
+				else:
+					await member.add_roles(role, reason=f"{ctx.author} gave {member.name} {role.name}.")
+					given.append(role)
+			await ctx.send(f"Gave {member.mention} some roles!\nRoles given: {', '.join([x.mention for x in given])}", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
 
 	@commands.command(name="takerole", aliases=['takeroles', 'trole', 'troles', 'removerole', 'removeroles', 'rrole'])
 	@commands.has_permissions(manage_roles=True)
@@ -336,16 +343,19 @@ class Utils(commands.Cog):
 		Takes a role or list of roles from another user that you have permission to remove them from.
 		"""
 		taken = []
-		for role in roles:
-			if role >= ctx.guild.me.top_role:
-				await ctx.send(f"I can't remove {role.name} from other users as it is above my highest role!")
-			elif role > ctx.author.top_role:
-				await ctx.send("You can't remove roles above your highest role!")
-			elif member.top_role > ctx.author.top_role:
-				await ctx.send("You can't change the roles of people above you!")
-			else:
-				await member.remove_roles(role, reason=f"{ctx.author} removed {role.name} from {member.name}.")
-		await ctx.send(f"Removed some role from {member.mention}!\nRoles taken: {', '.join([x.mention for x in taken])}", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
+		if len(roles) == 0:
+			await ctx.send("You have to specify at least one role to remove!")
+		else:
+			for role in roles:
+				if role >= ctx.guild.me.top_role:
+					await ctx.send(f"I can't remove {role.name} from other users as it is above my highest role!")
+				elif role > ctx.author.top_role:
+					await ctx.send("You can't remove roles above your highest role!")
+				elif member.top_role > ctx.author.top_role:
+					await ctx.send("You can't change the roles of people above you!")
+				else:
+					await member.remove_roles(role, reason=f"{ctx.author} removed {role.name} from {member.name}.")
+			await ctx.send(f"Removed some role from {member.mention}!\nRoles taken: {', '.join([x.mention for x in taken])}", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
 
 	@commands.command(aliases=["tr"])
 	async def translate(self, ctx, lang, *, text):
