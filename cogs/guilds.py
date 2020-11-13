@@ -94,6 +94,26 @@ class Guilds(commands.Cog):
 		"""
 		Will interactively ask you if you want to leave botfarms.
 		"""
+		await ctx.send(content="Calculating...")
+		try:
+			for botfarm in await calcbotfarms(self.bot):
+				check = lambda message: message.author.id == ctx.author.id and message.channel.id == ctx.channel.id
+				await ctx.send(f"Would you like to leave {botfarm['guild'].name}?\n- Bot %: `{botfarm['btmround']}%`\n- Bots/membercount: `{botfarm['bots']}/{botfarm['guild'].member_count}`")
+				msg = await self.bot.wait_for('message', check=check, timeout=60)
+				if msg.content.lower() == "yes":
+					m = await ctx.send("Leaving...")
+					await botfarm['guild'].leave()
+					await m.edit(content="Left!")
+					continue
+				elif msg.content.lower() == "no":
+					await ctx.send("Skipped!")
+					continue
+				else:
+					await ctx.send("Invalid response, skipping.")
+					continue
+			return await ctx.send("Finished!")
+		except asyncio.TimeoutError:
+			return await ctx.send(content="Timed out.")
 
 	@guilds.command()
 	@commands.is_owner()
