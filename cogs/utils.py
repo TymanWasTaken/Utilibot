@@ -310,20 +310,40 @@ class Utils(commands.Cog):
 	@commands.has_permissions(manage_roles=True)
 	@commands.bot_has_permissions(manage_roles=True)
 	@commands.guild_only()
-	async def giverole(self, ctx, member: discord.Member, role: discord.Role):
+	async def giverole(self, ctx, member: discord.Member, *roles: discord.Role):
 		"""
 		Gives a role to another user that you have permission to add it to.
 		"""
+		given = []
+		for role in roles:
+			if role >= ctx.guild.me.top_role:
+				await ctx.send(f"I can't give {role.name} to other users as it is above my highest role!")
+			elif role > ctx.author.top_role:
+				await ctx.send("You can't give roles above your highest role!")
+			elif member.top_role > ctx.author.top_role:
+				await ctx.send("You can't change the roles of people above you!")
+			else:
+				await member.add_roles(role, reason=f"{ctx.author} gave {member.name} {role.name}.")
+				given.append(role)
+		await ctx.send(f"Gave {member.mention} some roles!\nRoles given: {", ".join([x.mention for x in given])}", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
+
+	@commands.command(name="takerole")
+	@commands.has_permissions(manage_roles=True)
+	@commands.bot_has_permissions(manage_roles=True)
+	@commands.guild_only()
+	async def takerole(self, ctx, member: discord.Member, role: discord.Role):
+		"""
+		Takes a role from another user that you have permission to remove it from.
+		"""
 		if role >= ctx.guild.me.top_role:
-			await ctx.send(f"I can't give {role.name} to other users as it is above my highest role!")
+			await ctx.send(f"I can't remove {role.name} from other users as it is above my highest role!")
 		elif role > ctx.author.top_role:
-			await ctx.send("You can't give roles above your highest role!")
+			await ctx.send("You can't remove roles above your highest role!")
 		elif member.top_role > ctx.author.top_role:
 			await ctx.send("You can't change the roles of people above you!")
 		else:
-			await member.add_roles(role, reason=f"{ctx.author} gave {member.name} {role.name}.")
-			await ctx.send(f"Gave {member.mention} {role.mention}!", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
-
+			await member.remove_roles(role, reason=f"{ctx.author} removed {role.name} from {member.name}.")
+			await ctx.send(f"Removed{role.mention} from {member.mention}!", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
 
 	@commands.command(aliases=["tr"])
 	async def translate(self, ctx, lang, *, text):
