@@ -140,7 +140,7 @@ class Utils(commands.Cog):
 		"""
 		Creates a text channel with an optional position and reason. Use `newvc` to create a voice channel.
 		"""
-		c = await guild.create_text_channel(name=name, reason=f"Channel created by {ctx.author} ({ctx.author.id}) with reason: {reason}", position=position)
+		c = await ctx.guild.create_text_channel(name=name, reason=f"Channel created by {ctx.author} ({ctx.author.id}) with reason: {reason}", position=position)
 		await c.send(f"I created this channel for you, {ctx.author.mention}!")
 
 	@commands.command(name="createvoicechannel", aliases=['createvoicechan', 'newvoicechan', 'newvc'])
@@ -151,7 +151,7 @@ class Utils(commands.Cog):
 		"""
 		Creates a voice channel with an optional position and reason. Use `newchan` to create a text channel.
 		"""
-		c = await guild.create_voice_channel(name=name, reason=f"Channel created by {ctx.author} ({ctx.author.id}) with reason: {reason}", position=position)
+		c = await ctx.guild.create_voice_channel(name=name, reason=f"Channel created by {ctx.author} ({ctx.author.id}) with reason: {reason}", position=position)
 		await ctx.send(f"I created <#{c.id}> for you, {ctx.author.mention}!")
 
 	@commands.command(name="nuke", aliases=['nukechan', 'clone', 'resetchan'])
@@ -360,7 +360,7 @@ class Utils(commands.Cog):
 			**Roles:** {len(g.roles)-1}
 			**Members:** Total- {g.member_count}, Humans- {humans}, Bots- {bots}"""
 		)
-		# embed.set_footer(text=f"ID: {g.id}. Created on {guild.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}")
+		# embed.set_footer(text=f"ID: {g.id}. Created on {g.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}")
 		# embed.set_thumbnail=(g.icon_url)
 		await ctx.send(embed=embed)
 
