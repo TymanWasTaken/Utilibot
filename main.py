@@ -85,7 +85,7 @@ async def on_command_error(ctx, error):
 		await ctx.send(f'Sorry, but the command `{ctx.command.qualified_name}` is currently disabled.')
 	elif isinstance(error, commands.MissingRequiredArgument):
 		await ctx.send(str(error).capitalize())
-	elif isinstance(error, commands.BadArgument) or isinstance(error, command.BadUnionArgument):
+	elif isinstance(error, commands.BadArgument) or isinstance(error, commands.BadUnionArgument):
 		await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
 	elif "VoiceError: You are not connected to a voice channel." in str(error):
 		pass
