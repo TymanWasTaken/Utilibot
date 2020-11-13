@@ -104,7 +104,7 @@ class Utils(commands.Cog):
 		Edits a channel's name.
 		"""
 		chan = channel or ctx.channel
-		chan.edit(name=name, reason=f"Name changed by {ctx.author} ({ctx.author.id}).")
+		await chan.edit(name=name, reason=f"Name changed by {ctx.author} ({ctx.author.id}).")
 		await ctx.send(f"Changed `{chan.name}` to {name}!")
 
 
@@ -117,7 +117,7 @@ class Utils(commands.Cog):
 		Edits a channel's topic.
 		"""
 		chan = channel or ctx.channel
-		chan.edit(topic=topic, reason=f"Topic changed by {ctx.author} ({ctx.author.id}).")
+		await chan.edit(topic=topic, reason=f"Topic changed by {ctx.author} ({ctx.author.id}).")
 		await ctx.send(f"Changed <#{chan.id}>'s topic from {chan.topic} to {topic}!")
 
 	@commands.command(name="nuke", aliases=['nukechan', 'clone', 'resetchan'])
