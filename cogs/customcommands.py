@@ -16,20 +16,22 @@ async def runcode(code, ctx):
 	for line in lines:
 		n = "\n"
 		nn = "\\n"
-		sendMatch = re.match(r"^send\(.*\)$", line)
-		sendChannelMatch = re.match(r"^sendChannel\(.*\)$", line)
+		sendMatch = re.match(r"^send\((.*)\)$", line)
+		sendChannelMatch = re.match(r"^sendChannel\((.*)\)$", line)
 		if sendMatch:
 			line = line.replace("\\n", "\n")
-			sendText = line[sendMatch.start():sendMatch.end()].lstrip("send(").rstrip(")")
+			sendText = sendMatch.group(1)
+			if sendText == "":
+				return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` is invalid. You cannot send an empty message", allowed_mentions=nomention)
 			for var, value in variables.items():
 				if var in sendText:
 					sendText = sendText.replace(var, value)
 			await ctx.send(sendText, allowed_mentions=nomention)
 		elif sendChannelMatch:
 			line = line.replace("\\n", "\n")
-			args = line[sendChannelMatch.start():sendChannelMatch.end()].lstrip("sendChannel(").rstrip(")").split(",")
+			args = sendChannelMatch.group(1).split(",")
 			if len(args) != 2:
-				return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` threw an error while parsing arguments for `sendChannel()`.", allowed_mentions=nomention)
+				return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` threw an error while parsing arguments for `sendChannel()`. You must give 2 arguments.", allowed_mentions=nomention)
 			for var, value in variables.items():
 				if var in args[0]:
 					args[0] = args[0].replace(var, value)
