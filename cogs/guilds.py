@@ -227,7 +227,7 @@ class Guilds(commands.Cog):
 		"""
 		text = ""
 		for g in reversed(sorted(self.bot.guilds, key=lambda guild: guild.member_count)):
-			text = f"{text}{g.name}\n- Members: {g.member_count}\n\n"
+			text = f"{text}{g.name}\n- Members: {g.member_count}\n- Server id: {g.id}\n\n"
 		return await ctx.send(embed=discord.Embed(title="Hastebin:", description="Hasebin link: " + await postbin.postAsync(text)))
 
 def setup(bot):
