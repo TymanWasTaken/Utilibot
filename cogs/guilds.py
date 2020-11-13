@@ -16,6 +16,25 @@ async def Round(bot, num, roundnum):
 	with concurrent.futures.ProcessPoolExecutor() as pool:
 		return await bot.loop.run_in_executor(pool, func2, num, roundnum)
 
+async def calcbotfarms(bot):
+	botfarms = []
+	for g in bot.guilds:
+		await g.chunk()
+		bots = []
+		for m in g.members:
+			if m.bot:
+				bots.append(m.id)
+		btm = (len(bots)/g.member_count)*100
+		btmround = await Round(bot, btm, 2)
+		if btm >= 75 and g.member_count > 20:
+			botfarms.append({
+				'btm': btm,
+				'btmround': btmround,
+				'guild': g,
+				'bots': len(bots)
+			})
+	return botfarms
+
 class Guilds(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
@@ -56,7 +75,7 @@ class Guilds(commands.Cog):
 				url = await postbin.postAsync(tb)
 				await ctx.send(f"An error occured while trying to leave that guild. Hastebin: {url}")
 
-	@guilds.command()
+	@guilds.group(invoke_without_command=True)
 	@commands.is_owner()
 	async def botfarms(self, ctx):
 		"""
@@ -65,17 +84,16 @@ class Guilds(commands.Cog):
 		message = await ctx.send("Calculating...")
 		text = ""
 		e = discord.Embed(title="Bot farms detected:")
-		for g in self.bot.guilds:
-			await g.chunk()
-			bots = []
-			for m in g.members:
-				if m.bot:
-					bots.append(m.id)
-			btm = (len(bots)/g.member_count)*100
-			btmround = await Round(self.bot, btm, 2)
-			if btm >= 75 and g.member_count > 20:
-				e.add_field(name=g.name+":", value=f"- Bot %: `{btmround}%`\n- Bots/membercount: `{len(bots)}/{g.member_count}`\n- Guild ID: `{g.id}`\n\n")
+		for botfarm in await calcbotfarms(self.bot):
+			e.add_field(name=botfarm["guild"].name+":", value=f"- Bot %: `{botfarm['btmround']}%`\n- Bots/membercount: `{botfarm['bots']}/{botfarm['guild'].member_count}`\n- Guild ID: `{botfarm['guild'].id}`\n\n")
 		await message.edit(content="", embed=e)
+
+	@botfarms.command()
+	@commands.is_owner()
+	async def leave(self, ctx):
+		"""
+		Will interactively ask you if you want to leave botfarms.
+		"""
 
 	@guilds.command()
 	@commands.is_owner()
