@@ -16,6 +16,25 @@ async def Round(bot, num, roundnum):
 	with concurrent.futures.ProcessPoolExecutor() as pool:
 		return await bot.loop.run_in_executor(pool, func2, num, roundnum)
 
+async def calcbotfarms(bot):
+	botfarms = []
+	for g in bot.guilds:
+		await g.chunk()
+		bots = []
+		for m in g.members:
+			if m.bot:
+				bots.append(m.id)
+		btm = (len(bots)/g.member_count)*100
+		btmround = await Round(bot, btm, 2)
+		if btm >= 75 and g.member_count > 20:
+			botfarms.append({
+				'btm': btm,
+				'btmround': btmround,
+				'guild': g,
+				'bots': len(bots)
+			})
+	return botfarms
+
 class Guilds(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
@@ -56,7 +75,7 @@ class Guilds(commands.Cog):
 				url = await postbin.postAsync(tb)
 				await ctx.send(f"An error occured while trying to leave that guild. Hastebin: {url}")
 
-	@guilds.command()
+	@guilds.group(invoke_without_command=True)
 	@commands.is_owner()
 	async def botfarms(self, ctx):
 		"""
@@ -65,17 +84,36 @@ class Guilds(commands.Cog):
 		message = await ctx.send("Calculating...")
 		text = ""
 		e = discord.Embed(title="Bot farms detected:")
-		for g in self.bot.guilds:
-			await g.chunk()
-			bots = []
-			for m in g.members:
-				if m.bot:
-					bots.append(m.id)
-			btm = (len(bots)/g.member_count)*100
-			btmround = await Round(self.bot, btm, 2)
-			if btm >= 75 and g.member_count > 20:
-				e.add_field(name=g.name+":", value=f"- Bot %: `{btmround}%`\n- Bots/membercount: `{len(bots)}/{g.member_count}`\n- Guild ID: `{g.id}`\n\n")
+		for botfarm in await calcbotfarms(self.bot):
+			e.add_field(name=botfarm["guild"].name+":", value=f"- Bot %: `{botfarm['btmround']}%`\n- Bots/membercount: `{botfarm['bots']}/{botfarm['guild'].member_count}`\n- Guild ID: `{botfarm['guild'].id}`\n\n")
 		await message.edit(content="", embed=e)
+
+	@botfarms.command()
+	@commands.is_owner()
+	async def leave(self, ctx):
+		"""
+		Will interactively ask you if you want to leave botfarms.
+		"""
+		await ctx.send(content="Calculating...")
+		try:
+			for botfarm in await calcbotfarms(self.bot):
+				check = lambda message: message.author.id == ctx.author.id and message.channel.id == ctx.channel.id
+				await ctx.send(f"Would you like to leave {botfarm['guild'].name}?\n- Bot %: `{botfarm['btmround']}%`\n- Bots/membercount: `{botfarm['bots']}/{botfarm['guild'].member_count}`")
+				msg = await self.bot.wait_for('message', check=check, timeout=60)
+				if msg.content.lower() == "yes":
+					m = await ctx.send("Leaving...")
+					await botfarm['guild'].leave()
+					await m.edit(content="Left!")
+					continue
+				elif msg.content.lower() == "no":
+					await ctx.send("Skipped!")
+					continue
+				else:
+					await ctx.send("Invalid response, skipping.")
+					continue
+			return await ctx.send("Finished!")
+		except asyncio.TimeoutError:
+			return await ctx.send(content="Timed out.")
 
 	@guilds.command()
 	@commands.is_owner()
@@ -189,7 +227,7 @@ class Guilds(commands.Cog):
 		"""
 		text = ""
 		for g in reversed(sorted(self.bot.guilds, key=lambda guild: guild.member_count)):
-			text = f"{text}{g.name}\n- Members: {g.member_count}\n\n"
+			text = f"{text}{g.name}\n- Members: {g.member_count}\n- Server id: {g.id}\n\n"
 		return await ctx.send(embed=discord.Embed(title="Hastebin:", description="Hasebin link: " + await postbin.postAsync(text)))
 
 def setup(bot):
