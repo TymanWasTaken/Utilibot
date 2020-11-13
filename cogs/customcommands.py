@@ -28,7 +28,9 @@ async def runcode(code, ctx):
 	lines = code.split("\n")
 	member = ctx.guild.get_member(ctx.author.id)
 	variables = {
-		"author": ccAuthor
+		"author": ccAuthor,
+		"message": ccMessage,
+		"channel": ccChannel,
 	}
 	for line in lines:
 		n = "\n"
