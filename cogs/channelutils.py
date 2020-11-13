@@ -133,5 +133,5 @@ class ChannelUtils(commands.Cog):
 		await c.send(f"I reset this channel, {ctx.author.mention}!")
 
 def setup(bot):
-	bot.add_cog(Channel Utils(bot))
+	bot.add_cog(ChannelUtils(bot))
 	print('[ChannelUtilsCog] Channel Utils cog loaded')
