@@ -312,7 +312,7 @@ class Utils(commands.Cog):
 	@commands.guild_only()
 	async def giverole(self, ctx, member: discord.Member, *roles: discord.Role):
 		"""
-		Gives a role to another user that you have permission to add it to.
+		Gives a role or list of roles to another user that you have permission to add them to.
 		"""
 		given = []
 		for role in roles:
@@ -333,7 +333,7 @@ class Utils(commands.Cog):
 	@commands.guild_only()
 	async def takerole(self, ctx, member: discord.Member, *roles: discord.Role):
 		"""
-		Takes a role from another user that you have permission to remove it from.
+		Takes a role or list of roles from another user that you have permission to remove them from.
 		"""
 		taken = []
 		for role in roles:
