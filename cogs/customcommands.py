@@ -24,6 +24,8 @@ class ccChannel:
 		self.name = obj.channel.name
 		self.mention = f"<#{obj.channel.id}>"
 
+# def parseVars
+
 async def runcode(code, ctx):
 	lines = code.split("\n")
 	member = ctx.guild.get_member(ctx.author.id)
@@ -37,7 +39,7 @@ async def runcode(code, ctx):
 		nn = "\\n"
 		sendMatch = re.match(r"^send\((.*)\)$", line)
 		sendChannelMatch = re.match(r"^sendChannel\((.*)\)$", line)
-		varMatch = re.match(r"^(.*)=(.*)$")
+		# varMatch = re.match(r"^(.*)=(.*)$")
 		if sendMatch:
 			line = line.replace("\\n", "\n")
 			sendText = sendMatch.group(1)
@@ -82,10 +84,10 @@ async def runcode(code, ctx):
 			if channel.guild.id != ctx.guild.id:
 				return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` threw an error, as you cannot send messages to channels not in the current guild.", allowed_mentions=nomention)
 			await channel.send(args[1], allowed_mentions=nomention)
-		elif varMatch:
-			if varMatch.group(0) == "" or varMatch.group(2) == "":
-				return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` is invalid. Either the var name or value was empty.", allowed_mentions=nomention)
-			variables[varMatch.group(1)] = varMatch.group(2)
+		# elif varMatch:
+		# 	if varMatch.group(0) == "" or varMatch.group(2) == "":
+		# 		return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` is invalid. Either the var name or value was empty.", allowed_mentions=nomention)
+		# 	variables[varMatch.group(1)] = varMatch.group(2)
 		else:
 			return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` is invalid.", allowed_mentions=nomention)
 
