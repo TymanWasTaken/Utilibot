@@ -325,7 +325,7 @@ class Utils(commands.Cog):
 			else:
 				await member.add_roles(role, reason=f"{ctx.author} gave {member.name} {role.name}.")
 				given.append(role)
-		await ctx.send(f"Gave {member.mention} some roles!\nRoles given: {", ".join([x.mention for x in given])}", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
+		await ctx.send(f"Gave {member.mention} some roles!\nRoles given: {', '.join([x.mention for x in given])}", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
 
 	@commands.command(name="takerole")
 	@commands.has_permissions(manage_roles=True)
