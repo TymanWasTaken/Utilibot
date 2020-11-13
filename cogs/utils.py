@@ -120,6 +120,40 @@ class Utils(commands.Cog):
 		await chan.edit(topic=topic, reason=f"Topic changed by {ctx.author} ({ctx.author.id}).")
 		await ctx.send(f"Changed <#{chan.id}>'s topic from {chan.topic} to {topic}!")
 
+	@commands.command(name="deletechannel", aliases=['delchan', 'deletechan'])
+	@commands.guild_only()
+	@commands.has_permissions(manage_channels=True)
+	@commands.bot_has_permissions(manage_channels=True)
+	async def delchan(self, ctx, channel: typing.Optional[discord.TextChannel]=None, *, reason="None given."):
+		"""
+		Deletes a specified channel with an optional reason.
+		"""
+		chan = channel or ctx.channel
+		await chan.delete(reason=f"Channel deleted by {ctx.author} ({ctx.author.id}) with reason: {reason}.")
+		await ctx.send(f"Deleted {chan.name}!")
+
+	@commands.command(name="createchannel", aliases=['createchan', 'newchan'])
+	@commands.guild_only()
+	@commands.has_permissions(manage_channels=True)
+	@commands.bot_has_permissions(manage_channels=True)
+	async def createchan(self, ctx, name, position: int=None, *, reason="None given."):
+		"""
+		Creates a text channel with an optional position and reason. Use `newvc` to create a voice channel.
+		"""
+		c = await guild.create_text_channel(name=name, reason=f"Channel created by {ctx.author} ({ctx.author.id}) with reason: {reason}", position=position)
+		await c.send(f"I created this channel for you, {ctx.author.mention}!")
+
+	@commands.command(name="createvoicechannel", aliases=['createvoicechan', 'newvoicechan', 'newvc'])
+	@commands.guild_only()
+	@commands.has_permissions(manage_channels=True)
+	@commands.bot_has_permissions(manage_channels=True)
+	async def newvc(self, ctx, name, position: int=None, *, reason="None given."):
+		"""
+		Creates a voice channel with an optional position and reason. Use `newchan` to create a text channel.
+		"""
+		c = await guild.create_voice_channel(name=name, reason=f"Channel created by {ctx.author} ({ctx.author.id}) with reason: {reason}", position=position)
+		await ctx.send(f"I created <#{c.id}> for you, {ctx.author.mention}!")
+
 	@commands.command(name="nuke", aliases=['nukechan', 'clone', 'resetchan'])
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
@@ -129,8 +163,7 @@ class Utils(commands.Cog):
 		Resets a channel- Clones it and deletes the old one. Useful for clearing all the messages in a channel quickly.
 		"""
 		chan = channel or ctx.channel
-		c = await chan.clone(reason=f"Channel reset by {ctx.author} ({ctx.author.id})")
-		await c.edit(position=chan.position)
+		c = await chan.clone(reason=f"Channel reset by {ctx.author} ({ctx.author.id})", position=chan.position)
 		try: 
 			await chan.delete(reason=f"Channel reset by {ctx.author} ({ctx.author.id})")
 		except:
