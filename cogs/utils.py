@@ -99,7 +99,7 @@ class Utils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def cname(self, ctx, channel: typing.Optional[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel]=None, *, name=None):
+	async def cname(self, ctx, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel]=None, *, name=None):
 		"""
 		Edits a channel's name.
 		"""
@@ -124,7 +124,7 @@ class Utils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def delchan(self, ctx, channel: typing.Optional[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel]=None, *, reason="None given."):
+	async def delchan(self, ctx, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel]=None, *, reason="None given."):
 		"""
 		Deletes a specified channel with an optional reason.
 		"""
