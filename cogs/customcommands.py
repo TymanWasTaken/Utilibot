@@ -2,39 +2,78 @@ import discord, random, re, aiohttp
 from discord.ext import commands
 from discord.ext.commands import MemberConverter
 nomention = discord.AllowedMentions(everyone=False, roles=False, users=False)
+
+class ccAuthor:
+	def __init__(self, obj):
+		self.id = obj.author.id
+		self.name = obj.author.name
+		self.nick = obj.author.nick or obj.author.name
+		self.tag = str(obj.author)
+		self.discriminator = obj.author.discriminator
+		self.mention = obj.author.mention
+
+class ccMessage:
+	def __init__(self, obj):
+		self.content = obj.message.content
+		self.clean_content = obj.message.clean_content
+		self.id = obj.message.id
+
+class ccChannel:
+	def __init__(self, obj):
+		self.id = obj.channel.id
+		self.name = obj.channel.name
+		self.mention = f"<#{obj.channel.id}>"
+
 async def runcode(code, ctx):
 	lines = code.split("\n")
 	member = ctx.guild.get_member(ctx.author.id)
 	variables = {
-		"$message.content": str(ctx.message.content),
-		"$message.id": str(ctx.message.id),
-		"$author.tag": str(ctx.author),
-		"$author.id": str(ctx.author.id),
-		"$author.nick": str(member.nick or member.name),
-		"$author.name": str(member.name)
+		"author": ccAuthor,
+		"message": ccMessage,
+		"channel": ccChannel,
 	}
 	for line in lines:
 		n = "\n"
 		nn = "\\n"
-		sendMatch = re.match(r"^send\(.*\)$", line)
-		sendChannelMatch = re.match(r"^sendChannel\(.*\)$", line)
+		sendMatch = re.match(r"^send\((.*)\)$", line)
+		sendChannelMatch = re.match(r"^sendChannel\((.*)\)$", line)
 		if sendMatch:
 			line = line.replace("\\n", "\n")
-			sendText = line[sendMatch.start():sendMatch.end()].lstrip("send(").rstrip(")")
+			sendText = sendMatch.group(1)
+			if sendText == "":
+				return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` is invalid. You cannot send an empty message", allowed_mentions=nomention)
 			for var, value in variables.items():
 				if var in sendText:
-					sendText = sendText.replace(var, value)
+					varReg = re.search(fr"\${var}\.(.*)\$", sendText)
+					attrRaw = varReg.group(1)
+					try:
+						attr = getattr(variables[var](ctx), attrRaw)
+					except:
+						return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` is invalid. Variable `${var}.{attrRaw}$` is not a valid variable.", allowed_mentions=nomention)
+					sendText = sendText.replace(f"${var}.{attrRaw}$", attr)
 			await ctx.send(sendText, allowed_mentions=nomention)
 		elif sendChannelMatch:
 			line = line.replace("\\n", "\n")
-			args = line[sendChannelMatch.start():sendChannelMatch.end()].lstrip("sendChannel(").rstrip(")").split(",")
+			args = sendChannelMatch.group(1).split(",")
 			if len(args) != 2:
-				return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` threw an error while parsing arguments for `sendChannel()`.", allowed_mentions=nomention)
+				return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` threw an error while parsing arguments for `sendChannel()`. You must give 2 arguments.", allowed_mentions=nomention)
 			for var, value in variables.items():
 				if var in args[0]:
-					args[0] = args[0].replace(var, value)
+					varReg = re.search(fr"\${var}\.(.*)\$", args[0])
+					attrRaw = varReg.group(1)
+					try:
+						attr = getattr(variables[var](ctx), attrRaw)
+					except:
+						return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` is invalid. Variable `${var}.{attrRaw}$` is not a valid variable.", allowed_mentions=nomention)
+					args[0] = args[0].replace(f"${var}.{attrRaw}$", attr)
 				if var in args[1]:
-					aargs[1] = args[1].replace(var, value)
+					varReg = re.search(fr"\${var}\.(.*)\$", args[1])
+					attrRaw = varReg.group(1)
+					try:
+						attr = getattr(variables[var](ctx), attrRaw)
+					except:
+						return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` is invalid. Variable `${var}.{attrRaw}$` is not a valid variable.", allowed_mentions=nomention)
+					args[1] = args[1].replace(f"${var}.{attrRaw}$", attr)
 			try:
 				channel = await commands.TextChannelConverter().convert(ctx, args[0])
 			except commands.ChannelNotFound:
