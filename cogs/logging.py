@@ -29,7 +29,7 @@ class Logging(commands.Cog):
 	
 	@commands.Cog.listener()
 	async def on_message_delete(self, message):
-		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
+		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
 		embed=discord.Embed(title=f"Message Deleted in #{message.channel.name}", description=f"**Message:**```{message.clean_content.replace('`', '​`​')}", color=0xe41212, timestamp=datetime.now())
