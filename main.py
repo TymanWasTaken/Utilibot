@@ -66,58 +66,61 @@ async def on_ready():
 
 @bot.event
 async def on_command_error(ctx, error):
-	nocommandblacklist = [264445053596991498, 458341246453415947, 735615909884067930]
-	errorchannel = bot.get_channel(764333133738541056)
-	if isinstance(error, commands.TooManyArguments):
-		await ctx.send('Too many arguments')
-	elif isinstance(error, commands.NotOwner):
-		await ctx.send('Nice try, but you are not one of the developers.')
-		await errorchannel.send(f"{ctx.author} tried to run `{ctx.command.qualified_name}`, but they are not owner.")
-	elif isinstance(error, commands.CommandNotFound):
-		if ctx.guild and ctx.guild.id in nocommandblacklist:
-			return
-		await ctx.send(f'`{ctx.message.content}` is not a command, <@{ctx.author.id}>')
-	elif isinstance(error, commands.CheckFailure):
-		await ctx.send(error)
-	elif isinstance(error, BlacklistedError):
-		await ctx.send(error)
-	elif isinstance(error, commands.DisabledCommand):
-		await ctx.send(f'Sorry, but the command `{ctx.command.qualified_name}` is currently disabled.')
-	elif isinstance(error, commands.MissingRequiredArgument):
-		await ctx.send(str(error).capitalize())
-	elif isinstance(error, commands.BadArgument) or isinstance(error, commands.BadUnionArgument):
-		await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
-	elif "VoiceError: You are not connected to a voice channel." in str(error):
-		pass
-	else:
-		invitelink = f"https://discord.gg/"
-		for invite in await bot.get_guild(755887706386726932).invites():
-			if invite.temporary == True:
-				pass
-			else:
-				invitelink = invitelink + invite.code
-				break
+	try:
+		nocommandblacklist = [264445053596991498, 458341246453415947, 735615909884067930]
+		errorchannel = bot.get_channel(764333133738541056)
+		if isinstance(error, commands.TooManyArguments):
+			await ctx.send('Too many arguments')
+		elif isinstance(error, commands.NotOwner):
+			await ctx.send('Nice try, but you are not one of the developers.')
+			await errorchannel.send(f"{ctx.author} tried to run `{ctx.command.qualified_name}`, but they are not owner.")
+		elif isinstance(error, commands.CommandNotFound):
+			if ctx.guild and ctx.guild.id in nocommandblacklist:
+				return
+			await ctx.send(f'`{ctx.message.content}` is not a command, <@{ctx.author.id}>')
+		elif isinstance(error, commands.CheckFailure):
+			await ctx.send(error)
+		elif isinstance(error, BlacklistedError):
+			await ctx.send(error)
+		elif isinstance(error, commands.DisabledCommand):
+			await ctx.send(f'Sorry, but the command `{ctx.command.qualified_name}` is currently disabled.')
+		elif isinstance(error, commands.MissingRequiredArgument):
+			await ctx.send(str(error).capitalize())
+		elif isinstance(error, commands.BadArgument) or isinstance(error, commands.BadUnionArgument):
+			await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
+		elif "VoiceError: You are not connected to a voice channel." in str(error):
+			pass
 		else:
-			newinvite = await bot.get_channel(755910440533491773).create_invite(reason="Creating invite to the server for an error message.")
-			invitelink = invitelink + newinvite.code
-		tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
-		tb = f"Command ran: {ctx.message.content}\nUser id:{ctx.author.id}\nGuild id:{ctx.guild.id}\n\n{tb}"
-		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers, they just got a log of the error.\nYou can join the support server [here]({invitelink})\nError message: \n`{str(error)}`", color=0xff1100)
-		await ctx.send(embed=embed)
-		m = await errorchannel.send(allowed_mentions=discord.AllowedMentions(everyone=False, roles=True, users=False),content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: {str(bot.get_emoji(769398108064710717))}", embed=embed)
-		try:
-			url = await postbin.postAsync(content=tb, retry=0, find_fallback_on_retry_runout=True)
-			await m.edit(allowed_mentions=discord.AllowedMentions(everyone=False, roles=True, users=False),content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <{url}>", embed=embed)
-		except Exception as e:
-			tb2 = "".join(traceback.format_exception(type(e), e, e.__traceback__))
-			tb_wrap = [f"```py\n{line}```" for line in textwrap.wrap(tb, 1500)]
-			await errorchannel.send(f"Loading a hastebin errored. Since that didn't work, here is the raw traceback in discord:")
-			for message in tb_wrap:
-				await errorchannel.send(message)
-			tb2_wrap = [f"```py\n{line}```" for line in textwrap.wrap(tb2, 1500)]
-			await errorchannel.send(f"Here is the error that happened when trying to post to hastebin:")
-			for message in tb2_wrap:
-				await errorchannel.send(message)
+			invitelink = f"https://discord.gg/"
+			for invite in await bot.get_guild(755887706386726932).invites():
+				if invite.temporary == True:
+					pass
+				else:
+					invitelink = invitelink + invite.code
+					break
+			else:
+				newinvite = await bot.get_channel(755910440533491773).create_invite(reason="Creating invite to the server for an error message.")
+				invitelink = invitelink + newinvite.code
+			tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
+			tb = f"Command ran: {ctx.message.content}\nUser id:{ctx.author.id}\nGuild id:{ctx.guild.id}\n\n{tb}"
+			embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers, they just got a log of the error.\nYou can join the support server [here]({invitelink})\nError message: \n`{str(error)}`", color=0xff1100)
+			await ctx.send(embed=embed)
+			m = await errorchannel.send(allowed_mentions=discord.AllowedMentions(everyone=False, roles=True, users=False),content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: {str(bot.get_emoji(769398108064710717))}", embed=embed)
+			try:
+				url = await postbin.postAsync(content=tb, retry=0, find_fallback_on_retry_runout=True)
+				await m.edit(allowed_mentions=discord.AllowedMentions(everyone=False, roles=True, users=False),content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: <{url}>", embed=embed)
+			except Exception as e:
+				tb2 = "".join(traceback.format_exception(type(e), e, e.__traceback__))
+				tb_wrap = [f"```py\n{line}```" for line in textwrap.wrap(tb, 1500)]
+				await errorchannel.send(f"Loading a hastebin errored. Since that didn't work, here is the raw traceback in discord:")
+				for message in tb_wrap:
+					await errorchannel.send(message)
+				tb2_wrap = [f"```py\n{line}```" for line in textwrap.wrap(tb2, 1500)]
+				await errorchannel.send(f"Here is the error that happened when trying to post to hastebin:")
+				for message in tb2_wrap:
+					await errorchannel.send(message)
+	except:
+		await bot.get_channel(764333133738541056).send(content="<@&766132653640122419>\nIronic. The error handler errored.")
 @bot.event
 async def on_message(message):
 	if message.channel.id == 755982484444938290 and not message.content.startswith('=>'):
