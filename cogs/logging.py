@@ -1,5 +1,7 @@
-import discord
+import discord, dpytils
 from discord.ext import commands
+
+utils = dpytils.utils()
 
 class Logging(commands.Cog):
 	def __init__(self, bot):
@@ -13,13 +15,14 @@ class Logging(commands.Cog):
 		await ctx.send("Logging coming soon!")
 
 	@commands.Cog.listener()
-	async def on_raw_message_edit(self, payload):
-		channel = self.bot.get_channel(payload.channel_id)
-		message = await channel.fetch_message(payload.message_id)
-		logchannel = discord.utils.get(channel.guild.text_channels, name="utilibot-logs")
+	async def on_message_edit(self, before, after):
+		if before.content == after.content:
+			return
+		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
-		embed = discord.Embed(title="Message edited", description=f"Message edited in {channel.mention}:\n\nBefore:```{message.clean_content.replace('`', '​`​')}")
+		embed = discord.Embed(title="Message edited", description=f"Message edited in {before.channel.mention}:\n\nBefore:```{before.clean_content.replace('`', '​`​')}```After:```{after.clean_content.replace('`', '​`​')}```Message link: [click here]({before.jump_url})", color=utils.randcolor())
+		await logchannel.send(embed=embed)
 
 def setup(bot):
 	bot.add_cog(Logging(bot))
