@@ -22,9 +22,19 @@ class Logging(commands.Cog):
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
-		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", description=f"Before:```{before.clean_content.replace('`', '​`​')}```After:```{after.clean_content.replace('`', '​`​')}```Message link: [click here]({before.jump_url})", color=utils.randcolor(), timestamp=datetime.now())
-		embed.set_author(name=f"Message sent by {before.author}", icon_url=before.author.avatar_url)
+		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", description=f"**Before:**```{before.clean_content.replace('`', '​`​')}```**After:**```{after.clean_content.replace('`', '​`​')}```Message link: [click here]({before.jump_url})", color=utils.randcolor(), timestamp=datetime.now())
+		embed.set_author(name=before.author, icon_url=before.author.avatar_url)
 		embed.set_footer(text=f"Author ID: {before.author.id}")
+		await logchannel.send(embed=embed)
+	
+	@commands.Cog.listener()
+	async def on_message_delete(self, message):
+		logchannel = discord.utild.get(before.guild.text_channels, name="utilibot-logs")
+		if logchannel == None:
+			return
+		embed=discord.Embed(title=f"Message Deleted in #{message.channel.name}", description=f"**Message:**```{message.clean_content.replace('`', '​`​')}"
+		embed.set_author(name=message.author, icon_url=message.author.avatar_url)
+		embed.set_footer(text=f"Author ID: {message.author.id}")
 		await logchannel.send(embed=embed)
 
 def setup(bot):
