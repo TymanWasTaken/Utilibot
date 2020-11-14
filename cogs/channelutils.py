@@ -134,4 +134,4 @@ class ChannelUtils(commands.Cog):
 
 def setup(bot):
 	bot.add_cog(ChannelUtils(bot))
-	print('[ChannelUtilsCog] Channel Utils cog loaded')
+	print('[ChannelUtilsCog] Channel Utils cog loaded')	

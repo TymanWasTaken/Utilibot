@@ -1,5 +1,6 @@
 import discord, dpytils
 from discord.ext import commands
+from datetime import datetime
 
 utils = dpytils.utils()
 
@@ -21,7 +22,9 @@ class Logging(commands.Cog):
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
-		embed = discord.Embed(title="Message edited", description=f"Message edited in {before.channel.mention}:\n\nBefore:```{before.clean_content.replace('`', '​`​')}```After:```{after.clean_content.replace('`', '​`​')}```Message link: [click here]({before.jump_url})", color=utils.randcolor())
+		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", description=f"Before:```{before.clean_content.replace('`', '​`​')}```After:```{after.clean_content.replace('`', '​`​')}```Message link: [click here]({before.jump_url})", color=utils.randcolor(), timestamp=datetime.now())
+		embed.set_author(name=f"Message sent by {before.author}", icon_url={before.author.avatar_url})
+		embed.set_footer(text=f"Author ID: {before.author.id}")
 		await logchannel.send(embed=embed)
 
 def setup(bot):
