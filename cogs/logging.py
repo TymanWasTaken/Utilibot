@@ -64,11 +64,18 @@ class Logging(commands.Cog):
 				embed.title="Nickname Removed"
 			embed.add_field(name="Before:", value=f"```{before.nick}```", inline=False)
 			embed.add_field(name="After:", value=f"```{after.nick}```", inline=False)
-			await logchannel.send(embed=embed)
 		elif before.roles != after.roles:
-			embed.title="Roles updated"
+			embed.title="Member Roles Updated"
+			if len(before.roles) < len(after.roles):
+				embed.title="Role Added"
+			elif len(before.roles) > len(after.roles):
+				embed.title="Role Removed"
 			embed.description="Lol idk how to detect specific role yet"
-			await logchannel.send(embed=embed)
+		elif before.status != after.status:
+			embed.title="Status Changed"
+			embed.add_field(name="Before:", value=f"```{before.status}```", inline=False)
+			embed.add_field(name="After:", value=f"```{after.status}```", inline=False)
+		await logchannel.send(embed=embed)
 
 #	@commands.Cog.listener()
 #	async def on_user_update(self, before, after):
