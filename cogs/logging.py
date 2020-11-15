@@ -57,13 +57,18 @@ class Logging(commands.Cog):
 		embed.set_footer(text=f"User ID: {before.id}")
 		embed.set_author(name=before, icon_url=before.avatar_url)
 		if before.nick != after.nick:
-			embed.title="Nickname changed"
+			embed.title="Nickname Changed"
+			if before.nick == None:
+				embed.title="Nickname Added"
+			elif after.nick == None:
+				embed.title="Nickname Removed"
 			embed.add_field(name="Before:", value=f"```{before.nick}```", inline=False)
 			embed.add_field(name="After:", value=f"```{after.nick}```", inline=False)
+			await logchannel.send(embed=embed)
 		elif before.roles != after.roles:
 			embed.title="Roles updated"
 			embed.description="Lol idk how to detect specific role yet"
-		await logchannel.send(embed=embed)
+			await logchannel.send(embed=embed)
 
 #	@commands.Cog.listener()
 #	async def on_user_update(self, before, after):
