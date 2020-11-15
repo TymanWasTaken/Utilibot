@@ -65,10 +65,9 @@ class Logging(commands.Cog):
 			embed.description="Lol idk how to detect specific role yet"
 		await logchannel.send(embed=embed)
 
-	@commands.Cog.listener()
-	async def on_member_update(self, before, after):
-		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
-		
+#	@commands.Cog.listener()
+#	async def on_user_update(self, before, after):
+#		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 
 
 def setup(bot):
