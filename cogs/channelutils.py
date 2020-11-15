@@ -64,8 +64,9 @@ class ChannelUtils(commands.Cog):
 		Edits a channel's name.
 		"""
 		chan = channel or ctx.channel
+		oldname = chan.name
 		await chan.edit(name=name, reason=f"Name changed by {ctx.author} ({ctx.author.id}).")
-		await ctx.send(f"Changed `#{chan.name}`'s name to `#{name}`!")
+		await ctx.send(f"Changed <#{chan.id}>'s name from `#{oldname}` to #{name}!")
 
 
 	@commands.command(name="channeltopic", aliases=['editchanneltopic', 'editctopic', 'ctopic'])
@@ -77,8 +78,9 @@ class ChannelUtils(commands.Cog):
 		Edits a channel's topic.
 		"""
 		chan = channel or ctx.channel
+		oldtopic = chan.topic
 		await chan.edit(topic=topic, reason=f"Topic changed by {ctx.author} ({ctx.author.id}).")
-		await ctx.send(f"Changed <#{chan.id}>'s topic from `{chan.topic}` to `{topic}`!")
+		await ctx.send(f"Changed <#{chan.id}>'s topic from `{oldtopic}` to `{topic}`!")
 
 	@commands.command(name="deletechannel", aliases=['delchan', 'deletechan'])
 	@commands.guild_only()
@@ -102,7 +104,7 @@ class ChannelUtils(commands.Cog):
 		"""
 		c = await ctx.guild.create_text_channel(name=name, reason=f"Channel created by {ctx.author} ({ctx.author.id}) with reason: {reason}")
 		await c.edit(position=position)
-		await c.send(f"I created this channel for you, {ctx.author.mention}!")
+		await c.send(f"I created this channel for you, {ctx.author.mention}!", delete_after=60)
 
 	@commands.command(name="createvoicechannel", aliases=['createvoicechan', 'newvoicechan', 'newvc'])
 	@commands.guild_only()
@@ -130,7 +132,7 @@ class ChannelUtils(commands.Cog):
 			await chan.delete(reason=f"Channel reset by {ctx.author} ({ctx.author.id})")
 		except:
 			await chan.send(f"{ctx.author.mention}, I cannot delete this channel! (most likely cause is that it's set as a channel required for community servers)")
-		await c.send(f"I reset this channel, {ctx.author.mention}!")
+		await c.send(f"I reset this channel, {ctx.author.mention}!", delete_after=60)
 
 def setup(bot):
 	bot.add_cog(ChannelUtils(bot))
