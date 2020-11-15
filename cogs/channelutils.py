@@ -66,7 +66,7 @@ class ChannelUtils(commands.Cog):
 		chan = channel or ctx.channel
 		oldname = chan.name
 		await chan.edit(name=name, reason=f"Name changed by {ctx.author} ({ctx.author.id}).")
-		await ctx.send(f"Changed <#{chan.id}>'s name from `#{oldname}` to #{name}!")
+		await ctx.send(f"Changed <#{chan.id}>'s name!\nBefore: `#{oldname}`\nAfter: `#{name}`")
 
 
 	@commands.command(name="channeltopic", aliases=['editchanneltopic', 'editctopic', 'ctopic'])
@@ -80,7 +80,7 @@ class ChannelUtils(commands.Cog):
 		chan = channel or ctx.channel
 		oldtopic = chan.topic
 		await chan.edit(topic=topic, reason=f"Topic changed by {ctx.author} ({ctx.author.id}).")
-		await ctx.send(f"Changed <#{chan.id}>'s topic from `{oldtopic}` to `{topic}`!")
+		await ctx.send(f"Changed <#{chan.id}>'s topic!\nBefore: `{oldtopic}`\nAfter: `{topic}`")
 
 	@commands.command(name="deletechannel", aliases=['delchan', 'deletechan'])
 	@commands.guild_only()
