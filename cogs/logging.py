@@ -58,8 +58,8 @@ class Logging(commands.Cog):
 		embed.set_author(name=before, icon_url=before.avatar_url)
 		if before.nick != after.nick:
 			embed.title="Nickname changed"
-			embed.add_field(name="Before:", value=f"```{before.nick}```")
-			embed.add_field(name="After:", value=f"```{after.nick}```")
+			embed.add_field(name="Before:", value=f"```{before.nick}```", inline=False)
+			embed.add_field(name="After:", value=f"```{after.nick}```", inline=False)
 		elif before.roles != after.roles:
 			embed.title="Roles updated"
 			embed.description="Lol idk how to detect specific role yet"
