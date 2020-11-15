@@ -47,7 +47,7 @@ class Logging(commands.Cog):
 		for message in messages:
 			post = f"{post}\n\n\n{message.author} ({message.author.id}): {message.content}"
 		url = await postbin.postAsync(post)
-		embed=discord.Embed(title=f"{len(messages)} Messages Purged in #{obj.channel.name}", description=f"View them here: {url}", color=0xa50003, timestamp=datetime.now())
+		embed=discord.Embed(title=f"{len(messages)} Messages Purged in #{obj.channel.name}", description=f"View them here: {str(url).replace(".com",".com/raw")}", color=0xa50003, timestamp=datetime.now())
 		await logchannel.send(embed=embed)
 
 def setup(bot):
