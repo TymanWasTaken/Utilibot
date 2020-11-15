@@ -32,7 +32,7 @@ class Logging(commands.Cog):
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
-		embed=discord.Embed(title=f"Message Deleted in `#{message.channel.name}`", description=f"```{message.clean_content.replace('`', '​`​')}```", color=0xe41212, timestamp=datetime.now())
+		embed=discord.Embed(title=f"Message Deleted in #{message.channel.name}", description=f"```{message.clean_content.replace('`', '​`​')}```", color=0xe41212, timestamp=datetime.now())
 		embed.set_author(name=message.author, icon_url=message.author.avatar_url)
 		embed.set_footer(text=f"Author ID: {message.author.id}")
 		await logchannel.send(embed=embed)
@@ -47,7 +47,7 @@ class Logging(commands.Cog):
 		for message in messages:
 			post = f"{post}\n\n\n{message.author} ({message.author.id}): {message.content}"
 		url = await postbin.postAsync(post)
-		embed=discord.Embed(title=f"{len(messages)} Messages Purged in `#{obj.channel.name}`", description=f"View them here: {url}", color=0xe41212, timestamp=datetime.now())
+		embed=discord.Embed(title=f"{len(messages)} Messages Purged in #{obj.channel.name}", description=f"View them here: {url}", color=0xa50003, timestamp=datetime.now())
 		await logchannel.send(embed=embed)
 
 def setup(bot):
