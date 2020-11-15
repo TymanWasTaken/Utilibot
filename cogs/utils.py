@@ -185,7 +185,7 @@ class Utils(commands.Cog):
 		"""
 		bot = self.bot
 		if user is None:
-			user = author
+			user = ctx.author
 		if user.status == discord.Status.online:
 			status = bot.get_emoji(774816041632137226)
 		elif user.status == discord.Status.idle:
@@ -220,7 +220,7 @@ class Utils(commands.Cog):
 		Shows the user's avatar.
 		"""
 		if user is None:
-			user = author
+			user = ctx.author
 		embed=discord.Embed(title=f"{user}'s Avatar", description=f"Download avatar here: [Download Link]({str(user.avatar_url)})")
 		embed.image=user.avatar_url
 		embed.set_footer(text=f"ID: {user.id}")
