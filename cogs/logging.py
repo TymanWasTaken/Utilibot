@@ -50,6 +50,8 @@ class Logging(commands.Cog):
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
+		if message.clean_content == "":
+			return
 		embed=discord.Embed(title=f"Message Deleted in #{message.channel.name}", description=f"```{message.clean_content.replace('`', '​`​')}```", color=0xe41212, timestamp=datetime.now())
 		embed.set_author(name=message.author, icon_url=message.author.avatar_url)
 		embed.set_footer(text=f"Author ID: {message.author.id}")
