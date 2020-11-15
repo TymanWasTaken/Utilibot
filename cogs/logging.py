@@ -1,8 +1,26 @@
-import discord, dpytils, postbin
+import discord, dpytils, postbin, aiofiles, json
 from discord.ext import commands
 from datetime import datetime
 
 utils = dpytils.utils()
+
+async def readDB():
+	try:
+		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
+			return json.loads(await f.read())
+	except Exception as e:
+		print(f"An error occurred, {e}")
+
+async def writeDB(data: dict):
+	try:
+		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f_main:
+			async with aiofiles.open('/home/tyman/code/utilibot/data.json.bak', mode='w') as f_bak:
+				await f_bak.write(await f_main.read())
+		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='w') as f:
+			d = json.dumps(data)
+			await f.write(d)
+	except Exception as e:
+		print(f"An error occurred, {e}")
 
 class Logging(commands.Cog):
 	def __init__(self, bot):
@@ -56,6 +74,7 @@ class Logging(commands.Cog):
 		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
 		embed.set_footer(text=f"User ID: {before.id}")
 		embed.set_author(name=before, icon_url=before.avatar_url)
+		# Nickname change
 		if before.nick != after.nick:
 			embed.title="Nickname Changed"
 			if before.nick == None:
@@ -64,6 +83,7 @@ class Logging(commands.Cog):
 				embed.title="Nickname Removed"
 			embed.add_field(name="Before:", value=f"```{before.nick}```", inline=False)
 			embed.add_field(name="After:", value=f"```{after.nick}```", inline=False)
+		# role change
 		elif before.roles != after.roles:
 			embed.title="Member Roles Updated"
 			if len(before.roles) < len(after.roles):
@@ -71,18 +91,20 @@ class Logging(commands.Cog):
 			elif len(before.roles) > len(after.roles):
 				embed.title="Role Removed"
 			embed.description="Lol idk how to detect specific role yet"
+		# status change
 		elif before.status != after.status:
 			embed.title="Status Changed"
 			embed.add_field(name="Before:", value=f"```{before.status}```", inline=False)
 			embed.add_field(name="After:", value=f"```{after.status}```", inline=False)
+		#activity change
 		elif before.activity != after.activity:
 			embed.title="Activity Changed"
 			if before.activity == None:
 				embed.title="Activity Added"
 			elif after.activity == None:
 				embed.title="Activity Removed"
-			embed.add_field(name="Before:", value=f"```{before.activity}```", inline=False)
-			embed.add_field(name="After:", value=f"```{after.activity}```", inline=False)
+			embed.add_field(name="Before:", value=f"```{before.activity.name}\n{before.activity.details}```", inline=False)
+			embed.add_field(name="After:", value=f"```{after.activity.details}```", inline=False)
 		await logchannel.send(embed=embed)
 
 #	@commands.Cog.listener()
