@@ -59,14 +59,14 @@ class ChannelUtils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def cname(self, ctx, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel]=None, *, name):
+	async def cname(self, ctx, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel, None], *, name):
 		"""
 		Edits a channel's name.
 		"""
 		chan = channel or ctx.channel
 		oldname = chan.name
 		await chan.edit(name=name, reason=f"Name changed by {ctx.author} ({ctx.author.id}).")
-		await ctx.send(f"Changed <#{chan.id}>'s name!\nBefore: `#{oldname}`\nAfter: `#{name}`")
+		await ctx.send(f"Changed <#{chan.id}>'s name!\nBefore: `#{oldname}`\nAfter: `#{chan.name}`")
 
 
 	@commands.command(name="channeltopic", aliases=['editchanneltopic', 'editctopic', 'ctopic'])
@@ -86,7 +86,7 @@ class ChannelUtils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def delchan(self, ctx, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel]=None, *, reason="None given."):
+	async def delchan(self, ctx, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel, None], *, reason="None given."):
 		"""
 		Deletes a specified channel with an optional reason.
 		"""
@@ -98,7 +98,7 @@ class ChannelUtils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def createchan(self, ctx, name, position: int=None, *, reason="None given."):
+	async def createchan(self, ctx, name, position: int=0, *, reason="None given."):
 		"""
 		Creates a text channel with an optional position and reason. Use `newvc` to create a voice channel.
 		"""
@@ -110,7 +110,7 @@ class ChannelUtils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def newvc(self, ctx, name, position: int=None, *, reason="None given."):
+	async def newvc(self, ctx, name, position: int=0, *, reason="None given."):
 		"""
 		Creates a voice channel with an optional position and reason. Use `newchan` to create a text channel.
 		"""
