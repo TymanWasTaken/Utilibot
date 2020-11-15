@@ -35,7 +35,8 @@ class Logging(commands.Cog):
 		embed=discord.Embed(title=f"Message Deleted in #{message.channel.name}", description=f"```{message.clean_content.replace('`', '​`​')}```", color=0xe41212, timestamp=datetime.now())
 		embed.set_author(name=message.author, icon_url=message.author.avatar_url)
 		embed.set_footer(text=f"Author ID: {message.author.id}")
-		await logchannel.send(embed=embed)
+		if not (message.embeds and not message.content):
+			await logchannel.send(embed=embed)
 	
 	@commands.Cog.listener()
 	async def on_bulk_message_delete(self, messages):
@@ -64,6 +65,7 @@ class Logging(commands.Cog):
 				embed.title="Nickname Removed"
 			embed.add_field(name="Before:", value=f"```{before.nick}```", inline=False)
 			embed.add_field(name="After:", value=f"```{after.nick}```", inline=False)
+			await logchannel.send(embed=embed)
 		elif before.roles != after.roles:
 			embed.title="Member Roles Updated"
 			if len(before.roles) < len(after.roles):
@@ -71,19 +73,21 @@ class Logging(commands.Cog):
 			elif len(before.roles) > len(after.roles):
 				embed.title="Role Removed"
 			embed.description="Lol idk how to detect specific role yet"
+			await logchannel.send(embed=embed)
 		elif before.status != after.status:
 			embed.title="Status Changed"
 			embed.add_field(name="Before:", value=f"```{before.status}```", inline=False)
 			embed.add_field(name="After:", value=f"```{after.status}```", inline=False)
+			await logchannel.send(embed=embed)
 		elif before.activity != after.activity:
-			embed.title="Activity Changed"
+			embed.title="Status Changed"
 			if before.activity == None:
-				embed.title="Activity Added"
+				embed.title="Status Added"
 			elif after.activity == None:
-				embed.title="Activity Removed"
+				embed.title="Status Removed"
 			embed.add_field(name="Before:", value=f"```{before.activity}```", inline=False)
 			embed.add_field(name="After:", value=f"```{after.activity}```", inline=False)
-		await logchannel.send(embed=embed)
+			await logchannel.send(embed=embed)
 
 #	@commands.Cog.listener()
 #	async def on_user_update(self, before, after):
