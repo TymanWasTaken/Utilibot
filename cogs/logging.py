@@ -97,8 +97,8 @@ class Logging(commands.Cog):
 		# status change
 		elif before.status != after.status:
 			embed.title="Status Changed"
-			embed.add_field(name="Before:", value=f"```{before.status}```", inline=False)
-			embed.add_field(name="After:", value=f"```{after.status}```", inline=False)
+			embed.add_field(name="Before:", value=f"`{before.status}")
+			embed.add_field(name="After:", value=f"{after.status}")
 		#activity change
 		# elif before.activity != after.activity:
 		# 	embed.title="Status Changed"
