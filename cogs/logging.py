@@ -75,6 +75,14 @@ class Logging(commands.Cog):
 			embed.title="Status Changed"
 			embed.add_field(name="Before:", value=f"```{before.status}```", inline=False)
 			embed.add_field(name="After:", value=f"```{after.status}```", inline=False)
+		elif before.activity != after.activity:
+			embed.title="Activity Changed"
+			if before.activity == None:
+				embed.title="Activity Added"
+			elif after.activity == None:
+				embed.title="Activity Removed"
+			embed.add_field(name="Before:", value=f"```{before.activity}```", inline=False)
+			embed.add_field(name="After:", value=f"```{after.activity}```", inline=False)
 		await logchannel.send(embed=embed)
 
 #	@commands.Cog.listener()
