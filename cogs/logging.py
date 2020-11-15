@@ -50,6 +50,27 @@ class Logging(commands.Cog):
 		embed=discord.Embed(title=f"{len(messages)} Messages Purged in #{obj.channel.name}", description=f"View them here: {str(url).replace(',com','.com/raw')}", color=0xa50003, timestamp=datetime.now())
 		await logchannel.send(embed=embed)
 
+	@commands.Cog.listener()
+	async def on_member_update(self, before, after):
+		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
+		embed.set_footer(text=f"User ID: {before.id}")
+		embed.set_author(name=before, icon_url=before.avatar_url)
+		if before.nick != after.nick:
+			embed.title="Nickname changed"
+			embed.add_field(name="Before:", value=f"```{before.nick}```")
+			embed.add_field(name="After:", value=f"```{after.nick}```")
+		elif before.roles != after.roles:
+			embed.title="Roles updated"
+			embed.description="Lol idk how to detect specific role yet"
+		await logchannel.send(embed=embed)
+
+	@commands.Cog.listener()
+	async def on_member_update(self, before, after):
+		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
+		
+
+
 def setup(bot):
 	bot.add_cog(Logging(bot))
 	print('[LoggingCog] Logging cog loaded')
