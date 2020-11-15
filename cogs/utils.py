@@ -222,7 +222,7 @@ class Utils(commands.Cog):
 		if user is None:
 			user = ctx.author
 		embed=discord.Embed(title=f"{user}'s Avatar", description=f"Download avatar here: [Download Link]({str(user.avatar_url)})")
-		embed.set_image=(url=user.avatar_url)
+		embed.set_image(url=user.avatar_url)
 		embed.set_footer(text=f"ID: {user.id}")
 		await ctx.send(embed=embed)
 
