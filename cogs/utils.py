@@ -184,8 +184,7 @@ class Utils(commands.Cog):
 		Shows some info about a user. Defaults to self.
 		"""
 		bot = self.bot
-		if user is None:
-			user = ctx.author
+		user = user or ctx.author
 		if user.status == discord.Status.online:
 			status = bot.get_emoji(774816041632137226)
 		elif user.status == discord.Status.idle:
@@ -219,9 +218,8 @@ class Utils(commands.Cog):
 		"""
 		Shows the user's avatar.
 		"""
-		if user is None:
-			user = ctx.author
-		embed=discord.Embed(title=f"{user}'s Avatar", description=f"Download avatar here: [Download Link]({str(user.avatar_url)})")
+		user = user or ctx.author
+		embed=discord.Embed(title=f"{user}'s Avatar", description=f"Download avatar here: [Download Link]({str(user.avatar_url)})", color=user.color)
 		embed.set_image(url=user.avatar_url)
 		embed.set_footer(text=f"ID: {user.id}")
 		await ctx.send(embed=embed)
