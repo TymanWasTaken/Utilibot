@@ -39,7 +39,7 @@ class Logging(commands.Cog):
 	
 	@commands.Cog.listener()
 	async def on_bulk_message_delete(self, messages):
-		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
+		logchannel = discord.utils.get(obj.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
 		obj = messages[0]
