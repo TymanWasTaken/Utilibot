@@ -100,15 +100,16 @@ class Logging(commands.Cog):
 			embed.add_field(name="Before:", value=f"```{before.status}```", inline=False)
 			embed.add_field(name="After:", value=f"```{after.status}```", inline=False)
 		#activity change
-		elif before.activity != after.activity:
-			embed.title="Status Changed"
-			if before.activity == None:
-				embed.title="Status Added"
-			elif after.activity == None:
-				embed.title="Activity Removed"
-			embed.add_field(name="Before:", value=f"```{before.activity.name}\n{before.activity.details}```", inline=False)
-			embed.add_field(name="After:", value=f"```{after.activity.details}```", inline=False)
-		await logchannel.send(embed=embed)
+		# elif before.activity != after.activity:
+		# 	embed.title="Status Changed"
+		# 	if before.activity == None:
+		# 		embed.title="Status Added"
+		# 	elif after.activity == None:
+		# 		embed.title="Activity Removed"
+		# 	embed.add_field(name="Before:", value=f"```{before.activity.name}\n{before.activity.details}```", inline=False)
+		# 	embed.add_field(name="After:", value=f"```{after.activity.details}```", inline=False)
+		if embed.title != embed.Empty:
+			await logchannel.send(embed=embed)
 
 #	@commands.Cog.listener()
 #	async def on_user_update(self, before, after):
