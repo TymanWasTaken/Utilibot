@@ -39,10 +39,10 @@ class Logging(commands.Cog):
 	
 	@commands.Cog.listener()
 	async def on_bulk_message_delete(self, messages):
+		obj = messages[0]
 		logchannel = discord.utils.get(obj.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
-		obj = messages[0]
 		post = f"{len(messages)} messages deleted in #{obj.channel.name}:\n"
 		for message in messages:
 			post = f"{post}\n\n{message.author.name} ({message.author.id}): {message.content}"
