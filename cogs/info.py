@@ -149,6 +149,7 @@ class Info(commands.Cog):
 				help_text_page = help_text_page + help_text + "\n\n"
 				if len(help_text_page) > 2048:
 					help_text_pages.append(help_text_temp)
+					help_text_page = ""
 			embeds = [discord.Embed(title="Bot commands", description=page) for page in help_text_pages]
 			paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx)
 			paginator.add_reaction('⏮️', "first")
@@ -156,8 +157,7 @@ class Info(commands.Cog):
 			paginator.add_reaction('⏹', "lock")
 			paginator.add_reaction('⏩', "next")
 			paginator.add_reaction('⏭️', "last")
-			# await paginator.run(embeds)
-			await ctx.send("\n".join([await postbin.postAsync(help_page) for help_page in help_text_pages]))
+			await paginator.run(embeds)
 
 def setup(bot):
 	bot.add_cog(Info(bot))
