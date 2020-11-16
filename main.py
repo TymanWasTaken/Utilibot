@@ -124,6 +124,11 @@ async def on_command_error(ctx, error):
 					await errorchannel.send(message)
 	except:
 		await bot.get_channel(764333133738541056).send(content="<@&766132653640122419>\nIronic. The error handler errored.")
+
+@bot.event
+async def on_error(event):
+	await bot.get_channel(764333133738541056).send(event)
+
 @bot.event
 async def on_message(message):
 	if message.channel.id == 755982484444938290 and not message.content.startswith('=>'):
