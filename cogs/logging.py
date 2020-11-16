@@ -40,7 +40,12 @@ class Logging(commands.Cog):
 		Enable one of the logs.
 		"""
 		if log not in ["status", "activity", "nickname", "deletes", "edits", "avatar", "name"]:
-			return await ct
+			return await ctx.send("Not a valid log.")
+		db = await readDB()
+		if str(ctx.guild.id) not in db["logs"]:
+			db["logs"][str(ctx.guild.id)] = {}
+		db["logs"][str(ctx.guild.id)][log] = True
+		await writeDB(db)
 
 	@commands.Cog.listener()
 	async def on_message_edit(self, before, after):
@@ -122,33 +127,37 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_user_update(self, before, after):
-		logchannel = discord.utils.get(before.channel.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
-		embed.set_footer(text=f"User ID: {before.id}")
-		embed.set_author(name=before, icon_url=before.avatar_url)
-		#Username change
-		if before.name != after.name:
-			embed.title="Username Changed"
-			embed.add_field(name="Before:", value=f"```{before.name}```", inline=False)
-			embed.add_field(name="After:", value=f"```{after.name}```", inline=False)
-		#Discriminator change
-		elif before.discriminator != after.discriminator:
-			embed.title="Discriminator Changed"
-			embed.add_field(name="Before:", value=f"```{before.discriminator}```", inline=False)
-			embed.add_field(name="After:", value=f"```{after.discriminator}```", inline=False)
-		#Avatar change
-		elif before.avatar_url != after.avatar_url:
-			embed.title="Avatar Updated"
-			embed.add_field(name="Before:", value=f"[Link]({before.avatar_url})", inline=False)
-			embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
-			embed.set_thumbnail(after.avatar_url)
-		await logchannel.send(embed=embed)
+		for guild in self.bot.guilds:
+			logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
+			if logchannel == None:
+				return
+			embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
+			embed.set_footer(text=f"User ID: {before.id}")
+			embed.set_author(name=before, icon_url=before.avatar_url)
+			#Username change
+			if before.name != after.name:
+				embed.title="Username Changed"
+				embed.add_field(name="Before:", value=f"```{before.name}```", inline=False)
+				embed.add_field(name="After:", value=f"```{after.name}```", inline=False)
+			#Discriminator change
+			elif before.discriminator != after.discriminator:
+				embed.title="Discriminator Changed"
+				embed.add_field(name="Before:", value=f"```{before.discriminator}```", inline=False)
+				embed.add_field(name="After:", value=f"```{after.discriminator}```", inline=False)
+			#Avatar change
+			elif before.avatar_url != after.avatar_url:
+				embed.title="Avatar Updated"
+				embed.add_field(name="Before:", value=f"[Link]({before.avatar_url})", inline=False)
+				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
+				embed.set_thumbnail(after.avatar_url)
+			await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
 	async def on_voice_state_update(self, member, before, after):
 		logchannel = discord.utils.get(self.bot.guild.text_channels, name="utilibot-logs")
 		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
 		await logchannel.send(f"{member}, {before}, {after}")
+		
 
 
 def setup(bot):
