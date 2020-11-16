@@ -1,5 +1,5 @@
 # Imports
-import discord, os, time, glob, postbin, traceback, cogs, importlib, aiofiles, json, textwrap, re
+import discord, os, time, glob, postbin, traceback, cogs, importlib, aiofiles, json, textwrap, re, sys
 from datetime import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -128,7 +128,8 @@ async def on_command_error(ctx, error):
 @bot.event
 async def on_error(event, *args, **kwargs):
 	await bot.get_channel(764333133738541056).send(f"""
-	{event} errored for some reason :/
+	{event} errored: ```py
+	{sys.exc_info()}```
 	""".replace("	", ""))
 
 @bot.event
