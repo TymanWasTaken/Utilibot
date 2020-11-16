@@ -1,4 +1,4 @@
-import discord, dpytils, postbin, aiofiles, json
+import discord, dpytils, postbin, aiofiles, json, typing
 from discord.ext import commands
 from datetime import datetime
 
