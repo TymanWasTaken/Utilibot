@@ -167,32 +167,14 @@ class Info(commands.Cog):
 			paginator.add_reaction('⏭️', "last")
 			return await paginator.run(embeds)
 		cmd = None
-		for command in self.bot.commands:
-			if isinstance(command, commands.core.Group):
-				for subcommand in command.commands:
-					if command.qualified_name.lower() == argument.lower():
-						cmd = command
-						break
-					for alias in command.aliases:
-						if alias.lower() == argument.lower():
-							cmd = command
-							break
-				else:
-					if command.qualified_name.lower() == argument.lower():
-						cmd = command
-						break
-					for alias in command.aliases:
-						if alias.lower() == argument.lower():
-							cmd = command
-							break
-			else:
-				if command.qualified_name.lower() == argument.lower():
-					cmd = command
-					break
-				for alias in command.aliases:
-					if alias.lower() == argument.lower():
-						cmd = command
-						break
+		args_split = argument.split(" ")
+		cmd = bot.all_commands.get(args_split[0])
+		if cmd != None:
+			for command in cmd.all_commands[1:]:
+				try:
+					cmd = cmd.all_commands[command]
+				except (AttributeError, KeyError):
+					return None
 		if cmd != None:
 			n = "\n"
 			if isinstance(cmd, commands.core.Group):

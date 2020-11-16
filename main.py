@@ -126,8 +126,13 @@ async def on_command_error(ctx, error):
 		await bot.get_channel(764333133738541056).send(content="<@&766132653640122419>\nIronic. The error handler errored.")
 
 @bot.event
-async def on_error(event):
-	await bot.get_channel(764333133738541056).send(event)
+async def on_error(event, error, *args, **kwargs):
+	await bot.get_channel(764333133738541056).send(f"""
+	Event: {event}
+	Args: {args}
+	Kwargs: {kwargs}
+	Error: {error}
+	""".replace("	", ""))
 
 @bot.event
 async def on_message(message):

@@ -5,7 +5,7 @@ class FriendServer(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@aiocron.crontab('0 12 * * *', tz=pytz.timezone("US/Mountain"))
+	@aiocron.crontab('0 12 * * * 0', tz=pytz.timezone("US/Mountain"))
 	async def sendDuoMessage(self=None):
 		async with aiohttp.ClientSession() as session:
 			webhook = discord.Webhook.from_url('https://discord.com/api/webhooks/749360350901567607/KLeRMONub0E4-sktBG3tiCUFkweKW4YIgXqQWqn8Ucl5iJP05r3OJvVo53GylMlRPGbj', adapter=discord.AsyncWebhookAdapter(session))
