@@ -150,7 +150,13 @@ class Info(commands.Cog):
 				else:
 					current += " " + text
 			embeds = [discord.Embed(title="Bot commands", description=page) for page in pages]
-			await ctx.send(len(pages))
+			paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx)
+			paginator.add_reaction('⏮️', "first")
+			paginator.add_reaction('⏪', "back")
+			paginator.add_reaction('⏹', "lock")
+			paginator.add_reaction('⏩', "next")
+			paginator.add_reaction('⏭️', "last")
+			await paginator.run(embeds)
 
 def setup(bot):
 	bot.add_cog(Info(bot))
