@@ -265,9 +265,11 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		unicodereaction = (payload.emoji).encode("unicode_escape").lstrip(b"\u").decode("utf-8")
 		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482, timestamp=datetime.now())
 		link = reaction.url
-		if reaction.id == 0:
-			unicodereaction = (payload.emoji).encode("unicode_escape").lstrip(b"\u").decode("utf-8")
+		if reaction.is_unicode_emoji():
+			unicodereaction = str(payload.emoji).encode("unicode_escape").lstrip(b"\u").decode("utf-8")
 			link = f"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png"
+		else:
+			link = str(payload.emoji.url)
 		embed.description=f"""
 **User:** {user} (`{user.id}`)
 **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
