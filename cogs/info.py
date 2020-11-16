@@ -164,7 +164,7 @@ class Info(commands.Cog):
 			paginator.add_reaction('⏭️', "last")
 			await paginator.run(embeds)
 		elif cog != None:
-			cog_text = f"**__{cog.qualified_name}__**:\n"
+			cog_text = ""
 			for cmd in cog.get_commands():
 				if not cmd.hidden:
 					if cmd.short_doc:
@@ -174,7 +174,7 @@ class Info(commands.Cog):
 							cog_text = cog_text + f"**{cmd.name}**: {cmd.short_doc[0:65]}...\n"
 					else:
 						cog_text = cog_text + f"**{cmd.name}**\n"
-			embed = discord.Embed(title=f"{cog} commands", description=cog_text)
+			embed = discord.Embed(title=f"{cog.qualified_name} commands", description=cog_text)
 			await ctx.send(embed=embed)
 		else:
 			await ctx.send(f"Could not find command/cog {argument}.")
