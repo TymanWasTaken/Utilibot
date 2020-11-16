@@ -122,7 +122,7 @@ class Info(commands.Cog):
 		if argument == None:
 			commands = self.bot.commands
 			embed = discord.Embed(title="Commands")
-			sorted_commands = []
+			sorted_commands = {}
 			for cog_name in self.bot.cogs:
 				cog = self.bot.get_cog(cog_name)
 				sorted_commands[cog_name] = cog.get_commands()
