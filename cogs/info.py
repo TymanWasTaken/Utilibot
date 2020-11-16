@@ -184,7 +184,7 @@ class Info(commands.Cog):
 		else: cmd = None
 		if cmd != None:
 			if len(cmd.aliases) > 0:
-				embed = discord.Embed(description=f"{ctx.prefix}[{'|'.join(cmd.aliases)}] {cmd.signature}")
+				embed = discord.Embed(description=f"{ctx.prefix}[{cmd.name}|{'|'.join(cmd.aliases)}] {cmd.signature}")
 			else:
 				embed = discord.Embed(description=f"{ctx.prefix}{cmd.qualified_name} {cmd.signature}")
 			return await ctx.send(embed=embed)
