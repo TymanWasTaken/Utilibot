@@ -124,6 +124,7 @@ class Info(commands.Cog):
 			embed = discord.Embed(title="Commands")
 			sorted_commands = []
 			for cog in self.bot.cogs:
+				cog = self.bot.get_cog(cog)
 				sorted_commands[cog.name] = cog.get_commands()
 			sorted_commands["No category"] = [cmd for cmd in commands if cmd.cog == None]
 			help_text = ""
