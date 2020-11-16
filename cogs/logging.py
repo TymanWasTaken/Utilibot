@@ -154,7 +154,7 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_voice_state_update(self, member, before, after):
-		logchannel = discord.utils.get(self.bot.guild.text_channels, name="utilibot-logs")
+		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
 		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
 		embed.set_thumbnail(member.avatar_url)
 		if before == None:
