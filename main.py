@@ -131,7 +131,7 @@ async def on_error(event, *args, **kwargs):
 	tb = "".join(traceback.format_exception(errorInfo[0], errorInfo[1], errorInfo[2]))
 	await bot.get_channel(764333133738541056).send(f"""
 	{event} raised: ```py
-	{sys.exc_info()}```
+	{tb}```
 	""".replace("	", ""))
 
 @bot.event
