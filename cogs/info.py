@@ -175,9 +175,9 @@ class Info(commands.Cog):
 		if cmd != None:
 			n = "\n"
 			if len(cmd.aliases) > 0:
-				embed = discord.Embed(description=f"`{ctx.prefix}[{cmd.name}|{'|'.join(cmd.aliases)}]{f' {cmd.signature}' if cmd.signature != '' else ''}`{f'{n*2}```{n}{cmd.help}```' if cmd.help != None else ''}")
+				embed = discord.Embed(description=f"`{ctx.prefix}[{cmd.name}|{'|'.join(cmd.aliases)}]{f' {cmd.signature}' if cmd.signature != '' else ''}`\n\nCategory name: {cmd.cog.name if command.cog else 'none'}\n{f'```{n}{cmd.help}```' if cmd.help != None else ''}")
 			else:
-				embed = discord.Embed(description=f"`{ctx.prefix}{cmd.qualified_name}{f' {cmd.signature}' if cmd.signature != '' else ''}`{f'{n*2}```{n}{cmd.help}```' if cmd.help != None else ''}")
+				embed = discord.Embed(description=f"`{ctx.prefix}{cmd.qualified_name}{f' {cmd.signature}' if cmd.signature != '' else ''}`\n\nCategory name: {cmd.cog.name if command.cog else 'none'}\n{f'```{n}{cmd.help}```' if cmd.help != None else ''}")
 			return await ctx.send(embed=embed)
 		cog = [cog for cog in self.bot.cogs if cog.lower() == argument.lower()]
 		if len(cog) > 0: cog = self.bot.get_cog(cog[0])
