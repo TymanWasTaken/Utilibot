@@ -185,26 +185,26 @@ class Logging(commands.Cog):
 	@commands.Cog.listener()
 	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="🔨 Member Banned", description="📄lmao work in progress", color=0xe41212)
+		embed=discord.Embed(title="🔨 Member Banned", description="📄lmao work in progress", color=0xe41212, timestamp=datetime.now())
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
 	async def on_member_unban(self, guild, user):
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="🔓 Member Unbanned", description=f"📄lmao work in progress", color=5496236)
+		embed=discord.Embed(title="🔓 Member Unbanned", description=f"📄lmao work in progress", color=5496236, timestamp=datetime.now())
 		await logchannel.send(embed=embed)
 
 #Server Update
 	@commands.Cog.listener()
 	async def on_guild_update(self, before, after):
 		logchannel = discord.utils.get(before.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="✏️ Guild Updated", description="lmao work in progress", color=0x1184ff)
+		embed=discord.Embed(title="✏️ Guild Updated", description="lmao work in progress", color=0x1184ff, timestamp=datetime.now())
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
 	async def on_guild_emojis_update(self, guild, before, after):
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="Emoji Updated", description="lmao work in progress", color=0x1184ff)
+		embed=discord.Embed(title="Emoji Updated", description="lmao work in progress", color=0x1184ff, timestamp=datetime.now())
 		if len(before.emojis) > len(after.emojis):
 			embed.title="Emoji Deleted"
 			embed.color=0xe41212
@@ -218,14 +218,14 @@ class Logging(commands.Cog):
 	@commands.Cog.listener()
 	async def on_guild_role_create(self, role):
 		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="➕ Role Created", description=f"Name: {role.name}\nColor: {role.color}", color=role.color)
+		embed=discord.Embed(title="➕ Role Created", description=f"Name: {role.name}\nColor: {role.color}", color=role.color, timestamp=datetime.now())
 		embed.set_footer(text=f"Role ID: {role.id}")
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
 	async def on_guild_role_update(self, before, after):
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="✏️ Role Updated", color=after.color)
+		embed=discord.Embed(title="✏️ Role Updated", color=after.color, timestamp=datetime.now())
 		embed.set_footer(text=f"Role ID: {before.id}")
 		if before.color != after.color:
 			embed.add_field(name="Before:", value=f"Color: {before.color}")
@@ -248,7 +248,7 @@ Mentionable: {role.mentionable}
 Displayed separately: {role.hoist}
 Position: {role.position}
 Number of Members with Role: {len(role.members)}
-Created at: {role.created_at}""", color=role.color)
+Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		embed.set_footer(text=f"Role ID: {role.id}")
 		await logchannel.send(embed=embed)
 
@@ -258,7 +258,7 @@ Created at: {role.created_at}""", color=role.color)
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
-		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482)
+		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482, timestamp=datetime.now())
 		embed.description=f"""
 **User:** {user} (`{user.id}`)
 **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
@@ -273,7 +273,7 @@ Created at: {role.created_at}""", color=role.color)
 	async def on_reaction_remove(self, reaction, user):
 		message = reaction.message
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title=f"Reaction Removed by {user.nick or user.name}", color=11337728)
+		embed=discord.Embed(title=f"Reaction Removed by {user.nick or user.name}", color=11337728, timestamp=datetime.now())
 		embed.description=f"""
 **User:** {user} (`{user.id}`)
 **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
@@ -287,7 +287,7 @@ Created at: {role.created_at}""", color=role.color)
 	@commands.Cog.listener()
 	async def on_reaction_clear(self, message, reactions):
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="Reactions Cleared", color=0xa50003)
+		embed=discord.Embed(title="Reactions Cleared", color=0xa50003, timestamp=datetime.now())
 		embed.description=f"""
 **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
 **Author:** {message.author} (`{message.author.id}`)
