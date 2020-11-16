@@ -266,7 +266,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		link = reaction.url
 		if reaction.is_unicode_emoji():
 			unicodereaction = unicodedata.name(str(payload.emoji))
-			link = f"https://emojipedia.org/{unicodereaction.lower().replace('-', ' ')}"
+			link = f"https://emojipedia.org/{unicodereaction.lower().replace(' ', '-')}"
 		else:
 			link = str(payload.emoji.url)
 		embed.description=f"""
