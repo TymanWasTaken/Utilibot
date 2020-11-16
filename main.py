@@ -127,8 +127,10 @@ async def on_command_error(ctx, error):
 
 @bot.event
 async def on_error(event, *args, **kwargs):
+	errorInfo = sys.exc_info()
+	tb = "".join(traceback.format_exception(errorInfo[0], errorInfo[1] errorInfo[2]))
 	await bot.get_channel(764333133738541056).send(f"""
-	{event} errored: ```py
+	{event} raised: ```py
 	{sys.exc_info()}```
 	""".replace("	", ""))
 
