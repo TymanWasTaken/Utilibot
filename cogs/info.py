@@ -115,7 +115,7 @@ class Info(commands.Cog):
 			await ctx.send(f"Changed the prefix to `{prefix}` for this server!")
 
 	@commands.command()
-	async def help(self, ctx, argument=None):
+	async def help(self, ctx, *, argument=None):
 		"""
 		Displays the help command, self-explanatory.
 		"""
@@ -179,7 +179,7 @@ class Info(commands.Cog):
 						cog_text = cog_text + f"**{cmd.name}**: No description.\n"
 			embed = discord.Embed(title=f"{cog.qualified_name} commands", description=cog_text)
 			return await ctx.send(embed=embed)
-		cmd = [cmd for cmd in self.bot.commands if cmd.lower() == argument.lower()]
+		cmd = [cmd for cmd in self.bot.commands if cmd.qualified_name.lower() == argument.lower()]
 		if len(cmd) > 0: cmd = self.bot.get_cog(cmd[0])
 		else: cmd = None
 		if cmd != None:
