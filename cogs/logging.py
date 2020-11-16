@@ -322,7 +322,8 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 **Image Link:** [Link to Emoji]({link})
 """
 		embed.set_footer(text=user, icon_url=user.avatar_url)
-		embed.set_thumbnail(link)
+		if reaction.is_custom_emoji():
+			embed.set_thumbnail(url=link)
 		await logchannel.send(embed=embed)
 
 #	@commands.Cog.listener()
