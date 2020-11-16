@@ -32,7 +32,7 @@ class Debug(commands.Cog):
 		log = self.bot.get_channel(776466538156130314)
 		e = discord.Embed(title="Command ran", description=f"""
 		User: `{str(ctx.author)}` ({ctx.author.id})
-		Guild: `{ctx.guild.name}` ({ctx.guild.id})
+		Guild: `{ctx.guild.name + f" ({ctx.guild.id})" if ctx.guild else 'none'}`
 		Command: `{ctx.command.qualified_name}`
 		""".replace("	", "")
 		)

@@ -171,6 +171,8 @@ class Logging(commands.Cog):
 			embed.description = f"{str(member)} left {before.channel.name}"
 			embed.color=0xe41212
 		elif before.channel != after.channel:
+			if before.channel.id == after.channel.id:
+				return
 			embed.title = "Member Moved Voice Channels"
 			embed.add_field(name="Before:", value=before.channel.name)
 			embed.add_field(name="After:", value=after.channel.name)
@@ -238,7 +240,7 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_guild_role_delete(self, role):
-		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
+		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
 		embed=discord.Embed(title="❌ Role Deleted", description=f"""
 Name: {role.name}
 Color: {role.color}
@@ -254,6 +256,8 @@ Created at: {role.created_at}""", color=role.color)
 	async def on_reaction_add(self, reaction, user):
 		message = reaction.message
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
+		if logchannel == None:
+			return
 		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482)
 		embed.description=f"""
 **User:** {user} (`{user.id}`)
