@@ -281,7 +281,6 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		if logchannel == None:
 			return
 		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482, timestamp=datetime.now())
-		link = reaction.url
 		if reaction.is_unicode_emoji():
 			unicodereaction = unicodedata.name(str(payload.emoji))
 			link = f"https://emojipedia.org/{unicodereaction.lower().replace(' ', '-')}"
@@ -308,10 +307,11 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
-		link = reaction.url
-		if reaction.id == 0:
-			unicodereaction = (payload.emoji).encode("unicode_escape").lstrip(b"\u").decode("utf-8")
-			link = f"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png"
+		if reaction.is_unicode_emoji():
+			unicodereaction = unicodedata.name(str(payload.emoji))
+			link = f"https://emojipedia.org/{unicodereaction.lower().replace(' ', '-')}"
+		else:
+			link = str(payload.emoji.url)
 		embed=discord.Embed(title=f"Reaction Removed by {user.nick or user.name}", color=11337728, timestamp=datetime.now())
 		embed.description=f"""
 **User:** {user} (`{user.id}`)
