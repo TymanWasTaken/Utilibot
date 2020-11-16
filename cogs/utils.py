@@ -211,6 +211,7 @@ class Utils(commands.Cog):
 			thumbnail=user.avatar_url,
 			color=user.color
 			)
+		embed.add_field(name="Custom Status", value=f"```{user.activity}```", inline=False)
 		await ctx.send(embed=embed)
 
 	@commands.command(name="avatar", aliases=['av', 'pfp'])
