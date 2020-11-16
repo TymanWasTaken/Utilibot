@@ -121,9 +121,6 @@ class Info(commands.Cog):
 		"""
 		if ctx.author.id not in self.bot.owner_ids:
 			return await ctx.send("This command is currently in construction. Custom help command soon™")
-		cog = [cog for cog in self.bot.cogs if cog.lower() == argument.lower()]
-		if len(cog) > 0: cog = self.bot.get_cog(cog[0])
-		else: cog = None
 		if argument == None:
 			commands = self.bot.commands
 			embed = discord.Embed(title="Commands")
@@ -162,8 +159,11 @@ class Info(commands.Cog):
 			paginator.add_reaction('⏹', "lock")
 			paginator.add_reaction('⏩', "next")
 			paginator.add_reaction('⏭️', "last")
-			await paginator.run(embeds)
-		elif cog != None:
+			return await paginator.run(embeds)
+		cog = [cog for cog in self.bot.cogs if cog.lower() == argument.lower()]
+		if len(cog) > 0: cog = self.bot.get_cog(cog[0])
+		else: cog = None
+		if cog != None:
 			cog_text = ""
 			for cmd in cog.get_commands():
 				if not cmd.hidden:
