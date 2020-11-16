@@ -183,11 +183,11 @@ class Info(commands.Cog):
 					if not command.hidden:
 						if command.short_doc:
 							if len(command.help) < 65:
-								command_text = command_text + f"**{command.name}**: {command.short_doc}\n"
+								command_text = command_text + f"**{command.qualified_name}**: {command.short_doc}\n"
 							else:
-								command_text = command_text + f"**{command.name}**: {command.short_doc[0:65]}...\n"
+								command_text = command_text + f"**{command.qualified_name}**: {command.short_doc[0:65]}...\n"
 						else:
-							command_text = command_text + f"**{command.name}**: No description.\n"
+							command_text = command_text + f"**{command.qualified_name}**: No description.\n"
 				gcs = command_text
 			else:
 				gcs = ""
