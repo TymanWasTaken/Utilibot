@@ -131,7 +131,8 @@ class Info(commands.Cog):
 			for cmds in sorted_commands:
 				category_text = f"__{cmds}__:\n"
 				for cmd in sorted_commands[cmds]:
-					category_text = category_text + f"{cmd.name}: {cmd.brief}\n"
+					if not cmd.hidden:
+						category_text = category_text + f"{cmd.name}: {cmd.brief}\n"
 				help_text = help_text + category_text + "\n"
 			await ctx.send(help_text)
 
