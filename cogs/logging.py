@@ -248,6 +248,41 @@ Created at: {role.created_at}""", color=role.color)
 		embed.set_footer(text=f"Role ID: {role.id}")
 		await logchannel.send(embed=embed)
 
+	@commands.Cog.listener()
+	async def on_reaction_add(self, reaction, user):
+		message = reaction.message
+		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(title="Reaction Added", color=563482)
+		embed.description=f"""
+**User:** {user} (`{user.id}`)
+**Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
+**Author:** {message.author} (`{message.author.id}`)
+**Message Sent At:** {message.created_at}
+**Reaction:** {reaction} (`{reaction}`)
+"""
+		embed.set_footer(text=user, icon_url=user.avatar_url)
+		await logchannel.send(embed=embed)
+
+	@commands.Cog.listener()
+	async def on_reaction_remove(self, reaction, user):
+		message = reaction.message
+		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(title="Reaction Removed", color=0xe41212)
+		embed.description=f"""
+**User:** {user} (`{user.id}`)
+**Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
+**Author:** {message.author} (`{message.author.id}`)
+**Message Sent At:** {message.created_at}
+**Reaction:** {reaction} (`{reaction}`)
+"""
+		embed.set_footer(text=user, icon_url=user.avatar_url)
+		await logchannel.send(embed=embed)
+
+	@commands.Cog.listener()
+	async def on_reaction_clear(self, message, reactions):
+		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(title="Reactions Cleared", color=0xa50003)
+		await logchannel.send(embed=embed)
 
 
 def setup(bot):
