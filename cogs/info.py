@@ -131,7 +131,7 @@ class Info(commands.Cog):
 			sorted_commands["No category"] = [cmd for cmd in commands if cmd.cog == None]
 			help_texts = []
 			for cmds in sorted_commands:
-				if len(cmds) < 1:
+				if len(sorted_commands[cmds]) < 1:
 					continue
 				category_text = f"**__{cmds}__**:\n"
 				for cmd in sorted_commands[cmds]:
