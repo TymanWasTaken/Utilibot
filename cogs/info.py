@@ -121,13 +121,13 @@ class Info(commands.Cog):
 		Displays the help command, self-explanatory.
 		"""
 		if argument == None:
-			commands = self.bot.commands
+			bot_commands = self.bot.commands
 			embed = discord.Embed(title="Commands")
 			sorted_commands = {}
 			for cog_name in self.bot.cogs:
 				cog = self.bot.get_cog(cog_name)
 				sorted_commands[cog_name] = cog.get_commands()
-			sorted_commands["No category"] = [cmd for cmd in commands if cmd.cog == None]
+			sorted_commands["No category"] = [cmd for cmd in bot_commands if cmd.cog == None]
 			help_texts = []
 			for cmds in sorted_commands:
 				if len(sorted_commands[cmds]) < 1:
