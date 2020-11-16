@@ -1,4 +1,4 @@
-import discord, random, asyncio, string, aiofiles, json
+import discord, random, asyncio, string, aiofiles, json, DiscordUtils
 from discord.ext import commands
 import datetime
 import importlib
@@ -147,7 +147,14 @@ class Info(commands.Cog):
 				help_text_page = help_text_page + help_text + "\n\n"
 				if len(help_text_page) > 2048:
 					help_text_pages.append(help_text_temp)
-			await ctx.send(embed=discord.Embed(title="Help command", description=len(help_text_pages)))
+			embeds = [discord.Embed(title="Bot commands", description=page) for page in help_text_pages]
+			paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx)
+			paginator.add_reaction('⏮️', "first")
+			paginator.add_reaction('⏪', "back")
+			paginator.add_reaction('⏹', "lock")
+			paginator.add_reaction('⏩', "next")
+			paginator.add_reaction('⏭️', "last")
+			await paginator.run(embeds)
 
 def setup(bot):
 	bot.add_cog(Info(bot))
