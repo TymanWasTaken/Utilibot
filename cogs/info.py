@@ -153,7 +153,10 @@ class Info(commands.Cog):
 				else:
 					current += " " + text
 			embeds = [discord.Embed(title="Bot commands", description=page) for page in pages]
-			paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx)
+			if ctx.channel.permissions_for(ctx.guild.me).manage_messages:
+				paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx, timeout=60, remove_reactions=True, auto_footer=True)
+			else:
+				paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx, timeout=60, remove_reactions=False, auto_footer=True)
 			paginator.add_reaction('⏮️', "first")
 			paginator.add_reaction('⏪', "back")
 			paginator.add_reaction('⏹', "lock")
