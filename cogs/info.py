@@ -178,7 +178,7 @@ class Info(commands.Cog):
 		if cmd != None:
 			n = "\n"
 			if isinstance(cmd, commands.core.Group):
-				command_text = "\n\n**__{}__**:"
+				command_text = "\n**__{}__**:"
 				for command in cmd.commands:
 					if not command.hidden:
 						if command.short_doc:
@@ -188,7 +188,7 @@ class Info(commands.Cog):
 								command_text = command_text + f"**{command.name}**: {command.short_doc[0:65]}...\n"
 						else:
 							command_text = command_text + f"**{command.name}**: No description.\n"
-				gcs = "command_text"
+				gcs = command_text
 			else:
 				gcs = ""
 			if len(cmd.aliases) > 0:
