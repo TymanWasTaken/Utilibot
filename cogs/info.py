@@ -178,7 +178,7 @@ class Info(commands.Cog):
 		if cmd != None:
 			n = "\n"
 			if isinstance(cmd, commands.core.Group):
-				command_text = f"\n**__{cmd.qualified_name}__**:"
+				command_text = f"\n**__{cmd.qualified_name}__**:\n"
 				for command in cmd.commands:
 					if not command.hidden:
 						if command.short_doc:
