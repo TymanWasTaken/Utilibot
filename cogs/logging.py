@@ -256,24 +256,33 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 	async def on_raw_reaction_add(self, payload):
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 		user = message.guild.get_member(payload.user_id)
+		reaction = payload.emoji
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
+		unicodereaction = (payload.emoji).encode("unicode_escape").lstrip(b"\u").decode("utf-8")
 		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482, timestamp=datetime.now())
 		embed.description=f"""
 **User:** {user} (`{user.id}`)
 **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
 **Author:** {message.author} (`{message.author.id}`)
 **Message Sent At:** {message.created_at}
-**Reaction:** {payload.emoji} (`{payload.emoji}`)
+**Reaction:** {reaction} (`{reaction}`)
+**Image Link:** [Link to Emoji](https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png)
 """
 		embed.set_footer(text=user, icon_url=user.avatar_url)
+		embed.set_thumbnail(f"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png")
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
-	async def on_reaction_remove(self, reaction, user):
-		message = reaction.message
+	async def on_raw_reaction_remove(self, payload):
+		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+		user = message.guild.get_member(payload.user_id)
+		reaction = payload.emoji
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
+		if logchannel == None:
+			return
+		unicodereaction = (payload.emoji).encode("unicode_escape").lstrip(b"\u").decode("utf-8")
 		embed=discord.Embed(title=f"Reaction Removed by {user.nick or user.name}", color=11337728, timestamp=datetime.now())
 		embed.description=f"""
 **User:** {user} (`{user.id}`)
@@ -281,8 +290,10 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 **Author:** {message.author} (`{message.author.id}`)
 **Message Sent At:** {message.created_at}
 **Reaction:** {reaction} (`{reaction}`)
+**Image Link:** [Link to Emoji](https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png)
 """
 		embed.set_footer(text=user, icon_url=user.avatar_url)
+		embed.set_thumbnail(f"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png")
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
