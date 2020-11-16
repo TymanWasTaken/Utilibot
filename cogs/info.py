@@ -179,14 +179,15 @@ class Info(commands.Cog):
 			n = "\n"
 			if isinstance(cmd, commands.core.Group):
 				command_text = "\n\n**__{}__**:"
-				if not command.hidden:
-					if command.short_doc:
-						if len(command.help) < 65:
-							command_text = command_text + f"**{command.name}**: {command.short_doc}\n"
+				for command in cmd.commands:
+					if not command.hidden:
+						if command.short_doc:
+							if len(command.help) < 65:
+								command_text = command_text + f"**{command.name}**: {command.short_doc}\n"
+							else:
+								command_text = command_text + f"**{command.name}**: {command.short_doc[0:65]}...\n"
 						else:
-							command_text = command_text + f"**{command.name}**: {command.short_doc[0:65]}...\n"
-					else:
-						command_text = command_text + f"**{command.name}**: No description.\n"
+							command_text = command_text + f"**{command.name}**: No description.\n"
 				gcs = "command_text"
 			else:
 				gcs = ""
