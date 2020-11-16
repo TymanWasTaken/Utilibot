@@ -1,4 +1,4 @@
-import discord, random, asyncio, string, aiofiles, json, DiscordUtils
+import discord, random, asyncio, string, aiofiles, json, DiscordUtils, postbin
 from discord.ext import commands
 import datetime
 import importlib
@@ -156,7 +156,8 @@ class Info(commands.Cog):
 			paginator.add_reaction('⏹', "lock")
 			paginator.add_reaction('⏩', "next")
 			paginator.add_reaction('⏭️', "last")
-			await paginator.run(embeds)
+			# await paginator.run(embeds)
+			await ctx.send("\n".join([await postbin.postAsync(help_page) for help_page in help_text_pages]))
 
 def setup(bot):
 	bot.add_cog(Info(bot))
