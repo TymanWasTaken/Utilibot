@@ -180,7 +180,7 @@ class Info(commands.Cog):
 			embed = discord.Embed(title=f"{cog.qualified_name} commands", description=cog_text)
 			return await ctx.send(embed=embed)
 		cmd = [cmd for cmd in self.bot.commands if cmd.qualified_name.lower() == argument.lower()]
-		if len(cmd) > 0: cmd = self.bot.get_cog(cmd[0])
+		if len(cmd) > 0: cmd = cmd[0]
 		else: cmd = None
 		if cmd != None:
 			if len(cmd.aliases) > 0:
