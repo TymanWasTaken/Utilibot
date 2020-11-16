@@ -1,4 +1,4 @@
-import discord, dpytils, postbin, aiofiles, json, typing
+import discord, dpytils, postbin, aiofiles, json, typing, unicodedata
 from discord.ext import commands
 from datetime import datetime
 
@@ -265,8 +265,8 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482, timestamp=datetime.now())
 		link = reaction.url
 		if reaction.is_unicode_emoji():
-			unicodereaction = str(payload.emoji).encode("unicode_escape").lstrip(b"\u").decode("utf-8")
-			link = f"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png"
+			unicodereaction = unicodedata.name(str(payload.emoji))
+			link = f"https://emojipedia.org/{unicodereaction.lower().replace('-', ' ')}"
 		else:
 			link = str(payload.emoji.url)
 		embed.description=f"""
@@ -275,7 +275,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 **Author:** {message.author} (`{message.author.id}`)
 **Message Sent At:** {message.created_at}
 **Reaction:** {reaction} (`{reaction}`)
-**Image Link:** [Link to Emoji]({link})
+**Emoji Link:** [Link to Emoji]({link})
 """
 		embed.set_footer(text=user, icon_url=user.avatar_url)
 		embed.set_thumbnail(url=link)
