@@ -115,12 +115,11 @@ class Info(commands.Cog):
 			await ctx.send(f"Changed the prefix to `{prefix}` for this server!")
 
 	@commands.command()
-	async def help(self, ctx, *, argument=None):
+	@commands.is_owner()
+	async def chelp(self, ctx, *, argument=None):
 		"""
 		Displays the help command, self-explanatory.
 		"""
-		if ctx.author.id not in self.bot.owner_ids:
-			return await ctx.send("This command is currently in construction. Custom help command soon™")
 		if argument == None:
 			commands = self.bot.commands
 			embed = discord.Embed(title="Commands")

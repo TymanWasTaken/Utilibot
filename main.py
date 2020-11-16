@@ -37,7 +37,7 @@ async def getprefixes(bot, message):
 	else:
 		return defaults
 
-bot = commands.Bot(command_prefix=getprefixes, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents, help_command=None)
+bot = commands.Bot(command_prefix=getprefixes, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
 
 class BlacklistedError(commands.CommandError):
 	pass
