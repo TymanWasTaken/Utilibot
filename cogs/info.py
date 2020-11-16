@@ -151,12 +151,7 @@ class Info(commands.Cog):
 					help_text_pages.append(help_text_temp)
 					help_text_page = ""
 			embeds = [discord.Embed(title="Bot commands", description=page) for page in help_text_pages]
-			paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx)
-			paginator.add_reaction('⏮️', "first")
-			paginator.add_reaction('⏪', "back")
-			paginator.add_reaction('⏹', "lock")
-			paginator.add_reaction('⏩', "next")
-			paginator.add_reaction('⏭️', "last")
+			paginator = DiscordUtils.Pagination.AutoEmbedPaginator(ctx)
 			await paginator.run(embeds)
 
 def setup(bot):
