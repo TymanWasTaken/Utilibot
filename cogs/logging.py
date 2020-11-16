@@ -51,6 +51,8 @@ class Logging(commands.Cog):
 	async def on_message_edit(self, before, after):
 		if before.content == after.content:
 			return
+		if not before.guild:
+			return
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -156,13 +158,17 @@ class Logging(commands.Cog):
 	async def on_voice_state_update(self, member, before, after):
 		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
 		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
-		embed.set_thumbnail(url=member.avatar_url)
+		embed.set_author(name=member, icon_url=member.avatar_url)
 		if before.channel == None:
 			embed.title = "Member joined vc"
-			embed.description = f"{str(member)} joined {after.mention}"
+			embed.description = f"{str(member)} joined <#{after.channel.id}>"
+		elif after.channel == None:
+			embed.title = "Member left vc"
+			embed.description = f"{str(member)} joined <#{before.channel.id}>"
+		else:
+			embed.title = "Member moved vc"
+			embed.description = f"{str(member)} moved from <#{before.channel.id}> to <#{after.channel.id}>"
 		await logchannel.send(embed=embed)
-		
-
 
 def setup(bot):
 	bot.add_cog(Logging(bot))
