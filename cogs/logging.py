@@ -59,8 +59,8 @@ class Logging(commands.Cog):
 		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", description=f"**Before:**```{before.clean_content.replace('`', '​`​')}```**After:**```{after.clean_content.replace('`', '​`​')}```Message link: [click here]({before.jump_url})", color=0x1184ff, timestamp=datetime.now())
 		embed.set_author(name=before.author, icon_url=before.author.avatar_url)
 		embed.set_footer(text=f"Author ID: {before.author.id}")
-		if (message.embeds and not message.content):
-			embed.description=f"**Before:**```{before.cclean_content.replace('`', '​`​')}```**After:**```Message has Embed Only```Message link: [click here]({before.jump_url})"
+		if (after.embeds and not after.content):
+			embed.description=f"**Before:**```{before.clean_content.replace('`', '​`​')}```**After:**```Message has Embed Only```Message link: [click here]({before.jump_url})"
 		await logchannel.send(embed=embed)
 	
 	@commands.Cog.listener()
