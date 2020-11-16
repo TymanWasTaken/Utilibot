@@ -143,7 +143,12 @@ class Logging(commands.Cog):
 			embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
 			embed.set_thumbnail(after.avatar_url)
 		await logchannel.send(embed=embed)
-		
+
+	@commands.Cog.listener()
+	async def on_voice_state_update(self, member, before, after):
+		logchannel = discord.utils.get(self.bot.guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
+		await logchannel.send(f"{member}, {before}, {after}")
 
 
 def setup(bot):
