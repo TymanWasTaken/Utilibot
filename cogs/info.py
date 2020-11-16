@@ -131,17 +131,18 @@ class Info(commands.Cog):
 			sorted_commands["No category"] = [cmd for cmd in commands if cmd.cog == None]
 			help_texts = []
 			for cmds in sorted_commands:
-				category_text = f"__{cmds}__:\n"
+				category_text = f"**__{cmds}__**:\n"
 				for cmd in sorted_commands[cmds]:
 					if not cmd.hidden:
 						if cmd.short_doc:
 							if len(cmd.help) < 65:
-								category_text = category_text + f"{cmd.name}: {cmd.short_doc}\n"
+								category_text = category_text + f"**{cmd.name}**: {cmd.short_doc}\n"
 							else:
-								category_text = category_text + f"{cmd.name}: {cmd.short_doc[0:65]}...\n"
+								category_text = category_text + f"**{cmd.name}**: {cmd.short_doc[0:65]}...\n"
 						else:
-							category_text = category_text + f"{cmd.name}\n"
+							category_text = category_text + f"**{cmd.name}**\n"
 				help_texts.append(category_text)
+			help_texts = [txt + "\n\n" for txt in help_texts]
 			pages, current = [], next(iter(help_texts))
 			for text in help_texts:
 				if len(current) + 1 + len(text) > 2048:
