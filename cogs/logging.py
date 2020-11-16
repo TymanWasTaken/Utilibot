@@ -65,6 +65,8 @@ class Logging(commands.Cog):
 	
 	@commands.Cog.listener()
 	async def on_message_delete(self, message):
+		if not message.guild:
+			return
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -78,6 +80,8 @@ class Logging(commands.Cog):
 	
 	@commands.Cog.listener()
 	async def on_bulk_message_delete(self, messages):
+		if not message.guild:
+			return	
 		obj = messages[0]
 		logchannel = discord.utils.get(obj.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -91,6 +95,8 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_member_update(self, before, after):
+		if not message.guild:
+			return
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -133,6 +139,8 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_user_update(self, before, after):
+		if not message.guild:
+			return
 		for guild in self.bot.guilds:
 			if before.id not in [m.id for m in guild.members]:
 				return
@@ -162,6 +170,8 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_voice_state_update(self, member, before, after):
+		if not message.guild:
+			return
 		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -190,6 +200,8 @@ class Logging(commands.Cog):
 #Ban/Unban
 	@commands.Cog.listener()
 	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
+		if not message.guild:
+			return
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -198,6 +210,8 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_member_unban(self, guild, user):
+		if not message.guild:
+			return
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -207,6 +221,8 @@ class Logging(commands.Cog):
 #Server Update
 	@commands.Cog.listener()
 	async def on_guild_update(self, before, after):
+		if not message.guild:
+			return
 		logchannel = discord.utils.get(before.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -215,6 +231,8 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_guild_emojis_update(self, guild, before, after):
+		if not message.guild:
+			return
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -231,6 +249,8 @@ class Logging(commands.Cog):
 #Role Logging
 	@commands.Cog.listener()
 	async def on_guild_role_create(self, role):
+		if not message.guild:
+			return
 		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -240,6 +260,8 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_guild_role_update(self, before, after):
+		if not message.guild:
+			return
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -258,6 +280,8 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_guild_role_delete(self, role):
+		if not message.guild:
+			return
 		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -274,6 +298,8 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
+		if not message.guild:
+			return
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 		user = message.guild.get_member(payload.user_id)
 		reaction = payload.emoji
