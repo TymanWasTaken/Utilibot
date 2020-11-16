@@ -142,7 +142,7 @@ class Info(commands.Cog):
 						else:
 							category_text = category_text + f"**{cmd.name}**\n"
 				help_texts.append(category_text)
-			help_texts = [txt + "\n\n" for txt in help_texts]
+			help_texts = [txt + "\n" for txt in help_texts]
 			pages, current = [], next(iter(help_texts))
 			for text in help_texts:
 				if len(current) + 1 + len(text) > 2048:
