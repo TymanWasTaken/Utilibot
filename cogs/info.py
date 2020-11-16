@@ -148,8 +148,8 @@ class Info(commands.Cog):
 			passed_start = False
 			for text in help_texts:
 				if passed_start == False:
+					passed_start = True
 					continue
-				passed_start = True
 				if len(current) + 1 + len(text) > 2048:
 					pages.append(current)
 					current = text
