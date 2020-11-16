@@ -132,11 +132,11 @@ class Info(commands.Cog):
 				category_text = f"__{cmds}__:\n"
 				for cmd in sorted_commands[cmds]:
 					if not cmd.hidden:
-						if cmd.help:
+						if cmd.short_doc:
 							if len(cmd.help) < 65:
-								category_text = category_text + f"{cmd.name}: {cmd.help}\n"
+								category_text = category_text + f"{cmd.name}: {cmd.short_doc}\n"
 							else:
-								category_text = category_text + f"{cmd.name}: {cmd.help[0:65]}...\n"
+								category_text = category_text + f"{cmd.name}: {cmd.short_doc[0:65]}...\n"
 						else:
 							category_text = category_text + f"{cmd.name}\n"
 				help_texts.append(category_text)
