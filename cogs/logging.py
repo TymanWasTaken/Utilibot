@@ -157,17 +157,22 @@ class Logging(commands.Cog):
 	@commands.Cog.listener()
 	async def on_voice_state_update(self, member, before, after):
 		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
-		embed.set_author(name=member, icon_url=member.avatar_url)
+		embed=discord.Embed(timestamp=datetime.now())
+		embed.set_author(name=member.author, icon_url=member.avatar_url)
+		embed.set_footer(text=f"User ID: {member.id}")
 		if before.channel == None:
-			embed.title = "Member joined vc"
-			embed.description = f"{str(member)} joined <#{after.channel.id}>"
+			embed.title = "Member Joined Voice Channel"
+			embed.description = f"{str(member)} joined {after.name}"
+			embed.color = 5496236
 		elif after.channel == None:
-			embed.title = "Member left vc"
-			embed.description = f"{str(member)} joined <#{before.channel.id}>"
+			embed.title = "Member Left Voice Channel"
+			embed.description = f"{str(member)} left {before.name}"
+			embed.color=0x1184ff
 		else:
-			embed.title = "Member moved vc"
-			embed.description = f"{str(member)} moved from <#{before.channel.id}> to <#{after.channel.id}>"
+			embed.title = "Member Moved Voice Channels"
+			embed.add_field(name="Before:", value=before.name)
+			embed.add_field(name="After:", value=after.name)
+			embed.color=0x1184ff
 		await logchannel.send(embed=embed)
 
 def setup(bot):
