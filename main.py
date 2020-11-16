@@ -128,10 +128,7 @@ async def on_command_error(ctx, error):
 @bot.event
 async def on_error(event, *args, **kwargs):
 	await bot.get_channel(764333133738541056).send(f"""
-	Event: {event}
-	Args: {args}
-	Kwargs: {kwargs}
-	Error: {error}
+	{event} errored for some reason :/
 	""".replace("	", ""))
 
 @bot.event
