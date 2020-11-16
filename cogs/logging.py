@@ -282,8 +282,11 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 			return
 		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482, timestamp=datetime.now())
 		if reaction.is_unicode_emoji():
-			unicodereaction = unicodedata.name(payload.emoji)
-			link = f"https://emojipedia.org/{unicodereaction.lower().replace(' ', '-')}"
+			try:
+				unicodereaction = unicodedata.name(u"{}".format(payload.emoji.name))
+				link = f"https://emojipedia.org/{unicodereaction.lower().replace(' ', '-')}"
+			except:
+				link = None
 		else:
 			link = str(payload.emoji.url)
 		embed.description=f"""
@@ -292,7 +295,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 **Author:** {message.author} (`{message.author.id}`)
 **Message Sent At:** {message.created_at}
 **Reaction:** {reaction} (`{reaction}`)
-**Emoji Link:** [Link to Emoji]({link})
+{f"**Image Link:** [Link to Emoji]({link})" if link else ""}
 """
 		embed.set_footer(text=user, icon_url=user.avatar_url)
 		if reaction.is_custom_emoji():
@@ -308,8 +311,11 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		if logchannel == None:
 			return
 		if reaction.is_unicode_emoji():
-			unicodereaction = unicodedata.name(payload.emoji)
-			link = f"https://emojipedia.org/{unicodereaction.lower().replace(' ', '-')}"
+			try:
+				unicodereaction = unicodedata.name(u"{}".format(payload.emoji.name))
+				link = f"https://emojipedia.org/{unicodereaction.lower().replace(' ', '-')}"
+			except:
+				link = None
 		else:
 			link = str(payload.emoji.url)
 		embed=discord.Embed(title=f"Reaction Removed by {user.nick or user.name}", color=11337728, timestamp=datetime.now())
@@ -319,7 +325,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 **Author:** {message.author} (`{message.author.id}`)
 **Message Sent At:** {message.created_at}
 **Reaction:** {reaction} (`{reaction}`)
-**Image Link:** [Link to Emoji]({link})
+{f"**Image Link:** [Link to Emoji]({link})" if link else ""}
 """
 		embed.set_footer(text=user, icon_url=user.avatar_url)
 		if reaction.is_custom_emoji():
