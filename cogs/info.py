@@ -187,7 +187,7 @@ class Info(commands.Cog):
 				embed = discord.Embed(description=f"{ctx.prefix}[{'|'.join(cmd.aliases)}] {cmd.usage}")
 			else:
 				embed = discord.Embed(description=f"{ctx.prefix}[{cmd.qualified_name} {cmd.usage}")
-			return await ctx.send(embed)
+			return await ctx.send(embed=embed)
 		await ctx.send(f"Could not find command/cog {argument}.")
 
 
