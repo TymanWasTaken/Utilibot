@@ -3,14 +3,6 @@ from discord.ext import commands
 import datetime
 import importlib
 
-class HelpCommand(commands.MinimalHelpCommand):
-    async def send_pages(self):
-        destination = self.get_destination()
-        e = discord.Embed(color=discord.Color.blurple(), description='')
-        for page in self.paginator.pages:
-            e.description += page
-        await destination.send(embed=e)
-
 async def readDB():
 	try:
 		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
@@ -47,7 +39,6 @@ def permsfromvalue(value):
 class Info(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		bot.help_command=HelpCommand()
 
 	@commands.command()
 	async def ping(self, ctx):
@@ -122,6 +113,26 @@ class Info(commands.Cog):
 			d["prefixes"][str(ctx.guild.id)] = prefix
 			await writeDB(d)
 			await ctx.send(f"Changed the prefix to `{prefix}` for this server!")
+
+	@commands.command()
+	async def help(self, ctx, argument=None):
+		"""
+		Displays the help command, self-explanatory.
+		"""
+		if argument == None:
+			commands = self.bot.commands
+			embed = discord.Embed(title="Commands")
+			sorted_commands = []
+			for cog in self.bot.cogs:
+				sorted_commands[cog.name] = cog.get_commands()
+			sorted_commands["No category"] = [cmd for cmd in commands if cmd.cog == None]
+			help_text = ""
+			for cmds in sorted_commands:
+				category_text = f"__{cmds}__:\n"
+				for cmd in sorted_commands[cmds]:
+					category_text = category_text + f"{cmd.name}: {cmd.brief}\n"
+				help_text = help_text + category_text + "\n"
+
 
 def setup(bot):
 	bot.add_cog(Info(bot))
