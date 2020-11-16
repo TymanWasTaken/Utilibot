@@ -26,12 +26,21 @@ class Logging(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command(name="log")
+	@commands.group(invoke_without_command=True)
 	async def log(self, ctx):
 		"""
 		Will config logging eventually.
 		"""
-		await ctx.send("Logging coming soon!")
+		await ctx.send("Logging coming soon™!")
+
+	@log.command()
+	@commands.has_permissions(manage_guild=True)
+	async def enable(self, ctx, log: str):
+		"""
+		Enable one of the logs.
+		"""
+		if log not in ["status", "activity", "nickname", "deletes", "edits", "avatar", "name"]:
+			return await ct
 
 	@commands.Cog.listener()
 	async def on_message_edit(self, before, after):
@@ -113,7 +122,7 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_user_update(self, before, after):
-		logchannel = discord.utils.get(self.bot.guild.text_channels, name="utilibot-logs")
+		logchannel = discord.utils.get(before.channel.guild.text_channels, name="utilibot-logs")
 		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
 		embed.set_footer(text=f"User ID: {before.id}")
 		embed.set_author(name=before, icon_url=before.avatar_url)
