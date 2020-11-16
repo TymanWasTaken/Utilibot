@@ -285,17 +285,19 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		embed.set_footer(text=user, icon_url=user.avatar_url)
 		await logchannel.send(embed=embed)
 
-	@commands.Cog.listener()
-	async def on_reaction_clear(self, message, reactions):
-		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="Reactions Cleared", color=0xa50003, timestamp=datetime.now())
-		embed.description=f"""
-**Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
-**Author:** {message.author} (`{message.author.id}`)
-**Message Sent At:** {message.created_at}
-**Reactions Cleared:** {reaction} (`{reaction}`)
-"""
-		await logchannel.send(embed=embed)
+#   I commented out bellow because it will error, reaction isn't defined
+
+# 	@commands.Cog.listener()
+# 	async def on_reaction_clear(self, message, reactions):
+# 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
+# 		embed=discord.Embed(title="Reactions Cleared", color=0xa50003, timestamp=datetime.now())
+# 		embed.description=f"""
+# **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
+# **Author:** {message.author} (`{message.author.id}`)
+# **Message Sent At:** {message.created_at}
+# **Reactions Cleared:** {reaction} (`{reaction}`)
+# """
+# 		await logchannel.send(embed=embed)
 
 
 def setup(bot):
