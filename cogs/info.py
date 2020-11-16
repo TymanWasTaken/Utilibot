@@ -174,6 +174,7 @@ class Info(commands.Cog):
 					else:
 						cog_text = cog_text + f"**{cmd.name}**\n"
 			embed = discord.Embed(title=f"{cog} commands", description=cog_text)
+			await ctx.send(embed=embed)
 
 
 def setup(bot):
