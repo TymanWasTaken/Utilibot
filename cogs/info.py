@@ -132,7 +132,13 @@ class Info(commands.Cog):
 				category_text = f"__{cmds}__:\n"
 				for cmd in sorted_commands[cmds]:
 					if not cmd.hidden:
-						category_text = category_text + f"{cmd.name}: {cmd.brief}\n"
+						if cmd.help:
+							if len(cmd.help) < 65:
+								category_text = category_text + f"{cmd.name}: {cmd.help}\n"
+							else:
+								category_text = category_text + f"{cmd.name}: {cmd.help[0:65]}...\n"
+						else:
+							category_text = category_text + f"{cmd.name}\n"
 				help_text = help_text + category_text + "\n"
 			await ctx.send(help_text)
 

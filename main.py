@@ -90,6 +90,8 @@ async def on_command_error(ctx, error):
 			await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
 		elif "VoiceError: You are not connected to a voice channel." in str(error):
 			pass
+		elif " or fewer in length." in str(error):
+			await ctx.send("Command response was too long to send.")
 		else:
 			invitelink = f"https://discord.gg/"
 			for invite in await bot.get_guild(755887706386726932).invites():
