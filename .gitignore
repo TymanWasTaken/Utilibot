@@ -131,3 +131,6 @@ dmypy.json
 # Data files
 data.db
 data.json
+
+# Cogs that don't need to be public
+cogs/friendserver.py
