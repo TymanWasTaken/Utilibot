@@ -127,7 +127,7 @@ class Info(commands.Cog):
 				cog = self.bot.get_cog(cog_name)
 				sorted_commands[cog_name] = cog.get_commands()
 			sorted_commands["No category"] = [cmd for cmd in commands if cmd.cog == None]
-			help_text = ""
+			help_texts = []
 			for cmds in sorted_commands:
 				category_text = f"__{cmds}__:\n"
 				for cmd in sorted_commands[cmds]:
@@ -139,8 +139,8 @@ class Info(commands.Cog):
 								category_text = category_text + f"{cmd.name}: {cmd.help[0:65]}...\n"
 						else:
 							category_text = category_text + f"{cmd.name}\n"
-				help_text = help_text + category_text + "\n"
-			await ctx.send(help_text)
+				help_texts.append(category_text)
+			await ctx.send(embed=discord.Embed(title="Help command", description="\n\n".join(help_texts))
 
 
 def setup(bot):
