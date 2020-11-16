@@ -177,10 +177,23 @@ class Info(commands.Cog):
 					break
 		if cmd != None:
 			n = "\n"
-			if len(cmd.aliases) > 0:
-				embed = discord.Embed(description=f"`{ctx.prefix}[{cmd.name}|{'|'.join(cmd.aliases)}]{f' {cmd.signature}' if cmd.signature != '' else ''}`\n\nCategory name: {cmd.cog.qualified_name if command.cog else 'none'}\n{f'```{n}{cmd.help}```' if cmd.help != None else ''}")
+			if isinstance(cmd, commands.core.Group):
+				command_text = "\n\n**__{}__**:"
+				if not command.hidden:
+					if command.short_doc:
+						if len(command.help) < 65:
+							command_text = command_text + f"**{command.name}**: {command.short_doc}\n"
+						else:
+							command_text = command_text + f"**{command.name}**: {command.short_doc[0:65]}...\n"
+					else:
+						command_text = command_text + f"**{command.name}**: No description.\n"
+				gcs = "command_text"
 			else:
-				embed = discord.Embed(description=f"`{ctx.prefix}{cmd.qualified_name}{f' {cmd.signature}' if cmd.signature != '' else ''}`\n\nCategory name: {cmd.cog.qualified_name if command.cog else 'none'}\n{f'```{n}{cmd.help}```' if cmd.help != None else ''}")
+				gcs = ""
+			if len(cmd.aliases) > 0:
+				embed = discord.Embed(description=f"`{ctx.prefix}[{cmd.name}|{'|'.join(cmd.aliases)}]{f' {cmd.signature}' if cmd.signature != '' else ''}`\n\nCategory name: {cmd.cog.qualified_name if command.cog else 'none'}\n{f'```{n}{cmd.help}```' if cmd.help != None else ''}{gcs}")
+			else:
+				embed = discord.Embed(description=f"`{ctx.prefix}{cmd.qualified_name}{f' {cmd.signature}' if cmd.signature != '' else ''}`\n\nCategory name: {cmd.cog.qualified_name if command.cog else 'none'}\n{f'```{n}{cmd.help}```' if cmd.help != None else ''}{gcs}")
 			return await ctx.send(embed=embed)
 		cog = [cog for cog in self.bot.cogs if cog.lower() == argument.lower()]
 		if len(cog) > 0: cog = self.bot.get_cog(cog[0])
