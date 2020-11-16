@@ -168,13 +168,31 @@ class Info(commands.Cog):
 			return await paginator.run(embeds)
 		cmd = None
 		for command in self.bot.commands:
-			if command.qualified_name.lower() == argument.lower():
-				cmd = command
-				break
-			for alias in command.aliases:
-				if alias.lower() == argument.lower():
+			if isinstance(command, commands.core.Group):
+				for subcommand in command.commands:
+					if command.qualified_name.lower() == argument.lower():
+						cmd = command
+						break
+					for alias in command.aliases:
+						if alias.lower() == argument.lower():
+							cmd = command
+							break
+				else:
+					if command.qualified_name.lower() == argument.lower():
+						cmd = command
+						break
+					for alias in command.aliases:
+						if alias.lower() == argument.lower():
+							cmd = command
+							break
+			else:
+				if command.qualified_name.lower() == argument.lower():
 					cmd = command
 					break
+				for alias in command.aliases:
+					if alias.lower() == argument.lower():
+						cmd = command
+						break
 		if cmd != None:
 			n = "\n"
 			if isinstance(cmd, commands.core.Group):
