@@ -178,9 +178,16 @@ class Info(commands.Cog):
 					else:
 						cog_text = cog_text + f"**{cmd.name}**: No description.\n"
 			embed = discord.Embed(title=f"{cog.qualified_name} commands", description=cog_text)
-			await ctx.send(embed=embed)
-		else:
-			await ctx.send(f"Could not find command/cog {argument}.")
+			return await ctx.send(embed=embed)
+		cmd = [cmd for cmd in self.bot.commands if cmd.lower() == argument.lower()]
+		if len(cmd) > 0: cmd = self.bot.get_cog(cmd[0])
+		else: cmd = None
+		if cmd != None:
+			if len(cmd.aliases) > 0:
+				embed = discord.Embed(description=f"{ctx.prefix}[{'|'.join(cmd.aliases)}] {cmd.usage}")
+			else:
+				embed = discord.Embed(description=f"{ctx.prefix}[{cmd.qualified_name} {cmd.usage}")
+		await ctx.send(f"Could not find command/cog {argument}.")
 
 
 def setup(bot):
