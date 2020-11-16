@@ -177,38 +177,78 @@ class Logging(commands.Cog):
 			embed.color=0x1184ff
 		await logchannel.send(embed=embed)
 
+#Ban/Unban
 	@commands.Cog.listener()
 	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="🔨Member Banned", description="📄lmao work in progress", color=0xe41212)
+		embed=discord.Embed(title="🔨 Member Banned", description="📄lmao work in progress", color=0xe41212)
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
 	async def on_member_unban(self, guild, user):
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="🔓Member Unbanned", description=f"📄lmao work in progress", color=5496236)
+		embed=discord.Embed(title="🔓 Member Unbanned", description=f"📄lmao work in progress", color=5496236)
 		await logchannel.send(embed=embed)
+
+#Server Update
+	@commands.Cog.listener()
+	async def on_guild_update(self, before, after):
+		logchannel = discord.utils.get(before.text_channels, name="utilibot-logs")
+		embed=discord.Embed(title="✏️ Guild Updated", description="lmao work in progress", color=0x1184ff)
+		await logchannel.send(embed=embed)
+
+	@commands.Cog.listener()
+	async def on_guild_emojis_update(self, guild, before, after):
+		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(title="Emoji Updated", description="lmao work in progress", color=0x1184ff)
+		if len(before.emojis) > len(after.emojis):
+			embed.title="Emoji Deleted"
+			embed.color=0xe41212
+		elif len(before.emojis) < len(after.emojis):
+			embed.title="Emoji Created"
+			embed.color=5496236
+		await logchannel.send(embed=embed)
+
 
 #Role Logging
 	@commands.Cog.listener()
 	async def on_guild_role_create(self, role):
 		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="Role Created", description=f"lmao work in progress", color=role.color)
-		await logchannel.send(embed=embed)
-		
-
-	@commands.Cog.listener()
-	async def on_guild_role_delete(self, role):
-		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="Role Deleted", description="lmao work in progress", color=0xe41212)
+		embed=discord.Embed(title="➕ Role Created", description=f"Name: {role.name}\nColor: {role.color}", color=role.color)
+		embed.set_footer(text=f"Role ID: {role.id}")
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
 	async def on_guild_role_update(self, before, after):
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="Role Updated", description="lmao work in progress", color=0x1184ff)
+		embed=discord.Embed(title="✏️ Role Updated", color=after.color)
+		embed.set_footer(text=f"Role ID: {before.id}")
+		if before.color != after.color:
+			embed.add_field(name="Before:", value=f"Color: {before.color}")
+			embed.add_field(name="After:", value=f"Color: {after.color}")
+		elif before.name != after.name:
+			embed.add_field(name="Before:", value=f"Name: {before.name}")
+			embed.add_field(name="After:", value=f"Name: {after.name}")
+		elif before.hoist != after.hoist:
+			embed.add_field(name="Before:", value=f"Displayed Separately?: {before.hoist}")
+			embed.add_field(name="After:", value=f"Displayed Separately?: {after.name}")
 		await logchannel.send(embed=embed)
-		
+
+	@commands.Cog.listener()
+	async def on_guild_role_delete(self, role):
+		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(title="❌ Role Deleted", description=f"""
+Name: {role.name}
+Color: {role.color}
+Mentionable: {role.mentionable}
+Displayed separately: {role.hoist}
+Position: {role.position}
+Number of Members with Role: {len(role.members)}
+Created at: {role.created_at}""", color=role.color)
+		embed.set_footer(text=f"Role ID: {role.id}")
+		await logchannel.send(embed=embed)
+
+
 
 def setup(bot):
 	bot.add_cog(Logging(bot))
