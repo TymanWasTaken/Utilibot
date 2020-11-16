@@ -180,7 +180,7 @@ class Logging(commands.Cog):
 	@commands.Cog.listener()
 	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="🔨Member Banned", description="📄lmao work in progress", 0xe41212)
+		embed=discord.Embed(title="🔨Member Banned", description="📄lmao work in progress", color=0xe41212)
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
