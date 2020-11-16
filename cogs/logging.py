@@ -156,8 +156,8 @@ class Logging(commands.Cog):
 	async def on_voice_state_update(self, member, before, after):
 		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
 		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
-		embed.set_thumbnail(member.avatar_url)
-		if before == None:
+		embed.set_thumbnail(url=member.avatar_url)
+		if before.channel == None:
 			embed.title = "Member joined vc"
 			embed.description = f"{str(member)} joined {after.mention}"
 		await logchannel.send(embed=embed)
