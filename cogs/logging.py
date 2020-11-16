@@ -253,8 +253,9 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
-	async def on_reaction_add(self, reaction, user):
-		message = reaction.message
+	async def on_raw_reaction_add(self, payload):
+		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+		user = message.guild.get_member(payload.user_id)
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -264,7 +265,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
 **Author:** {message.author} (`{message.author.id}`)
 **Message Sent At:** {message.created_at}
-**Reaction:** {reaction} (`{reaction}`)
+**Reaction:** {payload.emoji} (`{payload.emoji}`)
 """
 		embed.set_footer(text=user, icon_url=user.avatar_url)
 		await logchannel.send(embed=embed)
