@@ -1,5 +1,5 @@
 # Imports
-import discord, os, time, glob, postbin, traceback, cogs, importlib, aiofiles, json, textwrap
+import discord, os, time, glob, postbin, traceback, cogs, importlib, aiofiles, json, textwrap, re
 from datetime import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -69,6 +69,7 @@ async def on_command_error(ctx, error):
 	try:
 		nocommandblacklist = [264445053596991498, 458341246453415947, 735615909884067930]
 		errorchannel = bot.get_channel(764333133738541056)
+		longTextRegex = re.match(r"Command raised an exception: HTTPException: 400 Bad Request \(error code: 50035\): Invalid Form Body\nIn (.+): Must be (\d+) or fewer in length.", str(error))
 		if isinstance(error, commands.TooManyArguments):
 			await ctx.send('Too many arguments')
 		elif isinstance(error, commands.NotOwner):
@@ -90,8 +91,8 @@ async def on_command_error(ctx, error):
 			await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
 		elif "VoiceError: You are not connected to a voice channel." in str(error):
 			pass
-		elif " or fewer in length." in str(error):
-			await ctx.send("Command response was too long to send.")
+		elif longTextRegex != None:
+			await ctx.send(f"Command response was too long to send. {longTextRegex.group(1)} must be {longTextRegex.group(2)} characters or less.")
 		else:
 			invitelink = f"https://discord.gg/"
 			for invite in await bot.get_guild(755887706386726932).invites():
