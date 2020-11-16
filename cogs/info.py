@@ -140,8 +140,7 @@ class Info(commands.Cog):
 						else:
 							category_text = category_text + f"{cmd.name}\n"
 				help_texts.append(category_text)
-			await ctx.send(embed=discord.Embed(title="Help command", description="\n\n".join(help_texts))
-
+			await ctx.send(embed=discord.Embed(title="Help command", description="\n\n".join(help_texts)))
 
 def setup(bot):
 	bot.add_cog(Info(bot))
