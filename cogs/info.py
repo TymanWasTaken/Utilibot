@@ -145,7 +145,11 @@ class Info(commands.Cog):
 				help_texts.append(category_text)
 			help_texts = [txt + "\n" for txt in help_texts]
 			pages, current = [], next(iter(help_texts))
+			passed_start = False
 			for text in help_texts:
+				if passed_start == False:
+					continue
+				passed_start = True
 				if len(current) + 1 + len(text) > 2048:
 					pages.append(current)
 					current = text
