@@ -92,7 +92,7 @@ async def on_command_error(ctx, error):
 		elif "VoiceError: You are not connected to a voice channel." in str(error):
 			pass
 		elif longTextRegex != None:
-			await ctx.send(f"Command response was too long to send. {longTextRegex.group(1)} must be {longTextRegex.group(2)} characters or less.")
+			await ctx.send(f"Command response was too long to send. `{longTextRegex.group(1)}` must be {longTextRegex.group(2)} characters or less.")
 		else:
 			invitelink = f"https://discord.gg/"
 			for invite in await bot.get_guild(755887706386726932).invites():
