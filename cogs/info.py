@@ -164,6 +164,7 @@ class Info(commands.Cog):
 			paginator.add_reaction('⏭️', "last")
 			await paginator.run(embeds)
 		elif cog != None:
+			cog_text = f"**__{cog.name}__**:\n"
 			for cmd in cog.get_commands():
 				if not cmd.hidden:
 					if cmd.short_doc:
