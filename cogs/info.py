@@ -142,17 +142,15 @@ class Info(commands.Cog):
 						else:
 							category_text = category_text + f"{cmd.name}\n"
 				help_texts.append(category_text)
-			help_text_pages = []
-			help_text_page = ""
-			for help_text in help_texts:
-				help_text_temp = help_text_page
-				help_text_page = help_text_page + help_text + "\n\n"
-				if len(help_text_page) > 2048:
-					help_text_pages.append(help_text_temp)
-					help_text_page = ""
-			embeds = [discord.Embed(title="Bot commands", description=page) for page in help_text_pages]
-			paginator = DiscordUtils.Pagination.AutoEmbedPaginator(ctx)
-			await paginator.run(embeds)
+			pages, current = [], next(help_texts)
+			for text in help_texts:
+				if len(current) + 1 + len(text) > 2048:
+					pages.append(current)
+					current = text
+				else:
+					current += " " + text
+			embeds = [discord.Embed(title="Bot commands", description=page) for page in pages]
+			await ctx.send(len(pages))
 
 def setup(bot):
 	bot.add_cog(Info(bot))
