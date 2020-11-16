@@ -178,4 +178,10 @@ for file in sorted(glob.glob("*.py")):
 	except:
 		pass
 bot.load_extension("riftgun")
+
+disabled_commands = ["log"]
+
+for cmd in disabled_commands:
+	bot.get_command(cmd).update(enabled=False)
+
 bot.run(os.getenv("BOT_TOKEN"))
