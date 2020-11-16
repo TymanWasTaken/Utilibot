@@ -252,7 +252,7 @@ Created at: {role.created_at}""", color=role.color)
 	async def on_reaction_add(self, reaction, user):
 		message = reaction.message
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="Reaction Added", color=563482)
+		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482)
 		embed.description=f"""
 **User:** {user} (`{user.id}`)
 **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
@@ -267,7 +267,7 @@ Created at: {role.created_at}""", color=role.color)
 	async def on_reaction_remove(self, reaction, user):
 		message = reaction.message
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="Reaction Removed", color=0xe41212)
+		embed=discord.Embed(title=f"Reaction Removed by {user.nick or user.name}", color=11337728)
 		embed.description=f"""
 **User:** {user} (`{user.id}`)
 **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
@@ -282,6 +282,12 @@ Created at: {role.created_at}""", color=role.color)
 	async def on_reaction_clear(self, message, reactions):
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		embed=discord.Embed(title="Reactions Cleared", color=0xa50003)
+		embed.description=f"""
+**Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
+**Author:** {message.author} (`{message.author.id}`)
+**Message Sent At:** {message.created_at}
+**Reactions Cleared:** {reaction} (`{reaction}`)
+"""
 		await logchannel.send(embed=embed)
 
 
