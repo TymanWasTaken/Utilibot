@@ -59,6 +59,8 @@ class Logging(commands.Cog):
 		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", description=f"**Before:**```{before.clean_content.replace('`', '​`​')}```**After:**```{after.clean_content.replace('`', '​`​')}```Message link: [click here]({before.jump_url})", color=0x1184ff, timestamp=datetime.now())
 		embed.set_author(name=before.author, icon_url=before.author.avatar_url)
 		embed.set_footer(text=f"Author ID: {before.author.id}")
+		if (message.embeds and not message.content):
+			embed.description=f"**Before:**```{before.cclean_content.replace('`', '​`​')}```**After:**```Message has Embed Only```Message link: [click here]({before.jump_url})"
 		await logchannel.send(embed=embed)
 	
 	@commands.Cog.listener()
@@ -167,13 +169,46 @@ class Logging(commands.Cog):
 		elif after.channel == None:
 			embed.title = "Member Left Voice Channel"
 			embed.description = f"{str(member)} left {before.channel.name}"
-			embed.color=0x1184ff
+			embed.color=0xe41212
 		else:
 			embed.title = "Member Moved Voice Channels"
 			embed.add_field(name="Before:", value=before.channel.name)
 			embed.add_field(name="After:", value=after.channel.name)
 			embed.color=0x1184ff
 		await logchannel.send(embed=embed)
+
+	@commands.Cog.listener()
+	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
+		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(title="🔨Member Banned", description="📄lmao work in progress", 0xe41212)
+		await logchannel.send(embed=embed)
+
+	@commands.Cog.listener()
+	async def on_member_unban(self, guild, user):
+		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(title="🔓Member Unbanned", description=f"📄lmao work in progress", color=5496236)
+		await logchannel.send(embed=embed)
+
+#Role Logging
+	@commands.Cog.listener()
+	async def on_guild_role_create(self, role):
+		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(title="Role Created", description=f"lmao work in progress", color=role.color)
+		await logchannel.send(embed=embed)
+		
+
+	@commands.Cog.listener()
+	async def on_guild_role_delete(self, role):
+		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(title="Role Deleted", description="lmao work in progress", color=0xe41212)
+		await logchannel.send(embed=embed)
+
+	@commands.Cog.listener()
+	async def on_guild_role_update(self, before, after):
+		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(title="Role Updated", description="lmao work in progress", color=0x1184ff)
+		await logchannel.send(embed=embed)
+		
 
 def setup(bot):
 	bot.add_cog(Logging(bot))
