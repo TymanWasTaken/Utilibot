@@ -162,16 +162,16 @@ class Logging(commands.Cog):
 		embed.set_footer(text=f"User ID: {member.id}")
 		if before.channel == None:
 			embed.title = "Member Joined Voice Channel"
-			embed.description = f"{str(member)} joined {after.name}"
+			embed.description = f"{str(member)} joined {after.channel.name}"
 			embed.color = 5496236
 		elif after.channel == None:
 			embed.title = "Member Left Voice Channel"
-			embed.description = f"{str(member)} left {before.name}"
+			embed.description = f"{str(member)} left {before.channel.name}"
 			embed.color=0x1184ff
 		else:
 			embed.title = "Member Moved Voice Channels"
-			embed.add_field(name="Before:", value=before.name)
-			embed.add_field(name="After:", value=after.name)
+			embed.add_field(name="Before:", value=before.channel.name)
+			embed.add_field(name="After:", value=after.channel.name)
 			embed.color=0x1184ff
 		await logchannel.send(embed=embed)
 
