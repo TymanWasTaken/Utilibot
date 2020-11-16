@@ -158,7 +158,7 @@ class Logging(commands.Cog):
 	async def on_voice_state_update(self, member, before, after):
 		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
 		embed=discord.Embed(timestamp=datetime.now())
-		embed.set_author(name=member.author, icon_url=member.avatar_url)
+		embed.set_author(name=member, icon_url=member.avatar_url)
 		embed.set_footer(text=f"User ID: {member.id}")
 		if before.channel == None:
 			embed.title = "Member Joined Voice Channel"
