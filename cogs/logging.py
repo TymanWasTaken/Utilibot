@@ -271,7 +271,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 **Image Link:** [Link to Emoji](https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png)
 """
 		embed.set_footer(text=user, icon_url=user.avatar_url)
-		embed.set_thumbnail(f"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png")
+		# embed.set_thumbnail(f"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png")
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
@@ -293,20 +293,23 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 **Image Link:** [Link to Emoji](https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png)
 """
 		embed.set_footer(text=user, icon_url=user.avatar_url)
-		embed.set_thumbnail(f"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png")
+		# embed.set_thumbnail(f"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png")
 		await logchannel.send(embed=embed)
 
-	@commands.Cog.listener()
-	async def on_reaction_clear(self, message, reactions):
-		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
-		embed=discord.Embed(title="Reactions Cleared", color=0xa50003, timestamp=datetime.now())
-		embed.description=f"""
-**Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
-**Author:** {message.author} (`{message.author.id}`)
-**Message Sent At:** {message.created_at}
-**Reactions Cleared:** {reactions.join(" ")} (`{reactions.join("` `")}`)
-"""
-		await logchannel.send(embed=embed)
+#	@commands.Cog.listener()
+#	async def on_raw_reaction_clear(self, payload):
+#		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+#		user = message.guild.get_member(payload.user_id)
+#		reactions = payload.emojis
+#		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
+#		embed=discord.Embed(title="Reactions Cleared", color=0xa50003, timestamp=datetime.now())
+#		embed.description=f"""
+#**Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
+#**Author:** {message.author} (`{message.author.id}`)
+#**Message Sent At:** {message.created_at}
+#**Reactions Cleared:** {reactions.join(" ")} (`{reactions.join("` `")}`)
+#"""
+#		await logchannel.send(embed=embed)
 
 
 def setup(bot):
