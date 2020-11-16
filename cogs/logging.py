@@ -262,11 +262,9 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
-		unicodereaction = (payload.emoji).encode("unicode_escape").lstrip(b"\u").decode("utf-8")
 		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482, timestamp=datetime.now())
 		link = reaction.url
 		if reaction.is_unicode_emoji():
-			await logchannel.send(payload.emoji.name)
 			unicodereaction = str(payload.emoji).encode("unicode_escape").lstrip(b"\u").decode("utf-8")
 			link = f"https://raw.githubusercontent.com/iamcal/emoji-data/master/img-google-136/{unicodereaction}.png"
 		else:
