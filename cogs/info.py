@@ -163,14 +163,20 @@ class Info(commands.Cog):
 			paginator.add_reaction('⏩', "next")
 			paginator.add_reaction('⏭️', "last")
 			return await paginator.run(embeds)
-		cmd = [cmd for cmd in self.bot.commands if cmd.qualified_name.lower() == argument.lower()]
-		if len(cmd) > 0: cmd = cmd[0]
-		else: cmd = None
+		cmd = None
+		for command in self.bot.commands:
+			if command.qualified_name.lower() == argument.lower():
+				cmd = command
+				break
+			for alias in command.aliases:
+				if alias.lower() == argument.lower():
+					cmd = command
+					break
 		if cmd != None:
 			if len(cmd.aliases) > 0:
-				embed = discord.Embed(description=f"`{ctx.prefix}[{cmd.name}|{'|'.join(cmd.aliases)}] {cmd.signature}`")
+				embed = discord.Embed(description=f"`{ctx.prefix}[{cmd.name}|{'|'.join(cmd.aliases)}]{f' {cmd.signature}' if cmd.signature != '' else ''}`")
 			else:
-				embed = discord.Embed(description=f"`{ctx.prefix}{cmd.qualified_name} {cmd.signature}`")
+				embed = discord.Embed(description=f"`{ctx.prefix}{cmd.qualified_name}{f' {cmd.signature}' if cmd.signature != '' else ''}`")
 			return await ctx.send(embed=embed)
 		cog = [cog for cog in self.bot.cogs if cog.lower() == argument.lower()]
 		if len(cog) > 0: cog = self.bot.get_cog(cog[0])
