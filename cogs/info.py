@@ -125,7 +125,7 @@ class Info(commands.Cog):
 			sorted_commands = []
 			for cog_name in self.bot.cogs:
 				cog = self.bot.get_cog(cog_name)
-				sorted_commands[cog.name or cog_name] = cog.get_commands()
+				sorted_commands[cog_name] = cog.get_commands()
 			sorted_commands["No category"] = [cmd for cmd in commands if cmd.cog == None]
 			help_text = ""
 			for cmds in sorted_commands:
