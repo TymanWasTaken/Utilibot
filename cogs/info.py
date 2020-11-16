@@ -145,7 +145,7 @@ class Info(commands.Cog):
 							else:
 								category_text = category_text + f"**{cmd.name}**: {cmd.short_doc[0:65]}...\n"
 						else:
-							category_text = category_text + f"**{cmd.name}**\n"
+							category_text = category_text + f"**{cmd.name}**: No description.\n"
 				help_texts.append(category_text)
 			help_texts = [txt + "\n" for txt in help_texts]
 			pages, current = [], next(iter(help_texts))
@@ -173,7 +173,7 @@ class Info(commands.Cog):
 						else:
 							cog_text = cog_text + f"**{cmd.name}**: {cmd.short_doc[0:65]}...\n"
 					else:
-						cog_text = cog_text + f"**{cmd.name}**\n"
+						cog_text = cog_text + f"**{cmd.name}**: No description.\n"
 			embed = discord.Embed(title=f"{cog.qualified_name} commands", description=cog_text)
 			await ctx.send(embed=embed)
 		else:
