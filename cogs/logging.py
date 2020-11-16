@@ -170,11 +170,13 @@ class Logging(commands.Cog):
 			embed.title = "Member Left Voice Channel"
 			embed.description = f"{str(member)} left {before.channel.name}"
 			embed.color=0xe41212
-		else:
+		elif before.channel != after.channel:
 			embed.title = "Member Moved Voice Channels"
 			embed.add_field(name="Before:", value=before.channel.name)
 			embed.add_field(name="After:", value=after.channel.name)
 			embed.color=0x1184ff
+		else:
+			return
 		await logchannel.send(embed=embed)
 
 #Ban/Unban
