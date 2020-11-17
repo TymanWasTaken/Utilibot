@@ -35,7 +35,7 @@ async def islogenabled(guild, log):
 class Logging(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.logs = ["status", "activity", "nickname", "deletes", "edits", "avatar", "name", "reactions", "roles"]
+		self.logs = ["status", "activity", "nickname", "deletes", "edits", "avatar", "name", "reactions", "roles", "voice", "discriminator"]
 
 	@commands.group(invoke_without_command=True)
 	async def log(self, ctx):
@@ -56,6 +56,46 @@ class Logging(commands.Cog):
 		if str(ctx.guild.id) not in db["logs"]:
 			db["logs"][str(ctx.guild.id)] = {}
 		db["logs"][str(ctx.guild.id)][log] = True
+		await writeDB(db)
+
+	@log.command()
+	@commands.has_permissions(manage_guild=True)
+	async def disable(self, ctx, log: str):
+		"""
+		Disable one of the logs.
+		"""
+		if log not in self.logs:
+			return await ctx.send("Not a valid log.")
+		db = await readDB()
+		if str(ctx.guild.id) not in db["logs"]:
+			db["logs"][str(ctx.guild.id)] = {}
+		db["logs"][str(ctx.guild.id)][log] = False
+		await writeDB(db)
+
+	@log.command()
+	@commands.has_permissions(manage_guild=True)
+	async def enableall(self, ctx):
+		"""
+		Enable all of the logs.
+		"""
+		db = await readDB()
+		for log in self.logs:
+			if str(ctx.guild.id) not in db["logs"]:
+				db["logs"][str(ctx.guild.id)] = {}
+			db["logs"][str(ctx.guild.id)][log] = True
+		await writeDB(db)
+
+	@log.command()
+	@commands.has_permissions(manage_guild=True)
+	async def disableall(self, ctx):
+		"""
+		Disable all of the logs.
+		"""
+		db = await readDB()
+		for log in self.logs:
+			if str(ctx.guild.id) not in db["logs"]:
+				db["logs"][str(ctx.guild.id)] = {}
+			db["logs"][str(ctx.guild.id)][log] = False
 		await writeDB(db)
 
 	@commands.Cog.listener()
@@ -177,21 +217,21 @@ class Logging(commands.Cog):
 			embed.set_author(name=before, icon_url=before.avatar_url)
 			#Username change
 			if before.name != after.name:
-				if not await islogenabled(before.guild, "name"):
+				if not await islogenabled(guild, "name"):
 					return
 				embed.title="Username Changed"
 				embed.add_field(name="Before:", value=f"```{before.name}```", inline=False)
 				embed.add_field(name="After:", value=f"```{after.name}```", inline=False)
 			#Discriminator change
 			elif before.discriminator != after.discriminator:
-				if not await islogenabled(before.guild, "discriminator"):
+				if not await islogenabled(guild, "discriminator"):
 					return
 				embed.title="Discriminator Changed"
 				embed.add_field(name="Before:", value=f"```{before.discriminator}```", inline=False)
 				embed.add_field(name="After:", value=f"```{after.discriminator}```", inline=False)
 			#Avatar change
 			elif before.avatar_url != after.avatar_url:
-				if not await islogenabled(before.guild, "avatar"):
+				if not await islogenabled(guild, "avatar"):
 					return
 				embed.title="Avatar Updated"
 				embed.add_field(name="Before:", value=f"[Link]({before.avatar_url})", inline=False)
@@ -309,7 +349,7 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_guild_role_delete(self, role):
-		if not await islogenabled(before.guild, "roles"):
+		if not await islogenabled(role.guild, "roles"):
 			return
 		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -327,7 +367,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
-		if not await islogenabled(before.guild, "reactions"):
+		if not await islogenabled(self.bot.get_guild(payload.guild_id), "reactions"):
 			return
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 		if not message.guild:
@@ -361,7 +401,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_remove(self, payload):
-		if not await islogenabled(before.guild, "reactions"):
+		if not await islogenabled(self.bot.get_guild(payload.guild_id), "reactions"):
 			return
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 		if not message.guild:

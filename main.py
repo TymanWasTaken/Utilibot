@@ -192,7 +192,7 @@ for file in sorted(glob.glob("*.py")):
 		pass
 bot.load_extension("riftgun")
 
-disabled_commands = ["log"]
+disabled_commands = []
 
 for cmd in disabled_commands:
 	bot.get_command(cmd).update(enabled=False)
