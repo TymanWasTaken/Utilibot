@@ -142,8 +142,8 @@ class Music(commands.Cog):
 	async def stop(self, ctx):
 		"""Stops and disconnects the bot from voice"""
 
-		await ctx.voice_client.disconnect()
-		
+		try: await ctx.voice_client.disconnect()
+		except: pass
 
 def setup(bot):
 	bot.add_cog(Music(bot))
