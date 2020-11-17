@@ -168,7 +168,7 @@ class Info(commands.Cog):
 			return await paginator.run(embeds)
 		cmd = None
 		args_split = argument.split(" ")
-		cmd = bot.all_commands.get(args_split[0])
+		cmd = self.bot.all_commands.get(args_split[0])
 		if cmd != None:
 			for command in cmd.all_commands[1:]:
 				try:
