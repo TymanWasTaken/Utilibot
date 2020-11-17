@@ -41,7 +41,7 @@ class Logging(commands.Cog):
 	@commands.has_permissions(manage_guild=True)
 	async def log(self, ctx):
 		"""
-		Will config logging eventually.
+		Shows logging settings for the current server.
 		"""
 		db = await readDB()
 		if str(ctx.guild.id) not in db["logs"]:
