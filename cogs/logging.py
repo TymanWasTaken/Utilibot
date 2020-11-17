@@ -35,7 +35,14 @@ async def islogenabled(guild, log):
 class Logging(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.logs = ["edit", "delete", "purge", "deletes", "nickname", "roles", "status", "activity", "username", "discriminator", "avatar", "voicejoin", "voiceleave", "voicemove", "ban", "unban", "server", "emojis", "rolecreate", "roleupdate", "roledelete", "reactionadd", "reactionremove", "reactionclear"]
+		self.logs = {
+		"messages":["edit", "delete", "purge"],
+		"users":["nickname", "rolechanges", "status", "activity", "username", "discriminator", "avatar", "ban", "unban"],
+		"voice":["voicejoin", "voiceleave", "voicemove"],
+		"server":["serverupdates", "emojis"],
+		"roles":["rolecreate", "roleupdate", "roledelete"],
+		"reactions":["reactionadd", "reactionremove", "reactionclear"]
+		}
 
 	@commands.group(invoke_without_command=True)
 	@commands.has_permissions(manage_guild=True)
@@ -204,7 +211,7 @@ Enabled logs:
 			embed.add_field(name="After:", value=f"```{after.nick}```", inline=False)
 		# role change
 		elif before.roles != after.roles:
-			if not await islogenabled(before.guild, "roles"):
+			if not await islogenabled(before.guild, "rolechanges"):
 				return
 			embed.title="Member Roles Updated"
 			if len(before.roles) < len(after.roles):
@@ -336,7 +343,7 @@ Enabled logs:
 # #Server Update
 # 	@commands.Cog.listener()
 # 	async def on_guild_update(self, before, after):
-#		if not await islogenabled(before, "server"):
+#		if not await islogenabled(before, "serverupdates"):
 #			return
 # 		logchannel = discord.utils.get(before.text_channels, name="utilibot-logs")
 # 		if logchannel == None:
