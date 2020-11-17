@@ -57,9 +57,10 @@ class Logging(commands.Cog):
 		logs = ""
 		for log in db["logs"][str(ctx.guild.id)]:
 			logs += f"{'✅' if db['logs'][str(ctx.guild.id)][log] else '❌'} {log}\n"
-		await ctx.send(f"""
-Enabled logs:
-{logs}""")
+#		await ctx.send(f"""
+#Enabled logs:
+#{logs}""")
+		await ctx.send("logging is temporarily disabled while we get log categories figured out")
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)

@@ -5,6 +5,7 @@
 		"aiocron",
 		"aiofiles",
 		"aiohttp",
+		"astimezone",
 		"asyncio",
 		"btmround",
 		"nocommandblacklist",
