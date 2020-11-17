@@ -73,9 +73,11 @@ class Music(commands.Cog):
 
 	@commands.command()
 	@commands.guild_only()
-	async def join(self, ctx, *, channel: discord.VoiceChannel):
+	async def join(self, ctx, *, channel: discord.VoiceChannel=None):
 		"""Joins a voice channel"""
 
+		channel = channel or ctx.author.voice.channel
+		
 		if ctx.voice_client is not None:
 			return await ctx.voice_client.move_to(channel)
 
