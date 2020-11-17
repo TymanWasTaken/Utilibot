@@ -131,8 +131,8 @@ Enabled logs:
 		if after_content == "" and after.embeds:
 			after_content = "Message contained embed only"
 		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", color=0x1184ff, timestamp=datetime.now())
-		embed.add_field("Before:", f"```{before_content}```", inline=False)
-		embed.add_field("After:", f"```{after_content}```", inline=False)
+		embed.add_field(name="Before:", value=f"```{before_content}```", inline=False)
+		embed.add_field(name="After:", value=f"```{after_content}```", inline=False)
 		embed.set_author(name=before.author, icon_url=before.author.avatar_url)
 		embed.set_footer(text=f"Author ID: {before.author.id}")
 		try:
@@ -141,8 +141,8 @@ Enabled logs:
 			before_content = await postbin.postAsync(before_content)
 			after_content = await postbin.postAsync(before_content)
 			embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", color=0x1184ff, timestamp=datetime.now())
-			embed.add_field("Before:", f"```{before_content}```", inline=False)
-			embed.add_field("After:", f"```{after_content}```", inline=False)
+			embed.add_field(name="Before:", value=f"```{before_content}```", inline=False)
+			embed.add_field(name="After:", value=f"```{after_content}```", inline=False)
 			embed.set_author(name=before.author, icon_url=before.author.avatar_url)
 			embed.set_footer(text=f"Author ID: {before.author.id}")
 			await logchannel.send(embed=embed)
