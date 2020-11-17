@@ -82,7 +82,7 @@ class Music(commands.Cog):
 		await channel.connect()
 		await ctx.guild.me.edit(deafen=True)
 
-	@commands.command()
+	@commands.command(name="play", aliases=['p','search'])
 	@commands.guild_only()
 	async def play(self, ctx, *, url):
 		"""
@@ -140,7 +140,7 @@ class Music(commands.Cog):
 
 	#     await ctx.send('Now playing: {}'.format(player.title))
 
-	@commands.command()
+	@commands.command(name="volume", aliases=['v'])
 	@commands.guild_only()
 	async def volume(self, ctx, volume: int=None):
 		"""Changes the player's volume"""
@@ -154,7 +154,7 @@ class Music(commands.Cog):
 		ctx.voice_client.source.volume = volume / 100
 		await ctx.send("Changed volume to {}%".format(volume))
 
-	@commands.command()
+	@commands.command(name="stop", aliases=['dc'])
 	@commands.guild_only()
 	async def stop(self, ctx):
 		"""Stops and disconnects the bot from voice"""
