@@ -22,14 +22,14 @@ async def writeDB(data: dict):
 	except Exception as e:
 		print(f"An error occurred, {e}")
 
-async def islogenabled(ctx, log):
+async def islogenabled(guild, log):
 	db = await readDB()
-	if str(ctx.guild.id) not in db["logs"]:
+	if str(guild.id) not in db["logs"]:
 		return False
-	if log not in db["logs"][str(ctx.guild.id)]:
+	if log not in db["logs"][str(guild.id)]:
 		return False
 	else:
-		return db["logs"][str(ctx.guild.id)][log]
+		return db["logs"][str(guild.id)][log]
 
 
 class Logging(commands.Cog):
@@ -60,10 +60,12 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_message_edit(self, before, after):
-		db = await readDB()
+		
 		if before.content == after.content:
 			return
 		if not before.guild:
+			return
+		if not await islogenabled(before.guild, "edits"):
 			return
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -79,6 +81,8 @@ class Logging(commands.Cog):
 	async def on_message_delete(self, message):
 		if not message.guild:
 			return
+		if not await islogenabled(message.guild, "deletes"):
+			return
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -93,7 +97,9 @@ class Logging(commands.Cog):
 	@commands.Cog.listener()
 	async def on_bulk_message_delete(self, messages):
 		if not messages[0].guild:
-			return	
+			return
+		if not await islogenabled(messages[0].guild, "deletes"):
+			return
 		obj = messages[0]
 		logchannel = discord.utils.get(obj.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -117,6 +123,8 @@ class Logging(commands.Cog):
 		embed.set_author(name=before, icon_url=before.avatar_url)
 		# Nickname change
 		if before.nick != after.nick:
+			if not await islogenabled(before.guild, "nickname"):
+				return
 			embed.title="Nickname Changed"
 			if before.nick == None:
 				embed.title="Nickname Added"
@@ -126,6 +134,8 @@ class Logging(commands.Cog):
 			embed.add_field(name="After:", value=f"```{after.nick}```", inline=False)
 		# role change
 		elif before.roles != after.roles:
+			if not await islogenabled(before.guild, "roles"):
+				return
 			embed.title="Member Roles Updated"
 			if len(before.roles) < len(after.roles):
 				embed.title="Role Added"
@@ -167,16 +177,22 @@ class Logging(commands.Cog):
 			embed.set_author(name=before, icon_url=before.avatar_url)
 			#Username change
 			if before.name != after.name:
+				if not await islogenabled(before.guild, "name"):
+					return
 				embed.title="Username Changed"
 				embed.add_field(name="Before:", value=f"```{before.name}```", inline=False)
 				embed.add_field(name="After:", value=f"```{after.name}```", inline=False)
 			#Discriminator change
 			elif before.discriminator != after.discriminator:
+				if not await islogenabled(before.guild, "discriminator"):
+					return
 				embed.title="Discriminator Changed"
 				embed.add_field(name="Before:", value=f"```{before.discriminator}```", inline=False)
 				embed.add_field(name="After:", value=f"```{after.discriminator}```", inline=False)
 			#Avatar change
 			elif before.avatar_url != after.avatar_url:
+				if not await islogenabled(before.guild, "avatar"):
+					return
 				embed.title="Avatar Updated"
 				embed.add_field(name="Before:", value=f"[Link]({before.avatar_url})", inline=False)
 				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
@@ -186,6 +202,8 @@ class Logging(commands.Cog):
 	@commands.Cog.listener()
 	async def on_voice_state_update(self, member, before, after):
 		if not member.guild:
+			return
+		if not await islogenabled(member.guild, "voice"):
 			return
 		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -215,6 +233,8 @@ class Logging(commands.Cog):
 #Ban/Unban
 	@commands.Cog.listener()
 	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
+		if not await islogenabled(guild, "bans"):
+			return
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -223,39 +243,43 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_member_unban(self, guild, user):
+		if not await islogenabled(guild, "bans"):
+			return
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
 		embed=discord.Embed(title="🔓 Member Unbanned", description=f"📄lmao work in progress", color=5496236, timestamp=datetime.now())
 		await logchannel.send(embed=embed)
 
-#Server Update
-	@commands.Cog.listener()
-	async def on_guild_update(self, before, after):
-		logchannel = discord.utils.get(before.text_channels, name="utilibot-logs")
-		if logchannel == None:
-			return
-		embed=discord.Embed(title="✏️ Guild Updated", description="lmao work in progress", color=0x1184ff, timestamp=datetime.now())
-		await logchannel.send(embed=embed)
+# #Server Update
+# 	@commands.Cog.listener()
+# 	async def on_guild_update(self, before, after):
+# 		logchannel = discord.utils.get(before.text_channels, name="utilibot-logs")
+# 		if logchannel == None:
+# 			return
+# 		embed=discord.Embed(title="✏️ Guild Updated", description="lmao work in progress", color=0x1184ff, timestamp=datetime.now())
+# 		await logchannel.send(embed=embed)
 
-	@commands.Cog.listener()
-	async def on_guild_emojis_update(self, guild, before, after):
-		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
-		if logchannel == None:
-			return
-		embed=discord.Embed(title="Emoji Updated", description="lmao work in progress", color=0x1184ff, timestamp=datetime.now())
-		if len(before.emojis) > len(after.emojis):
-			embed.title="Emoji Deleted"
-			embed.color=0xe41212
-		elif len(before.emojis) < len(after.emojis):
-			embed.title="Emoji Created"
-			embed.color=5496236
-		await logchannel.send(embed=embed)
+	# @commands.Cog.listener()
+	# async def on_guild_emojis_update(self, guild, before, after):
+	# 	logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
+	# 	if logchannel == None:
+	# 		return
+	# 	embed=discord.Embed(title="Emoji Updated", description="lmao work in progress", color=0x1184ff, timestamp=datetime.now())
+	# 	if len(before.emojis) > len(after.emojis):
+	# 		embed.title="Emoji Deleted"
+	# 		embed.color=0xe41212
+	# 	elif len(before.emojis) < len(after.emojis):
+	# 		embed.title="Emoji Created"
+	# 		embed.color=5496236
+	# 	await logchannel.send(embed=embed)
 
 
 #Role Logging
 	@commands.Cog.listener()
 	async def on_guild_role_create(self, role):
+		if not await islogenabled(role.guild, "roles"):
+			return
 		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -265,6 +289,8 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_guild_role_update(self, before, after):
+		if not await islogenabled(before.guild, "roles"):
+			return
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -283,6 +309,8 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_guild_role_delete(self, role):
+		if not await islogenabled(before.guild, "roles"):
+			return
 		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -299,6 +327,8 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
+		if not await islogenabled(before.guild, "reactions"):
+			return
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 		if not message.guild:
 			return
@@ -331,6 +361,8 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_remove(self, payload):
+		if not await islogenabled(before.guild, "reactions"):
+			return
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 		if not message.guild:
 			return
