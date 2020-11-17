@@ -96,10 +96,10 @@ class Music(commands.Cog):
 			return await ctx.send('You are not connected to a voice channel.')
 		url = url.lstrip("<").rstrip(">")
 		player = music.get_player(guild_id=ctx.guild.id)
+		await ctx.author.voice.channel.connect()
+		try: await ctx.guild.me.edit(deafen=True)
+		except: pass
 		if not player:
-			await ctx.author.voice.channel.connect()
-			try: await ctx.guild.me.edit(deafen=True)
-			except: pass
 			player = music.create_player(ctx, ffmpeg_error_betterfix=True)
 		if not ctx.voice_client.is_playing():
 			await player.queue(url, search=True)
