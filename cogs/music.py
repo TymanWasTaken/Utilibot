@@ -145,6 +145,23 @@ class Music(commands.Cog):
 		try: await ctx.voice_client.disconnect()
 		except: pass
 
+	@commands.command()
+	@commands.guild_only()
+	async def loop(self, ctx):
+		"""
+		Starts the music player looping
+		"""
+		player = music.get_player(guild_id=ctx.guild.id)
+		song = await player.toggle_song_loop()
+		if not player:
+			return await ctx.send("I am not playing music in this server.")
+		if ctx.member.voice.channel != ctx.me.voice.channel:
+			return await ctx.send("You are not connected to my voice channel.")
+		if song.is_looping:
+			await ctx.send(f"Enabled loop for {song.name}")
+		else:
+			await ctx.send(f"Disabled loop for {song.name}")
+
 def setup(bot):
 	bot.add_cog(Music(bot))
 	print('[MusicCog] Music cog loaded')
