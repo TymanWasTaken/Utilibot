@@ -88,7 +88,7 @@ class Music(commands.Cog):
 
 	@commands.command(aliases=["p"])
 	@commands.guild_only()
-	async def play(self, ctx, *, url):
+	async def play(self, ctx, *, url: str):
 		"""
 		Plays a youtube video.
 		"""
@@ -97,6 +97,9 @@ class Music(commands.Cog):
 		url = url.lstrip("<").rstrip(">")
 		player = music.get_player(guild_id=ctx.guild.id)
 		if not player:
+			await ctx.author.voice.channel.connect()
+			try: await ctx.guild.me.edit(deafen=True)
+			except: pass
 			player = music.create_player(ctx, ffmpeg_error_betterfix=True)
 		if not ctx.voice_client.is_playing():
 			await player.queue(url, search=True)
