@@ -7,5 +7,6 @@ This is a discord bot that include these things:
 - [ ] Mute
 - [x] Kick
 - [x] Ban
+- [x] Music
 
 It is intended for doing things that would normally take lots of time and/or be repetitive.
