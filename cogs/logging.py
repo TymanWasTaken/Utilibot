@@ -42,7 +42,16 @@ class Logging(commands.Cog):
 		"""
 		Will config logging eventually.
 		"""
-		await ctx.send("Logging coming soon™!")
+		db = await readDB()
+		if str(ctx.guild.id) not in db["logs"]:
+			db["logs"][str(ctx.guild.id)] = {}
+		await writeDB(db)
+		logs = ""
+		for log in db["logs"][str(ctx.guild.id)]:
+			logs += f"{'✅' if db['logs'][str(ctx.guild.id)][log] else '❌'} {log}\n"
+		await ctx.send(f"""
+Enabled logs:
+{logs}""")
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
@@ -57,6 +66,7 @@ class Logging(commands.Cog):
 			db["logs"][str(ctx.guild.id)] = {}
 		db["logs"][str(ctx.guild.id)][log] = True
 		await writeDB(db)
+		await ctx.send(f"Enabled log {log}")
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
@@ -71,6 +81,7 @@ class Logging(commands.Cog):
 			db["logs"][str(ctx.guild.id)] = {}
 		db["logs"][str(ctx.guild.id)][log] = False
 		await writeDB(db)
+		await ctx.send(f"Disabled log {log}")
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
@@ -84,6 +95,7 @@ class Logging(commands.Cog):
 				db["logs"][str(ctx.guild.id)] = {}
 			db["logs"][str(ctx.guild.id)][log] = True
 		await writeDB(db)
+		await ctx.send(f"Enabled all logs.")
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
@@ -97,6 +109,7 @@ class Logging(commands.Cog):
 				db["logs"][str(ctx.guild.id)] = {}
 			db["logs"][str(ctx.guild.id)][log] = False
 		await writeDB(db)
+		await ctx.send(f"Disabled all logs.")
 
 	@commands.Cog.listener()
 	async def on_message_edit(self, before, after):
