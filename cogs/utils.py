@@ -313,12 +313,12 @@ class Utils(commands.Cog):
 			await ctx.send("This nickname is too long! It must be 32 characters or less.")
 		elif ctx.author.id == mem.id:
 			await mem.edit(nick=newnick, reason=f"User changed their nickname from {oldnick} to {newnick}")
-			await ctx.send(f"Changed your nickname from {oldnick} to {mem.nick}!")
+			await ctx.send(f"Changed your nickname from `{oldnick}` to `{mem.nick}`!")
 		elif mem.top_role >= ctx.author.top_role:
 			await ctx.send("You can't change this user's nickname as their highest role is above yours!")
 		else:
 			await mem.edit(nick=newnick, reason=f"Nickname changed from {oldnick} to {mem.nick} by {ctx.author} ({ctx.author.id})!")
-			await ctx.send(f"Changed {mem.mention}'s nickname from {oldnick} to {mem.nick}!")
+			await ctx.send(f"Changed {mem.mention}'s nickname from `{oldnick}` to `{mem.nick}`")
 
 	@commands.command(aliases=["tr"])
 	async def translate(self, ctx, lang, *, text):
