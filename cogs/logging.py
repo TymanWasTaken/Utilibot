@@ -212,16 +212,18 @@ Enabled logs:
 			elif len(before.roles) > len(after.roles):
 				embed.title="Role Removed"
 			embed.description="Lol idk how to detect specific role yet"
-		# status change
-		# elif before.status != after.status:
-		#	embed.title="Status Changed"
-		#	embed.add_field(name="Before:", value=f"`{before.status}`")
-		#	embed.add_field(name="After:", value=f"`{after.status}`")
-		#activity change
+		elif before.status != after.status:
+			if not await islogenabled(before.guild, "status"):
+				return
+			embed.title="Status Changed"
+			embed.add_field(name="Before:", value=f"`{before.status}`")
+			embed.add_field(name="After:", value=f"`{after.status}`")
 		# elif before.activity != after.activity:
-		# 	embed.title="Status Changed"
+		# 	if not await islogenabled(before.guild, "activity"):
+		# 		return
+		# 	embed.title="Activity Changed"
 		# 	if before.activity == None:
-		# 		embed.title="Status Added"
+		# 		embed.title="Activity Added"
 		# 	elif after.activity == None:
 		# 		embed.title="Activity Removed"
 		# 	embed.add_field(name="Before:", value=f"```{before.activity.name}\n{before.activity.details}```", inline=False)
