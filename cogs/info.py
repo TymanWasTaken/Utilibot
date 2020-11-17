@@ -170,7 +170,7 @@ class Info(commands.Cog):
 		args_split = argument.split(" ")
 		cmd = self.bot.all_commands.get(args_split[0])
 		if cmd != None:
-			for command in cmd.all_commands[1:]:
+			for command in list(cmd.all_commands.keys())[1:]:
 				try:
 					cmd = cmd.all_commands[command]
 				except (AttributeError, KeyError):
