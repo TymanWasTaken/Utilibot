@@ -152,11 +152,14 @@ class Music(commands.Cog):
 		Starts the music player looping
 		"""
 		player = music.get_player(guild_id=ctx.guild.id)
-		song = await player.toggle_song_loop()
+		
 		if not player:
 			return await ctx.send("I am not playing music in this server.")
-		if ctx.member.voice.channel != ctx.me.voice.channel:
+		if not ctx.me.voice.channel:
+			await ctx.author.voice.channel.connect()
+		if ctx.author.voice.channel != ctx.me.voice.channel:
 			return await ctx.send("You are not connected to my voice channel.")
+		song = await player.toggle_song_loop()
 		if song.is_looping:
 			await ctx.send(f"Enabled loop for {song.name}")
 		else:

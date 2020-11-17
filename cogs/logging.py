@@ -293,7 +293,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482, timestamp=datetime.now())
 		if reaction.is_unicode_emoji():
 			try:
-				unicodereaction = unicodedata.name(u"{}".format(payload.emoji.name))
+				unicodereaction = unicodedata.name(payload.emoji.name.replace("\U0000fe0f", ""))
 				link = f"https://emojipedia.org/{unicodereaction.lower().replace(' ', '-')}"
 			except:
 				link = None
@@ -324,7 +324,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 			return
 		if reaction.is_unicode_emoji():
 			try:
-				unicodereaction = unicodedata.name(u"{}".format(payload.emoji.name))
+				unicodereaction = unicodedata.name(payload.emoji.name.replace("\U0000fe0f", ""))
 				link = f"https://emojipedia.org/{unicodereaction.lower().replace(' ', '-')}"
 			except:
 				link = None
