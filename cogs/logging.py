@@ -22,9 +22,20 @@ async def writeDB(data: dict):
 	except Exception as e:
 		print(f"An error occurred, {e}")
 
+async def islogenabled(ctx, log):
+	db = await readDB()
+	if str(ctx.guild.id) not in db["logs"]:
+		return False
+	if log not in db["logs"][str(ctx.guild.id)]:
+		return False
+	else:
+		return db["logs"][str(ctx.guild.id)][log]
+
+
 class Logging(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+		self.logs = ["status", "activity", "nickname", "deletes", "edits", "avatar", "name", "reactions", "roles"]
 
 	@commands.group(invoke_without_command=True)
 	async def log(self, ctx):
@@ -39,7 +50,7 @@ class Logging(commands.Cog):
 		"""
 		Enable one of the logs.
 		"""
-		if log not in ["status", "activity", "nickname", "deletes", "edits", "avatar", "name"]:
+		if log not in self.logs:
 			return await ctx.send("Not a valid log.")
 		db = await readDB()
 		if str(ctx.guild.id) not in db["logs"]:
@@ -49,6 +60,7 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_message_edit(self, before, after):
+		db = await readDB()
 		if before.content == after.content:
 			return
 		if not before.guild:
