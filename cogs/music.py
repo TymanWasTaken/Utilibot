@@ -73,8 +73,10 @@ class Music(commands.Cog):
 
 	@commands.command()
 	@commands.guild_only()
-	async def join(self, ctx, *, channel: discord.VoiceChannel):
+	async def join(self, ctx, *, channel: discord.VoiceChannel=None):
 		"""Joins a voice channel"""
+
+		channel = channel or ctx.author.voice.channel
 
 		if ctx.voice_client is not None:
 			return await ctx.voice_client.move_to(channel)
@@ -82,7 +84,7 @@ class Music(commands.Cog):
 		await channel.connect()
 		await ctx.guild.me.edit(deafen=True)
 
-	@commands.command(name="play", aliases=['p','search'])
+	@commands.command(aliases=["p"])
 	@commands.guild_only()
 	async def play(self, ctx, *, url):
 		"""
@@ -140,7 +142,7 @@ class Music(commands.Cog):
 
 	#     await ctx.send('Now playing: {}'.format(player.title))
 
-	@commands.command(name="volume", aliases=['v'])
+	@commands.command()
 	@commands.guild_only()
 	async def volume(self, ctx, volume: int=None):
 		"""Changes the player's volume"""
@@ -148,13 +150,16 @@ class Music(commands.Cog):
 		if ctx.voice_client is None:
 			return await ctx.send("Not connected to a voice channel.")
 
+		if volume > 200 or volume < 0:
+			return await ctx.send(f"Must be between 0 and 200.")
+
 		if volume is None:
 			return await ctx.send(f"Volume: {ctx.voice_client.source.volume * 100}")
 
 		ctx.voice_client.source.volume = volume / 100
 		await ctx.send("Changed volume to {}%".format(volume))
 
-	@commands.command(name="stop", aliases=['dc'])
+	@commands.command()
 	@commands.guild_only()
 	async def stop(self, ctx):
 		"""Stops and disconnects the bot from voice"""
