@@ -124,11 +124,19 @@ Enabled logs:
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
-		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", description=f"**Before:**```{before.clean_content.replace('`', '​`​') if len(before.clean_content.replace('`', '​`​')) < 2048 else await postbin.postAsync(before.clean_content.replace('`', '​`​'))}```**After:**```{after.clean_content.replace('`', '​`​') if len(after.clean_content.replace('`', '​`​')) < 2048 else await postbin.postAsync(after.clean_content.replace('`', '​`​'))}```Message link: [click here]({before.jump_url})", color=0x1184ff, timestamp=datetime.now())
+		before_content = before.clean_content.replace('`', '​`​')
+		after_content = after.clean_content.replace('`', '​`​')
+		if before_content == "" and after.embeds:
+			before_content = "Message contained embed only"
+		if after_content == "" and after.embeds:
+			after_content = "Message contained embed only"
+		if len(before_content) > 2048:
+			before_content = await postbin.postAsync(before_content)
+		if len(after_content) > 2048:
+			after_content = await postbin.postAsync(before_content)
+		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", description=f"**Before:**```{before_content}```**After:**```{after_content}```Message link: [click here]({before.jump_url})", color=0x1184ff, timestamp=datetime.now())
 		embed.set_author(name=before.author, icon_url=before.author.avatar_url)
 		embed.set_footer(text=f"Author ID: {before.author.id}")
-		if (after.embeds and not after.content):
-			embed.description=f"**Before:**```{before.clean_content.replace('`', '​`​') if len(before.clean_content.replace('`', '​`​')) < 2048 else await postbin.postAsync(before.clean_content.replace('`', '​`​'))}```**After:**```Message has Embed Only```Message link: [click here]({before.jump_url})"
 		await logchannel.send(embed=embed)
 	
 	@commands.Cog.listener()
