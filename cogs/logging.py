@@ -130,14 +130,22 @@ Enabled logs:
 			before_content = "Message contained embed only"
 		if after_content == "" and after.embeds:
 			after_content = "Message contained embed only"
-		if len(before_content) > 2048:
-			before_content = await postbin.postAsync(before_content)
-		if len(after_content) > 2048:
-			after_content = await postbin.postAsync(before_content)
-		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", description=f"**Before:**```{before_content}```**After:**```{after_content}```Message link: [click here]({before.jump_url})", color=0x1184ff, timestamp=datetime.now())
+		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", color=0x1184ff, timestamp=datetime.now())
+		embed.add_field("Before:", f"```{before_content}```", inline=False)
+		embed.add_field("After:", f"```{after_content}```", inline=False)
 		embed.set_author(name=before.author, icon_url=before.author.avatar_url)
 		embed.set_footer(text=f"Author ID: {before.author.id}")
-		await logchannel.send(embed=embed)
+		try:
+			await logchannel.send(embed=embed)
+		except discord.HTTPException:
+			before_content = await postbin.postAsync(before_content)
+			after_content = await postbin.postAsync(before_content)
+			embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", color=0x1184ff, timestamp=datetime.now())
+			embed.add_field("Before:", f"```{before_content}```", inline=False)
+			embed.add_field("After:", f"```{after_content}```", inline=False)
+			embed.set_author(name=before.author, icon_url=before.author.avatar_url)
+			embed.set_footer(text=f"Author ID: {before.author.id}")
+			await logchannel.send(embed=embed)
 	
 	@commands.Cog.listener()
 	async def on_message_delete(self, message):
