@@ -153,8 +153,13 @@ class Logging(commands.Cog):
 	async def on_user_update(self, before, after):
 		for guild in self.bot.guilds:
 			if before.id not in [m.id for m in guild.members]:
-				return
-			logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
+				continue
+			for channel in guild.text_channels:
+				if channel.name == "utilibot-logs":
+					logchannel = channel
+					break
+			else:
+				logchannel = None
 			if logchannel == None:
 				continue
 			embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
