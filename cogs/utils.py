@@ -370,8 +370,11 @@ class Utils(commands.Cog):
 		async with ctx.typing():
 			async with aiohttp.ClientSession() as s:
 				async with s.post("http://magmachain.herokuapp.com/api/v1", headers=dict(website=url)) as r:
-					website = (await r.json())["snapshot"]
-					await ctx.send(embed=discord.Embed(color=discord.Color.blurple()).set_image(url=website))
+					try:
+						website = (await r.json())["snapshot"]
+						await ctx.send(embed=discord.Embed(color=discord.Color.blurple()).set_image(url=website))
+					except aiohttp.ContentTypeError:
+						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
 
 	@commands.Cog.listener()
 	async def on_reaction_add(self, reaction, user):
