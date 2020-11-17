@@ -88,9 +88,9 @@ class Guilds(commands.Cog):
 			e.add_field(name=botfarm["guild"].name+":", value=f"- Bot %: `{botfarm['btmround']}%`\n- Bots/membercount: `{botfarm['bots']}/{botfarm['guild'].member_count}`\n- Guild ID: `{botfarm['guild'].id}`\n\n")
 		await message.edit(content="", embed=e)
 
-	@botfarms.command()
+	@botfarms.command(name="leave")
 	@commands.is_owner()
-	async def leave(self, ctx):
+	async def botfarms_leave(self, ctx):
 		"""
 		Will interactively ask you if you want to leave botfarms.
 		"""
