@@ -38,6 +38,7 @@ class Logging(commands.Cog):
 		self.logs = ["status", "activity", "nickname", "deletes", "edits", "avatar", "name", "reactions", "roles", "voice", "discriminator"]
 
 	@commands.group(invoke_without_command=True)
+	@commands.has_permissions(manage_guild=True)
 	async def log(self, ctx):
 		"""
 		Will config logging eventually.
