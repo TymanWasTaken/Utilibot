@@ -218,16 +218,22 @@ Enabled logs:
 			embed.title="Status Changed"
 			embed.add_field(name="Before:", value=f"`{before.status}`")
 			embed.add_field(name="After:", value=f"`{after.status}`")
-		# elif before.activity != after.activity:
-		# 	if not await islogenabled(before.guild, "activity"):
-		# 		return
-		# 	embed.title="Activity Changed"
-		# 	if before.activity == None:
-		# 		embed.title="Activity Added"
-		# 	elif after.activity == None:
-		# 		embed.title="Activity Removed"
-		# 	embed.add_field(name="Before:", value=f"```{before.activity.name}\n{before.activity.details}```", inline=False)
-		# 	embed.add_field(name="After:", value=f"```{after.activity.details}```", inline=False)
+		elif before.activity != after.activity:
+			if not await islogenabled(before.guild, "activity"):
+				return
+			embed.title="Activity Changed"
+			if before.activity == None:
+				embed.title="Activity Added"
+			elif after.activity == None:
+				embed.title="Activity Removed"
+			if isinstance(before.activity, discord.CustomActivity):
+				embed.add_field(name="Before:", value=f"```{before.activity.emoji} {before.activity.name}```", inline=False)
+			else:
+				embed.add_field(name="Before:", value=f"```I can't detect non-custom statuses yet :/```", inline=False)
+			if isinstance(after.activity, discord.CustomActivity):
+				embed.add_field(name="After:", value=f"```{after.activity.emoji} {after.activity.name}```", inline=False)
+			else:
+				embed.add_field(name="After:", value=f"```I can't detect non-custom statuses yet :/```", inline=False)
 		if embed.title != embed.Empty:
 			await logchannel.send(embed=embed)
 
