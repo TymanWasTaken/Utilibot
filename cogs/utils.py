@@ -302,6 +302,24 @@ class Utils(commands.Cog):
 					await member.remove_roles(role, reason=f"{ctx.author} removed {role.name} from {member.name}.")
 			await ctx.send(f"Removed some role from {member.mention}!\nRoles taken: {', '.join([x.mention for x in taken])}", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
 
+	@commands.command(name="setnick")
+	@commands.bot_has_permissions(manage_nicknames=True)
+	async def setnick(self, ctx, member: discord.Member=None, *, newnick=None):
+		mem = member or ctx.author
+		oldnick = member.nick
+		if mem.top_role >= ctx.guild.me.top_role:
+			await ctx.send("I can't change this user's nickname as their highest role is above mine!")
+		elif len(newnick) > 32:
+			await ctx.send("This nickname is too long! It must be 32 characters or less.")
+		elif ctx.author.id == mem.id:
+			await mem.edit(nick=newnick, reason=f"User changed their nickname from {oldnick} to {newnick}")
+			await ctx.send(f"Changed your nickname from {oldnick} to {mem.nick}!")
+		elif mem.top_role >= ctx.author.top_role:
+			await ctx.send("You can't change this user's nickname as their highest role is above yours!")
+		else:
+			await mem.edit(nick=newnick, reason=f"Nickname changed from {oldnick} to {mem.nick} by {ctx.author} ({ctx.author.id})!")
+			await ctx.send(f"Changed {mem.mention}'s nickname from {oldnick} to {mem.nick}!")
+
 	@commands.command(aliases=["tr"])
 	async def translate(self, ctx, lang, *, text):
 		"""
