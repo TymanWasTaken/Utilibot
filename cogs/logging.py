@@ -35,7 +35,7 @@ async def islogenabled(guild, log):
 class Logging(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.logs = ["status", "activity", "nickname", "deletes", "edits", "avatar", "name", "reactions", "roles", "voice", "discriminator"]
+		self.logs = ["edit", "delete", "purge", "deletes", "nickname", "roles", "status", "activity", "username", "discriminator", "avatar", "voicejoin", "voiceleave", "voicemove", "ban", "unban", "server", "emojis", "rolecreate", "roleupdate", "roledelete", "reactionadd", "reactionremove", "reactionclear"]
 
 	@commands.group(invoke_without_command=True)
 	@commands.has_permissions(manage_guild=True)
@@ -119,7 +119,7 @@ Enabled logs:
 			return
 		if not before.guild:
 			return
-		if not await islogenabled(before.guild, "edits"):
+		if not await islogenabled(before.guild, "edit"):
 			return
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -151,7 +151,7 @@ Enabled logs:
 	async def on_message_delete(self, message):
 		if not message.guild:
 			return
-		if not await islogenabled(message.guild, "deletes"):
+		if not await islogenabled(message.guild, "delete"):
 			return
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -168,7 +168,7 @@ Enabled logs:
 	async def on_bulk_message_delete(self, messages):
 		if not messages[0].guild:
 			return
-		if not await islogenabled(messages[0].guild, "deletes"):
+		if not await islogenabled(messages[0].guild, "purge"):
 			return
 		obj = messages[0]
 		logchannel = discord.utils.get(obj.guild.text_channels, name="utilibot-logs")
@@ -255,7 +255,7 @@ Enabled logs:
 			embed.set_author(name=before, icon_url=before.avatar_url)
 			#Username change
 			if before.name != after.name:
-				if not await islogenabled(guild, "name"):
+				if not await islogenabled(guild, "username"):
 					return
 				embed.title="Username Changed"
 				embed.add_field(name="Before:", value=f"```{before.name}```", inline=False)
@@ -281,8 +281,6 @@ Enabled logs:
 	async def on_voice_state_update(self, member, before, after):
 		if not member.guild:
 			return
-		if not await islogenabled(member.guild, "voice"):
-			return
 		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
@@ -290,14 +288,20 @@ Enabled logs:
 		embed.set_author(name=member, icon_url=member.avatar_url)
 		embed.set_footer(text=f"User ID: {member.id}")
 		if before.channel == None:
+			if not await islogenabled(member.guild, "voicejoin"):
+				return
 			embed.title = "Member Joined Voice Channel"
 			embed.description = f"{str(member)} joined {after.channel.name}"
 			embed.color = 5496236
 		elif after.channel == None:
+			if not await islogenabled(member.guild, "voiceleave"):
+				return
 			embed.title = "Member Left Voice Channel"
 			embed.description = f"{str(member)} left {before.channel.name}"
 			embed.color=0xe41212
 		elif before.channel != after.channel:
+			if not await islogenabled(member.guild, "voicemove"):
+				return
 			if before.channel.id == after.channel.id:
 				return
 			embed.title = "Member Moved Voice Channels"
@@ -311,7 +315,7 @@ Enabled logs:
 #Ban/Unban
 	@commands.Cog.listener()
 	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
-		if not await islogenabled(guild, "bans"):
+		if not await islogenabled(guild, "ban"):
 			return
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -321,7 +325,7 @@ Enabled logs:
 
 	@commands.Cog.listener()
 	async def on_member_unban(self, guild, user):
-		if not await islogenabled(guild, "bans"):
+		if not await islogenabled(guild, "unban"):
 			return
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -332,6 +336,8 @@ Enabled logs:
 # #Server Update
 # 	@commands.Cog.listener()
 # 	async def on_guild_update(self, before, after):
+#		if not await islogenabled(before, "server"):
+#			return
 # 		logchannel = discord.utils.get(before.text_channels, name="utilibot-logs")
 # 		if logchannel == None:
 # 			return
@@ -340,6 +346,8 @@ Enabled logs:
 
 	# @commands.Cog.listener()
 	# async def on_guild_emojis_update(self, guild, before, after):
+#		if not await islogenabled(before, "emojis"):
+#			return
 	# 	logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
 	# 	if logchannel == None:
 	# 		return
@@ -356,7 +364,7 @@ Enabled logs:
 #Role Logging
 	@commands.Cog.listener()
 	async def on_guild_role_create(self, role):
-		if not await islogenabled(role.guild, "roles"):
+		if not await islogenabled(role.guild, "rolecreate"):
 			return
 		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -367,7 +375,7 @@ Enabled logs:
 
 	@commands.Cog.listener()
 	async def on_guild_role_update(self, before, after):
-		if not await islogenabled(before.guild, "roles"):
+		if not await islogenabled(before.guild, "roleupdate"):
 			return
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -387,7 +395,7 @@ Enabled logs:
 
 	@commands.Cog.listener()
 	async def on_guild_role_delete(self, role):
-		if not await islogenabled(role.guild, "roles"):
+		if not await islogenabled(role.guild, "roledelete"):
 			return
 		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -405,7 +413,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
-		if not await islogenabled(self.bot.get_guild(payload.guild_id), "reactions"):
+		if not await islogenabled(self.bot.get_guild(payload.guild_id), "reactionadd"):
 			return
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 		if not message.guild:
@@ -439,7 +447,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_remove(self, payload):
-		if not await islogenabled(self.bot.get_guild(payload.guild_id), "reactions"):
+		if not await islogenabled(self.bot.get_guild(payload.guild_id), "reactionremove"):
 			return
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 		if not message.guild:
@@ -473,6 +481,8 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 #	@commands.Cog.listener()
 #	async def on_raw_reaction_clear(self, payload):
+#		if not await islogenabled(self.bot.get_guild(payload.guild_id), "reactionclear"):
+#			return
 #		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 #		user = message.guild.get_member(payload.user_id)
 #		reactions = payload.emojis
