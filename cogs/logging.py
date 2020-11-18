@@ -50,6 +50,9 @@ class Logging(commands.Cog):
 		db = await readDB()
 		if str(ctx.guild.id) not in db["logs"]:
 			db["logs"][str(ctx.guild.id)] = {}
+		for log in db["logs"][str(ctx.guild.id)]:
+			if log not in self.log_flat:
+				db["logs"][str(ctx.guild.id)].pop(log)
 		await writeDB(db)
 		logs = ""
 		for log in sorted(self.log_flat):
