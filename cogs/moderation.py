@@ -26,8 +26,7 @@ class PurgeError(Exception):
 def is_bot(m):
 	return 	m.author.bot
 def is_not_bot(m):
-	return 	not(m.author.bot)
-
+	return not m.author.bot
 
 class Moderation(commands.Cog):
 	def __init__(self, bot):
@@ -103,7 +102,6 @@ class Moderation(commands.Cog):
 			except:
 				await ctx.send(f"Error: Could Not DM user")
 
-
 	@commands.command(name="ban")
 	@commands.bot_has_permissions(ban_members=True)
 	@commands.has_permissions(ban_members=True)
@@ -112,28 +110,18 @@ class Moderation(commands.Cog):
 		"""
 		Does what it says, bans them from the server.
 		"""
-		member = ctx.guild.get_member(user)
-		if member in ctx.guild.members:
-			if member.top_role >= ctx.author.top_role:
-				await ctx.send("This user can't be banned due to hierarchy.")
-			else:
-				await ctx.message.delete()
-				await user.ban(reason=f"{user.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
-				await ctx.send(f"🔨 Banned {user} for the reason: `{reason}`")
-				try:
-					await user.send(f"🔨 You were banned from {ctx.guild} for the reason: `{reason}`")
-				except:
-					await ctx.send(f"Error: Could Not DM user")
+		if member.top_role >= ctx.author.top_role or member.top_role >= ctx.me.top_role:
+			await ctx.send("This user can't be banned due to hierachry.")
 		else:
 			await ctx.message.delete()
 			await user.ban(reason=f"{user.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
 			await ctx.send(f"🔨 Banned {user} for the reason: `{reason}`")
 			try:
-				await user.send(f"🔨 You were banned from {ctx.guild} for the reason: `{reason}`")
-			except:
-				await ctx.send(f"Error: Could Not DM user")
-
-
+				await member.send(f"You were banned from {ctx.guild} for the reason: `{reason}`")
+			except discord.Forbidden:
+				await ctx.send("Unable to message user.")
+			await member.ban(reason=f"{member.name} was banned by {ctx.author.name}, for the reason: {reason}")
+			await ctx.send(f"Banned {member} for the reason: `{reason}`")
 
 	@commands.command(name="unban")
 	@commands.bot_has_permissions(ban_members=True)
@@ -145,9 +133,9 @@ class Moderation(commands.Cog):
 		"""
 		await ctx.message.delete()
 		await user.unban(reason=f"{user.name} was unbanned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
-		await ctx.send(f"🔓 Unbanned {user} for the reason: `{reason}`")
+		await ctx.send(f"Unbanned {user} for the reason: `{reason}`")
 		try:
-			await user.send(f"🔓 You were unbanned from {ctx.guild} for the reason: `{reason}``")
+			await user.send(f"You were unbanned from {ctx.guild} for the reason: `{reason}``")
 		except:
 			await ctx.send("Could not DM user.")
 

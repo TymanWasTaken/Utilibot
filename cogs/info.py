@@ -77,17 +77,15 @@ class Info(commands.Cog):
 	@commands.command(name="botperms", aliases=['botpermissions'])
 	@commands.guild_only()
 	@commands.has_permissions(manage_guild=True)
-	async def _bot_permissions(self, ctx, channel_permissions="False"):
+	async def _bot_permissions(self, ctx, channel_permissions: bool = True):
 		"""
 		Shows all of the bot's permissions, neatly sorted.
 
 		channel_permissions = Whether or not to check the channel permissions, instead of the guild ones (default false)
 		"""
-		if ctx.channel.permissions_for(ctx.me).embed_links == False:
-			return await ctx.send("It appears I do not have the `Embed Links` permission in this channel. Please give me this permission or try again in a channel where I do have it, as it is necessary to run this command.")
-		if channel_permissions.lower() == "true":
+		if channel_permissions:
 			await ctx.send(embed=discord.Embed(title="All of the bot's permissions in this channel (Permissions not able to be used in this type of channel will show as denied):", description=permsfromvalue(ctx.channel.permissions_for(ctx.me).value) + "\nRun `u!requiredperms` to see which ones the bot needs.", color=randcolor()))
-		elif channel_permissions.lower() == "false":
+		else
 			await ctx.send(embed=discord.Embed(title="All of the bot's permissions in this server:", description=permsfromvalue(ctx.me.guild_permissions.value) + "\nRun `u!requiredperms` to see which ones the bot needs.", color=randcolor()))
 
 	@commands.command()

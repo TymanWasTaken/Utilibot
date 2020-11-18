@@ -46,7 +46,6 @@ class Utils(commands.Cog):
 			await channel.set_permissions(role, **{permission: state})
 		await m.edit(content=f"Changed permission `{permission}` to state `{state}` for role {role.name} on all channels.")
 
-
 	@commands.command(name="resetinvites", aliases=['wipeinv', 'delinvs'])
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
