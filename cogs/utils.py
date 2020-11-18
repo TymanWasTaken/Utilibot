@@ -45,10 +45,9 @@ class Utils(commands.Cog):
 	@commands.command()
 	async def findrole(self, ctx, role: discord.Role):
 		members = ""
-		for member in ctx.guild.members:
-			if role in member.roles:
-				members = members + f"{member.name}\n"
-		if members == "":
+		for member in role.members:
+			members += f"{member.name}\n"
+		if not members:
 			await ctx.send("No members found.")
 		elif len(members) > 2048:
 			await ctx.send("List is to big to send.")
