@@ -22,7 +22,7 @@ class Fun(commands.Cog):
 
 	@commands.command()
 	async def paroot(self, ctx):
-		await ctx.send("<a:paroot:755947816165048431>")
+		await ctx.send(self.bot.get_emoji(778489137001922591))
 
 	@commands.command()
 	async def choose(self, ctx, *, choices: str):

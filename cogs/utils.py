@@ -185,13 +185,13 @@ class Utils(commands.Cog):
 		bot = self.bot
 		user = user or ctx.author
 		if user.status == discord.Status.online:
-			status = bot.get_emoji(774816041632137226)
+			status = bot.get_emoji(778489146703609896)
 		elif user.status == discord.Status.idle:
-			status = bot.get_emoji(774816228739907624)
+			status = bot.get_emoji(778489147420704789)
 		elif user.status == discord.Status.dnd:
-			status = bot.get_emoji(774816849908727888)
+			status = bot.get_emoji(778489150148050996)
 		elif user.status == discord.Status.offline:
-			status = bot.get_emoji(774816333912473611)
+			status = bot.get_emoji(778489148750561292)
 		if user.is_on_mobile():
 			mobile = "✅"
 		else:
@@ -242,7 +242,7 @@ class Utils(commands.Cog):
 		embed = discord.Embed(
 			title=f"{g.name}'s Info",
 			description=f"""**Owner:** {g.owner}
-			**Channels:** {bot.get_emoji(776340924506308608)} {len(g.categories)} categories, {bot.get_emoji(776341306577780777)} {len(g.text_channels)} text, {bot.get_emoji(776341401545211905)} {len(g.voice_channels)} voice
+			**Channels:** {bot.get_emoji(778489166316175413)} {len(g.categories)} categories, {bot.get_emoji(778489167649701898)} {len(g.text_channels)} text, {bot.get_emoji(778489169000661002)} {len(g.voice_channels)} voice
 			**Roles:** {len(g.roles)-1}
 			**Members:** Total- {g.member_count}, Humans- {humans}, Bots- {bots}"""
 		)
