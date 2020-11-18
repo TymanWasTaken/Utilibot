@@ -1,5 +1,5 @@
 # Imports
-import discord, os, time, glob, postbin, traceback, cogs, importlib, aiofiles, json, textwrap, re, sys
+import discord, os, time, glob, postbin, traceback, cogs, importlib, aiofiles, json, textwrap, re, sys, aiosqlite
 from datetime import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -25,6 +25,8 @@ async def writeDB(data: dict):
 	except Exception as e:
 		print(f"An error occured, {e}")
 
+# json, not used
+
 async def getprefixes(bot, message):
 	prefixes = ['<@755084857280954550> ', '<@!755084857280954550> ']
 	defaults = ['<@755084857280954550> ', '<@!755084857280954550> ', 'u!', 'U!']
@@ -37,7 +39,23 @@ async def getprefixes(bot, message):
 	else:
 		return defaults
 
-bot = commands.Bot(command_prefix=getprefixes, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
+# sqlite, used
+
+async def getPrefix(bot, message):
+	prefixes = ['<@755084857280954550> ', '<@!755084857280954550> ']
+	defaults = ['<@755084857280954550> ', '<@!755084857280954550> ', 'u!', 'U!']
+	if message.guild == None:
+		return defaults
+	async with aiosqlite.connect('data.db') as db:
+		async with db.execute(f"SELECT * FROM prefixes WHERE guildid={message.guild.id}") as cursor:
+			entries = await cursor.fetchall()
+			if len(entries) < 1:
+				return defaults
+			else:
+				prefixes.append(entries[0][1])
+				return prefixes
+
+bot = commands.Bot(command_prefix=getPrefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
 
 class BlacklistedError(commands.CommandError):
 	pass
