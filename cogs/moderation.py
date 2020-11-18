@@ -9,15 +9,16 @@ class PurgeError(Exception):
 def is_bot(m):
 	return 	m.author.bot
 def is_not_bot(m):
-	return 	not(m.author.bot)
+	return not m.author.bot
 async def purge_messages(number, channel, mode, check=None):
 	#WARNING!
 	# THE WAY YOU CHECK HISTORY HERE IS VERY RATELIMIT HEAVY
 	# ID CONSIDER SOME OTHER METHOD
 	if check is None:
 		return await channel.purge(limit=number)
-	diff_message = 0
+# 	diff_message = 0
 	total_message = 0
+	"""
 	async for message in channel.history(limit=None):
 		if diff_message == number:
 			break
@@ -27,7 +28,8 @@ async def purge_messages(number, channel, mode, check=None):
 	else:
 		e = PurgeError(f'Could not find enough messages with mode {mode}')
 		raise e
-
+	"""
+	# This entire section has no use, you don't use "diff_message" at any point
 	return await channel.purge(limit=total_message, check=check)
 
 
@@ -64,16 +66,6 @@ class Moderation(commands.Cog):
 		await asyncio.sleep(2.5)
 		await message.delete()
 	
-	@commands.command()
-	@commands.has_permissions(ban_members=True)
-	@commands.bot_has_permissions(ban_members=True)
-	async def ban(self, ctx, member: discord.Member, *, reason="No reason given"):
-		try:
-			await member.send(content=f"You were banned from {ctx.guild.name}, by {ctx.author.name}, for the reason `{reason}.")
-		except:
-			await ctx.send(f"Error: Could not DM user.")
-		await ctx.guild.ban(user=member, reason=f"Banned by {ctx.author.name}, for the reason: " + reason)
-		await ctx.send(f"Banned {member.name} for the reason `{reason}`")
 
 	@commands.command(name="kick")
 	@commands.bot_has_guild_permissions(kick_members=True)
@@ -88,13 +80,11 @@ class Moderation(commands.Cog):
 		else:
 			await ctx.message.delete()
 			try:
-				await member.send(f"You were kicked from {ctx.guild} for the reason: `{reason}`")
-				await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
-				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
-			except:
-				await ctx.send(f"Eror: Could Not DM user")
-				await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
-				await ctx.send(f"Kicked {member} for the reason: `{reason}`")
+				await member.send(f"You were banned from {ctx.guild} for the reason: `{reason}`")
+			except discord.Forbidden:
+				await ctx.send("Unable to message user.")
+			await member.kick(reason=f"{member.name} was kicked by {ctx.author.name}, for the reason: {reason}")
+			await ctx.send(f"Kicked {member} for the reason: `{reason}`")
 	
 	@commands.command(name="ban")
 	@commands.bot_has_guild_permissions(ban_members=True)
@@ -103,18 +93,16 @@ class Moderation(commands.Cog):
 		"""
 		Does what it says, bans them from the server.
 		"""
-		if member.top_role >= ctx.author.top_role:
+		if member.top_role >= ctx.author.top_role or member.top_role >= ctx.me.top_role:
 			await ctx.send("This user can't be banned due to hierachry.")
 		else:
 			await ctx.message.delete()
 			try:
 				await member.send(f"You were banned from {ctx.guild} for the reason: `{reason}`")
-				await member.ban(reason=f"{member.name} was banned by {ctx.author.name}, for the reason: {reason}")
-				await ctx.send(f"Banned {member} for the reason: `{reason}`")
-			except:
-				await ctx.send(f"Error: Could Not DM user")
-				await member.ban(reason=f"{member.name} was banned by {ctx.author.name}, for the reason: {reason}")
-				await ctx.send(f"Banned {member} for the reason: `{reason}`")
+			except discord.Forbidden:
+				await ctx.send("Unable to message user.")
+			await member.ban(reason=f"{member.name} was banned by {ctx.author.name}, for the reason: {reason}")
+			await ctx.send(f"Banned {member} for the reason: `{reason}`")
 
 def setup(bot):
 	bot.add_cog(Moderation(bot))
