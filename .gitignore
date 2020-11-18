@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Cogs that don't need to be public
+cogs/friendserver.py

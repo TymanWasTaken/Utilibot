@@ -1,11 +1,12 @@
-import asyncio, discord, youtube_dl, os, glob, re
+import asyncio, discord, youtube_dl, os, glob, re, DiscordUtils
 from discord.ext import commands
+from discord.ext import tasks
+from youtube_search import YoutubeSearch as yt
+
+music = DiscordUtils.Music()
 
 # Suppress noise about console usage from errors
 youtube_dl.utils.bug_reports_message = lambda: ''
-
-class VoiceError(Exception):
-	pass
 
 ytdl_format_options = {
 	'format': 'bestaudio/best',
@@ -22,6 +23,7 @@ ytdl_format_options = {
 }
 
 ffmpeg_options = {
+	'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
 	'options': '-vn'
 }
 
@@ -57,42 +59,55 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
 
 class Music(commands.Cog):
+	status = {}
 	def __init__(self, bot):
 		self.bot = bot
+		self.deafen.start()			
+
+	@tasks.loop(seconds=5)
+	async def deafen(self):
+		bot = self.bot
+		for g in bot.guilds:
+			try:
+				await g.me.edit(deafen=True)
+			except:
+				pass
 
 	@commands.command()
-	async def join(self, ctx, *, channel: discord.VoiceChannel):
+	@commands.guild_only()
+	async def join(self, ctx, *, channel: discord.VoiceChannel=None):
 		"""Joins a voice channel"""
+
+		channel = channel or ctx.author.voice.channel
 
 		if ctx.voice_client is not None:
 			return await ctx.voice_client.move_to(channel)
 
 		await channel.connect()
+		await ctx.guild.me.edit(deafen=True)
 
-	@commands.command()
-	async def play(self, ctx, *, url):
+	@commands.command(aliases=["p"])
+	@commands.guild_only()
+	async def play(self, ctx, *, url: str):
 		"""
-		Plays a youtube video (Must be in the format "https://www.youtube.com/watch?v={Video ID}"
+		Plays a youtube video.
 		"""
-		if not re.search("https:\/\/www\.youtube\.com\/watch\?v=(?:.){11}$", url):
-				return await ctx.send('Not a valid youtube URL!')
-		if ctx.voice_client is None:
-			if ctx.author.voice:
-				await ctx.author.voice.channel.connect()
-			else:
-				await ctx.send('You are not connected to a voice channel.')
-				raise VoiceError("You are not connected to a voice channel.")
-		elif ctx.voice_client.is_playing():
-			ctx.voice_client.stop()
-
-		async with ctx.typing():
-			try:
-				player = await YTDLSource.from_url(url, loop=self.bot.loop)
-				ctx.voice_client.play(player, after=lambda e: cleanup(ctx, e, player, url.replace('https://www.youtube.com/watch?v=', '')))
-				await ctx.send(f'Now playing: {player.title}')
-			except youtube_dl.utils.DownloadError:
-				await ctx.send("Error downloading the file, is the link correct?")
-				await ctx.voice_client.disconnect()
+		if not ctx.author.voice:
+			return await ctx.send('You are not connected to a voice channel.')
+		url = url.lstrip("<").rstrip(">")
+		player = music.get_player(guild_id=ctx.guild.id)
+		await ctx.author.voice.channel.connect()
+		try: await ctx.guild.me.edit(deafen=True)
+		except: pass
+		if not player:
+			player = music.create_player(ctx, ffmpeg_error_betterfix=True)
+		if not ctx.voice_client.is_playing():
+			await player.queue(url, search=True)
+			song = await player.play()
+			await ctx.send(f"Playing {song.name}")
+		else:
+			song = await player.queue(url, search=True)
+			await ctx.send(f"Queued {song.name}")
 
 	# Broken might fix later
 	# @commands.command()
@@ -106,11 +121,15 @@ class Music(commands.Cog):
 	#     await ctx.send('Now playing: {}'.format(player.title))
 
 	@commands.command()
+	@commands.guild_only()
 	async def volume(self, ctx, volume: int=None):
 		"""Changes the player's volume"""
 
 		if ctx.voice_client is None:
 			return await ctx.send("Not connected to a voice channel.")
+
+		if volume > 200 or volume < 0:
+			return await ctx.send(f"Must be between 0 and 200.")
 
 		if volume is None:
 			return await ctx.send(f"Volume: {ctx.voice_client.source.volume * 100}")
@@ -118,11 +137,33 @@ class Music(commands.Cog):
 		ctx.voice_client.source.volume = volume / 100
 		await ctx.send("Changed volume to {}%".format(volume))
 
-	@commands.command()
+	@commands.command(aliases=["leave"])
+	@commands.guild_only()
 	async def stop(self, ctx):
 		"""Stops and disconnects the bot from voice"""
 
-		await ctx.voice_client.disconnect()
+		try: await ctx.voice_client.disconnect()
+		except: pass
+
+	@commands.command()
+	@commands.guild_only()
+	async def loop(self, ctx):
+		"""
+		Starts the music player looping
+		"""
+		player = music.get_player(guild_id=ctx.guild.id)
+		
+		if not player:
+			return await ctx.send("I am not playing music in this server.")
+		if not ctx.me.voice.channel:
+			await ctx.author.voice.channel.connect()
+		if ctx.author.voice.channel != ctx.me.voice.channel:
+			return await ctx.send("You are not connected to my voice channel.")
+		song = await player.toggle_song_loop()
+		if song.is_looping:
+			await ctx.send(f"Enabled loop for {song.name}")
+		else:
+			await ctx.send(f"Disabled loop for {song.name}")
 
 def setup(bot):
 	bot.add_cog(Music(bot))

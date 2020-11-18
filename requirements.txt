@@ -3,3 +3,5 @@ python-dotenv
 pylint
 jishaku
 youtube_dl
+postbin
+aiocron

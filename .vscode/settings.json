@@ -1,3 +1,19 @@
 {
-	"python.pythonPath": "/usr/local/bin/python3.8"
+	"python.pythonPath": "/usr/local/bin/python3.8",
+	"cSpell.words": [
+		"Unbans",
+		"aiocron",
+		"aiofiles",
+		"aiohttp",
+		"astimezone",
+		"asyncio",
+		"btmround",
+		"nocommandblacklist",
+		"pytz",
+		"reactionclear",
+		"roundnum",
+		"tyman",
+		"unban",
+		"utilibot"
+	]
 }
