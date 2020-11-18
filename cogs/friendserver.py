@@ -1,7 +1,7 @@
 import discord, asyncio, aiohttp, pytz, datetime
 from discord.ext import commands
 
-time_for_thing_to_happen = datetime.time(hour=12).astimezone("US/Mountain")
+time_for_thing_to_happen = datetime.time(hour=12)
 
 class FriendServer(commands.Cog):
 	def __init__(self, bot):
@@ -10,9 +10,9 @@ class FriendServer(commands.Cog):
 	async def sendDuoMessage(self):
 		while True:
 			now = datetime.datetime.utcnow()
-			date = now.date()
+			date = now.date().astimezone("US/Mountain")
 			if now.time() > time_for_thing_to_happen:
-				date = now.date() + datetime.timedelta(days=1)
+				date = now.date().astimezone("US/Mountain") + datetime.timedelta(days=1)
 			then = datetime.datetime.combine(date, time_for_thing_to_happen)
 			await discord.utils.sleep_until(then)
 			async with aiohttp.ClientSession() as session:
