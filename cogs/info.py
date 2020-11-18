@@ -30,7 +30,8 @@ class Info(commands.Cog):
 		m = await ctx.send(embed=embed1)
 		embed2 = embed1
 		time = m.created_at - ctx.message.created_at
-		embed2.description = f"Given Latency: `{round(self.bot.latency * 1000)} ms`\nMeasured Latency: `{int(time.microseconds / 1000)}ms`"
+		# I did this with spanner. Fun fact - message IDs are bulk-created, so can be created seconds in advance. This measurement is NOT accurate.
+		embed2.description = f"Given Latency: `{round(self.bot.latency * 1000)} ms`\nEstimated Measured Latency: `{int(time.microseconds / 1000)}ms`"
 		await m.edit(embed=embed2)
 
 	@commands.command()
@@ -43,15 +44,15 @@ class Info(commands.Cog):
 	
 	@commands.command(name="botperms", aliases=['botpermissions'])
 	@commands.has_permissions(manage_guild=True)
-	async def _bot_permissions(self, ctx, channel_permissions="False"):
+	async def _bot_permissions(self, ctx, channel_permissions: bool = True):
 		"""
 		Shows all of the bot's permissions, neatly sorted.
 
 		channel_permissions = Whether or not to check the channel permissions, instead of the guild ones (default false)
 		"""
-		if channel_permissions.lower() == "true":
+		if channel_permissions:
 			await ctx.send(embed=discord.Embed(title="All of the bot's permissions in this channel (Permissions not able to be used in this type of channel will show as denied):", description=permsfromvalue(ctx.channel.permissions_for(ctx.me).value) + "\nRun `u!requiredperms` to see which ones the bot needs.", color=randcolor()))
-		elif channel_permissions.lower() == "false":
+		else
 			await ctx.send(embed=discord.Embed(title="All of the bot's permissions in this server:", description=permsfromvalue(ctx.me.guild_permissions.value) + "\nRun `u!requiredperms` to see which ones the bot needs.", color=randcolor()))
 
 def setup(bot):
