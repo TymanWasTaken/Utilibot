@@ -57,68 +57,66 @@ class Logging(commands.Cog):
 		logs = ""
 		for log in db["logs"][str(ctx.guild.id)]:
 			logs += f"{'✅' if db['logs'][str(ctx.guild.id)][log] else '❌'} {log}\n"
-#		await ctx.send(f"""
-#Enabled logs:
-#{logs}""")
-		await ctx.send("logging is temporarily disabled while we get log categories figured out")
+		await ctx.send(f"""
+Enabled logs:
+{logs}""")
 
-	@log.command()
-	@commands.has_permissions(manage_guild=True)
-	async def enable(self, ctx, log: str):
-		"""
-		Enable one of the logs.
-		"""
-		if log not in self.logs:
-			return await ctx.send("Not a valid log.")
-		db = await readDB()
-		if str(ctx.guild.id) not in db["logs"]:
-			db["logs"][str(ctx.guild.id)] = {}
-		db["logs"][str(ctx.guild.id)][log] = True
-		await writeDB(db)
-		await ctx.send(f"Enabled log {log}")
+#	@log.command()
+#	@commands.has_permissions(manage_guild=True)
+#	async def enable(self, ctx, log: str):
+#		"""
+#		Enable one of the logs.
+#		"""
+#		if log not in self.logs:
+#			return await ctx.send("Not a valid log.")
+#		db = await readDB()
+#		if str(ctx.guild.id) not in db["logs"]:
+#			db["logs"][str(ctx.guild.id)] = {}
+#		db["logs"][str(ctx.guild.id)][log] = True
+#		await writeDB(db)
+#		await ctx.send(f"Enabled log {log}")
 
-	@log.command()
-	@commands.has_permissions(manage_guild=True)
-	async def disable(self, ctx, log: str):
-		"""
-		Disable one of the logs.
-		"""
-		if log not in self.logs:
-			return await ctx.send("Not a valid log.")
-		db = await readDB()
-		if str(ctx.guild.id) not in db["logs"]:
-			db["logs"][str(ctx.guild.id)] = {}
-		db["logs"][str(ctx.guild.id)][log] = False
-		await writeDB(db)
-		await ctx.send(f"Disabled log {log}")
+#	@log.command()
+#	@commands.has_permissions(manage_guild=True)
+#	async def disable(self, ctx, log: str):
+#		"""
+#		Disable one of the logs.
+#		"""
+#		if log not in self.logs:
+#			return await ctx.send("Not a valid log.")
+#		db = await readDB()
+#		if str(ctx.guild.id) not in db["logs"]:
+#			db["logs"][str(ctx.guild.id)] = {}
+#		db["logs"][str(ctx.guild.id)][log] = False
+#		await writeDB(db)
+#		await ctx.send(f"Disabled log {log}")
 
-	@log.command()
-	@commands.has_permissions(manage_guild=True)
-	async def enableall(self, ctx):
-		"""
-		Enable all of the logs.
-		"""
-		db = await readDB()
-		for log in self.logs:
-			if str(ctx.guild.id) not in db["logs"]:
-				db["logs"][str(ctx.guild.id)] = {}
-			db["logs"][str(ctx.guild.id)][log] = True
-		await writeDB(db)
-		await ctx.send(f"Enabled all logs.")
+#	@log.command()
+#	@commands.has_permissions(manage_guild=True)
+#	async def enableall(self, ctx):
+#		Enable all of the logs.
+#		"""
+#		db = await readDB()
+#		for log in self.logs:
+#			if str(ctx.guild.id) not in db["logs"]:
+#				db["logs"][str(ctx.guild.id)] = {}
+#			db["logs"][str(ctx.guild.id)][log] = True
+#		await writeDB(db)
+#		await ctx.send(f"Enabled all logs.")
 
-	@log.command()
-	@commands.has_permissions(manage_guild=True)
-	async def disableall(self, ctx):
-		"""
-		Disable all of the logs.
-		"""
-		db = await readDB()
-		for log in self.logs:
-			if str(ctx.guild.id) not in db["logs"]:
-				db["logs"][str(ctx.guild.id)] = {}
-			db["logs"][str(ctx.guild.id)][log] = False
-		await writeDB(db)
-		await ctx.send(f"Disabled all logs.")
+#	@log.command()
+#	@commands.has_permissions(manage_guild=True)
+#	async def disableall(self, ctx):
+#		"""
+#		Disable all of the logs.
+#		"""
+#		db = await readDB()
+#		for log in self.logs:
+#			if str(ctx.guild.id) not in db["logs"]:
+#				db["logs"][str(ctx.guild.id)] = {}
+#			db["logs"][str(ctx.guild.id)][log] = False
+#		await writeDB(db)
+#		await ctx.send(f"Disabled all logs.")
 
 	@commands.Cog.listener()
 	async def on_message_edit(self, before, after):
