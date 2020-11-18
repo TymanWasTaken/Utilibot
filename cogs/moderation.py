@@ -11,6 +11,9 @@ def is_bot(m):
 def is_not_bot(m):
 	return 	not(m.author.bot)
 async def purge_messages(number, channel, mode, check=None):
+	#WARNING!
+	# THE WAY YOU CHECK HISTORY HERE IS VERY RATELIMIT HEAVY
+	# ID CONSIDER SOME OTHER METHOD
 	if check is None:
 		return await channel.purge(limit=number)
 	diff_message = 0
