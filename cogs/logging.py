@@ -98,9 +98,9 @@ Enabled logs:
 		Enable all of the logs.
 		"""
 		db = await readDB()
-		for log in self.logs:
-			if str(ctx.guild.id) not in db["logs"]:
-				db["logs"][str(ctx.guild.id)] = {}
+		if str(ctx.guild.id) not in db["logs"]:
+			db["logs"][str(ctx.guild.id)] = {}
+		for log in self.log_flat:
 			db["logs"][str(ctx.guild.id)][log] = True
 		await writeDB(db)
 		await ctx.send(f"Enabled all logs.")
@@ -112,9 +112,9 @@ Enabled logs:
 		Disable all of the logs.
 		"""
 		db = await readDB()
-		for log in self.logs:
-			if str(ctx.guild.id) not in db["logs"]:
-				db["logs"][str(ctx.guild.id)] = {}
+		if str(ctx.guild.id) not in db["logs"]:
+			db["logs"][str(ctx.guild.id)] = {}
+		for log in self.log_flat:
 			db["logs"][str(ctx.guild.id)][log] = False
 		await writeDB(db)
 		await ctx.send(f"Disabled all logs.")
