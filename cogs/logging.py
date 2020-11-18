@@ -24,6 +24,8 @@ async def writeDB(data: dict):
 
 async def islogenabled(guild, log):
 	db = await readDB()
+	if not guild:
+		return False
 	if str(guild.id) not in db["logs"]:
 		return False
 	if log not in db["logs"][str(guild.id)]:
