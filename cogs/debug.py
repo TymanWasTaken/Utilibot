@@ -46,7 +46,8 @@ class Debug(commands.Cog):
 		"""
 		await ctx.send('Shutting down...')
 		print('Received quit command, shutting down.')
-		sys.exit()
+		await ctx.bot.logout()
+		# sys.exit()  # by the way, you could've just done exit() - you dont have to import sys
 
 	@commands.command()
 	@commands.is_owner()
