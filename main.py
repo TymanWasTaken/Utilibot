@@ -190,6 +190,7 @@ for file in sorted(glob.glob("*.py")):
 		bot.load_extension(f"cogs.{file}")
 	except:
 		pass
+os.chdir("..")
 bot.load_extension("riftgun")
 
 disabled_commands = ['mute']
