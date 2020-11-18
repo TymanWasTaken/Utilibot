@@ -103,18 +103,8 @@ class Info(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_guild=True)
 	async def setprefix(self, ctx, *, prefix=None):
-		if prefix == None:
-			d = await readDB()
-			if not str(ctx.guild.id) in d["prefixes"]:
-				return await ctx.send("I can't remove the custom prefix because it doesn't exist!")
-			del d["prefixes"][str(ctx.guild.id)]
-			await writeDB(d)
-			await ctx.send("Reset the prefix for this server!")
-		else:
-			d = await readDB()
-			d["prefixes"][str(ctx.guild.id)] = prefix
-			await writeDB(d)
-			await ctx.send(f"Changed the prefix to `{prefix}` for this server!")
+		await self.bot.setPrefix(ctx, prefix)
+		await ctx.send(f"{f'Changed the prefix to `{prefix}`' if prefix else 'Reset the prefix'} for this server!")
 
 	@commands.command()
 	@commands.is_owner()
