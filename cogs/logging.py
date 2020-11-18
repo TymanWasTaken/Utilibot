@@ -58,8 +58,8 @@ class Logging(commands.Cog):
 			db["logs"][str(ctx.guild.id)] = {}
 		await writeDB(db)
 		logs = ""
-		for log in db["logs"][str(ctx.guild.id)]:
-			logs += f"{'✅' if db['logs'][str(ctx.guild.id)][log] else '❌'} {log}\n"
+		for log in self.log_flat:
+			logs += f"{'✅' if await islogenabled(ctx.guild, log) else '❌'} {log}\n"
 		await ctx.send(f"""
 Enabled logs:
 {logs}""")
