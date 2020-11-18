@@ -180,7 +180,7 @@ async def on_message(message):
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
 		await message.channel.send("no")
 	if message.content == "utilibot prefix?" and message.guild:
-		ps = await getprefixes(bot, message)
+		ps = await getPrefix(bot, message)
 		ps_formatted = [f"`{x}`" for x in ps]
 		ps_formatted.remove(f"`<@{bot.user.id}> `")
 		ps_formatted.remove(f"`<@!{bot.user.id}> `")
