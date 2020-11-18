@@ -73,6 +73,10 @@ class Info(commands.Cog):
 			return await ctx.send("It appears I do not have the `Embed Links` permission in this channel. Please give me this permission or try again in a channel where I do have it, as it is necessary to run this command.")
 		embed = discord.Embed(title="Invite link", description=f"Click the links below to invite the bot to your server, or join our support server!\n[Click me to invite the bot!](https://discord.com/oauth2/authorize?client_id=755084857280954550&scope=bot&permissions=3501078)\n[Click me to join the support server!]({invitelink})", color=randcolor())
 		await ctx.send(embed=embed)
+
+	@commands.command()
+	async def suggest(self, ctx):
+		await ctx.send("Please join the support server with `u!invite`, then send your message in the #suggestions channel.")
 	
 	@commands.command(name="botperms", aliases=['botpermissions'])
 	@commands.guild_only()

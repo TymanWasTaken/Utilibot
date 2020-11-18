@@ -9,7 +9,7 @@ class TopGG(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.token = os.getenv("DBL_TOKEN") # set this to your DBL token
-		self.dblpy = dbl.DBLClient(self.bot, self.token, autopost=True, webhook_port=6779, webhook_path="/utilibotvote", webhook_auth="98ujwoasd90jqwd[pdqw;") # Autopost will post your guild count every 30 minutes
+		self.dblpy = dbl.DBLClient(self.bot, self.token, autopost=True, webhook_port=6779, webhook_path="/utilibotvote", webhook_auth="9408ncwm9m8jr239n0892ka0ej9") # Autopost will post your guild count every 30 minutes
 
 	@commands.command()
 	async def vote(self, ctx):
@@ -22,12 +22,12 @@ class TopGG(commands.Cog):
 	@commands.Cog.listener()
 	async def on_dbl_vote(self, data):
 		"""An event that is called whenever someone votes for the bot on top.gg."""
-		await self.bot.get_channel(755979601788010527).send("Received an upvote:\n" + data)
+		await self.bot.get_channel(755979601788010527).send("Received an upvote:\n" + str(await self.bot.fetch_user(data["user"])) + " just upvoted!")
 
 	@commands.Cog.listener()
 	async def on_dbl_test(self, data):
 		"""An event that is called whenever someone tests the webhook system for your bot on top.gg."""
-		await self.bot.get_channel(755979601788010527).send("Received a test upvote:\n" + data)
+		await self.bot.get_channel(755979601788010527).send("Received a test upvote:\n" + str(await self.bot.fetch_user(data["user"])) + " just test upvoted")
 
 	@commands.Cog.listener()
 	async def on_guild_post(self):
