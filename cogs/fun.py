@@ -13,7 +13,7 @@ class Fun(commands.Cog):
 		await ctx.send("Hello there.")
 
 	@commands.command()
-	async def say(self, ctx, *, message):
+	async def say(self, ctx, *, message: commands.clean_content(fix_channel_mentions=True):
 		"""
 		Says what you tell it to, self-explanitory
 		"""
