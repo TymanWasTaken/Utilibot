@@ -13,7 +13,7 @@ async def globally_block_dms(ctx):
 		return True
 	else:
 		await ctx.send("DM's are disabled, please use an actual server.")
-		return False
+		raise commands.NoPrivateMessage()
 
 @bot.event
 async def on_ready():
@@ -32,7 +32,7 @@ async def on_command_error(ctx, error):
 		await ctx.send(f'Not a command, <@{ctx.author.id}>')
 	elif isinstance(error, commands.CheckFailure):
 		await ctx.send(error)
-	elif isinstance(error, commands.BadArgument):
+	elif isinstance(error, (commands.BadArgument, commands.BadUnionArgument)):
 		await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
 	else:
 		embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers.\nIf you are a dev, run with Jishaku debug to see the full error.\nError message: \n`{error}`", color=0xff1100)
@@ -42,11 +42,8 @@ async def on_command_error(ctx, error):
 @bot.event
 async def on_message(message):
 	if message.channel.id == 755982484444938290:
-		for emoji in message.guild.emojis:
-			if emoji.id == 755947356834365490:
-				yes = emoji
-			elif emoji.id == 755947345212080160:
-				no = emoji
+		yes = bot.get_emoji(755947356834365490)
+		not = bot.get_emoji(755947345212080160)
 		await message.add_reaction(yes)
 		await message.add_reaction(no)
 
@@ -59,5 +56,8 @@ bot.load_extension("jishaku")
 os.chdir("cogs")
 for file in glob.glob("*.py"):
 	file = file.replace(".py", "")
-	bot.load_extension(f"cogs.{file}")
+	try:
+		bot.load_extension(f"cogs.{file}")
+	except Exception as e:
+		print(f"Unable to load cog {file} - Skipping\nError: {e}")
 bot.run(os.getenv("BOT_TOKEN"))
