@@ -214,6 +214,7 @@ Enabled logs:
 			embed.add_field(name="After:", value=f"```{after.nick}```", inline=False)
 		# role change
 		elif before.roles != after.roles:
+			n = "\n"
 			if not await islogenabled(before.guild, "rolechanges"):
 				return
 			embed.title="Member Roles Updated"
@@ -221,7 +222,7 @@ Enabled logs:
 				embed.title="Role Added"
 			elif len(before.roles) > len(after.roles):
 				embed.title="Role Removed"
-			embed.description="Lol idk how to detect specific role yet"
+			embed.description=f"{n.join([r.mention for r in set(before.roles) ^ set(after.roles)])}" # yeah, probably will get reset when changing it later though because the code does not format it # oh rip lmao
 		elif before.status != after.status:
 			if not await islogenabled(before.guild, "status"):
 				return
