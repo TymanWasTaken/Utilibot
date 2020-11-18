@@ -154,6 +154,14 @@ async def on_error(event, *args, **kwargs):
 
 @bot.event
 async def on_message(message):
+	if not message.guild:
+		log = bot.get_channel(776466538156130314)
+		e = discord.Embed(title="Bot DMed", description=f"""
+		User: `{str(message.author)}` ({message.author.id})
+		Content: `{await postbin.postAsync(message.content)}`
+		""".replace("	", "")
+		)
+		await log.send(embed=e)
 	if message.channel.id == 755982484444938290 and not message.content.startswith('=>'):
 		await message.add_reaction(bot.get_emoji(778489135870377994))
 		await message.add_reaction(bot.get_emoji(778489134741979186))
