@@ -161,12 +161,12 @@ class Info(commands.Cog):
 		cmd = None
 		args_split = argument.split(" ")
 		cmd = self.bot.all_commands.get(args_split[0])
-		if cmd != None:
+		if cmd != None and not isinstance(cmd, commands.command):
 			for command in list(cmd.all_commands.keys())[1:]:
 				try:
 					cmd = cmd.all_commands[command]
 				except (AttributeError, KeyError):
-					return None
+					break
 		if cmd != None:
 			n = "\n"
 			if isinstance(cmd, commands.core.Group):
