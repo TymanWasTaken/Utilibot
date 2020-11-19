@@ -60,10 +60,13 @@ async def setPrefix(ctx, prefix):
 		raise commands.NoPrivateMessage("You may not set a prefix in a DM.")
 	if prefix == None:
 		async with aiosqlite.connect('data.db') as db:
-			db.execute(f"DELETE FROM prefixes WHERE guildid={ctx.guild.id}")
+			await db.execute(f"DELETE FROM prefixes WHERE guildid={ctx.guild.id}")
+			await db.commit()
 	else:
 		async with aiosqlite.connect('data.db') as db:
-			db.execute(f"INSERT INTO prefixes VALUES ({ctx.guild.id}, \"{prefix}\")")
+			print(f"INSERT INTO prefixes VALUES ({ctx.guild.id}, \"{prefix}\")")
+			await db.execute(f"INSERT INTO prefixes VALUES ({ctx.guild.id}, \"{prefix}\")")
+			await db.commit()
 
 bot = commands.Bot(command_prefix=getPrefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
 
