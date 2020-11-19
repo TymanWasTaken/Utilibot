@@ -161,7 +161,7 @@ class Info(commands.Cog):
 		cmd = None
 		args_split = argument.split(" ")
 		cmd = self.bot.all_commands.get(args_split[0])
-		if cmd != None and not isinstance(cmd, commands.command):
+		if cmd != None and not isinstance(cmd, commands.core.Command):
 			for command in list(cmd.all_commands.keys())[1:]:
 				try:
 					cmd = cmd.all_commands[command]
