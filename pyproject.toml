@@ -7,11 +7,12 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "3.8.*"
-"discord.py" = "^1.5.1"
 postbin = {git = "https://github.com/dragdev-studios/PostBin"}
 python-dotenv = "^0.15.0"
 jishaku = "^1.19.2"
 youtube_dl = "^2020.11.19"
+DiscordUtils = "^1.2.4"
+"discord.py" = {git = "https://github.com/Rapptz/discord.py", extras = ["voice"]}
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.6.0"
