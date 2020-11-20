@@ -224,8 +224,8 @@ for file in sorted(glob.glob("*.py")):
 	file = file.replace(".py", "")
 	try:
 		bot.load_extension(f"cogs.{file}")
-	except:
-		print(f"Cog {file} failed to load.")
+	except Exception as e:
+		print(f"\033[1mCog {file} failed to load.\n{e}\033[0m")
 os.chdir("..")
 # bot.load_extension("riftgun")
 
