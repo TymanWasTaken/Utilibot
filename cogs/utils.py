@@ -245,6 +245,7 @@ class Utils(commands.Cog):
 		authreq = 'No'
 		if g.mfa_level > 0:
 			authreq = 'Yes'
+		vlevels = ["None: Unrestricted", "Low: Must have a verified email on their Discord account.", "Medium: Must also be registered on Discord for longer than 5 minutes.", "(╯°□°）╯︵ ┻━┻  (High): Must also be a member of this server for longer than 10 minutes.", "┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻  (Highest): Must have a verified phone on their Discord account."]
 		for m in g.members:
 			if m.bot:
 				bots = bots + 1
@@ -261,6 +262,7 @@ class Utils(commands.Cog):
 			**System Messages:** {systemchan}
 			**Rules Channel:** {ruleschan}
 			**2FA Required?** {authreq}
+			**Verification Level:** {vlevels[g.verification_level.value-1]}
 			
 			[Link to Icon]({g.icon_url})"""
 			.replace("	", ""),

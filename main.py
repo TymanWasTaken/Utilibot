@@ -71,7 +71,12 @@ bot = commands.Bot(command_prefix=getPrefix, case_insensitive=True, allowed_ment
 
 bot.setPrefix = setPrefix
 
-bot.db = aiosqlite.connect('data.db')
+async def query(table, condition=None):
+	async with aiosqlite.connect('data.db') as db:
+		async with db.execute(f"SELECT * FROM {table} WHERE{ ' ' + condition if condition else ''}") as cursor:
+			return await cursor.fetchall()
+
+bot.dbquery = query
 
 bot.utils = dpytils.utils()
 
