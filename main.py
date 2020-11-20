@@ -64,7 +64,6 @@ async def setPrefix(ctx, prefix):
 			await db.commit()
 	else:
 		async with aiosqlite.connect('data.db') as db:
-			print(f"INSERT INTO prefixes VALUES ({ctx.guild.id}, \"{prefix}\")")
 			await db.execute(f"INSERT INTO prefixes VALUES ({ctx.guild.id}, \"{prefix}\")")
 			await db.commit()
 
