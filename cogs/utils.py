@@ -249,8 +249,27 @@ class Utils(commands.Cog):
 		# embed.set_footer(text=f"ID: {g.id}. Created on {g.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}")
 		# embed.set_thumbnail=(g.icon_url)
 		await ctx.send(embed=embed)
+	
+	@commands.command(name="poll")
+	async def poll(self, ctx, pingrole: typing.Optional[discord.Role]=None, question: str, desc: str=None):
+		content = ""
+		if pingrole != None:
+			content = pingrole.mention
+		await ctx.message.delete()
+		m = await ctx.send(embed=discord.Embed(title=question, description=desc))
+		await m.add_reaction("👍")
+		await m.add_reaction("👎")
 
-	@commands.command(name="giverole", aliases=['giveroles', 'grole', 'groles', 'addrole', 'addroles'])
+	@commands.command(name="newrole", aliases=['createrole', 'crole', 'addrole'])
+	@commands.has_permissions(manage_roles=True)
+	@commands.bot_has_permissions(manage_roles=True)
+	@commands.guild_only()
+	async def newrole(self, ctx, color: discord.Color=None, hoist: bool=False, position: int=None, *name):
+		r = await ctx.guild.create_role(name=name, color=color, hoist=hoist, reason=f"Role created by {ctx.author} ({ctx.author.id})")
+		await ctx.send(f"Created {r.mention}!", allowed_mentions=discord.AllowedMentions(roles=False))
+
+
+	@commands.command(name="giverole", aliases=['giveroles', 'grole', 'groles'])
 	@commands.has_permissions(manage_roles=True)
 	@commands.bot_has_permissions(manage_roles=True)
 	@commands.guild_only()

@@ -225,9 +225,9 @@ for file in sorted(glob.glob("*.py")):
 	try:
 		bot.load_extension(f"cogs.{file}")
 	except:
-		pass
+		print(f"Cog {file} failed to load.")
 os.chdir("..")
-bot.load_extension("riftgun")
+# bot.load_extension("riftgun")
 
 disabled_commands = ['mute']
 
