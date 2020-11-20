@@ -224,16 +224,24 @@ class Utils(commands.Cog):
 		embed.set_footer(text=f"ID: {user.id}")
 		await ctx.send(embed=embed)
 
-	@commands.command(name="serverinfo", aliases=['si', 'server'])
+	@commands.command(name="serverinfo", aliases=['si', 'server', 'guildinfo', 'gi', 'guild'])
 	@commands.guild_only()
-	async def serverinfo(self, ctx):
+	async def serverinfo(self, ctx, guildid: int=None):
 		"""
 		Shows some info about the server.
 		"""
 		bot = self.bot
 		g = ctx.guild
+		if guildid != None and bot.get_guild(guildid):
+			g = bot.get_guild(guildid)
 		humans = 0
 		bots = 0
+		systemchan = 'None set'
+		if g.system_channel != None:
+			systemchan = g.system_channel.mention
+		ruleschan = 'None set'
+		if g.rules_channel != None:
+			ruleschan = g.rules_channel.mention
 		for m in g.members:
 			if m.bot:
 				bots = bots + 1
@@ -241,24 +249,32 @@ class Utils(commands.Cog):
 				humans = humans + 1
 		embed = discord.Embed(
 			title=f"{g.name}'s Info",
-			description=f"""**Owner:** {g.owner}
+			description=f"""**Owner:** {g.owner} ({g.owner.id})
+			**Members:** Total- {g.member_count}, Humans- {humans}, Bots- {bots}
 			**Channels:** {bot.get_emoji(778489166316175413)} {len(g.categories)} categories, {bot.get_emoji(778489167649701898)} {len(g.text_channels)} text, {bot.get_emoji(778489169000661002)} {len(g.voice_channels)} voice
 			**Roles:** {len(g.roles)-1}
-			**Members:** Total- {g.member_count}, Humans- {humans}, Bots- {bots}"""
+			**Emojis:** {len(g.emojis)}
+			**Features:** {', '.join(g.features)}
+			**System Messages:** {systemchan}
+			**Rules Channel:** {ruleschan}
+			
+			[Link to Icon]({g.icon_url})"""
+			.replace("	", "")
 		)
-		# embed.set_footer(text=f"ID: {g.id}. Created on {g.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}")
-		# embed.set_thumbnail=(g.icon_url)
+		# embed.add_field(name=f"Emojis ({len(g.emojis)}):", value=f"{for e in g.emojis: ems = f'{ems} {e}'}")
+		embed.set_footer(text=f"ID: {g.id} | Created on ", icon_url=g.icon_url)
+		embed.timestamp=g.created_at #Created on {g.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}")
 		await ctx.send(embed=embed)
 	
-	@commands.command(name="poll")
-	async def poll(self, ctx, pingrole: typing.Optional[discord.Role]=None, question: str, desc: str=None):
-		content = ""
-		if pingrole != None:
-			content = pingrole.mention
-		await ctx.message.delete()
-		m = await ctx.send(embed=discord.Embed(title=question, description=desc))
-		await m.add_reaction("👍")
-		await m.add_reaction("👎")
+#	@commands.command(name="poll")
+#	async def poll(self, ctx, pingrole: typing.Optional[discord.Role]=None, question: str, desc: str=None):
+#		content = ""
+#		if pingrole != None:
+#			content = pingrole.mention
+#		await ctx.message.delete()
+#		m = await ctx.send(embed=discord.Embed(title=question, description=desc))
+#		await m.add_reaction("👍")
+#		await m.add_reaction("👎")
 
 	@commands.command(name="newrole", aliases=['createrole', 'crole', 'addrole'])
 	@commands.has_permissions(manage_roles=True)
