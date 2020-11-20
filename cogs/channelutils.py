@@ -105,6 +105,7 @@ class ChannelUtils(commands.Cog):
 		c = await ctx.guild.create_text_channel(name=name, reason=f"Channel created by {ctx.author} ({ctx.author.id}) with reason: {reason}")
 		await c.edit(position=position)
 		await c.send(f"I created this channel for you, {ctx.author.mention}!", delete_after=60)
+		await ctx.send(f"{ctx.author.mention}, I created {c.mention} for you!", delete_after=60)
 
 	@commands.command(name="createvoicechannel", aliases=['createvoicechan', 'newvoicechan', 'newvc'])
 	@commands.guild_only()

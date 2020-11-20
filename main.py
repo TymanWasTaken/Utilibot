@@ -1,5 +1,5 @@
 # Imports
-import discord, os, time, glob, postbin, traceback, cogs, importlib, aiofiles, json, textwrap, re, sys, aiosqlite
+import discord, os, time, glob, postbin, traceback, cogs, importlib, aiofiles, json, textwrap, re, sys, aiosqlite, dpytils
 from datetime import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -71,6 +71,10 @@ async def setPrefix(ctx, prefix):
 bot = commands.Bot(command_prefix=getPrefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
 
 bot.setPrefix = setPrefix
+
+bot.db = aiosqlite.connect('data.db')
+
+bot.utils = dpytils.utils()
 
 class BlacklistedError(commands.CommandError):
 	pass

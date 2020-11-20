@@ -242,6 +242,9 @@ class Utils(commands.Cog):
 		ruleschan = 'None set'
 		if g.rules_channel != None:
 			ruleschan = g.rules_channel.mention
+		authreq = 'No'
+		if g.mfa_level > 0:
+			authreq = 'Yes'
 		for m in g.members:
 			if m.bot:
 				bots = bots + 1
@@ -257,9 +260,11 @@ class Utils(commands.Cog):
 			**Features:** {', '.join(g.features)}
 			**System Messages:** {systemchan}
 			**Rules Channel:** {ruleschan}
+			**2FA Required?** {authreq}
 			
 			[Link to Icon]({g.icon_url})"""
-			.replace("	", "")
+			.replace("	", ""),
+			color=bot.utils.randcolor()
 		)
 		# embed.add_field(name=f"Emojis ({len(g.emojis)}):", value=f"{for e in g.emojis: ems = f'{ems} {e}'}")
 		embed.set_footer(text=f"ID: {g.id} | Created on ", icon_url=g.icon_url)

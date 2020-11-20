@@ -282,6 +282,7 @@ Enabled logs:
 				embed.title="Avatar Updated"
 				embed.add_field(name="Before:", value=f"[Link]({before.avatar_url})", inline=False)
 				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
+				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
 				embed.set_thumbnail(url=after.avatar_url)
 			await logchannel.send(embed=embed)
 
