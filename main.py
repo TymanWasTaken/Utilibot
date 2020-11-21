@@ -46,6 +46,12 @@ async def query(table, condition=None):
 		async with db.execute(f"SELECT * FROM {table}{ ' WHERE ' + condition if condition != None else ''}") as cursor:
 			return await cursor.fetchall()
 
+async def dbexec(*sqls):
+	async with aiosqlite.connect('data.db') as db:
+		for sql in sqls:
+			await db.execute(sql)
+		await db.commit()
+
 async def getPrefix(bot, message):
 	prefixes = ['<@755084857280954550> ', '<@!755084857280954550> ']
 	defaults = ['<@755084857280954550> ', '<@!755084857280954550> ', 'u!', 'U!']

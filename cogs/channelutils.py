@@ -10,7 +10,7 @@ class ChannelUtils(commands.Cog):
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.guild_only()
-	async def annoucechannel(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None):
+	async def announcechannel(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None):
 		"""
 		A simple toggle to convert channels between Text and Announcements.
 		"""
@@ -52,7 +52,7 @@ class ChannelUtils(commands.Cog):
 					publishing = True
 				if publishing == True:
 					await msg.publish()
-					conf = await ctx.send(f"Sucessfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}>!")
+					conf = await ctx.send(f"Successfully published <https://discord.com/channels/{ctx.guild.id}/{ch.id}/{msg.id}>!")
 					await conf.delete(delay=5)
 
 	@commands.command(name="channelname", aliases=['editchannelname', 'editcname', 'cname'])
