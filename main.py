@@ -89,6 +89,8 @@ bot.setPrefix = setPrefix
 
 bot.dbquery = query
 
+bot.dbexex = dbexec
+
 bot.utils = dpytils.utils()
 
 class BlacklistedError(commands.CommandError):

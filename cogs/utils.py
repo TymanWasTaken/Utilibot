@@ -345,7 +345,7 @@ class Utils(commands.Cog):
 
 	@commands.command(name="setnick")
 	@commands.bot_has_permissions(manage_nicknames=True)
-	async def setnick(self, ctx, member: discord.Member=None, *, newnick=None):
+	async def setnick(self, ctx, member: discord.Member, *, newnick=None):
 		mem = member or ctx.author
 		oldnick = member.nick
 		if mem.top_role >= ctx.guild.me.top_role:
