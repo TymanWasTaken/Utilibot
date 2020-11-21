@@ -178,39 +178,69 @@ class Utils(commands.Cog):
 		await ctx.send(embed=discord.Embed(title=f"Permissions for value {value}:", description=permsfromvalue(value), color=randcolor()))
 
 	@commands.command(name="userinfo", aliases=['ui', 'user', 'info'])
-	async def userinfo(self, ctx, user: discord.Member=None):
+	async def userinfo(self, ctx, user):
 		"""
 		Shows some info about a user. Defaults to self.
 		"""
 		bot = self.bot
-		user = user or ctx.author
-		if user.status == discord.Status.online:
-			status = bot.get_emoji(778489146703609896)
-		elif user.status == discord.Status.idle:
-			status = bot.get_emoji(778489147420704789)
-		elif user.status == discord.Status.dnd:
-			status = bot.get_emoji(778489150148050996)
-		elif user.status == discord.Status.offline:
-			status = bot.get_emoji(778489148750561292)
-		if user.is_on_mobile():
-			mobile = "✅"
+		try: user = int(user)
+		except: pass
+		if isinstance(user, int):
+			user_temp = bot.get_user(user)
+			if user_temp == None:
+				try:
+					user_temp = await bot.fetch_user(user)
+				except discord.errors.NotFound:
+					return await ctx.send("I detected that you gave an id, but could not find the user.")
+			else:
+				user_temp_temp = ctx.guild.get_member(user)
+				if user_temp_temp != None:
+					user_temp = user_temp_temp
+			user = user_temp
 		else:
-			mobile = "❌"
-		embed = discord.Embed(
-			title=f"{str(user)}'s Info:", 
-			description=f"""**Nickname:** {user.nick}
-			**User ID:** `{user.id}`
-			**Role count:** {len(user.roles)}
-			**Joined Server on:** {user.joined_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
-			**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
-			**Status:** {status}
-			**Bot:** {'✅' if user.bot else '❌'}
-			**Mobile:** {mobile}"""
-			.replace("	", ""),
-			thumbnail=user.avatar_url,
-			color=user.color
-			)
-		embed.add_field(name="Custom Status", value=f"```{user.activity}```", inline=False)
+			user_temp = discord.utils.get(bot.users, name=user)
+			if user_temp == None:
+				return await ctx.send("The text you gave was not an id, but I could not find them by name.")
+			user = user_temp
+		if isinstance(user, discord.Member):
+			if user.status == discord.Status.online:
+				status = bot.get_emoji(778489146703609896)
+			elif user.status == discord.Status.idle:
+				status = bot.get_emoji(778489147420704789)
+			elif user.status == discord.Status.dnd:
+				status = bot.get_emoji(778489150148050996)
+			elif user.status == discord.Status.offline:
+				status = bot.get_emoji(778489148750561292)
+			if user.is_on_mobile():
+				mobile = "✅"
+			else:
+				mobile = "❌"
+			embed = discord.Embed(
+				title=f"{str(user)}'s Info:", 
+				description=f"""**Nickname:** {user.nick}
+				**User ID:** `{user.id}`
+				**Role count:** {len(user.roles)}
+				**Joined Server on:** {user.joined_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
+				**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
+				**Status:** {status}
+				**Bot:** {'✅' if user.bot else '❌'}
+				**Mobile:** {mobile}"""
+				.replace("	", ""),
+				thumbnail=user.avatar_url,
+				color=user.color
+				)
+			embed.add_field(name="Custom Status", value=f"```{user.activity}```", inline=False)
+		else:
+			embed = discord.Embed(
+				title=f"{str(user)}'s Info:", 
+				description=f"""**Name:** {user.name}
+				**User ID:** `{user.id}`
+				**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
+				**Bot:** {'✅' if user.bot else '❌'}"""
+				.replace("	", ""),
+				thumbnail=user.avatar_url,
+				)
+			embed.set_footer(text="⚠ The user was not in the current server, so I can only get minimal info.")
 		await ctx.send(embed=embed)
 
 	@commands.command(name="avatar", aliases=['av', 'pfp'])
