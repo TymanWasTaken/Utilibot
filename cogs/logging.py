@@ -278,7 +278,7 @@ Enabled logs:
 				if not await islogenabled(guild, "avatar"):
 					return
 				embed.title="Avatar Updated"
-				embed.description = f"[Avatar Link]({after.avatar_url})", inline=False)
+				embed.description = f"[Avatar Link]({after.avatar_url})"
 				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
 				embed.set_thumbnail(url=after.avatar_url)
 			await logchannel.send(embed=embed)
