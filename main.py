@@ -71,14 +71,11 @@ async def setPrefix(ctx, prefix):
 			await db.execute(f"DELETE FROM prefixes WHERE guildid={ctx.guild.id}")
 			await db.commit()
 	else:
-		if len(gPrefix) > 1:
-			async with aiosqlite.connect('data.db') as db:
-				await db.execute(f"UPDATE prefixes SET prefix='{prefix}' WHERE guildid={ctx.guild.id}")
-				await db.commit()
-		else:
-			async with aiosqlite.connect('data.db') as db:
-				await db.execute(f"INSERT INTO prefixes VALUES ({ctx.guild.id}, \"{prefix}\")")
-				await db.commit()
+		async with aiosqlite.connect('data.db') as db:
+			if len(gPrefix) > 0:
+				await db.execute(f"DELETE FROM prefixes WHERE guildid={ctx.guild.id}")
+			await db.execute(f"INSERT INTO prefixes VALUES ({ctx.guild.id}, \"{prefix}\")")
+			await db.commit()
 
 bot = commands.Bot(command_prefix=getPrefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
 
@@ -235,19 +232,18 @@ async def on_voice_state_update(member, before, after):
 			vc.cleanup()
 """
 bot.load_extension("jishaku")
-os.chdir("cogs")
-for file in sorted(glob.glob("*.py")):
-	file = file.replace(".py", "")
+for file in sorted(glob.glob("cogs/*.py")):
+	file = file.replace(".py", "").replace("/", ".")
 	try:
-		bot.load_extension(f"cogs.{file}")
+		bot.load_extension(file)
 	except Exception as e:
 		print(f"\033[1mCog {file} failed to load.\n{e}\033[0m")
-os.chdir("..")
 # bot.load_extension("riftgun")
 
 disabled_commands = ['mute']
 
 for cmd in disabled_commands:
-	bot.get_command(cmd).update(enabled=False)
+	try: bot.get_command(cmd).update(enabled=False)
+	except: pass
 
 bot.run(os.getenv("BOT_TOKEN"))
