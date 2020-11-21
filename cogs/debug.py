@@ -36,7 +36,7 @@ class Debug(commands.Cog):
 		Channel: `{ctx.channel.name}` ({ctx.channel.id})
 		Message: `{ctx.message.id}`
 		Command: `{ctx.command.qualified_name}`
-		""".replace("	", "")
+		""".replace("	", ""), color=0x2F3138
 		)
 		await log.send(embed=e)
 
