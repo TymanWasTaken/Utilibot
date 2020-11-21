@@ -33,6 +33,8 @@ class Debug(commands.Cog):
 		e = discord.Embed(title="Command ran", description=f"""
 		User: `{str(ctx.author)}` ({ctx.author.id})
 		Guild: `{ctx.guild.name + f" ({ctx.guild.id})" if ctx.guild else 'none'}`
+		Channel: `{ctx.channel.name}` ({ctx.channel.id})
+		Message: `{ctx.message.id}`
 		Command: `{ctx.command.qualified_name}`
 		""".replace("	", "")
 		)
