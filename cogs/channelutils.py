@@ -79,6 +79,8 @@ class ChannelUtils(commands.Cog):
 		"""
 		chan = channel or ctx.channel
 		oldtopic = chan.topic
+		if len(topic) > 512:
+			return await ctx.send("The new topic is too long! Channel topics must be between 0 and 512 characters.")
 		await chan.edit(topic=topic, reason=f"Topic changed by {ctx.author} ({ctx.author.id}).")
 		await ctx.send(f"Changed <#{chan.id}>'s topic!\nBefore: `{oldtopic}`\nAfter: `{topic}`")
 

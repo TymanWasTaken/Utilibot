@@ -262,7 +262,7 @@ class Utils(commands.Cog):
 			**System Messages:** {systemchan}
 			**Rules Channel:** {ruleschan}
 			**2FA Required?** {authreq}
-			**Verification Level:** {vlevels[g.verification_level.value-1]}
+			**Verification Level:** {vlevels[g.verification_level.value]}
 			
 			[Link to Icon]({g.icon_url})"""
 			.replace("	", ""),

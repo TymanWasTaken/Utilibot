@@ -41,6 +41,11 @@ async def getprefixes(bot, message):
 
 # sqlite, used
 
+async def query(table, condition=None):
+	async with aiosqlite.connect('data.db') as db:
+		async with db.execute(f"SELECT * FROM {table}{ ' WHERE ' + condition if condition != None else ''}") as cursor:
+			return await cursor.fetchall()
+
 async def getPrefix(bot, message):
 	prefixes = ['<@755084857280954550> ', '<@!755084857280954550> ']
 	defaults = ['<@755084857280954550> ', '<@!755084857280954550> ', 'u!', 'U!']
@@ -52,29 +57,32 @@ async def getPrefix(bot, message):
 			if len(entries) < 1:
 				return defaults
 			else:
+				if "u!" not in prefixes and message.author.id in bot.owner_ids:
+					prefixes.append("u!")
 				prefixes.append(entries[0][1])
 				return prefixes
 
 async def setPrefix(ctx, prefix):
 	if ctx.guild == None:
 		raise commands.NoPrivateMessage("You may not set a prefix in a DM.")
+	gPrefix = await query("prefixes", f"guildid={ctx.guild.id}")
 	if prefix == None:
 		async with aiosqlite.connect('data.db') as db:
 			await db.execute(f"DELETE FROM prefixes WHERE guildid={ctx.guild.id}")
 			await db.commit()
 	else:
-		async with aiosqlite.connect('data.db') as db:
-			await db.execute(f"INSERT INTO prefixes VALUES ({ctx.guild.id}, \"{prefix}\")")
-			await db.commit()
+		if len(gPrefix) > 1:
+			async with aiosqlite.connect('data.db') as db:
+				await db.execute(f"UPDATE prefixes SET prefix='{prefix}' WHERE guildid={ctx.guild.id}")
+				await db.commit()
+		else:
+			async with aiosqlite.connect('data.db') as db:
+				await db.execute(f"INSERT INTO prefixes VALUES ({ctx.guild.id}, \"{prefix}\")")
+				await db.commit()
 
 bot = commands.Bot(command_prefix=getPrefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
 
 bot.setPrefix = setPrefix
-
-async def query(table, condition=None):
-	async with aiosqlite.connect('data.db') as db:
-		async with db.execute(f"SELECT * FROM {table} WHERE{ ' ' + condition if condition else ''}") as cursor:
-			return await cursor.fetchall()
 
 bot.dbquery = query
 

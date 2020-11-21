@@ -138,21 +138,19 @@ Enabled logs:
 		if after_content == "" and after.embeds:
 			after_content = "Message contained embed only"
 		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", color=0x1184ff, timestamp=datetime.now())
-		embed.add_field(name="Before:", value=f"```{before_content}```", inline=False)
-		embed.add_field(name="After:", value=f"```{after_content}```", inline=False)
+		if len(before_content) <= 1016: 
+			embed.add_field(name="Before:", value=f"```{before_content}```", inline=False)
+		else:
+			before_content = await postbin.postAsync(before_content)
+			embed.add_field(name="Before:", value=before_content, inline=False)
+		if len(after_content) <= 1016:
+			embed.add_field(name="After:", value=f"```{after_content}```", inline=False)
+		else:
+			after_content = await postbin.postAsync(after_content)
+			embed.add_field(name="After:", value=after_content, inline=False)
 		embed.set_author(name=before.author, icon_url=before.author.avatar_url)
 		embed.set_footer(text=f"Author ID: {before.author.id}")
-		try:
-			await logchannel.send(embed=embed)
-		except discord.HTTPException:
-			before_content = await postbin.postAsync(before_content)
-			after_content = await postbin.postAsync(before_content)
-			embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", color=0x1184ff, timestamp=datetime.now())
-			embed.add_field(name="Before:", value=f"```{before_content}```", inline=False)
-			embed.add_field(name="After:", value=f"```{after_content}```", inline=False)
-			embed.set_author(name=before.author, icon_url=before.author.avatar_url)
-			embed.set_footer(text=f"Author ID: {before.author.id}")
-			await logchannel.send(embed=embed)
+		await logchannel.send(embed=embed)
 	
 	@commands.Cog.listener()
 	async def on_message_delete(self, message):
@@ -280,7 +278,17 @@ Enabled logs:
 				if not await islogenabled(guild, "avatar"):
 					return
 				embed.title="Avatar Updated"
-				embed.add_field(name="Before:", value=f"[Link]({before.avatar_url})", inline=False)
+				embed.description(f"[Avatar Link]({after.avatar_url})", inline=False)
+				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
+				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
+				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
+				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
+				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
+				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
+				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
+				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
+				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
+				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
 				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
 				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
 				embed.set_thumbnail(url=after.avatar_url)
