@@ -1,4 +1,4 @@
-import discord, random, asyncio, aiohttp, os, postbin, typing
+import discord, random, asyncio, aiohttp, os, postbin, typing, datetime
 from discord.ext import commands
 from pytz import timezone
 from dotenv import load_dotenv
@@ -178,10 +178,25 @@ class Utils(commands.Cog):
 		await ctx.send(embed=discord.Embed(title=f"Permissions for value {value}:", description=permsfromvalue(value), color=randcolor()))
 
 	@commands.command(name="userinfo", aliases=['ui', 'user', 'info'])
-	async def userinfo(self, ctx, user):
+	async def userinfo(self, ctx, user=None):
 		"""
 		Shows some info about a user. Defaults to self.
 		"""
+		user = user or ctx.author.id
+		badges = {
+			discord.UserFlags.early_supporter: f"{self.bot.get_emoji(778489157055414272)} Early supporter",
+			discord.UserFlags.bug_hunter: f"{self.bot.get_emoji(778489159551025162)} Bug hunter",
+			discord.UserFlags.bug_hunter_level_2: f"{self.bot.get_emoji(778489160080162826)} Bug hunter level 2",
+			discord.UserFlags.partner: f"{self.bot.get_emoji(778489162847879179)} Discord partner",
+			discord.UserFlags.verified_bot_developer: f"{self.bot.get_emoji(778489155977216050)} Early verified bot developer",
+			discord.UserFlags.staff: f"{self.bot.get_emoji(778489158221955103)} Discord staff",
+			discord.UserFlags.hypesquad_bravery: f"{self.bot.get_emoji(778489151288246273)} Hypesqaud bravery",
+			discord.UserFlags.hypesquad_brilliance: f"{self.bot.get_emoji(778489152228163604)} Hypesquad brilliance",
+			discord.UserFlags.hypesquad_balance: f"{self.bot.get_emoji(778489153405845544)} Hypesquad balance",
+			discord.UserFlags.hypesquad: f"{self.bot.get_emoji(778489154585362442)} Hypesquad events",
+			"nitro": f"{self.bot.get_emoji(779954141262774293)} Nitro",
+			"nitro_guess": f"{self.bot.get_emoji(779954141262774293)} Nitro (⚠ This is a guess, I cannot tell for certain.)",
+		}
 		bot = self.bot
 		try: user = int(user)
 		except: pass
@@ -202,6 +217,30 @@ class Utils(commands.Cog):
 			if user_temp == None:
 				return await ctx.send("The text you gave was not an id, but I could not find them by name.")
 			user = user_temp
+		flags_nice = []
+		for flag in user.public_flags.all():
+			if flag in badges:
+				flags_nice.append(badges[flag])
+		if user.is_avatar_animated():
+			flags_nice.append(badges["nitro"])
+		elif int(user.discriminator) < 7:
+			flags_nice.append(badges["nitro_guess"])
+		if isinstance(user, discord.Member):
+			if user.premium_since != None:
+				ms = (datetime.datetime.now() - user.premium_since).months
+				if ms >= 24: flags_nice.append(f"{bot.get_emoji(779966418006442004)} 24+ Month server boost")
+				elif ms >= 18: flags_nice.append(f"{bot.get_emoji(779966630016581653)} 18+ Month server boost")
+				elif ms >= 15: flags_nice.append(f"{bot.get_emoji(779966518352019466)} 15+ Month server boost")
+				elif ms >= 12: flags_nice.append(f"{bot.get_emoji(779966734177927209)} 12+ Month server boost")
+				elif ms >= 9: flags_nice.append(f"{bot.get_emoji(779966686614650959)} 9+ Month server boost")
+				elif ms >= 6: flags_nice.append(f"{bot.get_emoji(779966584298012683)} 6+ Month server boost")
+				elif ms >= 3: flags_nice.append(f"{bot.get_emoji(779966455407706132)} 3+ Month server boost")
+				elif ms >= 2: flags_nice.append(f"{bot.get_emoji(779966286426931202)} 2+ Month server boost")
+				elif ms >= 1: flags_nice.append(f"{bot.get_emoji(779966812321349653)} 1+ Month server boost")
+		if len(flags_nice) <= 0:
+			flags_nice = "No badges."
+		else:
+			flags_nice = "\n".join(flags_nice)
 		if isinstance(user, discord.Member):
 			if user.status == discord.Status.online:
 				status = bot.get_emoji(778489146703609896)
@@ -224,7 +263,9 @@ class Utils(commands.Cog):
 				**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
 				**Status:** {status}
 				**Bot:** {'✅' if user.bot else '❌'}
-				**Mobile:** {mobile}"""
+				**Mobile:** {mobile}
+				**Badges:**
+				{flags_nice}"""
 				.replace("	", ""),
 				thumbnail=user.avatar_url,
 				color=user.color
@@ -236,7 +277,9 @@ class Utils(commands.Cog):
 				description=f"""**Name:** {user.name}
 				**User ID:** `{user.id}`
 				**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
-				**Bot:** {'✅' if user.bot else '❌'}"""
+				**Bot:** {'✅' if user.bot else '❌'}
+				**Badges:**
+				{flags_nice}"""
 				.replace("	", ""),
 				thumbnail=user.avatar_url,
 				)

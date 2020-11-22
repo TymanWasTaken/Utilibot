@@ -224,7 +224,7 @@ colors = ["colorama (>=0.4.3,<0.5.0)"]
 
 [[package]]
 name = "jishaku"
-version = "1.19.2.202"
+version = "1.20.0.1"
 description = "A discord.py extension including useful tools for bot development and debugging."
 category = "main"
 optional = false
@@ -232,7 +232,7 @@ python-versions = ">=3.6.0"
 
 [package.dependencies]
 braceexpand = ">=0.1.5"
-"discord.py" = ">=1.3.4"
+"discord.py" = ">=1.4.0"
 humanize = "*"
 import-expression = ">=1.0.0,<2.0.0"
 
@@ -590,12 +590,12 @@ isort = [
     {file = "isort-5.6.4.tar.gz", hash = "sha256:dcaeec1b5f0eca77faea2a35ab790b4f3680ff75590bfcb7145986905aab2f58"},
 ]
 jishaku = [
-    {file = "jishaku-1.19.2.202-py3-none-any.whl", hash = "sha256:4a6bf3e43249c1ddd09424feeb27f6d6b4fcda72abf87aad75df326beb999ba8"},
-    {file = "jishaku-1.19.2.202-py3.6.egg", hash = "sha256:8861db8ce43017bf071d6b564be1e16ee31a814fddd7a2bd9ba85fde37d3e701"},
-    {file = "jishaku-1.19.2.202-py3.7.egg", hash = "sha256:be94901205a023e61071e45151eb369d83ca2ee5829c8a54e38f44e35bebd2dc"},
-    {file = "jishaku-1.19.2.202-py3.8.egg", hash = "sha256:976e79752c0ad92d13d29c366e3a6eb32825a69b3067b10a5de7d518dc454a14"},
-    {file = "jishaku-1.19.2.202-py3.9.egg", hash = "sha256:baa6b50bb00f4641002fd8794eca60e3292ec726c9aeef30ef2c30dd3034fbfe"},
-    {file = "jishaku-1.19.2.202.tar.gz", hash = "sha256:6abb2cb5e26cd453f9ada4e6fc99b7f26c79f55cc2677db267cc69143bb04eac"},
+    {file = "jishaku-1.20.0.1-py3-none-any.whl", hash = "sha256:c37296a9fa5a3253c81bad98c695b2ccd5ce3bbe08e6ef7c21a1a906e5002c04"},
+    {file = "jishaku-1.20.0.1-py3.6.egg", hash = "sha256:80282c92b10119d71794966929fbd0448d9a2426ca64c6c46d85cc52317f258f"},
+    {file = "jishaku-1.20.0.1-py3.7.egg", hash = "sha256:6691584646e6352d70a4c79a0f5db395da9b5dd2375182deb6a07a185eaf5b6c"},
+    {file = "jishaku-1.20.0.1-py3.8.egg", hash = "sha256:1db5df9ee3c294b8791e291ae4d4b7f2c58ae2bd3e5c1e020c3a96fa5979bb87"},
+    {file = "jishaku-1.20.0.1-py3.9.egg", hash = "sha256:9ea4c45852427b9514eec29fad7faa253bcaabe0464d138d60866b6b70349290"},
+    {file = "jishaku-1.20.0.1.tar.gz", hash = "sha256:acd2857c053e25a72203d560fed1f2782ed7f5895466a6f53f1ba8d9b8961d3e"},
 ]
 lazy-object-proxy = [
     {file = "lazy-object-proxy-1.4.3.tar.gz", hash = "sha256:f3900e8a5de27447acbf900b4750b0ddfd7ec1ea7fbaf11dfa911141bc522af0"},
