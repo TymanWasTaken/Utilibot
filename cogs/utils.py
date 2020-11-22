@@ -227,7 +227,7 @@ class Utils(commands.Cog):
 			flags_nice.append(badges["nitro_guess"])
 		if isinstance(user, discord.Member):
 			if user.premium_since != None:
-				ms = (datetime.datetime.now() - user.premium_since).months
+				ms = round((datetime.datetime.now() - user.premium_since).days / 30, 0)
 				if ms >= 24: flags_nice.append(f"{bot.get_emoji(779966418006442004)} 24+ Month server boost")
 				elif ms >= 18: flags_nice.append(f"{bot.get_emoji(779966630016581653)} 18+ Month server boost")
 				elif ms >= 15: flags_nice.append(f"{bot.get_emoji(779966518352019466)} 15+ Month server boost")
