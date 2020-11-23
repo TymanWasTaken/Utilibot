@@ -17,7 +17,7 @@ class Logging(commands.Cog):
 		}
 		self.log_flat = {x for v in self.logs.values() for x in v}
 
-	async def islogenabled(guild, log):
+	async def islogenabled(self, guild, log):
 		if not guild:
 			return False
 		db = await self.bot.dbquery("logging", "guildid=" + str(guild.id))
@@ -29,7 +29,7 @@ class Logging(commands.Cog):
 		else:
 			return data[log]
 
-	async def getlogs(guild):
+	async def getlogs(self, guild):
 		if not guild:
 			return None
 		db = await self.bot.dbquery("logging", "guildid=" + str(guild.id))
@@ -38,7 +38,7 @@ class Logging(commands.Cog):
 		data = json.loads(db[0][1])
 		return data
 
-	async def setlogs(guild, data):
+	async def setlogs(self, guild, data):
 		if not guild:
 			return None
 		await self.bot.dbexec(("INSERT INTO logging VALUES (?, ?)", (guild.id, json.dumps(data))))
@@ -50,16 +50,16 @@ class Logging(commands.Cog):
 		"""
 		Shows logging settings for the current server.
 		"""
-		db = await getlogs(ctx.guild)
+		db = await self.getlogs(ctx.guild)
 		if db == None:
 			db = {}
 		for log in list(db):
 			if log not in self.log_flat:
 				db.pop(log)
-		await setlogs(ctx.guild, db)
+		await self.setlogs(ctx.guild, db)
 		logs = ""
 		for log in sorted(self.log_flat):
-			logs += f"{'✅' if await islogenabled(ctx.guild, log) else '❌'} {log}\n"
+			logs += f"{'✅' if await self.islogenabled(ctx.guild, log) else '❌'} {log}\n"
 		await ctx.send(f"""
 Enabled logs:
 {logs}""")
@@ -72,11 +72,11 @@ Enabled logs:
 		"""
 		if log not in self.log_flat:
 			return await ctx.send("Not a valid log.")
-		db = await getlogs(ctx.guild)
+		db = await self.getlogs(ctx.guild)
 		if db == None:
 			db = {}
 		db[log] = True
-		await setlogs(ctx.guild, db)
+		await self.setlogs(ctx.guild, db)
 		await ctx.send(f"Enabled log {log}")
 
 	@log.command()
@@ -87,11 +87,11 @@ Enabled logs:
 		"""
 		if log not in self.log_flat:
 			return await ctx.send("Not a valid log.")
-		db = await getlogs(ctx.guild)
+		db = await self.getlogs(ctx.guild)
 		if db == None:
 			db = {}
 		db[log] = False
-		await setlogs(ctx.guild, db)
+		await self.setlogs(ctx.guild, db)
 		await ctx.send(f"Disabled log {log}")
 
 	@log.command()
@@ -129,7 +129,7 @@ Enabled logs:
 			return
 		if not before.guild:
 			return
-		if not await islogenabled(before.guild, "edit"):
+		if not await self.islogenabled(before.guild, "edit"):
 			return
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -159,7 +159,7 @@ Enabled logs:
 	async def on_message_delete(self, message):
 		if not message.guild:
 			return
-		if not await islogenabled(message.guild, "delete"):
+		if not await self.islogenabled(message.guild, "delete"):
 			return
 		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -176,7 +176,7 @@ Enabled logs:
 	async def on_bulk_message_delete(self, messages):
 		if not messages[0].guild:
 			return
-		if not await islogenabled(messages[0].guild, "purge"):
+		if not await self.islogenabled(messages[0].guild, "purge"):
 			return
 		obj = messages[0]
 		logchannel = discord.utils.get(obj.guild.text_channels, name="utilibot-logs")
@@ -201,7 +201,7 @@ Enabled logs:
 		embed.set_author(name=before, icon_url=before.avatar_url)
 		# Nickname change
 		if before.nick != after.nick:
-			if not await islogenabled(before.guild, "nickname"):
+			if not await self.islogenabled(before.guild, "nickname"):
 				return
 			embed.title="Nickname Changed"
 			if before.nick == None:
@@ -213,7 +213,7 @@ Enabled logs:
 		# role change
 		elif before.roles != after.roles:
 			n = "\n"
-			if not await islogenabled(before.guild, "rolechanges"):
+			if not await self.islogenabled(before.guild, "rolechanges"):
 				return
 			embed.title="Member Roles Updated"
 			if len(before.roles) < len(after.roles):
@@ -222,13 +222,13 @@ Enabled logs:
 				embed.title="Role Removed"
 			embed.description=f"{n.join([r.mention for r in set(before.roles) ^ set(after.roles)])}" # yeah, probably will get reset when changing it later though because the code does not format it # oh rip lmao
 		elif before.status != after.status:
-			if not await islogenabled(before.guild, "status"):
+			if not await self.islogenabled(before.guild, "status"):
 				return
 			embed.title="Status Changed"
 			embed.add_field(name="Before:", value=f"`{before.status}`")
 			embed.add_field(name="After:", value=f"`{after.status}`")
 		elif before.activity != after.activity:
-			if not await islogenabled(before.guild, "activity"):
+			if not await self.islogenabled(before.guild, "activity"):
 				return
 			embed.title="Activity Changed"
 			if before.activity == None:
@@ -264,21 +264,21 @@ Enabled logs:
 			embed.set_author(name=before, icon_url=before.avatar_url)
 			#Username change
 			if before.name != after.name:
-				if not await islogenabled(guild, "username"):
+				if not await self.islogenabled(guild, "username"):
 					return
 				embed.title="Username Changed"
 				embed.add_field(name="Before:", value=f"```{before.name}```", inline=False)
 				embed.add_field(name="After:", value=f"```{after.name}```", inline=False)
 			#Discriminator change
 			elif before.discriminator != after.discriminator:
-				if not await islogenabled(guild, "discriminator"):
+				if not await self.islogenabled(guild, "discriminator"):
 					return
 				embed.title="Discriminator Changed"
 				embed.add_field(name="Before:", value=f"```{before.discriminator}```", inline=False)
 				embed.add_field(name="After:", value=f"```{after.discriminator}```", inline=False)
 			#Avatar change
 			elif before.avatar_url != after.avatar_url:
-				if not await islogenabled(guild, "avatar"):
+				if not await self.islogenabled(guild, "avatar"):
 					return
 				embed.title="Avatar Updated"
 				embed.description(f"[Avatar Link]({after.avatar_url})", inline=False)
@@ -296,19 +296,19 @@ Enabled logs:
 		embed.set_author(name=member, icon_url=member.avatar_url)
 		embed.set_footer(text=f"User ID: {member.id}")
 		if before.channel == None:
-			if not await islogenabled(member.guild, "voicejoin"):
+			if not await self.islogenabled(member.guild, "voicejoin"):
 				return
 			embed.title = "Member Joined Voice Channel"
 			embed.description = f"{str(member)} joined {after.channel.name}"
 			embed.color = 5496236
 		elif after.channel == None:
-			if not await islogenabled(member.guild, "voiceleave"):
+			if not await self.islogenabled(member.guild, "voiceleave"):
 				return
 			embed.title = "Member Left Voice Channel"
 			embed.description = f"{str(member)} left {before.channel.name}"
 			embed.color=0xe41212
 		elif before.channel != after.channel:
-			if not await islogenabled(member.guild, "voicemove"):
+			if not await self.islogenabled(member.guild, "voicemove"):
 				return
 			if before.channel.id == after.channel.id:
 				return
@@ -323,7 +323,7 @@ Enabled logs:
 #Ban/Unban
 	@commands.Cog.listener()
 	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
-		if not await islogenabled(guild, "ban"):
+		if not await self.islogenabled(guild, "ban"):
 			return
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -333,7 +333,7 @@ Enabled logs:
 
 	@commands.Cog.listener()
 	async def on_member_unban(self, guild, user):
-		if not await islogenabled(guild, "unban"):
+		if not await self.islogenabled(guild, "unban"):
 			return
 		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -344,7 +344,7 @@ Enabled logs:
 #Server Update
 	@commands.Cog.listener()
 	async def on_guild_update(self, before, after):
-		if not await islogenabled(before, "serverupdates"):
+		if not await self.islogenabled(before, "serverupdates"):
 			return
 		logchannel = discord.utils.get(before.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -365,7 +365,7 @@ Enabled logs:
 
 	# @commands.Cog.listener()
 	# async def on_guild_emojis_update(self, guild, before, after):
-#		if not await islogenabled(before, "emojis"):
+#		if not await self.islogenabled(before, "emojis"):
 #			return
 	# 	logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
 	# 	if logchannel == None:
@@ -383,7 +383,7 @@ Enabled logs:
 #Role Logging
 	@commands.Cog.listener()
 	async def on_guild_role_create(self, role):
-		if not await islogenabled(role.guild, "rolecreate"):
+		if not await self.islogenabled(role.guild, "rolecreate"):
 			return
 		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -394,7 +394,7 @@ Enabled logs:
 
 	@commands.Cog.listener()
 	async def on_guild_role_update(self, before, after):
-		if not await islogenabled(before.guild, "roleupdate"):
+		if not await self.islogenabled(before.guild, "roleupdate"):
 			return
 		logchannel = discord.utils.get(before.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -414,7 +414,7 @@ Enabled logs:
 
 	@commands.Cog.listener()
 	async def on_guild_role_delete(self, role):
-		if not await islogenabled(role.guild, "roledelete"):
+		if not await self.islogenabled(role.guild, "roledelete"):
 			return
 		logchannel = discord.utils.get(role.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
@@ -432,7 +432,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
-		if not await islogenabled(self.bot.get_guild(payload.guild_id), "reactionadd"):
+		if not await self.islogenabled(self.bot.get_guild(payload.guild_id), "reactionadd"):
 			return
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 		if not message.guild:
@@ -466,7 +466,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_remove(self, payload):
-		if not await islogenabled(self.bot.get_guild(payload.guild_id), "reactionremove"):
+		if not await self.islogenabled(self.bot.get_guild(payload.guild_id), "reactionremove"):
 			return
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 		if not message.guild:
@@ -500,7 +500,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 #	@commands.Cog.listener()
 #	async def on_raw_reaction_clear(self, payload):
-#		if not await islogenabled(self.bot.get_guild(payload.guild_id), "reactionclear"):
+#		if not await self.islogenabled(self.bot.get_guild(payload.guild_id), "reactionclear"):
 #			return
 #		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 #		user = message.guild.get_member(payload.user_id)
