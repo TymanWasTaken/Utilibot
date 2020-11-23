@@ -47,10 +47,18 @@ async def query(table, condition=None):
 			return await cursor.fetchall()
 
 async def dbexec(*sqls):
+	for sql in sqls:
+		if not isinstance(sql, tuple) and not isinstance(sql, str):
+			raise TypeError("Sql must be type Union[tuple, str]")
+	outputs = {}
 	async with aiosqlite.connect('data.db') as db:
 		for sql in sqls:
-			await db.execute(sql)
+			if isinstance(sql, str):
+				outputs[sql] = await db.execute(sql)
+			else:
+				outputs[sql[0]] = await db.execute(sql[0], sql[1])
 		await db.commit()
+	return outputs
 
 async def getPrefix(bot, message):
 	prefixes = ['<@755084857280954550> ', '<@!755084857280954550> ']
@@ -89,7 +97,7 @@ bot.setPrefix = setPrefix
 
 bot.dbquery = query
 
-bot.dbexex = dbexec
+bot.dbexec = dbexec
 
 bot.utils = dpytils.utils()
 

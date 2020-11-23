@@ -224,7 +224,7 @@ colors = ["colorama (>=0.4.3,<0.5.0)"]
 
 [[package]]
 name = "jishaku"
-version = "1.20.0.1"
+version = "1.20.0.220"
 description = "A discord.py extension including useful tools for bot development and debugging."
 category = "main"
 optional = false
@@ -383,12 +383,31 @@ security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
 socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 
 [[package]]
+name = "riftgun"
+version = "1.1.0"
+description = "A new module for providing easy remote support with discord bots"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "six"
 version = "1.15.0"
 description = "Python 2 and 3 compatibility utilities"
 category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
+name = "tabulate"
+version = "0.8.7"
+description = "Pretty-print tabular data"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+widechars = ["wcwidth"]
 
 [[package]]
 name = "toml"
@@ -461,7 +480,7 @@ requests = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.8.*"
-content-hash = "3e4502f5d8288cdcf60cc1921cd1363e4ea6b1cc098e57505c3aaf9eae14ea0f"
+content-hash = "5ac7095b862cedaf841ee9a0b7488ed3c52ab942af38723684429c58fca60cd7"
 
 [metadata.files]
 aiofiles = [
@@ -590,12 +609,12 @@ isort = [
     {file = "isort-5.6.4.tar.gz", hash = "sha256:dcaeec1b5f0eca77faea2a35ab790b4f3680ff75590bfcb7145986905aab2f58"},
 ]
 jishaku = [
-    {file = "jishaku-1.20.0.1-py3-none-any.whl", hash = "sha256:c37296a9fa5a3253c81bad98c695b2ccd5ce3bbe08e6ef7c21a1a906e5002c04"},
-    {file = "jishaku-1.20.0.1-py3.6.egg", hash = "sha256:80282c92b10119d71794966929fbd0448d9a2426ca64c6c46d85cc52317f258f"},
-    {file = "jishaku-1.20.0.1-py3.7.egg", hash = "sha256:6691584646e6352d70a4c79a0f5db395da9b5dd2375182deb6a07a185eaf5b6c"},
-    {file = "jishaku-1.20.0.1-py3.8.egg", hash = "sha256:1db5df9ee3c294b8791e291ae4d4b7f2c58ae2bd3e5c1e020c3a96fa5979bb87"},
-    {file = "jishaku-1.20.0.1-py3.9.egg", hash = "sha256:9ea4c45852427b9514eec29fad7faa253bcaabe0464d138d60866b6b70349290"},
-    {file = "jishaku-1.20.0.1.tar.gz", hash = "sha256:acd2857c053e25a72203d560fed1f2782ed7f5895466a6f53f1ba8d9b8961d3e"},
+    {file = "jishaku-1.20.0.220-py3-none-any.whl", hash = "sha256:2ced3fb5b5d3c82cd9e938591eb5867da06f8acefd71450a044d7e79e17e04d9"},
+    {file = "jishaku-1.20.0.220-py3.6.egg", hash = "sha256:2075e8aa8c6b24b0691df2471146b9a6a2285685639f27cb78f29bc5c4eca56b"},
+    {file = "jishaku-1.20.0.220-py3.7.egg", hash = "sha256:af565758d5ec2ab97df497bc3cd840b71660c58f66fb31d6042ce425f41849a5"},
+    {file = "jishaku-1.20.0.220-py3.8.egg", hash = "sha256:fbe6e9160df5688538becea0c32558ddccbd026cd0820cd83122c3419ec4625b"},
+    {file = "jishaku-1.20.0.220-py3.9.egg", hash = "sha256:ba4cdab5eb3893b213d0aaf82e711665d6dedab3182c6c071507f22ec7f981ff"},
+    {file = "jishaku-1.20.0.220.tar.gz", hash = "sha256:eb6d2e2fc9d4f89ca98d20be7487b3354ae745e0cf14e234d31df573054bcf9e"},
 ]
 lazy-object-proxy = [
     {file = "lazy-object-proxy-1.4.3.tar.gz", hash = "sha256:f3900e8a5de27447acbf900b4750b0ddfd7ec1ea7fbaf11dfa911141bc522af0"},
@@ -704,9 +723,16 @@ requests = [
     {file = "requests-2.25.0-py2.py3-none-any.whl", hash = "sha256:e786fa28d8c9154e6a4de5d46a1d921b8749f8b74e28bde23768e5e16eece998"},
     {file = "requests-2.25.0.tar.gz", hash = "sha256:7f1a0b932f4a60a1a65caa4263921bb7d9ee911957e0ae4a23a6dd08185ad5f8"},
 ]
+riftgun = [
+    {file = "riftgun-1.1.0.tar.gz", hash = "sha256:10c08d39e808bf69a4df785acccf703b4d3e5a313f7498c20fa94133c54d80d2"},
+]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
     {file = "six-1.15.0.tar.gz", hash = "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"},
+]
+tabulate = [
+    {file = "tabulate-0.8.7-py3-none-any.whl", hash = "sha256:ac64cb76d53b1231d364babcd72abbb16855adac7de6665122f97b593f1eb2ba"},
+    {file = "tabulate-0.8.7.tar.gz", hash = "sha256:db2723a20d04bcda8522165c73eea7c300eda74e0ce852d9022e0159d7895007"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},

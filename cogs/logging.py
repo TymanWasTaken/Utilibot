@@ -4,33 +4,10 @@ from datetime import datetime
 
 utils = dpytils.utils()
 
-async def readDB():
-	async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
-		return json.loads(await f.read())
-
-async def writeDB(data: dict):
-	async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f_main:
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json.bak', mode='w') as f_bak:
-			await f_bak.write(await f_main.read())
-	async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='w') as f:
-		d = json.dumps(data)
-		await f.write(d)
-
-async def islogenabled(guild, log):
-	db = await readDB()
-	if not guild:
-		return False
-	if str(guild.id) not in db["logs"]:
-		return False
-	if log not in db["logs"][str(guild.id)]:
-		return False
-	else:
-		return db["logs"][str(guild.id)][log]
-
-
 class Logging(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+		self.getlogs = getlogs
 		self.logs = {
 		"messages":["edit", "delete", "purge"],
 		"users":["nickname", "userroles", "status", "activity", "username", "discriminator", "avatar", "ban", "unban"],
@@ -41,19 +18,46 @@ class Logging(commands.Cog):
 		}
 		self.log_flat = {x for v in self.logs.values() for x in v}
 
+	async def islogenabled(guild, log):
+		if not guild:
+			return False
+		db = await self.bot.dbquery("logging", "guildid=" + str(guild.id))
+		if len(db) < 1:
+			return False
+		data = json.loads(db[0][1])
+		if log not in data:
+			return False
+		else:
+			return data[log]
+
+	async def getlogs(guild):
+		if not guild:
+			return None
+		db = await self.bot.dbquery("logging", "guildid=" + str(guild.id))
+		if len(db) < 1:
+			return None
+		data = json.loads(db[0][1])
+		return data
+
+	async def setlogs(guild, data):
+		if not guild:
+			return None
+		await self.bot.dbexec(("INSERT INTO logging VALUES (?, ?)", (guild.id, json.dumps(data))))
+
 	@commands.group(invoke_without_command=True)
 	@commands.has_permissions(manage_guild=True)
+	@commands.guild_only()
 	async def log(self, ctx):
 		"""
 		Shows logging settings for the current server.
 		"""
-		db = await readDB()
-		if str(ctx.guild.id) not in db["logs"]:
-			db["logs"][str(ctx.guild.id)] = {}
-		for log in list(db["logs"][str(ctx.guild.id)]):
+		db = await getlogs(ctx.guild)
+		if db == None:
+			db = {}
+		for log in list(db):
 			if log not in self.log_flat:
-				db["logs"][str(ctx.guild.id)].pop(log)
-		await writeDB(db)
+				db.pop(log)
+		await setlogs(ctx.guild, db)
 		logs = ""
 		for log in sorted(self.log_flat):
 			logs += f"{'✅' if await islogenabled(ctx.guild, log) else '❌'} {log}\n"
@@ -69,11 +73,11 @@ Enabled logs:
 		"""
 		if log not in self.log_flat:
 			return await ctx.send("Not a valid log.")
-		db = await readDB()
-		if str(ctx.guild.id) not in db["logs"]:
-			db["logs"][str(ctx.guild.id)] = {}
-		db["logs"][str(ctx.guild.id)][log] = True
-		await writeDB(db)
+		db = await getlogs(ctx.guild)
+		if db == None:
+			db = {}
+		db[log] = True
+		await setlogs(ctx.guild, db)
 		await ctx.send(f"Enabled log {log}")
 
 	@log.command()
@@ -84,11 +88,11 @@ Enabled logs:
 		"""
 		if log not in self.log_flat:
 			return await ctx.send("Not a valid log.")
-		db = await readDB()
-		if str(ctx.guild.id) not in db["logs"]:
-			db["logs"][str(ctx.guild.id)] = {}
-		db["logs"][str(ctx.guild.id)][log] = False
-		await writeDB(db)
+		db = await getlogs(ctx.guild)
+		if db == None:
+			db = {}
+		db[log] = False
+		await setlogs(ctx.guild, db)
 		await ctx.send(f"Disabled log {log}")
 
 	@log.command()
@@ -278,8 +282,7 @@ Enabled logs:
 				if not await islogenabled(guild, "avatar"):
 					return
 				embed.title="Avatar Updated"
-				embed.description = f"[Avatar Link]({after.avatar_url})"
-				embed.add_field(name="After:", value=f"[Link]({after.avatar_url})", inline=False)
+				embed.description(f"[Avatar Link]({after.avatar_url})", inline=False)
 				embed.set_thumbnail(url=after.avatar_url)
 			await logchannel.send(embed=embed)
 
@@ -339,16 +342,273 @@ Enabled logs:
 		embed=discord.Embed(title="🔓 Member Unbanned", description=f"📄lmao work in progress", color=5496236, timestamp=datetime.now())
 		await logchannel.send(embed=embed)
 
-# #Server Update
-# 	@commands.Cog.listener()
-# 	async def on_guild_update(self, before, after):
-#		if not await islogenabled(before, "serverupdates"):
-#			return
-# 		logchannel = discord.utils.get(before.text_channels, name="utilibot-logs")
-# 		if logchannel == None:
-# 			return
-# 		embed=discord.Embed(title="✏️ Guild Updated", description="lmao work in progress", color=0x1184ff, timestamp=datetime.now())
-# 		await logchannel.send(embed=embed)
+#Server Update
+	@commands.Cog.listener()
+	async def on_guild_update(self, before, after):
+		if not await islogenabled(before, "serverupdates"):
+			return
+		logchannel = discord.utils.get(before.text_channels, name="utilibot-logs")
+		if logchannel == None:
+			return
+		embed=discord.Embed(title="✏️ Guild Updated", color=0x1184ff, timestamp=datetime.now())
+		if before.name != after.name:
+			embed.set_thumbnail(before.icon_url)
+			embed.title="Server Name Changed"
+			embed.add_field(name="Before:", value=before.name, inline=False)
+			embed.add_field(name="After:", value=after.name, inline=False)
+		elif before.icon_url != after.icon_url:
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
+		elif embed.title == embed.Empty:
+			return
+		await logchannel.send(embed=embed)
 
 	# @commands.Cog.listener()
 	# async def on_guild_emojis_update(self, guild, before, after):
