@@ -7,7 +7,6 @@ utils = dpytils.utils()
 class Logging(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.getlogs = getlogs
 		self.logs = {
 		"messages":["edit", "delete", "purge"],
 		"users":["nickname", "userroles", "status", "activity", "username", "discriminator", "avatar", "ban", "unban"],
