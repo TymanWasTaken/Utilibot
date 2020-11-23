@@ -256,7 +256,7 @@ for file in sorted(glob.glob("cogs/*.py")):
 		print(f"\033[1mCog {file} failed to load.\n{e}\033[0m")
 # bot.load_extension("riftgun")
 
-disabled_commands = ['mute']
+disabled_commands = ['mute', 'log']
 
 for cmd in disabled_commands:
 	try: bot.get_command(cmd).update(enabled=False)
