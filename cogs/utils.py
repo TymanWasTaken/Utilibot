@@ -206,7 +206,7 @@ class Utils(commands.Cog):
 			discord.UserFlags.partner: f"{self.bot.get_emoji(778489162847879179)} Discord partner",
 			discord.UserFlags.verified_bot_developer: f"{self.bot.get_emoji(778489155977216050)} Early verified bot developer",
 			discord.UserFlags.staff: f"{self.bot.get_emoji(778489158221955103)} Discord staff",
-			discord.UserFlags.hypesquad_bravery: f"{self.bot.get_emoji(778489151288246273)} Hypesqaud bravery",
+			discord.UserFlags.hypesquad_bravery: f"{self.bot.get_emoji(778489151288246273)} Hypesquad bravery",
 			discord.UserFlags.hypesquad_brilliance: f"{self.bot.get_emoji(778489152228163604)} Hypesquad brilliance",
 			discord.UserFlags.hypesquad_balance: f"{self.bot.get_emoji(778489153405845544)} Hypesquad balance",
 			discord.UserFlags.hypesquad: f"{self.bot.get_emoji(778489154585362442)} Hypesquad events",
