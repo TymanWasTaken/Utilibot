@@ -38,7 +38,7 @@ async def runcode(code, ctx):
 	variables = {
 		"author": ccAuthor,
 		"message": ccMessage,
-		"channel": ccChannel,,
+		"channel": ccChannel,
 		"guild": ccGuild
 	}
 	for line in lines:
