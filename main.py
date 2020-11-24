@@ -212,7 +212,12 @@ async def on_message(message):
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
 		await message.channel.send("no")
 	if re.match('(?i)(\s|^)f($|\s)', message.content):
-		await message.channel.send(f"{message.author.mention} has paid their respects.")
+		db = await bot.dbquery("pressf", f"channelid={message.channel.id}")
+		if len(db) < 1:
+			pass
+		else:
+			if db[0][1] == "true":
+				await message.channel.send(f"{message.author.mention} has paid their respects.")
 	if message.webhook_id != None and message.mention_everyone:
 		webhook_guilds = [693225390130331661, 755887706386726932]
 		if message.guild.id in webhook_guilds:
