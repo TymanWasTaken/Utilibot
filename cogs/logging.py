@@ -225,7 +225,7 @@ Enabled logs:
 				embed.title="Role Added"
 			elif len(before.roles) > len(after.roles):
 				embed.title="Role Removed"
-			embed.description=f"{n.join([r.mention for r in set(before.roles) ^ set(after.roles)])}" # yeah, probably will get reset when changing it later though because the code does not format it # oh rip lmao
+			embed.description=f"{n.join([r.mention for r in set(before.roles) ^ set(after.roles)])}"
 		elif before.status != after.status:
 			if not await self.islogenabled(before.guild, "status"):
 				return
@@ -295,7 +295,7 @@ Enabled logs:
 		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
-		embed=discord.Embed(timestamp=datetime.now(), color=)
+		embed=discord.Embed(timestamp=datetime.now(), color=2937504)
 		embed.set_author(name=f"Member Joined {ctx.guild.name}", icon_url=member.avatar_url)
 		embed.set_footer(text=f"{member} joined", icon_url=member.guild.avatar_url)
 		embed.add_field(name="User Info", value=f"""
