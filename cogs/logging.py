@@ -361,7 +361,7 @@ Enabled logs:
 		await logchannel.send(embed=embed)
 
 #Ban/Unban
-			embed.set_image(image=after.icon_url)
+		embed.set_image(image=after.icon_url)
 		if embed.title == embed.Empty:
 			return
 		await logchannel.send(embed=embed)
