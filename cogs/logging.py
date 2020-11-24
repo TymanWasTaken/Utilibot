@@ -281,7 +281,7 @@ Enabled logs:
 				if not await self.islogenabled(guild, "avatar"):
 					return
 				embed.title="Avatar Updated"
-				embed.description(f"[Avatar Link]({after.avatar_url})", inline=False)
+				embed.description = f"[Avatar Link]({after.avatar_url})"
 				embed.set_thumbnail(url=after.avatar_url)
 			await logchannel.send(embed=embed)
 

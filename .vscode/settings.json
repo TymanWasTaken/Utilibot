@@ -1,5 +1,5 @@
 {
-	"python.pythonPath": "C:\\Program Files (x86)\\Python36-32\\python.exe",
+	"python.pythonPath": "/home/tyman/.cache/pypoetry/virtualenvs/utilibot-9RZ7yNPF-py3.8/bin/python3.8",
 	"cSpell.words": [
 		"Unbans",
 		"aiocron",
