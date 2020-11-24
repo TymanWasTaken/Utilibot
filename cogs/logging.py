@@ -390,7 +390,7 @@ Enabled logs:
 			return
 		embed=discord.Embed(title="✏️ Guild Updated", color=0x1184ff, timestamp=datetime.now())
 		if before.name != after.name:
-			embed.set_thumbnail(before.icon_url)
+			embed.set_thumbnail(url=before.icon_url)
 			embed.title="Server Name Changed"
 			embed.add_field(name="Before:", value=before.name, inline=False)
 			embed.add_field(name="After:", value=after.name, inline=False)
