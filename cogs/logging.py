@@ -425,7 +425,7 @@ Enabled logs:
 			embed.add_field(name="Before:", value=f"Position: {before.position}")
 			embed.add_field(name="After:", value=f"Position: {after.position}")
 		elif before.permissions != after.permissions:
-			embed.add_field(name="Before:", value=f"Permissions: {dict(before.permissions) }")
+			embed.add_field(name="Before:", value=f"Permissions: {dict(before.permissions)}")
 			embed.add_field(name="After:", value=f"Permissions: {dict(after.permissions)}")
 			embed.add_field(name="NOTE:", value="This log is a work in progress, eventually it will show which permissions changed :)", inline=False)
 		await logchannel.send(embed=embed)
