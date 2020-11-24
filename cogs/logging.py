@@ -3,6 +3,8 @@ from discord.ext import commands
 from datetime import datetime
 
 utils = dpytils.utils()
+yes = bot.get_emoji(778489135870377994)
+no = bot.get_emoji(778489134741979186)
 
 class Logging(commands.Cog):
 	def __init__(self, bot):
@@ -64,7 +66,7 @@ class Logging(commands.Cog):
 		await self.setlogs(ctx.guild, db)
 		logs = ""
 		for log in sorted(self.log_flat):
-			logs += f"{'✅' if await self.islogenabled(ctx.guild, log) else '❌'} {log}\n"
+			logs += f"{yes if await self.islogenabled(ctx.guild, log) else no} {log}\n"
 		await ctx.send(f"""
 Enabled logs:
 {logs}""")
@@ -411,16 +413,8 @@ Enabled logs:
 			embed.add_field(name="Before:", value=f"Name: {before.name}")
 			embed.add_field(name="After:", value=f"Name: {after.name}")
 		elif before.hoist != after.hoist:
-			yes = bot.get_emoji(778489135870377994)
-			no = bot.get_emoji(778489134741979186)
-			bhoist = yes
-			ahoist = yes
-			if before.hoist == False:
-				bhoist = no
-			if after.hoist == False:
-				ahoist = no
-			embed.add_field(name="Before:", value=f"Displayed Separately?: {bhoist}")
-			embed.add_field(name="After:", value=f"Displayed Separately?: {ahoist}")
+			embed.add_field(name="Before:", value=f"Displayed Separately?: {yes if before.hoist else no}")
+			embed.add_field(name="After:", value=f"Displayed Separately?: {yes if after.hoist else no}")
 		elif before.position != after.position:
 			embed.add_field(name="Before:", value=f"Position: {before.position}")
 			embed.add_field(name="After:", value=f"Position: {after.position}")
