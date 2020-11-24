@@ -1,4 +1,4 @@
-import discord, dpytils, postbin, aiofiles, json, typing, unicodedata
+import discord, dpytils, postbin, aiofiles, json, typing, unicodedata, aiosqlite
 from discord.ext import commands
 from datetime import datetime
 
@@ -41,7 +41,11 @@ class Logging(commands.Cog):
 	async def setlogs(self, guild, data):
 		if not guild:
 			return None
-		await self.bot.dbexec(("INSERT INTO logging VALUES (?, ?)", (guild.id, json.dumps(data))))
+		try:
+			await self.bot.dbexec(("INSERT INTO logging VALUES (?, ?)", (guild.id, json.dumps(data))))
+		except aiosqlite.IntegrityError:
+			await self.bot.dbexec(("DELETE FROM logging WHERE guildid=?", (guild.id,)))
+			await self.bot.dbexec(("INSERT INTO logging VALUES (?, ?)", (guild.id, json.dumps(data))))
 
 	@commands.group(invoke_without_command=True)
 	@commands.has_permissions(manage_guild=True)
@@ -100,12 +104,12 @@ Enabled logs:
 		"""
 		Enable all of the logs.
 		"""
-		db = await readDB()
-		if str(ctx.guild.id) not in db["logs"]:
-			db["logs"][str(ctx.guild.id)] = {}
+		db = await self.getlogs(ctx.guild)
+		if db == None:
+			db = {}
 		for log in self.log_flat:
-			db["logs"][str(ctx.guild.id)][log] = True
-		await writeDB(db)
+			db[log] = True
+		await self.setlogs(ctx.guild, db)
 		await ctx.send(f"Enabled all logs.")
 
 	@log.command()
@@ -114,12 +118,12 @@ Enabled logs:
 		"""
 		Disable all of the logs.
 		"""
-		db = await readDB()
-		if str(ctx.guild.id) not in db["logs"]:
-			db["logs"][str(ctx.guild.id)] = {}
+		db = await self.getlogs(ctx.guild)
+		if db == None:
+			db = {}
 		for log in self.log_flat:
-			db["logs"][str(ctx.guild.id)][log] = False
-		await writeDB(db)
+			db[log] = False
+		await self.setlogs(ctx.guild, db)
 		await ctx.send(f"Disabled all logs.")
 
 	@commands.Cog.listener()

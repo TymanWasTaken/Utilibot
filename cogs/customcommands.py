@@ -17,12 +17,18 @@ class ccMessage:
 		self.content = obj.message.content
 		self.clean_content = obj.message.clean_content
 		self.id = obj.message.id
+		self.link = obj.jump_url
 
 class ccChannel:
 	def __init__(self, obj):
 		self.id = obj.channel.id
 		self.name = obj.channel.name
 		self.mention = f"<#{obj.channel.id}>"
+
+class ccGuild:
+	def __init__(self, obj):
+		self.id = obj.guild.id
+		self.name = obj.guild.name
 
 # def parseVars
 
@@ -32,7 +38,8 @@ async def runcode(code, ctx):
 	variables = {
 		"author": ccAuthor,
 		"message": ccMessage,
-		"channel": ccChannel,
+		"channel": ccChannel,,
+		"guild": ccGuild
 	}
 	for line in lines:
 		n = "\n"
@@ -53,7 +60,7 @@ async def runcode(code, ctx):
 						attr = getattr(variables[var](ctx), attrRaw)
 					except:
 						return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` is invalid. Variable `${var}.{attrRaw}$` is not a valid variable.", allowed_mentions=nomention)
-					sendText = sendText.replace(f"${var}.{attrRaw}$", attr)
+					sendText = sendText.replace(f"${var}.{attrRaw}$", str(attr))
 			await ctx.send(sendText, allowed_mentions=nomention)
 		elif sendChannelMatch:
 			line = line.replace("\\n", "\n")
@@ -68,7 +75,7 @@ async def runcode(code, ctx):
 						attr = getattr(variables[var](ctx), attrRaw)
 					except:
 						return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` is invalid. Variable `${var}.{attrRaw}$` is not a valid variable.", allowed_mentions=nomention)
-					args[0] = args[0].replace(f"${var}.{attrRaw}$", attr)
+					args[0] = args[0].replace(f"${var}.{attrRaw}$", str(attr))
 				if var in args[1]:
 					varReg = re.search(fr"\${var}\.(.*)\$", args[1])
 					attrRaw = varReg.group(1)
@@ -76,7 +83,7 @@ async def runcode(code, ctx):
 						attr = getattr(variables[var](ctx), attrRaw)
 					except:
 						return await ctx.send(f"Line ```\n{line.replace('`', '​`​').replace(n, nn)}``` is invalid. Variable `${var}.{attrRaw}$` is not a valid variable.", allowed_mentions=nomention)
-					args[1] = args[1].replace(f"${var}.{attrRaw}$", attr)
+					args[1] = args[1].replace(f"${var}.{attrRaw}$", str(attr))
 			try:
 				channel = await commands.TextChannelConverter().convert(ctx, args[0])
 			except commands.ChannelNotFound:
