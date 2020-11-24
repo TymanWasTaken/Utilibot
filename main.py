@@ -211,6 +211,8 @@ async def on_message(message):
 		await message.add_reaction(bot.get_emoji(778489134741979186))
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
 		await message.channel.send("no")
+	if re.match('(?i)(\s|^)f($|\s)', message.content):
+		await message.channel.send(f"{message.author.mention} has paid their respects.")
 	if message.content == "utilibot prefix?" and message.guild:
 		ps = await getPrefix(bot, message)
 		ps_formatted = [f"`{x}`" for x in ps]

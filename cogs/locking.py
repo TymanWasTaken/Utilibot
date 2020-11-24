@@ -19,6 +19,18 @@ async def writeDB(data: dict):
 	except Exception as e:
 		print(f"An error occured, {e}")
 
+async def islockable(guild, channel):
+	if not guild:
+		return False
+	db = await self.bot.dbquery("server_hardlockable_channels", "guildid=" + str(guild.id))
+	if len(db) < 1:
+		return False
+	data = json.loads(db[0][1])
+	if channel not in data:
+		return False
+	else:
+		return data[channel]
+
 class Locking(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot

@@ -75,6 +75,22 @@ class Utils(commands.Cog):
 			embed.add_field(name="Couldn't Delete:", value=((", ".join(failed)) or "None"))
 		await ctx.send(embed=embed)
 
+	@commands.command(name="servername", aliases=['sname', 'guildname', 'gname'])
+	@commands.has_permissions(manage_guild=True)
+	@commands.guild_only()
+	async def guildname(self, ctx, *, newname):
+		"""
+		Changes the server's name.
+		"""
+		oldname = ctx.guild.name
+		if len(newname) > 100:
+			await ctx.send("This name is too long! Server names must be between 2 and 100 characters.")
+		elif len(newname) < 2:
+			await ctx.send("This name is too short! Server names must be between 2 and 100 characters.")
+		else:
+			await ctx.guild.edit(name=newname, reason=(f"Server name changed by {ctx.author} ({ctx.author.id})"))
+			await ctx.send(f"Changed the server's name!\nBefore: `{oldname}`\nAfter: `{ctx.guild.name}`")
+
 	@commands.command(name="rolemembers", aliases=['members'])
 	@commands.guild_only()
 	async def rolemembers(self, ctx, *, role: discord.Role):
@@ -421,18 +437,23 @@ class Utils(commands.Cog):
 	async def setnick(self, ctx, member: discord.Member, *, newnick=None):
 		mem = member or ctx.author
 		oldnick = member.nick
-		if mem.top_role >= ctx.guild.me.top_role:
-			await ctx.send("I can't change this user's nickname as their highest role is above mine!")
-		elif len(newnick) > 32:
-			await ctx.send("This nickname is too long! It must be 32 characters or less.")
-		elif ctx.author.id == mem.id:
+		if ctx.author.id != mem.id and (getattr(ctx.author.guild_permissions, "manage_nicknames") == False):
+			await ctx.send("You don't have permissions to change other users' nicknames!")
+		elif ctx.author.id != mem.id and (getattr(ctx.author.guild_permissions, "manage_nicknames") == True):
+			if mem.top_role >= ctx.guild.me.top_role:
+				await ctx.send("I can't change this user's nickname as their highest role is above mine!")
+			elif mem.top_role >= ctx.author.top_role:
+				await ctx.send("You can't change this user's nickname as their highest role is above yours!")
+			elif (newnick != None) and (len(newnick) > 32):
+				await ctx.send("This nickname is too long! It must be 32 characters or less.")
+			else:
+				await mem.edit(nick=newnick, reason=f"Nickname changed from {oldnick} to {mem.nick} by {ctx.author} ({ctx.author.id})!")
+				await ctx.send(f"Changed {mem.mention}'s nickname from `{oldnick}` to `{mem.nick}`")
+		elif ctx.author.id == mem.id and (getattr(ctx.author.guild_permissions, "change_nickname") == False):
+			await ctx.send("You don't have permission to change your nickname!")
+		elif ctx.author.id == mem.id and (getattr(ctx.author.guild_permissions, "change_nickname") == True):
 			await mem.edit(nick=newnick, reason=f"User changed their nickname from {oldnick} to {newnick}")
 			await ctx.send(f"Changed your nickname from `{oldnick}` to `{mem.nick}`!")
-		elif mem.top_role >= ctx.author.top_role:
-			await ctx.send("You can't change this user's nickname as their highest role is above yours!")
-		else:
-			await mem.edit(nick=newnick, reason=f"Nickname changed from {oldnick} to {mem.nick} by {ctx.author} ({ctx.author.id})!")
-			await ctx.send(f"Changed {mem.mention}'s nickname from `{oldnick}` to `{mem.nick}`")
 
 	@commands.command(aliases=["tr"])
 	async def translate(self, ctx, lang, *, text):

@@ -1,4 +1,4 @@
-import discord, random
+import discord, random, typing
 from discord.ext import commands
 
 class Fun(commands.Cog):
@@ -15,7 +15,7 @@ class Fun(commands.Cog):
 	@commands.command()
 	async def say(self, ctx, *, message: commands.clean_content(fix_channel_mentions=True)):
 		"""
-		Says what you tell it to, self-explanitory
+		Says what you tell it to, self-explanatory.
 		"""
 		await ctx.message.delete()
 		await ctx.send(message)
@@ -40,6 +40,14 @@ class Fun(commands.Cog):
 	@commands.command(hidden=True)
 	async def dogs(self, ctx):
 		await ctx.send("https://media.discordapp.net/attachments/499750909190864918/776309869946208266/unknown.png")
+
+	@commands.command(name="pressf", aliases=['enablepressf', 'pressfenable', 'pf'])
+	@commands.has_permissions(manage_messages=True)
+	async def pressf(self, ctx, channel: typing.Optional[discord.TextChannel]):
+		"""
+		Toggle to enable/disable the `Press F` autoresponse in a channel. Defaults to current channel.
+		"""
+		await ctx.send("doesn't do anything until clari figures out sql :joy: press f to pay respects autoresponse will be always enabled for the time being.")
 
 def setup(bot):
 	bot.add_cog(Fun(bot))

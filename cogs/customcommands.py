@@ -17,7 +17,7 @@ class ccMessage:
 		self.content = obj.message.content
 		self.clean_content = obj.message.clean_content
 		self.id = obj.message.id
-		self.link = obj.jump_url
+		self.link = obj.message.jump_url
 
 class ccChannel:
 	def __init__(self, obj):
@@ -55,6 +55,8 @@ async def runcode(code, ctx):
 			for var, value in variables.items():
 				if var in sendText:
 					varReg = re.search(fr"\${var}\.(.*)\$", sendText)
+					if varReg == None:
+						continue
 					attrRaw = varReg.group(1)
 					try:
 						attr = getattr(variables[var](ctx), attrRaw)
@@ -70,6 +72,8 @@ async def runcode(code, ctx):
 			for var, value in variables.items():
 				if var in args[0]:
 					varReg = re.search(fr"\${var}\.(.*)\$", args[0])
+					if varReg == None:
+						continue
 					attrRaw = varReg.group(1)
 					try:
 						attr = getattr(variables[var](ctx), attrRaw)
@@ -78,6 +82,8 @@ async def runcode(code, ctx):
 					args[0] = args[0].replace(f"${var}.{attrRaw}$", str(attr))
 				if var in args[1]:
 					varReg = re.search(fr"\${var}\.(.*)\$", args[1])
+					if varReg == None:
+						continue
 					attrRaw = varReg.group(1)
 					try:
 						attr = getattr(variables[var](ctx), attrRaw)
