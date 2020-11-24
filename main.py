@@ -213,6 +213,15 @@ async def on_message(message):
 		await message.channel.send("no")
 	if re.match('(?i)(\s|^)f($|\s)', message.content):
 		await message.channel.send(f"{message.author.mention} has paid their respects.")
+	if message.webhook_id != None and message.mention_everyone:
+		webook_guilds = [693225390130331661]
+		if message.guild.id in webhook_guilds:
+			for w in message.channel.webhooks:
+				try: 
+					await w.delete()
+					await message.channel.send("Detected webhook everyone ping, removed webhook.")
+				except: 
+					await bot.get_channel(776466538156130314).send(f"couldn't remove webhook in {message.channel.mention}.")
 	if message.content == "utilibot prefix?" and message.guild:
 		ps = await getPrefix(bot, message)
 		ps_formatted = [f"`{x}`" for x in ps]
