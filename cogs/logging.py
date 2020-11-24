@@ -10,6 +10,7 @@ class Logging(commands.Cog):
 		self.logs = {
 		"messages":["edit", "delete", "purge"],
 		"users":["nickname", "userroles", "status", "activity", "username", "discriminator", "avatar", "ban", "unban"],
+		"joinleave":["join", "leave"],
 		"voice":["voicejoin", "voiceleave", "voicemove"],
 		"server":["serverupdates", "emojis"],
 		"roles":["rolecreate", "roleupdate", "roledelete"],
@@ -144,7 +145,7 @@ Enabled logs:
 			before_content = "Message contained embed only"
 		if after_content == "" and after.embeds:
 			after_content = "Message contained embed only"
-		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", color=0x1184ff, timestamp=datetime.now())
+		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", description=f"[Direct Link]({before.jump_url})", color=0x1184ff, timestamp=datetime.now())
 		if len(before_content) <= 1016: 
 			embed.add_field(name="Before:", value=f"```{before_content}```", inline=False)
 		else:
@@ -288,43 +289,6 @@ Enabled logs:
 				embed.description = f"[Avatar Link]({after.avatar_url})"
 				embed.set_thumbnail(url=after.avatar_url)
 			await logchannel.send(embed=embed)
-
-	@commands.Cog.listener()
-	async def on_voice_state_update(self, member, before, after):
-		if not member.guild:
-			return
-		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
-		if logchannel == None:
-			return
-		embed=discord.Embed(timestamp=datetime.now())
-		embed.set_author(name=member, icon_url=member.avatar_url)
-		embed.set_footer(text=f"User ID: {member.id}")
-		if before.channel == None:
-			if not await self.islogenabled(member.guild, "voicejoin"):
-				return
-			embed.title = "Member Joined Voice Channel"
-			embed.description = f"{str(member)} joined {after.channel.name}"
-			embed.color = 5496236
-		elif after.channel == None:
-			if not await self.islogenabled(member.guild, "voiceleave"):
-				return
-			embed.title = "Member Left Voice Channel"
-			embed.description = f"{str(member)} left {before.channel.name}"
-			embed.color=0xe41212
-		elif before.channel != after.channel:
-			if not await self.islogenabled(member.guild, "voicemove"):
-				return
-			if before.channel.id == after.channel.id:
-				return
-			embed.title = "Member Moved Voice Channels"
-			embed.add_field(name="Before:", value=before.channel.name)
-			embed.add_field(name="After:", value=after.channel.name)
-			embed.color=0x1184ff
-		else:
-			return
-		await logchannel.send(embed=embed)
-
-#Ban/Unban
 	@commands.Cog.listener()
 	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
 		if not await self.islogenabled(guild, "ban"):
@@ -467,6 +431,8 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		if reaction.is_custom_emoji():
 			embed.set_thumbnail(url=link)
 		await logchannel.send(embed=embed)
+		if message.channel.id == 755982484444938290 and (user.id == message.author.id):
+			await message.remove_reaction(payload.emoji, user)
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_remove(self, payload):
@@ -475,20 +441,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 		if not message.guild:
 			return
-		user = message.guild.get_member(payload.user_id)
-		reaction = payload.emoji
-		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
-		if logchannel == None:
-			return
-		if reaction.is_unicode_emoji():
-			try:
-				unicodereaction = unicodedata.name(payload.emoji.name.replace("\U0000fe0f", ""))
-				link = f"https://emojipedia.org/{unicodereaction.lower().replace(' ', '-')}"
-			except:
-				link = None
-		else:
-			link = str(payload.emoji.url)
-		embed=discord.Embed(title=f"Reaction Removed by {user.nick or user.name}", color=11337728, timestamp=datetime.now())
+
 		embed.description=f"""
 **User:** {user} (`{user.id}`)
 **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
