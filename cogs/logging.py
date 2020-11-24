@@ -411,12 +411,14 @@ Enabled logs:
 			embed.add_field(name="Before:", value=f"Name: {before.name}")
 			embed.add_field(name="After:", value=f"Name: {after.name}")
 		elif before.hoist != after.hoist:
-			bhoist = ":white_check_mark:"
-			ahoist = ":white_check_mark:"
+			yes = bot.get_emoji(778489135870377994)
+			no = bot.get_emoji(778489134741979186)
+			bhoist = yes
+			ahoist = yes
 			if before.hoist == False:
-				bhoist = ":x:"
+				bhoist = no
 			if after.hoist == False:
-				ahoist = ":x:"
+				ahoist = no
 			embed.add_field(name="Before:", value=f"Displayed Separately?: {bhoist}")
 			embed.add_field(name="After:", value=f"Displayed Separately?: {ahoist}")
 		elif before.position != after.position:
