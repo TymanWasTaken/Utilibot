@@ -289,6 +289,77 @@ Enabled logs:
 				embed.description = f"[Avatar Link]({after.avatar_url})"
 				embed.set_thumbnail(url=after.avatar_url)
 			await logchannel.send(embed=embed)
+
+	@commands.Cog.listener()
+	async def on_member_join(self, member):
+		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
+		if logchannel == None:
+			return
+		embed=discord.Embed(timestamp=datetime.now(), color=2937504)
+		embed.set_author(name=f"Member Joined {guild.name}", icon_url=member.avatar_url)
+		embed.set_footer(text=f"{member} joined", icon_url=member.guild.icon_url)
+		embed.add_field(name="User Info", value=f"""
+		Ping: {member.mention}
+		Username: [{user}](https://discord.com/users/{user.id})
+		User ID: {user.id}""", inline=False)
+		embed.add_field(name="Account Info", value=f"""
+		Account Created on: {member.created_at}
+		Account Age: {datetime.now() - member.created_at}""", inline=False)
+		await logchannel.send(embed=embed)
+
+	@commands.Cog.listener()
+	async def on_member_remove(self, member):
+		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
+		if logchannel == None:
+			return
+		embed=discord.Embed(timestamp=datetime.now(), color=10354688)
+		embed.set_author(name=f"Member Left {guild.name}", icon_url=member.avatar_url)
+		embed.set_footer(text=f"{member} left", icon_url=member.guild.icon_url)
+		embed.add_field(name="User Info", value=f"""
+		Ping: {member.mention}
+		Username: [{user}](https://discord.com/users/{user.id})
+		User ID: {user.id}""", inline=False)
+		embed.add_field(name="Account Info", value=f"""
+		Account Created on: {member.created_at}
+		Account Age: {datetime.now() - member.created_at}""", inline=False)
+		await logchannel.send(embed=embed)
+
+	@commands.Cog.listener()
+	async def on_voice_state_update(self, member, before, after):
+		if not member.guild:
+			return
+		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
+		if logchannel == None:
+			return
+		embed=discord.Embed(timestamp=datetime.now())
+		embed.set_author(name=member, icon_url=member.avatar_url)
+		embed.set_footer(text=f"User ID: {member.id}")
+		if before.channel == None:
+			if not await self.islogenabled(member.guild, "voicejoin"):
+				return
+			embed.title = "Member Joined Voice Channel"
+			embed.description = f"{str(member)} joined {after.channel.name}"
+			embed.color = 5496236
+		elif after.channel == None:
+			if not await self.islogenabled(member.guild, "voiceleave"):
+				return
+			embed.title = "Member Left Voice Channel"
+			embed.description = f"{str(member)} left {before.channel.name}"
+			embed.color=0xe41212
+		elif before.channel != after.channel:
+			if not await self.islogenabled(member.guild, "voicemove"):
+				return
+			if before.channel.id == after.channel.id:
+				return
+			embed.title = "Member Moved Voice Channels"
+			embed.add_field(name="Before:", value=before.channel.name)
+			embed.add_field(name="After:", value=after.channel.name)
+			embed.color=0x1184ff
+		else:
+			return
+		await logchannel.send(embed=embed)
+
+#Ban/Unban
 	@commands.Cog.listener()
 	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
 		if not await self.islogenabled(guild, "ban"):
