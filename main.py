@@ -214,7 +214,7 @@ async def on_message(message):
 	if re.match('(?i)(\s|^)f($|\s)', message.content):
 		await message.channel.send(f"{message.author.mention} has paid their respects.")
 	if message.webhook_id != None and message.mention_everyone:
-		webook_guilds = [693225390130331661]
+		webhook_guilds = [693225390130331661, 755887706386726932]
 		if message.guild.id in webhook_guilds:
 			for w in message.channel.webhooks:
 				try: 
