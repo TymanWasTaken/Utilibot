@@ -411,8 +411,14 @@ Enabled logs:
 			embed.add_field(name="Before:", value=f"Name: {before.name}")
 			embed.add_field(name="After:", value=f"Name: {after.name}")
 		elif before.hoist != after.hoist:
-			embed.add_field(name="Before:", value=f"Displayed Separately?: {if before.hoist == True: ':white_check_mark' else: ':x:'}")
-			embed.add_field(name="After:", value=f"Displayed Separately?: {if after.hoist == True: ':white_check_mark' else: ':x:'}")
+			bhoist = ":white_check_mark:"
+			ahoist = ":white_check_mark:"
+			if before.hoist == False:
+				bhoist = ":x:"
+			if after.hoist == False:
+				ahoist = ":x:"
+			embed.add_field(name="Before:", value=f"Displayed Separately?: {bhoist}")
+			embed.add_field(name="After:", value=f"Displayed Separately?: {ahoist}")
 		elif before.position != after.position:
 			embed.add_field(name="Before:", value=f"Position: {before.position}")
 			embed.add_field(name="After:", value=f"Position: {after.position}")
