@@ -82,7 +82,7 @@ Enabled logs:
 			db = {}
 		db[log] = True
 		await self.setlogs(ctx.guild, db)
-		await ctx.send(f"Enabled log {log}")
+		await ctx.send(f"Enabled log `{log}`")
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
@@ -97,7 +97,7 @@ Enabled logs:
 			db = {}
 		db[log] = False
 		await self.setlogs(ctx.guild, db)
-		await ctx.send(f"Disabled log {log}")
+		await ctx.send(f"Disabled log `{log}`")
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
@@ -295,9 +295,9 @@ Enabled logs:
 		logchannel = discord.utils.get(member.guild.text_channels, name="utilibot-logs")
 		if logchannel == None:
 			return
-		embed=discord.Embed(timestamp=datetime.now(), color=2937504)
-		embed.set_author(name=f"Member Joined {guild.name}", icon_url=member.avatar_url)
-		embed.set_footer(text=f"{member} joined", icon_url=member.guild.icon_url)
+		embed=discord.Embed(timestamp=datetime.now(), color=)
+		embed.set_author(name=f"Member Joined {ctx.guild.name}", icon_url=member.avatar_url)
+		embed.set_footer(text=f"{member} joined", icon_url=member.guild.avatar_url)
 		embed.add_field(name="User Info", value=f"""
 		Ping: {member.mention}
 		Username: [{user}](https://discord.com/users/{user.id})
@@ -313,7 +313,7 @@ Enabled logs:
 		if logchannel == None:
 			return
 		embed=discord.Embed(timestamp=datetime.now(), color=10354688)
-		embed.set_author(name=f"Member Left {guild.name}", icon_url=member.avatar_url)
+		embed.set_author(name=f"Member Left {ctx.guild.name}", icon_url=member.avatar_url)
 		embed.set_footer(text=f"{member} left", icon_url=member.guild.icon_url)
 		embed.add_field(name="User Info", value=f"""
 		Ping: {member.mention}
@@ -323,6 +323,7 @@ Enabled logs:
 		Account Created on: {member.created_at}
 		Account Age: {datetime.now() - member.created_at}""", inline=False)
 		await logchannel.send(embed=embed)
+
 
 	@commands.Cog.listener()
 	async def on_voice_state_update(self, member, before, after):
@@ -360,43 +361,6 @@ Enabled logs:
 		await logchannel.send(embed=embed)
 
 #Ban/Unban
-	@commands.Cog.listener()
-	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
-		if not await self.islogenabled(guild, "ban"):
-			return
-		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
-		if logchannel == None:
-			return
-		embed=discord.Embed(title="🔨 Member Banned", description="📄lmao work in progress", color=0xe41212, timestamp=datetime.now())
-		await logchannel.send(embed=embed)
-
-	@commands.Cog.listener()
-	async def on_member_unban(self, guild, user):
-		if not await self.islogenabled(guild, "unban"):
-			return
-		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
-		if logchannel == None:
-			return
-		embed=discord.Embed(title="🔓 Member Unbanned", description=f"📄lmao work in progress", color=5496236, timestamp=datetime.now())
-		await logchannel.send(embed=embed)
-
-#Server Update
-	@commands.Cog.listener()
-	async def on_guild_update(self, before, after):
-		if not await self.islogenabled(before, "serverupdates"):
-			return
-		logchannel = discord.utils.get(before.text_channels, name="utilibot-logs")
-		if logchannel == None:
-			return
-		embed=discord.Embed(title="✏️ Guild Updated", color=0x1184ff, timestamp=datetime.now())
-		if before.name != after.name:
-			embed.set_thumbnail(url=before.icon_url)
-			embed.title="Server Name Changed"
-			embed.add_field(name="Before:", value=before.name, inline=False)
-			embed.add_field(name="After:", value=after.name, inline=False)
-		elif before.icon_url != after.icon_url:
-			embed.title="Server Icon Changed"
-			embed.description=f"[Link to New Icon]({after.icon_url})"
 			embed.set_image(image=after.icon_url)
 		if embed.title == embed.Empty:
 			return
@@ -447,8 +411,15 @@ Enabled logs:
 			embed.add_field(name="Before:", value=f"Name: {before.name}")
 			embed.add_field(name="After:", value=f"Name: {after.name}")
 		elif before.hoist != after.hoist:
-			embed.add_field(name="Before:", value=f"Displayed Separately?: {before.hoist}")
-			embed.add_field(name="After:", value=f"Displayed Separately?: {after.name}")
+			embed.add_field(name="Before:", value=f"Displayed Separately?: {if before.hoist == True: ':white_check_mark' else: ':x:'}")
+			embed.add_field(name="After:", value=f"Displayed Separately?: {if after.hoist == True: ':white_check_mark' else: ':x:'}")
+		elif before.position != after.position:
+			embed.add_field(name="Before:", value=f"Position: {before.position}")
+			embed.add_field(name="After:", value=f"Position: {after.position}")
+		elif before.permissions != after.permissions:
+			embed.add_field(name="Before:", value=f"Permissions: {dict(before.permissions) }")
+			embed.add_field(name="After:", value=f"Permissions: {dict(after.permissions)}")
+			embed.add_field(name="NOTE:", value="This log is a work in progress, eventually it will show which permissions changed :)", inline=False)
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
@@ -464,7 +435,6 @@ Color: {role.color}
 Mentionable: {role.mentionable}
 Displayed separately: {role.hoist}
 Position: {role.position}
-Number of Members with Role: {len(role.members)}
 Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		embed.set_footer(text=f"Role ID: {role.id}")
 		await logchannel.send(embed=embed)
@@ -509,6 +479,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 	async def on_raw_reaction_remove(self, payload):
 		if not await self.islogenabled(self.bot.get_guild(payload.guild_id), "reactionremove"):
 			return
+		user = message.guild.get_member(payload.user_id)
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 		if not message.guild:
 			return
