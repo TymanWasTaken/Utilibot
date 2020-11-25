@@ -4,6 +4,8 @@ from datetime import datetime
 
 utils = dpytils.utils()
 
+just a thing to stop this from loading because aaaaaaaaa logspam
+
 class Logging(commands.Cog):
 	def __init__(self, bot):
 		self.yes = bot.get_emoji(778489135870377994)
