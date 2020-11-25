@@ -69,8 +69,7 @@ class Debug(commands.Cog):
 		for dbname in dbs:
 			dbname = dbname[0]
 			dbinfo = await self.bot.dbquery(f"pragma_table_info('{dbname}')")
-			dbinfo = dbinfo[0]
-			embed.add_field(name=dbname, value="\n".join(f"Column {dbinfo[0]}: {dbinfo[1]} {dbinfo[2]}"))
+			embed.add_field(name=dbname, value="\n".join([f"Column {i[0]}: {i[1]} {i[2]}" for i in dbinfo]))
 		await ctx.send(embed=embed)
 
 	@commands.command()
