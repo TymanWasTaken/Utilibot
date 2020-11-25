@@ -512,23 +512,20 @@ class Utils(commands.Cog):
 						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
 
 	@commands.Cog.listener()
-	async def on_reaction_add(self, reaction, user):
-		if reaction.emoji == "📣":
-			ch = reaction.message.channel
+	async def on_raw_reaction_add(self, payload):
+		if payload.emoji == "📣":
+			ch = payload.channel
 			if ch.type != discord.ChannelType.news:
-				er = await reaction.message.channel.send(f"<#{ch.id}> is not an announcement channel!")
+				er = await payload.channel.send(f"<#{ch.id}> is not an announcement channel!")
 				await er.delete(delay=5)
 			else:
-				msg = await ch.fetch_message(reaction.message.id)
+				msg = await ch.fetch_message(payload.message.id)
 				try:
 					await msg.publish()
+					await ch.send(f"Sucessfully published <{msg.jump_url}>!", delete_after=5)
 				except discord.HTTPException:
-					pass
-				conf = await reaction.message.channel.send(f"Sucessfully published <https://discord.com/channels/{msg.guild.id}/{ch.id}/{msg.id}>!")
-				await conf.delete(delay=5)
+					await ch.send(f"Couldn't publish <{msg.jump_url}>.")
 
 def setup(bot):
-	cog = Utils(bot)
-	bot.add_listener(cog.on_reaction_add)
-	bot.add_cog(cog)
+	bot.add_cog(Utils(bot))
 	print('[UtilsCog] Utils cog loaded')

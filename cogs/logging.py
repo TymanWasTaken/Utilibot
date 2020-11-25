@@ -457,11 +457,12 @@ class Logging(commands.Cog):
 			embed.add_field(name="Before:", value=f"Displayed Separately?: {self.yes if before.hoist else self.no}")
 			embed.add_field(name="After:", value=f"Displayed Separately?: {self.yes if after.hoist else self.no}")
 		elif before.position != after.position:
-			embed.add_field(name="Before:", value=f"Position: {before.position}")
-			embed.add_field(name="After:", value=f"Position: {after.position}")
+			pass
+#			embed.add_field(name="Before:", value=f"Position: {before.position}")
+#			embed.add_field(name="After:", value=f"Position: {after.position}")
 		elif before.permissions != after.permissions:
-			embed.add_field(name="Before:", value=f"Permissions: {dict(before.permissions)}")
-			embed.add_field(name="After:", value=f"Permissions: {dict(after.permissions)}")
+#			embed.add_field(name="Before:", value=f"Permissions: {dict(before.permissions)}")
+#			embed.add_field(name="After:", value=f"Permissions: {dict(after.permissions)}")
 			embed.add_field(name="NOTE:", value="This log is a work in progress, eventually it will show which permissions changed :)", inline=False)
 		await logchannel.send(embed=embed)
 
@@ -497,12 +498,12 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482, timestamp=datetime.now())
 		if reaction.is_unicode_emoji():
 			try:
-				unicodereaction = unicodedata.name(payload.emoji.name.replace("\U0000fe0f", ""))
+				unicodereaction = unicodedata.name(reaction.name.replace("\U0000fe0f", ""))
 				link = f"https://emojipedia.org/{unicodereaction.lower().replace(' ', '-')}"
 			except:
 				link = None
 		else:
-			link = str(payload.emoji.url)
+			link = str(reaction.url)
 		embed.description=f"""
 **User:** {user} (`{user.id}`)
 **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
@@ -516,17 +517,29 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 			embed.set_thumbnail(url=link)
 		await logchannel.send(embed=embed)
 		if message.channel.id == 755982484444938290 and (user.id == message.author.id):
-			await message.remove_reaction(payload.emoji, user)
+			await message.remove_reaction(reaction, user)
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_remove(self, payload):
 		if not await self.islogenabled(self.bot.get_guild(payload.guild_id), "reactionremove"):
 			return
-		user = message.guild.get_member(payload.user_id)
 		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+		user = message.guild.get_member(payload.user_id)
+		reaction = payload.emoji
 		if not message.guild:
 			return
-
+		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
+		if logchannel == None:
+			return
+		if reaction.is_unicode_emoji():
+			try:
+				unicodereaction = unicodedata.name(reaction.name.replace("\U0000fe0f", ""))
+				link = f"https://emojipedia.org/{unicodereaction.lower().replace(' ', '-')}"
+			except:
+				link = None
+		else:
+			link = str(reaction.url)
+		embed=discord.Embed(title=f"Reaction Removed by {user.nick or user.name}", color=11337728, timestamp=datetime.now())
 		embed.description=f"""
 **User:** {user} (`{user.id}`)
 **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
