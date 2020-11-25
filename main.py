@@ -196,6 +196,8 @@ async def on_error(event, *args, **kwargs):
 	{tb}```
 	""".replace("	", ""))
 
+fReg = re.compile(r'(?:\s|^)f|F(?:$|\s|\.)')
+
 @bot.event
 async def on_message(message):
 	if not message.guild:
@@ -211,13 +213,10 @@ async def on_message(message):
 		await message.add_reaction(bot.get_emoji(778489134741979186))
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
 		await message.channel.send("no")
-	if re.match('(?i)(\s|^)f($|\s)', message.content):
+	if fReg.search(message.content):
 		db = await bot.dbquery("pressf", f"channelid={message.channel.id}")
-		if len(db) < 1:
-			pass
-		else:
-			if db[0][1] == "true":
-				await message.channel.send(f"{message.author.mention} has paid their respects.")
+		if not len(db) < 1 and db[0][1] == "true":
+			await message.channel.send(f"{message.author.mention} has paid their respects.")
 	if message.webhook_id != None and message.mention_everyone:
 		webhook_guilds = [693225390130331661, 755887706386726932]
 		if message.guild.id in webhook_guilds:
