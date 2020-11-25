@@ -1,9 +1,16 @@
-import discord, random, typing
+import discord, random, typing, json
 from discord.ext import commands
 
 class Fun(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+
+	async def fcheck(self, channel):
+		db = await self.bot.dbquery("pressf", "channelid=" + str(channel.id))
+		if len(db) < 1:
+			return None
+		data = json.loads(db[0][1])
+		return data
 
 	@commands.command()
 	async def hello(self, ctx):
@@ -47,7 +54,15 @@ class Fun(commands.Cog):
 		"""
 		Toggle to enable/disable the `Press F` autoresponse in a channel. Defaults to current channel.
 		"""
-		await ctx.send("doesn't do anything until clari figures out sql :joy: press f to pay respects autoresponse will be always disabled for the time being.")
+		ch = channel or ctx.channel
+		action = "Enabled"
+		if await self.fcheck(ch) == True:
+			await self.bot.dbexec(f"DELETE FROM pressf WHERE channelid={ctx.channel.id}")
+			action = "Disabled"
+		elif await self.fcheck(ch) == None: 
+			await self.bot.dbexec(("INSERT INTO pressf VALUES (?, ?)", (ch.id, "true")))
+		await ctx.send(f"{action} `Press F` autoresponse!")
+		#await ctx.send("doesn't do anything until clari figures out sql :joy: press f to pay respects autoresponse will be always disabled for the time being.")
 
 def setup(bot):
 	bot.add_cog(Fun(bot))
