@@ -46,6 +46,18 @@ async def query(table, condition=None):
 		async with db.execute(f"SELECT * FROM {table}{ ' WHERE ' + condition if condition != None else ''}") as cursor:
 			return await cursor.fetchall()
 
+async def dbinsert(table, values, params=None):
+	if not isinstance(values, tuple):
+		raise TypeError("Parameter \"values\" must be a tuple.")
+	if not isinstance(params, tuple) and params != None:
+		raise TypeError("Parameter \"params\" must be a tuple.")
+	async with aiosqlite.connect('data.db') as db:
+		if params != None:
+			await db.execute(f"INSERT INTO {table} VALUES ({','.join(values)})")
+		else:
+			await db.execute(f"INSERT INTO {table} VALUES ({','.join(values)})", params)
+		await db.commit()
+
 async def dbexec(*sqls):
 	for sql in sqls:
 		if not isinstance(sql, tuple) and not isinstance(sql, str):
@@ -94,11 +106,9 @@ async def setPrefix(ctx, prefix):
 bot = commands.Bot(command_prefix=getPrefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
 
 bot.setPrefix = setPrefix
-
 bot.dbquery = query
-
 bot.dbexec = dbexec
-
+bot.dbinsert = dbinsert
 bot.utils = dpytils.utils()
 
 class BlacklistedError(commands.CommandError):
