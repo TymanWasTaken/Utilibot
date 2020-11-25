@@ -41,9 +41,9 @@ async def getprefixes(bot, message):
 
 # sqlite, used
 
-async def query(table, condition=None):
+async def query(table, value="*" condition=None):
 	async with aiosqlite.connect('data.db') as db:
-		async with db.execute(f"SELECT * FROM {table}{ ' WHERE ' + condition if condition != None else ''}") as cursor:
+		async with db.execute(f"SELECT {value} FROM {table}{ ' WHERE ' + condition if condition != None else ''}") as cursor:
 			return await cursor.fetchall()
 
 async def dbinsert(table, values, params=None):
