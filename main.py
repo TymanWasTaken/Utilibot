@@ -223,7 +223,7 @@ async def on_message(message):
 		await message.add_reaction(bot.get_emoji(778489134741979186))
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
 		await message.channel.send("no")
-	if re.match(r"(\A|^|\s)f(\z|$|\s)", message.content):
+	if re.match(r"(\A|^|\s)f($|\s)", message.content):
 		db = await bot.dbquery("pressf", f"channelid={message.channel.id}")
 		if not len(db) < 1 and db[0][1] == "true":
 			await message.channel.send(f"{message.author.mention} has paid their respects.")
