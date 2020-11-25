@@ -236,7 +236,7 @@ async def on_message(message):
 					await message.channel.send("Detected webhook everyone ping, removed webhook.")
 				except: 
 					await bot.get_channel(776466538156130314).send(f"couldn't remove webhook in {message.channel.mention}.")
-	if message.content == f"<@{bot.user.id}>" or message.content == f"<@!{bot.user.id}>")
+	if message.content == f"<@{bot.user.id}>" or message.content == f"<@!{bot.user.id}>":
 		ps = await getPrefix(bot, message)
 		ps_formatted = [f"`{x}`" for x in ps]
 		ps_formatted.remove(f"`<@{bot.user.id}> `")
