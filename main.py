@@ -206,7 +206,7 @@ async def on_error(event, *args, **kwargs):
 	{tb}```
 	""".replace("	", ""))
 
-fReg = re.compile(r"(^|\s)f($|\s)", flags=[re.I, re.M])
+fReg = re.compile(r"(^|\s)f($|\s)", flags=(re.IGNORECASE|re.MULTILINE))
 
 @bot.event
 async def on_message(message):
