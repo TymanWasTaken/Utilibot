@@ -223,7 +223,7 @@ async def on_message(message):
 		await message.add_reaction(bot.get_emoji(778489134741979186))
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
 		await message.channel.send("no")
-	if re.match(r"(\A|^|\s)f($|\s)", message.content):
+	if fReg.match(message.content):
 		db = await bot.dbquery("pressf", f"channelid={message.channel.id}")
 		if not len(db) < 1 and db[0][1] == "true":
 			await message.channel.send(f"{message.author.mention} has paid their respects.")
@@ -236,7 +236,7 @@ async def on_message(message):
 					await message.channel.send("Detected webhook everyone ping, removed webhook.")
 				except: 
 					await bot.get_channel(776466538156130314).send(f"couldn't remove webhook in {message.channel.mention}.")
-	if message.content == (f"<@{bot.user.id}>" or f"<@!{bot.user.id}>")
+	if message.content == f"<@{bot.user.id}>" or message.content == f"<@!{bot.user.id}>")
 		ps = await getPrefix(bot, message)
 		ps_formatted = [f"`{x}`" for x in ps]
 		ps_formatted.remove(f"`<@{bot.user.id}> `")
