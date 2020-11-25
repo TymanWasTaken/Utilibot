@@ -367,7 +367,44 @@ class Logging(commands.Cog):
 		await logchannel.send(embed=embed)
 
 #Ban/Unban
-		embed.set_image(image=after.icon_url)
+	@commands.Cog.listener()
+	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
+		if not await self.islogenabled(guild, "ban"):
+			return
+		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
+		if logchannel == None:
+			return
+		embed=discord.Embed(title="🔨 Member Banned", description="📄lmao work in progress", color=0xe41212, timestamp=datetime.now())
+		await logchannel.send(embed=embed)
+
+	@commands.Cog.listener()
+	async def on_member_unban(self, guild, user):
+		if not await self.islogenabled(guild, "unban"):
+			return
+		logchannel = discord.utils.get(guild.text_channels, name="utilibot-logs")
+		if logchannel == None:
+			return
+		embed=discord.Embed(title="🔓 Member Unbanned", description=f"📄lmao work in progress", color=5496236, timestamp=datetime.now())
+		await logchannel.send(embed=embed)
+
+#Server Update
+	@commands.Cog.listener()
+	async def on_guild_update(self, before, after):
+		if not await self.islogenabled(before, "serverupdates"):
+			return
+		logchannel = discord.utils.get(before.text_channels, name="utilibot-logs")
+		if logchannel == None:
+			return
+		embed=discord.Embed(title="✏️ Guild Updated", color=0x1184ff, timestamp=datetime.now())
+		if before.name != after.name:
+			embed.set_thumbnail(url=before.icon_url)
+			embed.title="Server Name Changed"
+			embed.add_field(name="Before:", value=before.name, inline=False)
+			embed.add_field(name="After:", value=after.name, inline=False)
+		elif before.icon_url != after.icon_url:
+			embed.title="Server Icon Changed"
+			embed.description=f"[Link to New Icon]({after.icon_url})"
+			embed.set_image(image=after.icon_url)
 		if embed.title == embed.Empty:
 			return
 		await logchannel.send(embed=embed)
