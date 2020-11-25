@@ -4,7 +4,7 @@ from datetime import datetime
 
 utils = dpytils.utils()
 
-just a thing to stop this from loading because aaaaaaaaa logspam
+#just a thing to stop this from loading because aaaaaaaaa logspam
 
 class Logging(commands.Cog):
 	def __init__(self, bot):
@@ -87,10 +87,13 @@ class Logging(commands.Cog):
 			return await ctx.send("Not a valid log.")
 		db = await self.getlogs(ctx.guild)
 		if db == None:
-			db = {}
-		db[log] = True
-		await self.setlogs(ctx.guild, db)
-		await ctx.send(f"Enabled log `{log}`")
+			db = {}	
+		if db[log] == True:
+			await ctx.send(f"`{log}` is already enabled!")
+		else: 
+			db[log] = True
+			await self.setlogs(ctx.guild, db)
+			await ctx.send(f"Enabled log `{log}`")
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
@@ -103,9 +106,12 @@ class Logging(commands.Cog):
 		db = await self.getlogs(ctx.guild)
 		if db == None:
 			db = {}
-		db[log] = False
-		await self.setlogs(ctx.guild, db)
-		await ctx.send(f"Disabled log `{log}`")
+		if db[log] == False:
+			await ctx.send(f"`{log}` is already disabled!")
+		else: 
+			db[log] = False
+			await self.setlogs(ctx.guild, db)
+			await ctx.send(f"Disabled log `{log}`")
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
@@ -235,12 +241,14 @@ class Logging(commands.Cog):
 				embed.title="Role Removed"
 			embed.description=f"{n.join([r.mention for r in set(before.roles) ^ set(after.roles)])}"
 		elif before.status != after.status:
+			return
 			if not await self.islogenabled(before.guild, "status"):
 				return
 			embed.title="Status Changed"
 			embed.add_field(name="Before:", value=f"`{before.status}`")
 			embed.add_field(name="After:", value=f"`{after.status}`")
 		elif before.activity != after.activity:
+			return
 			if not await self.islogenabled(before.guild, "activity"):
 				return
 			embed.title="Activity Changed"
@@ -555,22 +563,21 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 			embed.set_thumbnail(url=link)
 		await logchannel.send(embed=embed)
 
-#	@commands.Cog.listener()
-#	async def on_raw_reaction_clear(self, payload):
-#		if not await self.islogenabled(self.bot.get_guild(payload.guild_id), "reactionclear"):
-#			return
-#		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
-#		user = message.guild.get_member(payload.user_id)
-#		reactions = payload.emojis
-#		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
-#		embed=discord.Embed(title="Reactions Cleared", color=0xa50003, timestamp=datetime.now())
-#		embed.description=f"""
-#**Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
-#**Author:** {message.author} (`{message.author.id}`)
-#**Message Sent At:** {message.created_at}
-#**Reactions Cleared:** {reactions.join(" ")} (`{reactions.join("` `")}`)
-#"""
-#		await logchannel.send(embed=embed)
+	@commands.Cog.listener()
+	async def on_reaction_clear(self, message, reactions):
+		if not await self.islogenabled(self.bot.get_guild(payload.guild_id), "reactionclear"):
+			return
+		reactlist = ", ".join(reactions)
+		rawreactlist = "`, `".join(reactions)
+		logchannel = discord.utils.get(message.guild.text_channels, name="utilibot-logs")
+		embed=discord.Embed(title="Reactions Cleared", color=0xa50003, timestamp=datetime.now())
+		embed.description=f"""
+**Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
+**Author:** {message.author} (`{message.author.id}`)
+**Message Sent At:** {message.created_at}
+**Reactions Cleared:** {reactlist} || {rawreactlist}
+"""
+		await logchannel.send(embed=embed)
 
 
 def setup(bot):

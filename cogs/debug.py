@@ -58,7 +58,7 @@ class Debug(commands.Cog):
 		"""
 		await ctx.send("soon:tm:")
 		
-	@commands.command()
+	@commands.group(invoke_without_command=True)
 	@commands.is_owner()
 	async def dbinfo(self, ctx):
 		"""
@@ -72,6 +72,21 @@ class Debug(commands.Cog):
 			embed.add_field(name=dbname, value="\n".join([f"Column {i[0]}: {i[1]} {i[2]}" for i in dbinfo]))
 		await ctx.send(embed=embed)
 
+	@dbinfo.command()
+	@commands.is_owner()
+	async def query(self, ctx, table, selectfrom, search):
+		tables = [tb[0] for tb in await self.bot.dbquery("sqlite_master", "name", "type=\"table\"")]
+		if table not in tables:
+			return #await 
+		result = await self.bot.dbquery(table, selectfrom, search)
+		embed = discord.Embed(title="Query results")
+		for res in result:
+			pass#await 
+# oh you're literally working on this rn lmao
+# i looked at it like ooh cool command and then tried to run it with a table arg
+# didn't work
+# then tried to jsk reload ~ and it broke on this cog 😂
+# also nice forced error in logging
 	@commands.command()
 	@commands.is_owner()
 	async def git(self, ctx, *, message=""):
