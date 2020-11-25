@@ -31,6 +31,18 @@ async def islockable(guild, channel):
 	else:
 		return data[channel]
 
+class Locking(commands.Cog):
+	def __init__(self, bot):
+		self.bot = bot
+
+# Things that need to be added - shlable db, 'duration' flag/arg
+# Hardlock- Changes perms.
+	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
+	@commands.bot_has_permissions(manage_channels=True)
+	@commands.has_permissions(manage_channels=True)
+	@commands.guild_only()
+	async def hardlock(self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel]=None, *, reason="None given"):
+		"""
 		Locks down a channel by denying @everyone send messages permission.
 		"""
 		ch = channel or ctx.channel
@@ -92,7 +104,7 @@ async def islockable(guild, channel):
 		Locks the entire server by setting all channels' send messages permissions for @everyone to false.
 		"""
 		locked = []
-			m = await ctx.send("Locking server...")
+		m = await ctx.send("Locking server...")
 		for chan in ctx.guild.text_channels:
 			perms = chan.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages != False:
@@ -195,4 +207,4 @@ async def islockable(guild, channel):
 
 def setup(bot):
 	bot.add_cog(Locking(bot))
-	print('[LockingCog] Utils cog loaded')
+	print('[LockingCog] Locking cog loaded')
