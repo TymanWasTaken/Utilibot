@@ -61,8 +61,7 @@ class Fun(commands.Cog):
 			action = "Disabled"
 		elif await self.fcheck(ch) == None: 
 			await self.bot.dbexec(("INSERT INTO pressf VALUES (?, ?)", (ch.id, "true")))
-		await ctx.send(f"{action} `Press F` autoresponse!")
-		#await ctx.send("doesn't do anything until clari figures out sql :joy: press f to pay respects autoresponse will be always disabled for the time being.")
+		await ctx.send(f"{action} `Press F` autoresponse for <#{ch.id}>!")
 
 def setup(bot):
 	bot.add_cog(Fun(bot))
