@@ -47,7 +47,7 @@ class Fun(commands.Cog):
 		"""
 		Toggle to enable/disable the `Press F` autoresponse in a channel. Defaults to current channel.
 		"""
-		await ctx.send("doesn't do anything until clari figures out sql :joy: press f to pay respects autoresponse will be always enabled for the time being.")
+		await ctx.send("doesn't do anything until clari figures out sql :joy: press f to pay respects autoresponse will be always disabled for the time being.")
 
 def setup(bot):
 	bot.add_cog(Fun(bot))
