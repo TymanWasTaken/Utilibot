@@ -10,13 +10,13 @@ class Logging(commands.Cog):
 		self.no = bot.get_emoji(778489134741979186)
 		self.bot = bot
 		self.logs = {
-		"messages":["edit", "delete", "purge"],
-		"users":["nickname", "userroles", "status", "activity", "username", "discriminator", "avatar", "ban", "unban"],
-		"joinleave":["join", "leave"],
-		"voice":["voicejoin", "voiceleave", "voicemove"],
-		"server":["serverupdates", "emojis"],
-		"roles":["rolecreate", "roleupdate", "roledelete"],
-		"reactions":["reactionadd", "reactionremove", "reactionclear"]
+		"Messages":["edit", "delete", "purge"],
+		"Users":["nickname", "userroles", "status", "activity", "username", "discriminator", "avatar", "ban", "unban"],
+		"Join/Leave":["join", "leave"],
+		"Voice":["voicejoin", "voiceleave", "voicemove"],
+		"Server":["serverupdates", "emojis"],
+		"Roles":["rolecreate", "roleupdate", "roledelete"],
+		"Reactions":["reactionadd", "reactionremove", "reactionclear"]
 		}
 		self.log_flat = {x for v in self.logs.values() for x in v}
 
@@ -64,12 +64,16 @@ class Logging(commands.Cog):
 			if log not in self.log_flat:
 				db.pop(log)
 		await self.setlogs(ctx.guild, db)
-		logs = ""
-		for log in sorted(self.log_flat):
-			logs += f"{self.yes if await self.islogenabled(ctx.guild, log) else self.no} `{log}`\n"
-		await ctx.send(f"""
-Enabled logs:
-{logs}""")
+#		logs = ""
+#		for log in sorted(self.log_flat):
+#			logs += f"{self.yes if await self.islogenabled(ctx.guild, log) else self.no} `{log}`\n"
+		embed=discord.Embed(title="Enabled Logs:", color=6666219)
+		for cat in self.logs:
+			logs = ""
+			for log in self.logs[cat]:
+				logs += f"{self.yes if await self.islogenabled(ctx.guild, log) else self.no} `{log}`\n"
+			embed.add_field(name=cat, value=logs, inline=False)
+		await ctx.send(embed=embed)
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
