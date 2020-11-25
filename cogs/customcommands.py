@@ -3,6 +3,11 @@ from discord.ext import commands
 from discord.ext.commands import MemberConverter
 nomention = discord.AllowedMentions(everyone=False, roles=False, users=False)
 
+class dictToClass:
+	def __init__(self, dictionary):
+		for key in dictionary:
+			setattr(self, key, dictionary[key])
+
 class ccAuthor:
 	def __init__(self, obj):
 		self.id = obj.author.id
@@ -106,7 +111,7 @@ async def runcode(code, ctx):
 
 class CustomCommands(commands.Cog):
 	def __init__(self, bot):
-		self.bot = bot			
+		self.bot = bot
 
 	@commands.command()
 	async def run(self, ctx, *, CCcode):
