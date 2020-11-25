@@ -236,6 +236,13 @@ async def on_message(message):
 					await message.channel.send("Detected webhook everyone ping, removed webhook.")
 				except: 
 					await bot.get_channel(776466538156130314).send(f"couldn't remove webhook in {message.channel.mention}.")
+	if message.content == (f"<@{bot.user.id}>" or f"<@!{bot.user.id}>")
+		ps = await getPrefix(bot, message)
+		ps_formatted = [f"`{x}`" for x in ps]
+		ps_formatted.remove(f"`<@{bot.user.id}> `")
+		ps_formatted.remove(f"`<@!{bot.user.id}> `")
+		ps_formatted = str(ps_formatted).replace("[", "").replace("]", "").replace("'", "")
+		await message.channel.send(f"My prefixes in this server are:\n`{ps_formatted}`")
 	if message.content == "utilibot prefix?" and message.guild:
 		ps = await getPrefix(bot, message)
 		ps_formatted = [f"`{x}`" for x in ps]
