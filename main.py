@@ -242,7 +242,8 @@ async def on_message(message):
 		ps_formatted.remove(f"`<@{bot.user.id}> `")
 		ps_formatted.remove(f"`<@!{bot.user.id}> `")
 		ps_formatted = str(ps_formatted).replace("[", "").replace("]", "").replace("'", "")
-		await message.channel.send(f"My prefixes in this server are:\n`{ps_formatted}`")
+		embed = discord.Embed(title=f"Prefixes for the server \"{message.guild.name}\":", description=ps_formatted).set_footer(text="Note: if you ping the bot with a space after the ping but before the command, it will always work as a prefix. For example: \"@Utilibot ping\"")
+		await message.channel.send(embed=embed)
 	if message.content == "utilibot prefix?" and message.guild:
 		ps = await getPrefix(bot, message)
 		ps_formatted = [f"`{x}`" for x in ps]
