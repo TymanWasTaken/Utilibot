@@ -262,7 +262,7 @@ async def on_message(message):
 
 @bot.event
 async def on_command(ctx):
-	if bot.get_command(ctx.command):
+	if bot.get_command(ctx.command) == True:
 		if not ctx.author.bot:
 			db = (await bot.dbquery("turkeyday", "notfirst", "userid=" + str(ctx.author.id)))
 			if not db[0][1] == 'true':
