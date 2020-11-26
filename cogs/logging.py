@@ -168,7 +168,7 @@ class Logging(commands.Cog):
 			return
 #		if not await self.islogenabled(before.guild, "edit"):
 #			return
-		logchannel = await self.getlogchannel(message.guild)
+		logchannel = await self.getlogchannel(before.guild)
 		if logchannel == None:
 			return
 		before_content = before.clean_content.replace('`', '​`​')
