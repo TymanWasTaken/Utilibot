@@ -79,7 +79,7 @@ class Logging(commands.Cog):
 		embed=discord.Embed(title="Enabled Logs:", color=6666219)
 		for cat in self.logs:
 			logs = ""
-			for log in self.logs[cat]:
+			for log in sorted(self.logs[cat]):
 				logs += f"{self.yes if await self.islogenabled(ctx.guild, log) else self.no} `{log}`\n"
 			embed.add_field(name=cat, value=logs, inline=False)
 		embed.add_field(name="Log Channel", value=f"{f'<#{logchannel}>' if logchannel else 'None Set'}")
