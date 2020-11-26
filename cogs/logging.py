@@ -167,14 +167,11 @@ class Logging(commands.Cog):
 		if not before.guild:
 			return
 		if not await self.islogenabled(before.guild, "edit"):
-<<<<<<< HEAD
-=======
 			return
 		logchannel = await self.getlogchannel(before.guild)
 		if before.guild.id == 774443390879793205:
 			logchannel = await self.bot.fetch_webhook(781614888429813771)
 		if logchannel == None:
->>>>>>> 9defdb8d8e55ddf2799e18ca6e29207d82971974
 			return
 		logchannel = await self.getlogchannel(before.guild)
 		if before.guild.id == 774443390879793205:
