@@ -262,6 +262,7 @@ async def on_message(message):
 
 @bot.event
 async def on_command(ctx):
+	await ctx.send('yes sure i\'ll just not work')
 	if bot.get_command(ctx.command):
 		if not user.bot:
 			db = (await bot.dbquery("turkeyday", "notfirst", "userid=" + str(ctx.author.id)))
