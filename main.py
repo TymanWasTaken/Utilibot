@@ -206,7 +206,7 @@ async def on_error(event, *args, **kwargs):
 	{tb}```
 	""".replace("	", ""))
 
-fReg = re.compile(r"(^|\s)f($|\s)", flags=(re.IGNORECASE|re.MULTILINE))
+fReg = re.compile(r"(^|\A|\s)f($|\Z|\s)", flags=(re.IGNORECASE|re.MULTILINE))
 
 @bot.event
 async def on_message(message):
@@ -223,7 +223,7 @@ async def on_message(message):
 		await message.add_reaction(bot.get_emoji(778489134741979186))
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
 		await message.channel.send("no")
-	if fReg.match(message.content):
+	if fReg.search(message.content):
 		db = await bot.dbquery("pressf", "enabled", f"channelid={message.channel.id}")
 		if db:
 			await message.channel.send(f"{message.author.mention} has paid their respects.")
