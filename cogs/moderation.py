@@ -148,12 +148,16 @@ class Moderation(commands.Cog):
 		"""
 		Mutes a member so they cannot speak in the server. This command uses the first role it finds named "muted", ignoring case.
 		"""
-		muterole = next((x for x in ctx.guild.roles if x.name.lower() == "muted"), None) or await ctx.guild.create_role(name="Muted", color=0x757575, reason="Could not automatically detect a role named \"Muted\", so creating one to use.")
+		# sure this is longer, but its easier to read
+		muterole = discord.utils.find(lambda r: r.name.lower() == "muted", ctx.guild.roles) or await ctx.guild.create_role(name="Muted", color=0x757575, reason="Could not automatically detect a role named \"Muted\", so creating one to use.")
+		#muterole = next((x for x in ctx.guild.roles if x.name.lower() == "muted"), None) or await ctx.guild.create_role(name="Muted", color=0x757575, reason="Could not automatically detect a role named \"Muted\", so creating one to use.")
 		member.add_roles(muterole, reason=f"Member muted by {str(ctx.author)}")
-		channels = [x for x in ctx.guild.channels if x.permissions_for(member).send_messages == True]
+		channels = [x for x in ctx.guild.channels if x.permissions_for(member).send_messages]  # whoever is doing this, please stop doing == and != to None, False and True.
+													# None evals to False, so `if True` will work, `if None` or `if False` won't execute that block.
 		if channels != []:
 			await ctx.send(f"I have detected that {str(member)} still has permission to talk in some channels, attempting to apply a fix.")
 			for channel in channels:
+				# consider making this a task rather than waiting for it
 				await channel.set_permissions(muterole, send_messages=False, reason="Applying overwrites for Muted role")
 		await ctx.send(f"Successfully muted {str(member)}.")
 
