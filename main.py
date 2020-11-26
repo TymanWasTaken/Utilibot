@@ -262,7 +262,7 @@ async def on_message(message):
 
 @bot.event
 async def on_command(ctx):
-	if self.bot.get_command(str(ctx.command)) == True:
+	if bot.get_command(str(ctx.command)):
 		if not ctx.author.bot:
 			db = (await bot.dbquery("turkeyday", "notfirst", "userid=" + str(ctx.author.id)))
 			if not db[0][1] == 'true':
@@ -313,7 +313,7 @@ for file in sorted(glob.glob("cogs/*.py")):
 		errlog(f"Cog {file} failed to load.```py\n{tb}```")
 # bot.load_extension("riftgun")
 
-disabled_commands = ['mute']
+disabled_commands = ['mute', 'shl', 'ushl']
 
 for cmd in disabled_commands:
 	try: bot.get_command(cmd).update(enabled=False)
