@@ -134,7 +134,7 @@ async def blacklist_users(ctx):
 @bot.event
 async def on_ready():
 	bot.const_emojis = {}
-	for e in bot.get_guild(778487633205788712):
+	for e in bot.get_guild(778487633205788712).emojis:
 		bot.const_emojis[e.name] = str(e)
 	print(f'Bot logged in as {bot.user}')
 	await bot.get_channel(755979601788010527).send(content=datetime.now().strftime("[%m/%d/%Y %I:%M:%S] ") + "Bot online")
