@@ -1,5 +1,5 @@
 # Imports
-import discord, os, time, glob, postbin, traceback, cogs, importlib, aiofiles, json, textwrap, re, sys, aiosqlite, dpytils, asyncio
+import discord, os, time, glob, postbin, traceback, cogs, importlib, aiofiles, json, textwrap, re, sys, aiosqlite, dpytils
 from datetime import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -41,7 +41,7 @@ async def getprefixes(bot, message):
 
 # sqlite, used
 
-async def query(table, value="*", condition=None):
+async def query(table, value="*", condition=None): await bot.dbquery("logging", "data", "guildid=" + str(ctx.guild.id))
 	async with aiosqlite.connect('data.db') as db:
 		async with db.execute(f"SELECT {value} FROM {table}{ ' WHERE ' + condition if condition != None else ''}") as cursor:
 			return await cursor.fetchall()
@@ -259,14 +259,19 @@ async def on_message(message):
 		await message.channel.send("As this is a dm channel, there is no prefix. Just say the name of the command and it will run. For example, `ping`.")
 	else:
 		await bot.process_commands(message)
-		if not (await bot.dbquery("turkeyday", "notfirst", "userid=" + str(message.author.id))):
-			embed=discord.Embed(title=":turkey: Happy Turkey Day! :turkey:", description="To those of you in the United States, we wish you a happy Thanksgiving. What are you going to give thanks for today? We want to tell you: Thank *you* for choosing Utilibot! Have a great day!", color=0xcb611d)
-			embed.set_author(name="Special Thanksgiving Day message from the Utilibot Development Team")
-			embed.set_footer(text=message.author, icon_url=message.author.avatar_url)
-			await bot.dbexec(f"INSERT INTO turkeyday VALUES ({str(message.author.id)}, 'true')")
-#			await message.channel.send(embed=embed)
 
-
+@bot.event
+async def on_command(ctx):
+	if bot.get_command(ctx.command):
+		if not user.bot:
+			if not (await bot.dbquery("turkeyday", "notfirst", "userid=" + str(ctx.author.id))):
+				embed=discord.Embed(title=":turkey: Happy Turkey Day! :turkey:", description="To those of you in the United States, we wish you a happy Thanksgiving. What are you going to give thanks for today? We want to tell you: Thank *you* for choosing Utilibot! Have a great day!", color=0xcb611d)
+				embed.set_author(name="Special Thanksgiving Day message from the Utilibot Development Team")
+				embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
+	#			await bot.dbexec(f"INSERT INTO turkeyday VALUES ({str(ctx.author.id)}, 'true')")
+				await ctx.send(embed=embed)
+	else:
+		await ctx.send("lmao just testing error")
 
 
 @bot.event
@@ -303,8 +308,8 @@ for file in sorted(glob.glob("cogs/*.py")):
 		bot.load_extension(file)
 	except Exception as error:
 		print(f"\033[1mCog {file} failed to load.\n{error}\033[0m")
-		#tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
-		#errlog(f"Cog {file} failed to load.```py\n{tb}```")
+		tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
+		errlog(f"Cog {file} failed to load.```py\n{tb}```")
 # bot.load_extension("riftgun")
 
 disabled_commands = ['mute']
