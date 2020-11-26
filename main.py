@@ -338,3 +338,5 @@ disabled_commands = ['mute']
 for cmd in disabled_commands:
 	try: bot.get_command(cmd).update(enabled=False)
 	except: pass
+
+bot.run(os.getenv("BOT_TOKEN"))
