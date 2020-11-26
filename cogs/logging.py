@@ -166,9 +166,11 @@ class Logging(commands.Cog):
 			return
 		if not before.guild:
 			return
-#		if not await self.islogenabled(before.guild, "edit"):
-#			return
+		if not await self.islogenabled(before.guild, "edit"):
+			return
 		logchannel = await self.getlogchannel(before.guild)
+		if before.guild.id == 774443390879793205:
+			logchannel = await self.bot.fetch_webhook(781614888429813771)
 		if logchannel == None:
 			return
 		before_content = before.clean_content.replace('`', '​`​')
