@@ -280,13 +280,19 @@ async def on_voice_state_update(member, before, after):
 			await vc.disconnect()
 			vc.cleanup()
 """
+
+def errlog(message):
+	asyncio.create_task(bot.get_channel(764333133738541056).send(message))
+
 bot.load_extension("jishaku")
 for file in sorted(glob.glob("cogs/*.py")):
 	file = file.replace(".py", "").replace("/", ".")
 	try:
 		bot.load_extension(file)
-	except Exception as e:
-		print(f"\033[1mCog {file} failed to load.\n{e}\033[0m")
+	except Exception as error:
+		print(f"\033[1mCog {file} failed to load.\n{error}\033[0m")
+		tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
+		errlog(f"Cog {file} failed to load.```py\n{tb}```")
 # bot.load_extension("riftgun")
 
 disabled_commands = ['mute']

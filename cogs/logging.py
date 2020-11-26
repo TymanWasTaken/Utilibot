@@ -18,8 +18,8 @@ class Logging(commands.Cog):
 		"Reactions":["reactionadd", "reactionremove", "reactionclear"]
 		}
 		self.log_flat = {x for v in self.logs.values() for x in v}
-		self.yes = bot.get_emoji(778489135870377994)
-		self.no = bot.get_emoji(778489134741979186)
+		self.yes = f"<:yes:778489135870377994>"
+		self.no = f"<:no:778489134741979186>"
 
 	async def islogenabled(self, guild, log):
 		if not guild:
