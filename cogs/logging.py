@@ -158,7 +158,7 @@ class Logging(commands.Cog):
 			return
 #		if not await self.islogenabled(before.guild, "edit"):
 #			return
-		logchannel = before.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(before.guild.id)))[0][0])
+		logchannel = before.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(before.guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		before_content = before.clean_content.replace('`', '​`​')
@@ -188,7 +188,7 @@ class Logging(commands.Cog):
 			return
 		if not await self.islogenabled(message.guild, "delete"):
 			return
-		logchannel = message.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(message.guild.id)))[0][0])
+		logchannel = message.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(message.guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		if message.clean_content == "":
@@ -206,7 +206,7 @@ class Logging(commands.Cog):
 			return
 		if not await self.islogenabled(exmsg.guild, "purge"):
 			return
-		logchannel = exmsg.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(exmsg.guild.id)))[0][0])
+		logchannel = exmsg.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(exmsg.guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		post = f"{len(messages)} messages deleted in #{exmsg.channel.name} in {exmsg.guild.name}:\n\n"
@@ -220,7 +220,7 @@ class Logging(commands.Cog):
 	async def on_member_update(self, before, after):
 		if not before.guild:
 			return
-		logchannel = before.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(before.guild.id)))[0][0])
+		logchannel = before.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(before.guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
@@ -280,7 +280,7 @@ class Logging(commands.Cog):
 		for guild in self.bot.guilds:
 			if before.id not in [m.id for m in guild.members]:
 				continue
-			logchannel = guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(guild.id)))[0][0])
+			logchannel = guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(guild.id)))[0][0]))
 			if logchannel == None:
 				continue
 			embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
@@ -311,7 +311,7 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
-		logchannel = member.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(member.guild.id)))[0][0])
+		logchannel = member.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(member.guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		if not await self.islogenabled(member.guild, "join"):
@@ -330,7 +330,7 @@ class Logging(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_member_remove(self, member):
-		logchannel = member.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(member.guild.id)))[0][0])
+		logchannel = member.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(member.guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		if not await self.islogenabled(member.guild, "leave"):
@@ -352,7 +352,7 @@ class Logging(commands.Cog):
 	async def on_voice_state_update(self, member, before, after):
 		if not member.guild:
 			return
-		logchannel = member.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(member.guild.id)))[0][0])
+		logchannel = member.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(member.guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		embed=discord.Embed(timestamp=datetime.now())
@@ -388,7 +388,7 @@ class Logging(commands.Cog):
 	async def on_member_ban(self, guild, user: typing.Union[discord.User, discord.Member]):
 		if not await self.islogenabled(guild, "ban"):
 			return
-		logchannel = guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(guild.id)))[0][0])
+		logchannel = guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		embed=discord.Embed(title="🔨 Member Banned", description="📄lmao work in progress", color=0xe41212, timestamp=datetime.now())
@@ -398,7 +398,7 @@ class Logging(commands.Cog):
 	async def on_member_unban(self, guild, user):
 		if not await self.islogenabled(guild, "unban"):
 			return
-		logchannel = guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(guild.id)))[0][0])
+		logchannel = guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		embed=discord.Embed(title="🔓 Member Unbanned", description=f"📄lmao work in progress", color=5496236, timestamp=datetime.now())
@@ -409,7 +409,7 @@ class Logging(commands.Cog):
 	async def on_guild_update(self, before, after):
 		if not await self.islogenabled(before, "serverupdates"):
 			return
-		logchannel = before.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(before.id)))[0][0])
+		logchannel = before.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(before.id)))[0][0]))
 		if logchannel == None:
 			return
 		embed=discord.Embed(title="✏️ Guild Updated", color=0x1184ff, timestamp=datetime.now())
@@ -430,7 +430,7 @@ class Logging(commands.Cog):
 	# async def on_guild_emojis_update(self, guild, before, after):
 #		if not await self.islogenabled(before, "emojis"):
 #			return
-#		logchannel = guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(guild.id)))[0][0])
+#		logchannel = guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(guild.id)))[0][0]))
 	# 	if logchannel == None:
 	# 		return
 	# 	embed=discord.Embed(title="Emoji Updated", description="lmao work in progress", color=0x1184ff, timestamp=datetime.now())
@@ -448,7 +448,7 @@ class Logging(commands.Cog):
 	async def on_guild_role_create(self, role):
 		if not await self.islogenabled(role.guild, "rolecreate"):
 			return
-		logchannel = role.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(role.guild.id)))[0][0])
+		logchannel = role.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(role.guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		embed=discord.Embed(title="➕ Role Created", description=f"Name: {role.name}\nColor: {role.color}", color=role.color, timestamp=datetime.now())
@@ -459,7 +459,7 @@ class Logging(commands.Cog):
 	async def on_guild_role_update(self, before, after):
 		if not await self.islogenabled(before.guild, "roleupdate"):
 			return
-		logchannel = before.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(before.guild.id)))[0][0])
+		logchannel = before.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(before.guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		embed=discord.Embed(title="✏️ Role Updated", color=after.color, timestamp=datetime.now())
@@ -487,7 +487,7 @@ class Logging(commands.Cog):
 	async def on_guild_role_delete(self, role):
 		if not await self.islogenabled(role.guild, "roledelete"):
 			return
-		logchannel = role.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(role.guild.id)))[0][0])
+		logchannel = role.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(role.guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		embed=discord.Embed(title="❌ Role Deleted", description=f"""
@@ -509,7 +509,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 			return
 		user = message.guild.get_member(payload.user_id)
 		reaction = payload.emoji
-		logchannel = message.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(message.guild.id)))[0][0])
+		logchannel = message.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(message.guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		embed=discord.Embed(title=f"Reaction Added by {user.nick or user.name}", color=563482, timestamp=datetime.now())
@@ -545,7 +545,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		reaction = payload.emoji
 		if not message.guild:
 			return
-		logchannel = message.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(message.guild.id)))[0][0])
+		logchannel = message.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(message.guild.id)))[0][0]))
 		if logchannel == None:
 			return
 		if reaction.is_unicode_emoji():
@@ -576,7 +576,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 			return
 		reactlist = ", ".join(reactions)
 		rawreactlist = "`, `".join(reactions)
-		logchannel = message.guild.get_channel((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(message.guild.id)))[0][0])
+		logchannel = message.guild.get_channel(int((await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(message.guild.id)))[0][0]))
 		embed=discord.Embed(title="Reactions Cleared", color=0xa50003, timestamp=datetime.now())
 		embed.description=f"""
 **Message:** [This Message]({message.jump_url}) in {message.channel.mention} (`#{message.channel.name}`)
