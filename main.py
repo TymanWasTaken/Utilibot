@@ -110,44 +110,6 @@ bot.dbquery = query
 bot.dbexec = dbexec
 bot.dbinsert = dbinsert
 bot.utils = dpytils.utils()
-bot.const_emojis = {
-	'no': '<:no:778489134741979186>',
-	'yes': '<:yes:778489135870377994>',
-	'paroot': '<a:paroot:778489137001922591>',
-	'banhammer': '<:banhammer:778489141356658690>',
-	'loading': '<a:loading:778489145524748298>',
-	'online': '<:online:778489146703609896>',
-	'idle': '<:idle:778489147420704789>',
-	'offline': '<:offline:778489148750561292>',
-	'dnd': '<:dnd:778489150148050996>',
-	'bravery': '<:bravery:778489151288246273>',
-	'briliance': '<:briliance:778489152228163604>',
-	'balance': '<:balance:778489153405845544>',
-	'hypesquad_events': '<:hypesquad_events:778489154585362442>',
-	'bot_dev_badge': '<:bot_dev_badge:778489155977216050>',
-	'early_supporter': '<:early_supporter:778489157055414272>',
-	'discord_staff_badge': '<:discord_staff_badge:778489158221955103>',
-	'bug_hunter_badge': '<:bug_hunter_badge:778489159551025162>',
-	'golden_bug_hunter_badge': '<:golden_bug_hunter_badge:778489160080162826>',
-	'bot_tag': '<:bot_tag:778489161027420170>',
-	'verified_bot_tag': '<:verified_bot_tag:778489161627861013>',
-	'new_partner_badge': '<:new_partner_badge:778489162847879179>',
-	'category': '<:category:778489166316175413>',
-	'text_channel': '<:text_channel:778489167649701898>',
-	'voice_channel': '<:voice_channel:778489169000661002>',
-	'locking_lock': '<a:locking_lock:778489170703548437>',
-	'unlocking_lock': '<a:unlocking_lock:778489172833992704>',
-	'nitro': '<:nitro:779954141262774293>',
-	'2moboost': '<:2moboost:779966286426931202>',
-	'24moboost': '<:24moboost:779966418006442004>',
-	'3moboost': '<:3moboost:779966455407706132>',
-	'15moboost': '<:15moboost:779966518352019466>',
-	'6moboost': '<:6moboost:779966584298012683>',
-	'18moboost': '<:18moboost:779966630016581653>',
-	'9moboost': '<:9moboost:779966686614650959>',
-	'12moboost': '<:12moboost:779966734177927209>',
-	'1moboost': '<:1moboost:779966812321349653>'
-}
 
 class BlacklistedError(commands.CommandError):
 	pass
@@ -171,6 +133,9 @@ async def blacklist_users(ctx):
 
 @bot.event
 async def on_ready():
+	bot.const_emojis = {}
+	for e in bot.get_guild(778487633205788712):
+		bot.const_emojis[e.name] = str(e)
 	print(f'Bot logged in as {bot.user}')
 	await bot.get_channel(755979601788010527).send(content=datetime.now().strftime("[%m/%d/%Y %I:%M:%S] ") + "Bot online")
 
