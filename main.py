@@ -41,7 +41,7 @@ async def getprefixes(bot, message):
 
 # sqlite, used
 
-async def query(table, value="*", condition=None): await bot.dbquery("logging", "data", "guildid=" + str(ctx.guild.id)):
+async def query(table, value="*", condition=None):
 	async with aiosqlite.connect('data.db') as db:
 		async with db.execute(f"SELECT {value} FROM {table}{ ' WHERE ' + condition if condition != None else ''}") as cursor:
 			return await cursor.fetchall()
