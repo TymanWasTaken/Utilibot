@@ -264,7 +264,7 @@ async def on_message(message):
 async def on_command(ctx):
 	if not ctx.author.bot:
 		db = (await bot.dbquery("turkeyday", "notfirst", "userid=" + str(ctx.author.id)))
-		if not db[0][0] == 'true':
+		if not db:
 			embed=discord.Embed(title=":turkey: Happy Turkey Day! :turkey:", description="To those of you in the United States, we wish you a happy Thanksgiving. What are you going to give thanks for today? We want to tell you: Thank *you* for choosing Utilibot! Have a great day!", color=0xcb611d)
 			embed.set_author(name="Special Thanksgiving Day message from the Utilibot Development Team")
 			embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
