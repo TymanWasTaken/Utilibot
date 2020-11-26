@@ -57,6 +57,21 @@ class Debug(commands.Cog):
 		Uses pm2 to restart the bot. Will not work if the bot is not hosted with pm2.
 		"""
 		await ctx.send("soon:tm:")
+		await ctx.send("maybe restarting?")
+		print('Received restart command, rebooting.')
+		sys.Restart()
+
+	@commands.command()
+	@commands.is_owner()
+	async def wipedb(self, ctx, table: str, key: str):
+#		try:
+		db = await self.bot.dbquery(table)
+#		except:
+#			return await ctx.send(f"The table `{table}` doesn't exist.")
+		m = await ctx.send(f"Wiping `{table}`...")
+		for i in db:
+			await self.bot.dbexec(f"DELETE FROM {table} WHERE {key}={i[0]}")
+		await m.edit(content=f"{self.bot.const_emojis['yes']}Wiped the `{table}` table.")
 		
 	@commands.group(invoke_without_command=True)
 	@commands.is_owner()
