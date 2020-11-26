@@ -166,13 +166,11 @@ class Logging(commands.Cog):
 			return
 		if not before.guild:
 			return
-#		if not await self.islogenabled(before.guild, "edit"):
-#			return
-		logchannel = await self.getlogchannel(before.guild)
-		if logchannel == None:
+		if not await self.islogenabled(before.guild, "edit"):
 			return
-		before_content = before.clean_content.replace('`', '​`​')
-		after_content = after.clean_content.replace('`', '​`​')
+		logchannel = await self.getlogchannel(before.guild)
+		if before.guild.id == 774443390879793205:
+			logchannel = await self.bot.fetch_webhook(781614888429813771)
 		if before_content == "" and after.embeds:
 			before_content = "Message contained embed only"
 		if after_content == "" and after.embeds:
@@ -199,6 +197,8 @@ class Logging(commands.Cog):
 		if not await self.islogenabled(message.guild, "delete"):
 			return
 		logchannel = await self.getlogchannel(message.guild)
+		if before.guild.id == 774443390879793205:
+			logchannel = await self.bot.fetch_webhook(781614888429813771)
 		if logchannel == None:
 			return
 		if message.clean_content == "":
@@ -217,6 +217,8 @@ class Logging(commands.Cog):
 		if not await self.islogenabled(exmsg.guild, "purge"):
 			return
 		logchannel = await self.getlogchannel(exmsg.guild)
+		if before.guild.id == 774443390879793205:
+			logchannel = await self.bot.fetch_webhook(781614888429813771)
 		if logchannel == None:
 			return
 		post = f"{len(messages)} messages deleted in #{exmsg.channel.name} in {exmsg.guild.name}:\n\n"
@@ -230,8 +232,6 @@ class Logging(commands.Cog):
 	async def on_member_update(self, before, after):
 		if not before.guild:
 			return
-		logchannel = await self.getlogchannel(before.guild)
-		if logchannel == None:
 			return
 		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
 		embed.set_footer(text=f"User ID: {before.id}")
