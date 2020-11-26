@@ -148,6 +148,44 @@ bot.const_emojis = {
 	'12moboost': '<:12moboost:779966734177927209>',
 	'1moboost': '<:1moboost:779966812321349653>'
 }
+
+class BlacklistedError(commands.CommandError):
+	pass
+
+async def is_blacklisted(id: int):
+	# Check if user is owner, if so ignore everthing
+	if id in bot.owner_ids:
+		return False
+	data = await readDB()
+	if id in data["banned_users"]:
+			return True
+	else:
+			return False
+
+@bot.check
+async def blacklist_users(ctx):
+	if await is_blacklisted(ctx.author.id) == True:
+		raise BlacklistedError("I'm sorry, but you have been blacklisted from using this bot.")
+	else:
+		return True
+
+@bot.event
+async def on_ready():
+	print(f'Bot logged in as {bot.user}')
+	await bot.get_channel(755979601788010527).send(content=datetime.now().strftime("[%m/%d/%Y %I:%M:%S] ") + "Bot online")
+
+@bot.event
+async def on_command_error(ctx, error):
+	try:
+		nocommandblacklist = [264445053596991498, 458341246453415947, 735615909884067930]
+		errorchannel = bot.get_channel(764333133738541056)
+		longTextRegex = re.match(r"Command raised an exception: HTTPException: 400 Bad Request \(error code: 50035\): Invalid Form Body\nIn (.+): Must be (\d+) or fewer in length.", str(error))
+		if isinstance(error, commands.TooManyArguments):
+			await ctx.send('Too many arguments')
+		elif isinstance(error, commands.NotOwner):
+			await ctx.send('Nice try, but you are not one of the developers.')
+			await errorchannel.send(f"{ctx.author} tried to run `{ctx.command.qualified_name}`, but they are not owner.")
+		elif isinstance(error, commands.CommandNotFound):
 			if ctx.guild and ctx.guild.id in nocommandblacklist:
 				return
 			await ctx.send(f'`{ctx.message.content}` is not a command, <@{ctx.author.id}>')
@@ -300,5 +338,3 @@ disabled_commands = ['mute']
 for cmd in disabled_commands:
 	try: bot.get_command(cmd).update(enabled=False)
 	except: pass
-
-bot.run(os.getenv("BOT_TOKEN"))
