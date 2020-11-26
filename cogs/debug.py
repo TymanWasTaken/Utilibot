@@ -74,19 +74,20 @@ class Debug(commands.Cog):
 
 	@dbinfo.command()
 	@commands.is_owner()
-	async def query(self, ctx, table, selectfrom, search):
+	async def query(self, ctx, table, search=None):
 		tables = [tb[0] for tb in await self.bot.dbquery("sqlite_master", "name", "type=\"table\"")]
 		if table not in tables:
-			return #await 
-		result = await self.bot.dbquery(table, selectfrom, search)
+			return await ctx.send("Not a valid table.")
+		tableinfo = await self.bot.dbquery(f"pragma_table_info('{table}')")
+		result = await self.bot.dbquery(table=table, condition=search)
 		embed = discord.Embed(title="Query results")
-		for res in result:
-			pass#await 
-# oh you're literally working on this rn lmao
-# i looked at it like ooh cool command and then tried to run it with a table arg
-# didn't work
-# then tried to jsk reload ~ and it broke on this cog 😂
-# also nice forced error in logging
+		for i, res in enumerate(result):
+			nice = []
+			for ii, r in enumerate(res):
+				nice.append(f"{tableinfo[ii][1]}: {r}")
+			embed.add_field(name=f"Result {i+1}", value="\n".join(nice))
+		await ctx.send(embed=embed)
+
 	@commands.command()
 	@commands.is_owner()
 	async def git(self, ctx, *, message=""):

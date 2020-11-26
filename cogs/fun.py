@@ -6,11 +6,11 @@ class Fun(commands.Cog):
 		self.bot = bot
 
 	async def fcheck(self, channel):
-		db = await self.bot.dbquery("pressf", "channelid=" + str(channel.id))
-		if len(db) < 1:
+		db = await self.bot.dbquery("pressf", "enabled", "channelid=" + str(channel.id))
+		if db == 'true':
+			return True
+		else:
 			return None
-		data = json.loads(db[0][1])
-		return data
 
 	@commands.command()
 	async def hello(self, ctx):
@@ -56,10 +56,12 @@ class Fun(commands.Cog):
 		"""
 		ch = channel or ctx.channel
 		action = "Enabled"
-		if await self.fcheck(ch) == True:
-			await self.bot.dbexec(f"DELETE FROM pressf WHERE channelid={ctx.channel.id}")
+		db = await self.bot.dbquery("pressf", "enabled", "channelid=" + str(ch.id))
+		if db:
 			action = "Disabled"
-		elif await self.fcheck(ch) == None: 
+			await self.bot.dbexec((f"DELETE FROM pressf WHERE channelid={ch.id}"))
+		else:
+			await self.bot.dbexec((f"DELETE FROM pressf WHERE channelid={ch.id}"))
 			await self.bot.dbexec(("INSERT INTO pressf VALUES (?, ?)", (ch.id, "true")))
 		await ctx.send(f"{action} `Press F` autoresponse for <#{ch.id}>!")
 
