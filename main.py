@@ -138,6 +138,7 @@ async def on_ready():
 		bot.const_emojis[e.name] = str(e)
 	print(f'Bot logged in as {bot.user}')
 	await bot.get_channel(755979601788010527).send(content=datetime.now().strftime("[%m/%d/%Y %I:%M:%S] ") + "Bot online")
+	await bot.change_presence(activity=discord.Game("with my developers' emotions."))
 
 @bot.event
 async def on_command_error(ctx, error):
