@@ -348,7 +348,7 @@ class Logging(commands.Cog):
 		if not await self.islogenabled(member.guild, "leave"):
 			return
 		embed=discord.Embed(timestamp=datetime.now(), color=10354688)
-		embed.set_author(name=f"Member Left {ctx.guild.name}", icon_url=member.avatar_url)
+		embed.set_author(name=f"Member Left {member.guild.name}", icon_url=member.avatar_url)
 		embed.set_footer(text=f"{member} left", icon_url=member.guild.icon_url)
 		embed.add_field(name="User Info", value=f"""
 		Ping: {member.mention}
