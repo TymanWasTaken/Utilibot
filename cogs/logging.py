@@ -330,15 +330,13 @@ class Logging(commands.Cog):
 		if not await self.islogenabled(member.guild, "join"):
 			return
 		embed=discord.Embed(timestamp=datetime.now(), color=2937504)
-		embed.set_author(name=f"Member Joined {ctx.guild.name}", icon_url=member.avatar_url)
+		embed.set_author(name=f"Member Joined {member.guild.name}", icon_url=member.avatar_url)
 		embed.set_footer(text=f"{member} joined", icon_url=member.guild.icon_url)
 		embed.add_field(name="User Info", value=f"""
 		Ping: {member.mention}
 		Username: [{member}](https://discord.com/users/{member.id})
-		User ID: {member.id}""", inline=False)
-		embed.add_field(name="Account Info", value=f"""
-		Account Created on: {member.created_at}
-		Account Age: {datetime.now() - member.created_at}""", inline=False)
+		User ID: {member.id}""".replace("	", ""), inline=False)
+		embed.add_field(name="Account Info", value=f"Account Created on: {member.created_at.strftime(%c MST)}\nAccount Age: {datetime.now() - member.created_at}", inline=False)
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
@@ -354,10 +352,8 @@ class Logging(commands.Cog):
 		embed.add_field(name="User Info", value=f"""
 		Ping: {member.mention}
 		Username: [{member}](https://discord.com/users/{member.id})
-		User ID: {member.id}""", inline=False)
-		embed.add_field(name="Account Info", value=f"""
-		Account Created on: {member.created_at}
-		Account Age: {datetime.now() - member.created_at}""", inline=False)
+		User ID: {member.id}""".replace("	", ""), inline=False)
+		embed.add_field(name="Account Info", value=f"Account Created on: {member.created_at.strftime(%c MST)}\nAccount Age: {datetime.now() - member.created_at}", inline=False)
 		await logchannel.send(embed=embed)
 
 
