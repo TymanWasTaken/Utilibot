@@ -585,7 +585,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 	@commands.Cog.listener()
 	async def on_reaction_clear(self, message, reactions):
-		if not await self.islogenabled(self.bot.get_guild(payload.guild_id), "reactionclear"):
+		if not await self.islogenabled(self.bot.get_guild(message.guild_id), "reactionclear"):
 			return
 		reactlist = ", ".join(reactions)
 		rawreactlist = "`, `".join(reactions)
