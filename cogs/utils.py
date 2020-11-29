@@ -54,6 +54,7 @@ class Utils(commands.Cog):
 		"""
 		Deletes all invites in the server, pass invite arguments after the command to ignore said invites.
 		"""
+		m = await ctx.send(f"Deleting {guild.name}'s invites...")
 		deleted = []
 		ignored = []
 		failed = []
@@ -73,7 +74,7 @@ class Utils(commands.Cog):
 			embed.add_field(name="Deleted:", value=((", ".join(deleted)) or "None"))
 			embed.add_field(name="Ignored:", value=((", ".join(ignored)) or "None"))
 			embed.add_field(name="Couldn't Delete:", value=((", ".join(failed)) or "None"))
-		await ctx.send(embed=embed)
+		await m.edit(content=None, embed=embed)
 
 	@commands.command(name="servername", aliases=['sname', 'guildname', 'gname'])
 	@commands.has_permissions(manage_guild=True)
