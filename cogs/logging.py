@@ -15,6 +15,7 @@ class Logging(commands.Cog):
 		"Voice":["voicejoin", "voiceleave", "voicemove"],
 		"Server":["serverupdates", "emojis"],
 		"Roles":["rolecreate", "roleupdate", "roledelete"],
+		"Channels":["channelcreate", "channelupdate", "channeldelete"],
 		"Reactions":["reactionadd", "reactionremove", "reactionclear"]
 		}
 		self.log_flat = {x for v in self.logs.values() for x in v}
@@ -330,11 +331,11 @@ class Logging(commands.Cog):
 			return
 		embed=discord.Embed(timestamp=datetime.now(), color=2937504)
 		embed.set_author(name=f"Member Joined {ctx.guild.name}", icon_url=member.avatar_url)
-		embed.set_footer(text=f"{member} joined", icon_url=member.guild.avatar_url)
+		embed.set_footer(text=f"{member} joined", icon_url=member.guild.icon_url)
 		embed.add_field(name="User Info", value=f"""
 		Ping: {member.mention}
-		Username: [{user}](https://discord.com/users/{member.id})
-		User ID: {user.id}""", inline=False)
+		Username: [{member}](https://discord.com/users/{member.id})
+		User ID: {member.id}""", inline=False)
 		embed.add_field(name="Account Info", value=f"""
 		Account Created on: {member.created_at}
 		Account Age: {datetime.now() - member.created_at}""", inline=False)
@@ -352,8 +353,8 @@ class Logging(commands.Cog):
 		embed.set_footer(text=f"{member} left", icon_url=member.guild.icon_url)
 		embed.add_field(name="User Info", value=f"""
 		Ping: {member.mention}
-		Username: [{user}](https://discord.com/users/{member.id})
-		User ID: {user.id}""", inline=False)
+		Username: [{member}](https://discord.com/users/{member.id})
+		User ID: {member.id}""", inline=False)
 		embed.add_field(name="Account Info", value=f"""
 		Account Created on: {member.created_at}
 		Account Age: {datetime.now() - member.created_at}""", inline=False)
