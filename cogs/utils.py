@@ -54,26 +54,26 @@ class Utils(commands.Cog):
 		"""
 		Deletes all invites in the server, pass invite arguments after the command to ignore said invites.
 		"""
-		m = await ctx.send(f"Deleting {ctx.guild.name}'s invites...")
+		if len(await ctx.guild.invites()) < 1:
+			return await ctx.send(f"**{ctx.guild}** has no invites!")
+		else:
+			m = await ctx.send(f"Deleting {ctx.guild}'s invites...")
 		deleted = []
 		ignored = []
 		failed = []
 		embed = discord.Embed(title=f"Bulk Deleted {ctx.guild}'s Invites!")
-		if len(await ctx.guild.invites()) == 0:
-			embed.description=f"{ctx.guild} has no invites!"
-		else:
-			for inv in await ctx.guild.invites():
-				if not inv in ignore:
-					try:
-						await inv.delete(reason=f"Bulk delete by {ctx.author} ({ctx.author.id})")
-						deleted.append(f"`{inv.code}`")
-					except: 
-						failed.append(f"`{inv.code}`")
-				else:
-					ignored.append(f"`{inv.code}`")
-			embed.add_field(name="Deleted:", value=((", ".join(deleted)) or "None"))
-			embed.add_field(name="Ignored:", value=((", ".join(ignored)) or "None"))
-			embed.add_field(name="Couldn't Delete:", value=((", ".join(failed)) or "None"))
+		for inv in await ctx.guild.invites():
+			if not inv in ignore:
+				try:
+					await inv.delete(reason=f"Bulk delete by {ctx.author} ({ctx.author.id})")
+					deleted.append(f"`{inv.code}`")
+				except: 
+					failed.append(f"`{inv.code}`")
+			else:
+				ignored.append(f"`{inv.code}`")
+		embed.add_field(name="Deleted:", value=((", ".join(deleted)) or "None"))
+		embed.add_field(name="Ignored:", value=((", ".join(ignored)) or "None"))
+		embed.add_field(name="Couldn't Delete:", value=((", ".join(failed)) or "None"))
 		await m.edit(content=None, embed=embed)
 
 	@commands.command(name="servername", aliases=['sname', 'guildname', 'gname'])
