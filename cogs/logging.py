@@ -556,7 +556,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		logchannel = await self.getlogchannel(channel.guild)
 		if logchannel == None:
 			return
-		embed=discord.Embed(title=f"{channel.type} Channel Deleted".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {channel.category}", 0xe41212)
+		embed=discord.Embed(title=f"{channel.type} Channel Deleted".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {channel.category}", color=0xe41212)
 		embed.set_footer(text=f"Channel ID: {channel.id}")
 		await logchannel.send(embed=embed)
 
