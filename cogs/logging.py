@@ -516,7 +516,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		logchannel = await self.getlogchannel(channel.guild)
 		if logchannel == None:
 			return
-		embed=discord.Embed(title=f"{channel.type} Channel Created".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {guild.get_channel(channel.parent_id)}")
+		embed=discord.Embed(title=f"{channel.type} Channel Created".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {channel.category}")
 		embed.set_footer(text=f"Channel ID: {channel.id}")
 		await logchannel.send(embed=embed)
 				    
@@ -540,6 +540,9 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		elif before.type != after.type:
 			bvalue=f"**Type:** `{str(before.type).capitalize()}`"
 			avalue=f"**Type:** `{str(after.type).capitalize()}`"
+		elif before.category != after.category:
+			bvalue=f"**Category:** `{before.category}`"
+			avalue=f"**Category:** `{after.category}`"
 		if (bvalue == "") or (avalue == ""):
 			return
 		embed.add_field(name="Before:", value=bvalue, inline=False)
@@ -553,7 +556,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		logchannel = await self.getlogchannel(channel.guild)
 		if logchannel == None:
 			return
-		embed=discord.Embed(title=f"{channel.type} Channel Deleted".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {guild.get_channel(channel.parent_id)}")
+		embed=discord.Embed(title=f"{channel.type} Channel Deleted".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {channel.category}")
 		embed.set_footer(text=f"Channel ID: {channel.id}")
 		await logchannel.send(embed=embed)
 
