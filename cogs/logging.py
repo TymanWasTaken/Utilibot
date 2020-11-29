@@ -516,7 +516,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		logchannel = await self.getlogchannel(channel.guild)
 		if logchannel == None:
 			return
-		embed=discord.Embed(title=f"{channel.type} Channel Created".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {channel.category}")
+		embed=discord.Embed(title=f"{channel.type} Channel Created".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {channel.category}", color=5496236)
 		embed.set_footer(text=f"Channel ID: {channel.id}")
 		await logchannel.send(embed=embed)
 				    
@@ -527,7 +527,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		logchannel = await self.getlogchannel(before.guild)
 		if logchannel == None:
 			return
-		embed=discord.Embed(title=f"{after.type} Channel Updated".capitalize())
+		embed=discord.Embed(title=f"{after.type} Channel Updated".capitalize(), color=0x1184ff)
 		embed.set_footer(text=f"Channel ID: {before.id}")
 		bvalue = ""
 		avalue = ""
@@ -556,7 +556,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		logchannel = await self.getlogchannel(channel.guild)
 		if logchannel == None:
 			return
-		embed=discord.Embed(title=f"{channel.type} Channel Deleted".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {channel.category}")
+		embed=discord.Embed(title=f"{channel.type} Channel Deleted".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {channel.category}", 0xe41212)
 		embed.set_footer(text=f"Channel ID: {channel.id}")
 		await logchannel.send(embed=embed)
 
