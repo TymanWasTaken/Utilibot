@@ -54,7 +54,7 @@ class Utils(commands.Cog):
 		"""
 		Deletes all invites in the server, pass invite arguments after the command to ignore said invites.
 		"""
-		m = await ctx.send(f"Deleting {guild.name}'s invites...")
+		m = await ctx.send(f"Deleting {ctx.guild.name}'s invites...")
 		deleted = []
 		ignored = []
 		failed = []
