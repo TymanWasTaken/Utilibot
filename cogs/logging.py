@@ -333,7 +333,7 @@ class Logging(commands.Cog):
 		embed.set_footer(text=f"{member} joined", icon_url=member.guild.avatar_url)
 		embed.add_field(name="User Info", value=f"""
 		Ping: {member.mention}
-		Username: [{user}](https://discord.com/users/{user.id})
+		Username: [{user}](https://discord.com/users/{member.id})
 		User ID: {user.id}""", inline=False)
 		embed.add_field(name="Account Info", value=f"""
 		Account Created on: {member.created_at}
@@ -352,7 +352,7 @@ class Logging(commands.Cog):
 		embed.set_footer(text=f"{member} left", icon_url=member.guild.icon_url)
 		embed.add_field(name="User Info", value=f"""
 		Ping: {member.mention}
-		Username: [{user}](https://discord.com/users/{user.id})
+		Username: [{user}](https://discord.com/users/{member.id})
 		User ID: {user.id}""", inline=False)
 		embed.add_field(name="Account Info", value=f"""
 		Account Created on: {member.created_at}
