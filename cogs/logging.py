@@ -508,6 +508,54 @@ Position: {role.position}
 Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		embed.set_footer(text=f"Role ID: {role.id}")
 		await logchannel.send(embed=embed)
+				    
+	@commands.Cog.listener()
+	async def on_guild_channel_create(self, channel):
+		if not await self.islogenabled(channel.guild, "channelcreate"):
+			return
+		logchannel = await self.getlogchannel(channel.guild)
+		if logchannel == None:
+			return
+		embed=discord.Embed(title=f"{channel.type} Channel Created".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {guild.get_channel(channel.parent_id)}")
+		embed.set_footer(text=f"Channel ID: {channel.id}")
+		await logchannel.send(embed=embed)
+				    
+	@commands.Cog.listener()
+	async def on_guild_channel_update(self, before, after):
+		if not await self.islogenabled(before.guild, "channelupdate"):
+			return
+		logchannel = await self.getlogchannel(before.guild)
+		if logchannel == None:
+			return
+		embed=discord.Embed(title=f"{after.type} Channel Updated".capitalize())
+		embed.set_footer(text=f"Channel ID: {before.id}")
+		bvalue = ""
+		avalue = ""
+		if before.name != after.name:
+			bvalue=f"**Name:** `{before.name}`"
+			avalue=f"**Name:** `{after.name}`"
+		elif before.topic != after.topic:
+			bvalue=f"**Topic:** `{before.topic}`"
+			avalue=f"**Topic:** `{after.topic}`"
+		elif before.type != after.type:
+			bvalue=f"**Type:** `{str(before.type).capitalize()}`"
+			avalue=f"**Type:** `{str(after.type).capitalize()}`"
+		if (bvalue == "") or (avalue == ""):
+			return
+		embed.add_field(name="Before:", value=bvalue, inline=False)
+		embed.add_field(name="After:", value=avalue, inline=False)
+		await logchannel.send(embed=embed)
+				    
+	@commands.Cog.listener()
+	async def on_guild_channel_delete(self, channel):
+		if not await self.islogenabled(channel.guild, "channeldelete"):
+			return
+		logchannel = await self.getlogchannel(channel.guild)
+		if logchannel == None:
+			return
+		embed=discord.Embed(title=f"{channel.type} Channel Deleted".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {guild.get_channel(channel.parent_id)}")
+		embed.set_footer(text=f"Channel ID: {channel.id}")
+		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
