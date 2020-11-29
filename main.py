@@ -198,8 +198,8 @@ async def on_command_error(ctx, error):
 				await errorchannel.send(f"Here is the error that happened when trying to post to hastebin:")
 				for message in tb2_wrap:
 					await errorchannel.send(message)
-	except:
-		await bot.get_channel(764333133738541056).send(content="<@&766132653640122419>\nIronic. The error handler errored.")
+	except Exception as error:
+		await bot.get_channel(764333133738541056).send(content=f"<@&766132653640122419>\nIronic. The error handler errored.```py\n{"".join(traceback.format_exception(type(error), error, error.__traceback__))}```")
 
 @bot.event
 async def on_error(event, *args, **kwargs):
