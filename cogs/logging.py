@@ -541,6 +541,8 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 			bvalue=f"**Type:** `{str(before.type).capitalize()}`"
 			avalue=f"**Type:** `{str(after.type).capitalize()}`"
 		elif before.category != after.category:
+			if not channel.guild.get_channel(before.parent_id):
+				return
 			bvalue=f"**Category:** `{before.category}`"
 			avalue=f"**Category:** `{after.category}`"
 		if (bvalue == "") or (avalue == ""):
