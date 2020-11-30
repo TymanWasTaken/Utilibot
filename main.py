@@ -1,5 +1,5 @@
 # Imports
-import discord, os, time, glob, postbin, traceback, cogs, importlib, aiofiles, json, textwrap, re, sys, aiosqlite, dpytils
+import discord, os, time, glob, postbin, traceback, asyncio, cogs, importlib, aiofiles, json, textwrap, re, sys, aiosqlite, dpytils
 from datetime import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -322,7 +322,7 @@ for file in sorted(glob.glob("cogs/*.py")):
 	except Exception as error:
 		print(f"\033[1mCog {file} failed to load.\n{error}\033[0m")
 		tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
-		errlog(f"Cog {file} failed to load.```py\n{tb}```")
+		# errlog(f"Cog {file} failed to load.```py\n{tb}```")
 # bot.load_extension("riftgun")
 
 disabled_commands = ['mute', 'shl', 'ushl']
