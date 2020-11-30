@@ -5,6 +5,30 @@ from discord.ext import commands
 class ChannelUtils(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+	
+	@commands.command(name="channelinfo", aliases=['ci'])
+	@commands.guild_only()
+	async def channelinfo(self, ctx, channel: discord.Channel):
+		"""
+		Shows some info on a channel.
+		"""
+		channel = channel or ctx.channel
+		embed = discord.Embed(title=f"#{channel}'s Info")
+		fields = {
+			"ID:": f"`{channel.id}`",
+			"Topic:": f"```{channel.topic}```",
+			"Category": f"{channel.category} (`{channel.category.id}`)",
+			"Position": str(channel.position)
+		}
+	#	embed.description=f"""
+	#	**ID:** `{channel.id}`
+	#	**
+	#	""".replace("	", "")
+		for f in fields:
+			embed.add_field(name=f, value=fields[f])
+		embed.set_footer(text="Created at")
+		embed.timestamp=channel.created_at
+		await ctx.send(embed=embed)
 
 	@commands.command(name="announcechannel", aliases=['ac', 'achan',])
 	@commands.has_permissions(manage_channels=True)
