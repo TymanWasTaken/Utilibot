@@ -509,6 +509,8 @@ class Logging(commands.Cog):
 		if (bvalue != "") and (avalue != ""):
 			embed.add_field(name="Before:", value=bvalue, inline=False)
 			embed.add_field(name="After:", value=avalue, inline=False)
+		else:
+			return
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
