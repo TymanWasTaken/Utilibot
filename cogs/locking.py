@@ -22,10 +22,10 @@ async def writeDB(data: dict):
 async def islockable(guild, channel):
 	if not guild:
 		return False
-	db = await self.bot.dbquery("server_hardlockable_channels", "guildid=" + str(guild.id))
+	db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(guild.id))
 	if len(db) < 1:
 		return False
-	data = json.loads(db[0][1])
+	data = json.loads(db[0][0])
 	if channel not in data:
 		return False
 	else:
@@ -78,19 +78,14 @@ class Locking(commands.Cog):
 	@commands.has_permissions(manage_channels=True)
 	@commands.guild_only()
 	@commands.is_owner()
-	async def serverhardlockable(self, ctx, *channels: discord.TextChannel, action=bool):
+	async def serverhardlockable(self, ctx, *channels: discord.TextChannel):
 		"""
 		Adds (text) channels to the list of channels that can be affected by server hardlock/unhardlock.
 		"""
 		if len(channels) == 0:
 			await ctx.send(f"Please provide 1 or more channels to add to the list!\nCurrent list: ")
 		else:
-			if action == True:
-				#this will be for adding to the db'
-				pass
-			else:
-				#this will be for removing from db
-				pass
+		
 			await ctx.send("lol that didn't do anything (yet) :joy:")
 
 
