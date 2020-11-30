@@ -229,7 +229,7 @@ async def on_message(message):
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
 		await message.channel.send("no")
 	if fReg.search(message.content):
-		if user.bot: continue
+		if message.author.bot: continue
 		db = await bot.dbquery("pressf", "enabled", f"channelid={message.channel.id}")
 		if db:
 			await message.channel.send(f"{message.author.mention} has paid their respects.")
@@ -237,6 +237,7 @@ async def on_message(message):
 	if afksearch:
 		try: user = message.guild.get_member(int(afksearch.group(1)))
 		except: continue
+		if user.bot: continue
 		globalafk = await bot.dbquery("globalafk", "message", f"userid={user.id}")
 		if globalafk:
 			embed = discord.Embed(description=globalafk[0][0], color=bot.utils.randcolor())
