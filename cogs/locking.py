@@ -134,7 +134,10 @@ class Locking(commands.Cog):
 				removedchannels.append(chan.mention)
 		if len(existingchannels) > 1:
 			await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
-		await ctx.send(f"Removed the following channels from the list of hardlockable channels:\n{', '.join(removedchannels)}")
+		if len(removedchannels) < 1:
+			await ctx.send("There were no channels to remove.")
+		else:
+			await ctx.send(f"Removed the following channels from the list of hardlockable channels:\n{', '.join(removedchannels)}")
 
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
 	@commands.bot_has_permissions(manage_channels=True)
