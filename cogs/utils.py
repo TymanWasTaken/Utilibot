@@ -538,7 +538,7 @@ class Utils(commands.Cog):
 			if ch.type != discord.ChannelType.news:
 				await ch.send(f"<#{ch.id}> is not an announcement channel!", delete_after=5)
 			else:
-				msg = ch.fetch_message(payload.message_id)
+				msg = await ch.fetch_message(payload.message_id)
 				try:
 					await msg.publish()
 					await ch.send(f"Sucessfully published <{msg.jump_url}>!", delete_after=5)
