@@ -519,15 +519,24 @@ class Utils(commands.Cog):
 		Sets your AFK message.
 		"""
 		db = await self.bot.dbquery("afk", "message", f"userid={ctx.author.id}")
-		await ctx.send(f"{ctx.author.mention}, I set your AFK message to `{afkmessage}`!")
 		if db:
 			await self.bot.dbexec((f"DELETE FROM afk WHERE userid={ctx.author.id}"))
-		await self.bot.dbexec((f"INSERT INTO afk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
+			if afkmessage == "AFK":
+				await ctx.send(f"{ctx.author.mention}, I removed your AFK!")
+			else:
+				await ctx.send(f"{ctx.author.mention}, I set your AFK message to `{afkmessage}`!")
+				await self.bot.dbexec((f"INSERT INTO afk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
+		else:
+			await ctx.send(f"{ctx.author.mention}, I set your AFK message to `{afkmessage}`!")
+			await self.bot.dbexec((f"INSERT INTO afk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
+
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
+		await payload.channel.send("YEET")
 		if payload.emoji == "📣":
 			ch = payload.channel
+			await ch.send("🤔")
 			if ch.type != discord.ChannelType.news:
 				await ch.send(f"<#{ch.id}> is not an announcement channel!", delete_after=5)
 			else:
