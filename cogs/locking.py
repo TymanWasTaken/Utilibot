@@ -111,7 +111,7 @@ class Locking(commands.Cog):
 				existingchannels.append(chan.id)
 				newchannels.append(chan.mention)
 		for chanid in existingchannels:
-			if not guild.get_channel(chanid):
+			if not ctx.guild.get_channel(chanid):
 				existingchannels.remove(chanid)
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
 		await ctx.send(f"Added the following channels to the list of hardlockable channels:\n{', '.join(newchannels)}")
@@ -134,7 +134,7 @@ class Locking(commands.Cog):
 				existingchannels.remove(chan.id)
 				removedchannels.append(chan.mention)
 		for chanid in existingchannels:
-			if not guild.get_channel(chanid):
+			if not ctx.guild.get_channel(chanid):
 				existingchannels.remove(chanid)
 		if len(existingchannels) > 1:
 			await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
@@ -162,7 +162,7 @@ class Locking(commands.Cog):
 		locked = []
 		m = await ctx.send("Locking server...")
 		for chanid in channellist:
-			chan = guild.get_channel(chanid)
+			chan = ctx.guild.get_channel(chanid)
 			if not chan:
 				channellist.remove(chanid)
 				continue
