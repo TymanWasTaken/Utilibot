@@ -73,7 +73,7 @@ class Locking(commands.Cog):
 			await ctx.send(f"✅ Successfully unlocked <#{ch.id}>!\n**Reason:** {reason}", delete_after=10)
 			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unlocked 🔓", description=f"This channel was unlocked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
 
-	@commands.command(name="serverhardlockable", aliases=['shlockable', 'shlable'])
+	@commands.group(name="serverhardlockable", aliases=['shlockable', 'shlable'], invoke_without_command=True)
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True)
 	@commands.guild_only()
@@ -82,11 +82,28 @@ class Locking(commands.Cog):
 		"""
 		Adds (text) channels to the list of channels that can be affected by server hardlock/unhardlock.
 		"""
-		if len(channels) == 0:
-			await ctx.send(f"Please provide 1 or more channels to add to the list!\nCurrent list: ")
-		else:
-		
-			await ctx.send("lol that didn't do anything (yet) :joy:")
+		db = await bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
+		exisitngchannels = json.loads(db[0][0])
+		chanlist = []
+		embed=discord.Embed(title="Server Hardlockable Channels", description=f"{ctx.guild} has no configured channels.")
+		if len(existingchannels) < 1:
+			for chan in existingchannels:
+				chanlist.append(ctx.guild.get_channel(chan))
+			chanlist = ', '.join(chanlist)
+			embed.description=f"{chanlist}"
+		await ctx.send(embed=embed)
+#		if len(existingchannels) > 0:
+#			await bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
+#		else:
+#			for chan in channels:
+#				if chan in existingchannels:
+#					channel.remove
+#		
+#		if len(channels) == 0:
+#			await ctx.send(f"Please provide 1 or more channels to add to the list!\nCurrent list: ")
+#		else:
+#		
+#			await ctx.send("lol that didn't do anything (yet) :joy:")
 
 
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
