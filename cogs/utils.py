@@ -522,12 +522,12 @@ class Utils(commands.Cog):
 		if db:
 			await self.bot.dbexec((f"DELETE FROM afk WHERE userid={ctx.author.id}"))
 			if afkmessage == "AFK":
-				await ctx.send(f"{ctx.author.mention}, I removed your AFK!")
+				await ctx.send(f"{ctx.author.mention}, I removed your AFK!", delete_after=10)
 			else:
-				await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```")
+				await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```", delete_after=10)
 				await self.bot.dbexec((f"INSERT INTO afk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
 		else:
-			await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```!")
+			await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```!", delete_after=10)
 			await self.bot.dbexec((f"INSERT INTO afk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
 
 
