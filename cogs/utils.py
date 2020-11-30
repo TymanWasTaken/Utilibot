@@ -353,7 +353,7 @@ class Utils(commands.Cog):
 			**Rules Channel:** {ruleschan}
 			**2FA Required?** {authreq}
 			**Verification Level:** {vlevels[g.verification_level.value]}
-			**Region:** {guild.region}
+			**Region:** {g.region}
 			
 			[Link to Icon]({g.icon_url})"""
 			.replace("	", ""),
@@ -533,7 +533,7 @@ class Utils(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
-		await payload.channel.send("YEET")
+		await guild.get_channel(payload.channel_id).send("YEET")
 		if payload.emoji == "📣":
 			ch = payload.channel
 			await ch.send("🤔")
