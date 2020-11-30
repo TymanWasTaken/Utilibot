@@ -192,10 +192,20 @@ class Locking(commands.Cog):
 		"""
 		Unlocks the entire server by setting all channels' send messages permissions for @everyone to neutral.
 		"""
-		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
+		channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
+		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
+		if not channeldb:
+			return await ctx.send(f"This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
+		if not islockeddb:
+			return await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is already locked down!")
+		channellist = json.loads(channeldb[0][0])
 		unlocked = []
 		m = await ctx.send("Unlocking server...")
-		for chan in ctx.guild.text_channels:
+		for chanid in channellist:
+			chan = ctx.guild.get_channel(chanid)
+			if not chan:
+				channellist.remove(chanid)
+				continue
 			perms = chan.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages == False:
 				perms.send_messages = None
@@ -206,6 +216,9 @@ class Locking(commands.Cog):
 		embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
 			embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}"
+		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
+		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(channellist))))
+		await self.bot.dbexec("DELETE FROM islocked WHERE guildid=" + str(ctx.guild.id))
 		await m.delete()
 		await ctx.send(content="Done!", embed=embed, delete_after=60)
 
