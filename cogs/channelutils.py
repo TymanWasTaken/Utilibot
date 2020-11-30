@@ -153,7 +153,7 @@ class ChannelUtils(commands.Cog):
 		"""
 		chan = channel or ctx.channel
 		c = await chan.clone(reason=f"Channel reset by {ctx.author} ({ctx.author.id})")
-		c.edit(position=chan.position)
+		await c.edit(position=chan.position)
 		try: 
 			await chan.delete(reason=f"Channel reset by {ctx.author} ({ctx.author.id})")
 		except:
