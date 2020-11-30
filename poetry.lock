@@ -282,7 +282,7 @@ cli = ["webbrowser"]
 type = "git"
 url = "https://github.com/dragdev-studios/PostBin"
 reference = "master"
-resolved_reference = "b2ff88bb695ae04cecc457fec5dd7a1621e7094f"
+resolved_reference = "d27571977431dbb47dad9fd612ceae6c59594189"
 
 [[package]]
 name = "psutil"
@@ -460,7 +460,7 @@ multidict = ">=4.0"
 
 [[package]]
 name = "youtube-dl"
-version = "2020.11.26"
+version = "2020.11.29"
 description = "YouTube video downloader"
 category = "main"
 optional = false
@@ -768,8 +768,8 @@ yarl = [
     {file = "yarl-1.5.1.tar.gz", hash = "sha256:c22c75b5f394f3d47105045ea551e08a3e804dc7e01b37800ca35b58f856c3d6"},
 ]
 youtube-dl = [
-    {file = "youtube_dl-2020.11.26-py2.py3-none-any.whl", hash = "sha256:be0b605c65adbcda2844806359478fe88101def37c994f19c52fad45232af7cc"},
-    {file = "youtube_dl-2020.11.26.tar.gz", hash = "sha256:3d52d2c969ec9521a086c43f809fd7545708b7ba24d7379fb123b5438ba691e1"},
+    {file = "youtube_dl-2020.11.29-py2.py3-none-any.whl", hash = "sha256:ef2d60d5a963da54585fc80331fba46d15f45c0a89b85dbddc3b13c9cdc84e63"},
+    {file = "youtube_dl-2020.11.29.tar.gz", hash = "sha256:849d2a85ee99e5caafc8d52572bb603c4ae020dfb615a4d51c3bc90787d40df3"},
 ]
 youtube-search = [
     {file = "youtube-search-1.1.1.tar.gz", hash = "sha256:ba6f59960191140e14f0440725438ddaf7403f52447854fa25c8b2f8218fd118"},
