@@ -153,7 +153,7 @@ class ChannelUtils(commands.Cog):
 	@commands.bot_has_permissions(manage_channels=True)
 	async def nuke(self, ctx, channel: typing.Optional[discord.TextChannel]=None):
 		"""
-		Resets a channel- Clones it and deletes the old one. Useful for clearing all the messages in a channel quickly.
+		Resets a text channel- Clones it and deletes the old one. Useful for clearing all the messages in a channel quickly.
 		"""
 		chan = channel or ctx.channel
 		c = await chan.clone(reason=f"Channel reset by {ctx.author} ({ctx.author.id})")
@@ -163,6 +163,24 @@ class ChannelUtils(commands.Cog):
 		except:
 			await chan.send(f"{ctx.author.mention}, I cannot delete this channel! (most likely cause is that it's set as a channel required for community servers)")
 		await c.send(f"I reset this channel, {ctx.author.mention}!", delete_after=60)
+		
+	@commands.command(name="slowmode")
+	@commands.guild_only()
+	@commands.bot_has_permissions(manage_channels=True)
+	@commands.has_permissions(manage_channels=True)
+	async def slowmode(self, ctx, channel: typing.Optional[discord.TextChannel]=None, slowmode: int):
+		"""
+		Sets a text channel's slowmode delay in seconds. Maximum of 21600 seconds (6 hours).
+		"""
+		channel = channel or ctx.channel
+		if slowmode > 21600:
+			await ctx.send(f"`{slowmode}` is too long of a delay! The new slowmode must be 21600 seconds or less (6 hours).")
+		elif slowmode == 0:
+			await channel.edit(slowmode_delay=slowmode, reason=f"Slowmode disabled by {ctx.author} ({ctx.author.id}).")
+			await ctx.send(f"Disabled slowmode for {channel.mention}!")
+		else:
+			await channel.edit(slowmode_delay=slowmode, reason=f"Slowmode changed to {slowmode} seconds by {ctx.author} ({ctx.author.id}).")
+			await ctx.send(f"Changed {channel.mention}'s slowmode to {slowmode} seconds.")
 
 def setup(bot):
 	bot.add_cog(ChannelUtils(bot))
