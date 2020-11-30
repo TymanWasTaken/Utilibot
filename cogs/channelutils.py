@@ -15,10 +15,13 @@ class ChannelUtils(commands.Cog):
 		channel = channel or ctx.channel
 		embed = discord.Embed(title=f"#{channel}'s Info")
 		fields = {
-			"ID:": f"`{channel.id}`",
-			"Topic:": f"```{channel.topic}```",
+			"ID": f"`{channel.id}`",
+			"Topic": f"```{channel.topic}```",
 			"Category": f"{channel.category} (`{channel.category.id}`)",
-			"Position": str(channel.position)
+			"Position": str(channel.position),
+			"NSFW?": f"{'Yes' if channel.nsfw else 'No'}",
+			"Type": str(channel.type).capitalize(),
+			"Slowmode": f"{f'{channel.slowmode_delay} seconds' if channel.slowmode_delay > 0 else 'Disabled'}"
 		}
 	#	embed.description=f"""
 	#	**ID:** `{channel.id}`
