@@ -353,6 +353,7 @@ class Utils(commands.Cog):
 			**Rules Channel:** {ruleschan}
 			**2FA Required?** {authreq}
 			**Verification Level:** {vlevels[g.verification_level.value]}
+			**Region:** {guild.region}
 			
 			[Link to Icon]({g.icon_url})"""
 			.replace("	", ""),
