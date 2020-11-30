@@ -120,7 +120,7 @@ class Locking(commands.Cog):
 		"""
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		if not db:
-			return await ctx.send(f"This server has no hardlockable channels. Use `{ctx.prefix}shlable add <channels> to add some.")
+			return await ctx.send(f"This server has no hardlockable channels. Use `{ctx.prefix}shlable add <channels>` to add some.")
 		if len(channels) < 1:
 			return await ctx.send("Please provide some channels to remove from the list!")
 		existingchannels = json.loads(db[0][0])
