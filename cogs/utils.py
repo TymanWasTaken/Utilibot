@@ -524,10 +524,10 @@ class Utils(commands.Cog):
 			if afkmessage == "AFK":
 				await ctx.send(f"{ctx.author.mention}, I removed your AFK!")
 			else:
-				await ctx.send(f"{ctx.author.mention}, I set your AFK message to `{afkmessage}`!")
+				await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```")
 				await self.bot.dbexec((f"INSERT INTO afk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
 		else:
-			await ctx.send(f"{ctx.author.mention}, I set your AFK message to `{afkmessage}`!")
+			await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```!")
 			await self.bot.dbexec((f"INSERT INTO afk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
 
 
