@@ -97,7 +97,7 @@ class ChannelUtils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def ctopic(self, ctx, channel: typing.Optional[discord.TextChannel, None], *, topic=None):
+	async def ctopic(self, ctx, channel: typing.Optional[discord.TextChannel]=None, *, topic=None):
 		"""
 		Edits a channel's topic.
 		"""
