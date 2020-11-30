@@ -94,10 +94,12 @@ class Locking(commands.Cog):
 		await ctx.send(embed=embed)
 
 	@serverhardlockable.command()
-	async def add(self, ctx, *, channels: discord.TextChannel):
+	async def add(self, ctx, *channels: discord.TextChannel):
 		"""
 		Adds channels to the list of server hardlockable channels.
 		"""
+		if len(channels) < 1:
+			return await ctx.send("Please provide some channels to remove!")
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		existingchannels = []
 		if db:
@@ -112,13 +114,15 @@ class Locking(commands.Cog):
 		await ctx.send(f"Added the following channels to the list of hardlockable channels:\n{', '.join(newchannels)}")
 
 	@serverhardlockable.command()
-	async def remove(self, ctx, *, channels: discord.TextChannel):
+	async def remove(self, ctx, *channels: discord.TextChannel):
 		"""
 		Removes channels from the list of server hardlockable channels.
 		"""
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		if not db:
 			return await ctx.send(f"This server has no hardlockable channels. Use `{ctx.prefix}shlable add <channels> to add some.")
+		if len(channels) < 1:
+			return await ctx.send("Please provide some channels to remove from the list!")
 		existingchannels = json.loads(db[0][0])
 		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
 		removedchannels = []
