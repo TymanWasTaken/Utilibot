@@ -8,7 +8,7 @@ class ChannelUtils(commands.Cog):
 	
 	@commands.command(name="channelinfo", aliases=['ci'])
 	@commands.guild_only()
-	async def channelinfo(self, ctx, channel: discord.Channel):
+	async def channelinfo(self, ctx, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel]):
 		"""
 		Shows some info on a channel.
 		"""
@@ -97,7 +97,7 @@ class ChannelUtils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def ctopic(self, ctx, channel: typing.Optional[discord.TextChannel]=None, *, topic=None):
+	async def ctopic(self, ctx, channel: typing.Optional[discord.TextChannel, None], *, topic=None):
 		"""
 		Edits a channel's topic.
 		"""
