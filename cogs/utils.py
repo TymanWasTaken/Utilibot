@@ -543,7 +543,7 @@ class Utils(commands.Cog):
 					await msg.publish()
 					await ch.send(f"Sucessfully published <{msg.jump_url}>!", delete_after=5)
 				except discord.HTTPException:
-					await ch.send(f"Couldn't publish <{msg.jump_url}>.")
+					await ch.send(f"Couldn't publish <{msg.jump_url}>.", delete_after=5)
 
 def setup(bot):
 	bot.add_cog(Utils(bot))
