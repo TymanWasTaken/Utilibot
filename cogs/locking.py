@@ -78,9 +78,9 @@ class Locking(commands.Cog):
 	@commands.has_permissions(manage_channels=True)
 	@commands.guild_only()
 	@commands.is_owner()
-	async def serverhardlockable(self, ctx, *channels: discord.TextChannel):
+	async def serverhardlockable(self, ctx):
 		"""
-		Adds (text) channels to the list of channels that can be affected by server hardlock/unhardlock.
+		Configure which channels will be locked by server hardlock/unhardlock.
 		"""
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		embed=discord.Embed(title="Server Hardlockable Channels", description=f"{ctx.guild} has no configured channels.")
@@ -92,6 +92,22 @@ class Locking(commands.Cog):
 			chanlist = ', '.join(chanlist)
 			embed.description=f"{chanlist}"
 		await ctx.send(embed=embed)
+
+	@serverhardlockable.command()
+	async def add(self, ctx, *channels: discord.TextChannel):
+		"""
+		Adds channels to the list of server hardlockable channels.
+		"""
+		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
+		if db:
+			existingchannels = json.loads(db[0][0])
+			newchannels = []
+			for chan in channels:
+				if chan not in existingchannels:
+					existingchannels.append(chan.id)
+					newchannels.append(chan.mention)
+			await self.bot.dbexec("INSERT INTO 
+			await ctx.send(f"Added the following channels to the list of hardlockable channels:\n{', '.join(newchannels)")
 #		if len(existingchannels) > 0:
 #			await bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
 #		else:
