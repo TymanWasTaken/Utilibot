@@ -514,7 +514,7 @@ class Utils(commands.Cog):
 						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
 
 	@commands.command(name="afk")
-	async def afk(self, ctx, *, afkmessage):
+	async def afk(self, ctx, *, afkmessage="AFK"):
 		"""
 		Sets your AFK message.
 		"""
