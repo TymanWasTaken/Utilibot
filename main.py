@@ -211,6 +211,7 @@ async def on_error(event, *args, **kwargs):
 	""".replace("	", ""))
 
 fReg = re.compile(r"(^|\A|\s)f($|\Z|\s)", flags=(re.IGNORECASE|re.MULTILINE))
+afkReg = re.compile(r"<@!?(\d+)>", flags=(re.MULTILINE))
 
 @bot.event
 async def on_message(message):
@@ -231,6 +232,12 @@ async def on_message(message):
 		db = await bot.dbquery("pressf", "enabled", f"channelid={message.channel.id}")
 		if db:
 			await message.channel.send(f"{message.author.mention} has paid their respects.")
+	if afkReg.search(message.content):
+		user = message.guild.get_member(afkReg.group(1))
+		db = await bot.dbquery("afk", "message", f"userid={user.id})
+			if db:
+				embed = discord.Embed(description=db[0][0])
+				embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator}", icon_url=user.avatar_url)
 	if message.webhook_id != None and message.mention_everyone:
 		webhook_guilds = [693225390130331661, 755887706386726932]
 		if message.guild.id in webhook_guilds:
