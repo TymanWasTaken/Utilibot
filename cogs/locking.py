@@ -150,14 +150,14 @@ class Locking(commands.Cog):
 	@commands.is_owner()
 	async def serverhardlock(self, ctx, *, reason=f'None given.'):
 		"""
-		Locks the entire server by setting all channels' send messages permissions for @everyone to false.
+		Locks the entire server by setting specified channels' send messages permissions for @everyone to false.
 		"""
 		channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
 		if not channeldb:
 			return await ctx.send("This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
 		if islockeddb:
-			return await ctx.send(f"{self.bot.const_emojis["no"]} **{ctx.guild}** is already locked down!")
+			return await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is already locked down!")
 		channellist = json.loads(channeldb[0][0])
 		locked = []
 		m = await ctx.send("Locking server...")
