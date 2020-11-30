@@ -183,14 +183,14 @@ class Info(commands.Cog):
 				gcs = command_text
 			else:
 				gcs = ""
-			embeda = discord.Embed(description=f"**`{ctx.prefix}{cmd.name}`**{f'` {cmd.signature}`' if cmd.signature else ''}\n\n**Aliases:** {', '.join(cmd.aliases) if cmd.aliases else 'None'}\n\n**Command Help:**{f'```{cmd.help}```' if cmd.help else 'No help found.'}")
-			embeda.set_footer(text=f"Category: {cmd.cog.qualified_name if cmd.cog else 'None'}")
-			await ctx.send(embed=embeda)
-			if len(cmd.aliases) > 0:
-				embed = discord.Embed(description=f"`{ctx.prefix}[{cmd.name}|{'|'.join(cmd.aliases)}]{f' {cmd.signature}' if cmd.signature != '' else ''}`\n{f'```{n}{cmd.help}```' if cmd.help != None else ''}{gcs}")
-			else:
-				embed = discord.Embed(description=f"`{ctx.prefix}{cmd.qualified_name}{f' {cmd.signature}' if cmd.signature != '' else ''}`\n{f'```{n}{cmd.help}```' if cmd.help != None else ''}{gcs}")
+			embed = discord.Embed(description=f"**`{ctx.prefix}{cmd.name}`**{f'` {cmd.signature}`' if cmd.signature else ''}\n\n**Aliases:** {', '.join(cmd.aliases) if cmd.aliases else 'None'}\n\n**Command Help:**{f'```{cmd.help}```' if cmd.help else 'No help found.'}")
 			embed.set_footer(text=f"Category: {cmd.cog.qualified_name if cmd.cog else 'None'}")
+#			await ctx.send(embed=embeda)
+#			if len(cmd.aliases) > 0:
+#				embed = discord.Embed(description=f"`{ctx.prefix}[{cmd.name}|{'|'.join(cmd.aliases)}]{f' {cmd.signature}' if cmd.signature != '' else ''}`\n{f'```{n}{cmd.help}```' if cmd.help != None else ''}{gcs}")
+#			else:
+#				embed = discord.Embed(description=f"`{ctx.prefix}{cmd.qualified_name}{f' {cmd.signature}' if cmd.signature != '' else ''}`\n{f'```{n}{cmd.help}```' if cmd.help != None else ''}{gcs}")
+#			embed.set_footer(text=f"Category: {cmd.cog.qualified_name if cmd.cog else 'None'}")
 			return await ctx.send(embed=embed)
 		cog = [cog for cog in self.bot.cogs if cog.lower() == argument.lower()]
 		if len(cog) > 0: cog = self.bot.get_cog(cog[0])
