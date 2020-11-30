@@ -94,7 +94,7 @@ class Locking(commands.Cog):
 		await ctx.send(embed=embed)
 
 	@serverhardlockable.command()
-	async def add(self, ctx, *channels: discord.TextChannel):
+	async def add(self, ctx, *, channels: discord.TextChannel):
 		"""
 		Adds channels to the list of server hardlockable channels.
 		"""
@@ -110,19 +110,24 @@ class Locking(commands.Cog):
 				newchannels.append(chan.mention)
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
 		await ctx.send(f"Added the following channels to the list of hardlockable channels:\n{', '.join(newchannels)}")
-#		if len(existingchannels) > 0:
-#			await bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
-#		else:
-#			for chan in channels:
-#				if chan in existingchannels:
-#					channel.remove
-#		
-#		if len(channels) == 0:
-#			await ctx.send(f"Please provide 1 or more channels to add to the list!\nCurrent list: ")
-#		else:
-#		
-#			await ctx.send("lol that didn't do anything (yet) :joy:")
 
+	@serverhardlockable.command()
+	async def remove(self, ctx, *, channels: discord.TextChannel):
+		"""
+		Removes channels from the list of server hardlockable channels.
+		"""
+		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
+		if not db:
+			return await ctx.send(f"This server has no hardlockable channels. Use `{ctx.prefix}shlable add <channels> to add some.")
+		existingchannels = json.loads(db[0][0])
+		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
+		removedchannels = []
+		for chan in channels:
+			if chan in existingchannels:
+				existingchannels.remove(index(chan.id))
+				removedchannels.append(chan.mention)
+		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
+		await ctx.send(f"Removed the following channels from the list of hardlockable channels:\n{', '.join(removedchannels)}")
 
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
 	@commands.bot_has_permissions(manage_channels=True)
