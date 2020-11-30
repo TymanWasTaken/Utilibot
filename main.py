@@ -234,7 +234,7 @@ async def on_message(message):
 			await message.channel.send(f"{message.author.mention} has paid their respects.")
 	afksearch=afkReg.search(message.content)
 	if afksearch:
-		await message.channel.send(f"Search: {afksearch}\nGroup: {afksearch.group(1)}")
+		#await message.channel.send(f"Search: {afksearch}\nGroup: {afksearch.group(1)}")
 		user = message.guild.get_member(afksearch.group(1))
 		db = await bot.dbquery("afk", "message", f"userid={user.id}")
 		if db:
