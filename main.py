@@ -236,8 +236,8 @@ async def on_message(message):
 	afksearch=afkReg.search(message.content)
 	if afksearch:
 		try: user = message.guild.get_member(int(afksearch.group(1)))
-		except: continue
-		if not user.bot:
+		except: user = None
+		if user and not user.bot:
 			globalafk = await bot.dbquery("globalafk", "message", f"userid={user.id}")
 			if globalafk:
 				embed = discord.Embed(description=globalafk[0][0], color=bot.utils.randcolor())
