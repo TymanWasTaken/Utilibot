@@ -26,7 +26,7 @@ class TopGG(commands.Cog):
 			await self.bot.wait_until_ready()
 		print(json.dumps(data))
 		user = await self.bot.fetch_user(data["user"])
-		embed = discord.Embed(title="User voted!", description=f"{user.name} voted!\n\nf"Weekend: {self.bot.const_emojis['yes'] if data['isWeekend'] else self.bot.const_emojis['no']}"")
+		embed = discord.Embed(title="User voted!", description=f"{user.name} voted!\n\nWeekend: {self.bot.const_emojis['yes'] if data['isWeekend'] else self.bot.const_emojis['no']}")
 		embed.set_author(name=str(user), url=f"https://discord.com/users/{user.id}", icon_url=str(user.avatar_url))
 		await self.bot.get_channel(783063185015963658).send(embed=embed)
 
