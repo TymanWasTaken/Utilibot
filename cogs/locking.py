@@ -180,7 +180,10 @@ class Locking(commands.Cog):
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(channellist))))
 		await self.bot.dbexec(("INSERT INTO islocked VALUES (?, ?)", (str(ctx.guild.id), "true")))
 		await m.delete()
-		await ctx.send(content="Done!", embed=embed, delete_after=60)
+		if len(locked) < 1:
+			await ctx.send("No channels locked.", delete_after=60)
+		else:
+			await ctx.send(content="Done!", embed=embed, delete_after=60)
 
 
 	@commands.command(name="unserverhardlock", aliases=['unserverlockdown', 'ushl', 'usld'])
@@ -220,7 +223,10 @@ class Locking(commands.Cog):
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(channellist))))
 		await self.bot.dbexec("DELETE FROM islocked WHERE guildid=" + str(ctx.guild.id))
 		await m.delete()
-		await ctx.send(content="Done!", embed=embed, delete_after=60)
+		if len(unlocked) < 1:
+			await ctx.send("No channels unlocked.", delete_after=60)
+		else:
+			await ctx.send(content="Done!", embed=embed, delete_after=60)
 
 # Softlock- Deletes messages.
 	@commands.command(name="softlock", aliases=['lock', 'sl'])
