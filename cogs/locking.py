@@ -124,10 +124,13 @@ class Locking(commands.Cog):
 		if len(channels) < 1:
 			return await ctx.send("Please provide some channels to remove from the list!")
 		existingchannels = json.loads(db[0][0])
+		await ctx.send(existingchannels)
 		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
 		removedchannels = []
 		for chan in channels:
+			await ctx.send(chane)
 			if chan in existingchannels:
+			       await ctx.send(chan)
 				existingchannels.remove(existingchannels.index(chan.id))
 				removedchannels.append(chan.mention)
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
