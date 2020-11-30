@@ -518,6 +518,7 @@ class Utils(commands.Cog):
 		"""
 		Sets your AFK message.
 		"""
+		await ctx.message.delete(delay=10)
 		db = await self.bot.dbquery("afk", "message", f"userid={ctx.author.id}")
 		if db:
 			await self.bot.dbexec((f"DELETE FROM afk WHERE userid={ctx.author.id}"))
