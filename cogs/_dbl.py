@@ -1,4 +1,4 @@
-import dbl, discord, os
+import dbl, discord, os, json
 from discord.ext import commands
 from dotenv import load_dotenv
 load_dotenv(dotenv_path="/home/tyman/code/utilibot/.env")
@@ -9,7 +9,7 @@ class TopGG(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.token = os.getenv("DBL_TOKEN") # set this to your DBL token
-		self.dblpy = dbl.DBLClient(self.bot, self.token, autopost=True, webhook_port=6779, webhook_path="/utilibotvote", webhook_auth="9408ncwm9m8jr239n0892ka0ej9") # Autopost will post your guild count every 30 minutes
+		self.dblpy = dbl.DBLClient(self.bot, self.token, autopost=True, webhook_port=6779, webhook_path="/utilibotvote", webhook_auth=os.getenv('DBL_AUTH')) # Autopost will post your guild count every 30 minutes
 
 	@commands.command()
 	async def vote(self, ctx):
@@ -22,10 +22,18 @@ class TopGG(commands.Cog):
 	@commands.Cog.listener()
 	async def on_dbl_vote(self, data):
 		"""An event that is called whenever someone votes for the bot on top.gg."""
-		await self.bot.get_channel(755979601788010527).send("Received an upvote:\n" + str(await self.bot.fetch_user(data["user"])) + " just upvoted!")
+		if not self.bot.is_ready:
+			await self.bot.wait_until_ready()
+		print(json.dumps(data))
+		user = await self.bot.fetch_user(data["user"])
+		embed = discord.Embed(title="User voted!", description=f"{user.name} voted!\n\nf"Weekend: {self.bot.const_emojis['yes'] if data['isWeekend'] else self.bot.const_emojis['no']}"")
+		embed.set_author(name=str(user), url=f"https://discord.com/users/{user.id}", icon_url=str(user.avatar_url))
+		await self.bot.get_channel(783063185015963658).send(embed=embed)
 
 	@commands.Cog.listener()
 	async def on_dbl_test(self, data):
+		if not self.bot.is_ready:
+			await self.bot.wait_until_ready()
 		"""An event that is called whenever someone tests the webhook system for your bot on top.gg."""
 		await self.bot.get_channel(755979601788010527).send("Received a test upvote:\n" + str(await self.bot.fetch_user(data["user"])) + " just test upvoted")
 

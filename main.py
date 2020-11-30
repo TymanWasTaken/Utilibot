@@ -41,7 +41,7 @@ async def getprefixes(bot, message):
 
 # sqlite, used
 
-async def query(table, value="*", condition=None):
+async def query(table, value="*", condition=None): await bot.dbquery("logging", "data", "guildid=" + str(ctx.guild.id)):
 	async with aiosqlite.connect('data.db') as db:
 		async with db.execute(f"SELECT {value} FROM {table}{ ' WHERE ' + condition if condition != None else ''}") as cursor:
 			return await cursor.fetchall()
@@ -138,7 +138,6 @@ async def on_ready():
 		bot.const_emojis[e.name] = str(e)
 	print(f'Bot logged in as {bot.user}')
 	await bot.get_channel(755979601788010527).send(content=datetime.now().strftime("[%m/%d/%Y %I:%M:%S] ") + "Bot online")
-	await bot.change_presence(activity=discord.Game("with my developers' emotions."))
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -198,8 +197,8 @@ async def on_command_error(ctx, error):
 				await errorchannel.send(f"Here is the error that happened when trying to post to hastebin:")
 				for message in tb2_wrap:
 					await errorchannel.send(message)
-	except Exception as error:
-		await bot.get_channel(764333133738541056).send(content=f"<@&766132653640122419>\nIronic. The error handler errored.```py\n{''.join(traceback.format_exception(type(error), error, error.__traceback__))}```")
+	except:
+		await bot.get_channel(764333133738541056).send(content="<@&766132653640122419>\nIronic. The error handler errored.")
 
 @bot.event
 async def on_error(event, *args, **kwargs):
@@ -211,7 +210,6 @@ async def on_error(event, *args, **kwargs):
 	""".replace("	", ""))
 
 fReg = re.compile(r"(^|\A|\s)f($|\Z|\s)", flags=(re.IGNORECASE|re.MULTILINE))
-afkReg = re.compile(r"<@!?(\d+)>", flags=(re.MULTILINE))
 
 @bot.event
 async def on_message(message):
@@ -229,20 +227,9 @@ async def on_message(message):
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
 		await message.channel.send("no")
 	if fReg.search(message.content):
-		if not message.author.bot:
-			db = await bot.dbquery("pressf", "enabled", f"channelid={message.channel.id}")
-			if db:
-				await message.channel.send(f"{message.author.mention} has paid their respects.")
-	afksearch=afkReg.search(message.content)
-	if afksearch:
-		try: user = message.guild.get_member(int(afksearch.group(1)))
-		except: user = None
-		if user and not user.bot:
-			globalafk = await bot.dbquery("globalafk", "message", f"userid={user.id}")
-			if globalafk:
-				embed = discord.Embed(description=globalafk[0][0], color=bot.utils.randcolor())
-				embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator} is currently AFK.", icon_url=user.avatar_url)
-				await message.channel.send(embed=embed, delete_after=10)
+		db = await bot.dbquery("pressf", "enabled", f"channelid={message.channel.id}")
+		if db:
+			await message.channel.send(f"{message.author.mention} has paid their respects.")
 	if message.webhook_id != None and message.mention_everyone:
 		webhook_guilds = [693225390130331661, 755887706386726932]
 		if message.guild.id in webhook_guilds:
@@ -273,18 +260,18 @@ async def on_message(message):
 	else:
 		await bot.process_commands(message)
 
-#@bot.event
-#async def on_command(ctx):
-#	if not ctx.author.bot:
-#		table = turkeyday
-#		db = (await bot.dbquery(table, "notfirst", "userid=" + str(ctx.author.id)))
-#		if not db:
-#			embed=discord.Embed(title=":turkey: Happy Turkey Day! :turkey:", description="To those of you in the United States, we wish you a happy Thanksgiving. What are you going to give thanks for today? We want to tell you: Thank *you* for choosing Utilibot! Have a great day!\n\n||This message will disappear at 12 AM (CST). You can type `u!turkey` to see it again.||", color=0xcb611d)
-#			embed.set_author(name="Special Thanksgiving Day message from the Utilibot Development Team")
-#			embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
-#			await bot.dbexec(f"INSERT INTO {table} VALUES ({str(ctx.author.id)}, 'true')")
-#			await ctx.send(embed=embed)
-#			await bot.get_channel(781596395739152414).send(content=f"{ctx.author} received their turkey day message in **{ctx.guild.name}** ({ctx.channel.mention}).")
+@bot.event
+async def on_command(ctx):
+	if bot.get_command(ctx.command):
+		if not user.bot:
+			if not (await bot.dbquery("turkeyday", "notfirst", "userid=" + str(ctx.author.id))):
+				embed=discord.Embed(title=":turkey: Happy Turkey Day! :turkey:", description="To those of you in the United States, we wish you a happy Thanksgiving. What are you going to give thanks for today? We want to tell you: Thank *you* for choosing Utilibot! Have a great day!", color=0xcb611d)
+				embed.set_author(name="Special Thanksgiving Day message from the Utilibot Development Team")
+				embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
+	#			await bot.dbexec(f"INSERT INTO turkeyday VALUES ({str(ctx.author.id)}, 'true')")
+				await ctx.send(embed=embed)
+	else:
+		await ctx.send("lmao just testing error")
 
 
 @bot.event
@@ -325,7 +312,7 @@ for file in sorted(glob.glob("cogs/*.py")):
 		errlog(f"Cog {file} failed to load.```py\n{tb}```")
 # bot.load_extension("riftgun")
 
-disabled_commands = ['mute', 'shl', 'ushl']
+disabled_commands = ['mute']
 
 for cmd in disabled_commands:
 	try: bot.get_command(cmd).update(enabled=False)
