@@ -229,15 +229,14 @@ async def on_message(message):
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
 		await message.channel.send("no")
 	if fReg.search(message.content):
+		if user.bot: continue
 		db = await bot.dbquery("pressf", "enabled", f"channelid={message.channel.id}")
 		if db:
 			await message.channel.send(f"{message.author.mention} has paid their respects.")
 	afksearch=afkReg.search(message.content)
 	if afksearch:
-		try:
-			user = message.guild.get_member(int(afksearch.group(1)))
-		except:
-			continue
+		try: user = message.guild.get_member(int(afksearch.group(1)))
+		except: continue
 		globalafk = await bot.dbquery("globalafk", "message", f"userid={user.id}")
 		if globalafk:
 			embed = discord.Embed(description=globalafk[0][0], color=bot.utils.randcolor())
@@ -273,15 +272,16 @@ async def on_message(message):
 	else:
 		await bot.process_commands(message)
 
-@bot.event
-async def on_command(ctx):
-	if not ctx.author.bot:
-		db = (await bot.dbquery("turkeyday", "notfirst", "userid=" + str(ctx.author.id)))
-		if not db:
-			embed=discord.Embed(title=":turkey: Happy Turkey Day! :turkey:", description="To those of you in the United States, we wish you a happy Thanksgiving. What are you going to give thanks for today? We want to tell you: Thank *you* for choosing Utilibot! Have a great day!\n\n||This message will disappear at 12 AM (CST). You can type `u!turkey` to see it again.||", color=0xcb611d)
-			embed.set_author(name="Special Thanksgiving Day message from the Utilibot Development Team")
-			embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
-			await bot.dbexec(f"INSERT INTO turkeyday VALUES ({str(ctx.author.id)}, 'true')")
+#@bot.event
+#async def on_command(ctx):
+#	if not ctx.author.bot:
+#		table = turkeyday
+#		db = (await bot.dbquery(table, "notfirst", "userid=" + str(ctx.author.id)))
+#		if not db:
+#			embed=discord.Embed(title=":turkey: Happy Turkey Day! :turkey:", description="To those of you in the United States, we wish you a happy Thanksgiving. What are you going to give thanks for today? We want to tell you: Thank *you* for choosing Utilibot! Have a great day!\n\n||This message will disappear at 12 AM (CST). You can type `u!turkey` to see it again.||", color=0xcb611d)
+#			embed.set_author(name="Special Thanksgiving Day message from the Utilibot Development Team")
+#			embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
+#			await bot.dbexec(f"INSERT INTO {table} VALUES ({str(ctx.author.id)}, 'true')")
 #			await ctx.send(embed=embed)
 #			await bot.get_channel(781596395739152414).send(content=f"{ctx.author} received their turkey day message in **{ctx.guild.name}** ({ctx.channel.mention}).")
 
