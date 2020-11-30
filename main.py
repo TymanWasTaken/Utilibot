@@ -320,7 +320,9 @@ for file in sorted(glob.glob("cogs/*.py")):
 	try:
 		bot.load_extension(file)
 	except Exception as error:
-		print(f"\033[0;31m\033[1mCog {file} failed to load.\n{error}\033[0m")
+		BOLD = "\033[1m"
+		RED = "\033[0;31m"
+		print(f"{RED}{BOLD}Cog {file} failed to load.\n{error}\033[0m")
 		tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
 		# errlog(f"Cog {file} failed to load.```py\n{tb}```")
 # bot.load_extension("riftgun")
