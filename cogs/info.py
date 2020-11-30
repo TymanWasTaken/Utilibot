@@ -183,7 +183,7 @@ class Info(commands.Cog):
 				gcs = command_text
 			else:
 				gcs = ""
-			embeda = discord.Embed(description=f"`{cmd.name}{f' {cmd.signature}' if cmd.signature != '' else ''}`\n**Aliases:** {'|'.join(cmd.aliases) if cmd.aliases > 0 else 'None'}\n**Command Help:**{f'```{cmd.help}```' if cmd.help else 'No help found.'}")
+			embeda = discord.Embed(description=f"`{cmd.name}{f' {cmd.signature}' if cmd.signature else ''}`\n**Aliases:** {'|'.join(cmd.aliases) if cmd.aliases else 'None'}\n**Command Help:**{f'```{cmd.help}```' if cmd.help else 'No help found.'}")
 			embeda.set_footer(text=f"Category: {cmd.cog.qualified_name if cmd.cog else 'None'}")
 			await ctx.send(embed=embeda)
 			if len(cmd.aliases) > 0:
