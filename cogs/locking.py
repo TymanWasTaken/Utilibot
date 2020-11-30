@@ -88,7 +88,7 @@ class Locking(commands.Cog):
 			chanlist = []
 			existingchannels = json.loads(db[0][0])
 			for chan in existingchannels:
-				chanlist.append(ctx.guild.get_channel(chan))
+				chanlist.append(str(ctx.guild.get_channel(chan).mention))
 			chanlist = ', '.join(chanlist)
 			embed.description=f"{chanlist}"
 		await ctx.send(embed=embed)
