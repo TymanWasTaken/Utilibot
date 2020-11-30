@@ -513,23 +513,23 @@ class Utils(commands.Cog):
 					except aiohttp.ContentTypeError:
 						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
 
-	@commands.command(name="afk")
-	async def afk(self, ctx, *, afkmessage="AFK"):
+	@commands.command(name="globalafk")
+	async def globalafk(self, ctx, *, afkmessage="AFK"):
 		"""
-		Sets your AFK message.
+		Sets your global AFK message.
 		"""
 		await ctx.message.delete(delay=10)
 		db = await self.bot.dbquery("afk", "message", f"userid={ctx.author.id}")
 		if db:
-			await self.bot.dbexec((f"DELETE FROM afk WHERE userid={ctx.author.id}"))
+			await self.bot.dbexec((f"DELETE FROM globalafk WHERE userid={ctx.author.id}"))
 			if afkmessage == "AFK":
 				await ctx.send(f"{ctx.author.mention}, I removed your AFK!", delete_after=10)
 			else:
 				await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```", delete_after=10)
-				await self.bot.dbexec((f"INSERT INTO afk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
+				await self.bot.dbexec((f"INSERT INTO globalafk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
 		else:
 			await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```!", delete_after=10)
-			await self.bot.dbexec((f"INSERT INTO afk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
+			await self.bot.dbexec((f"INSERT INTO globalafk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
 
 
 	@commands.Cog.listener()
