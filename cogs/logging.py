@@ -299,20 +299,22 @@ class Logging(commands.Cog):
 			embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
 			embed.set_footer(text=f"User ID: {before.id}")
 			embed.set_author(name=before, icon_url=before.avatar_url)
+			before = ""
+			after = ""
 			#Username change
 			if before.name != after.name:
 				if not await self.islogenabled(guild, "username"):
 					return
 				embed.title="Username Changed"
-				embed.add_field(name="Before:", value=f"```{before.name}```", inline=False)
-				embed.add_field(name="After:", value=f"```{after.name}```", inline=False)
+				before=before.name
+				after=after.name
 			#Discriminator change
 			elif before.discriminator != after.discriminator:
 				if not await self.islogenabled(guild, "discriminator"):
 					return
 				embed.title="Discriminator Changed"
-				embed.add_field(name="Before:", value=f"```{before.discriminator}```", inline=False)
-				embed.add_field(name="After:", value=f"```{after.discriminator}```", inline=False)
+				before=before.discriminator
+				after=after.discriminator
 			#Avatar change
 			elif before.avatar_url != after.avatar_url:
 				if not await self.islogenabled(guild, "avatar"):
@@ -320,6 +322,9 @@ class Logging(commands.Cog):
 				embed.title="Avatar Updated"
 				embed.description = f"[Avatar Link]({after.avatar_url})"
 				embed.set_thumbnail(url=after.avatar_url)
+			if (bvalue != "") and (avalue != ""):
+				embed.add_field(name="Before:", value=before, inline=False)
+				embed.add_field(name="After:", value=after, inline=False)
 			await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
@@ -422,17 +427,26 @@ class Logging(commands.Cog):
 		if logchannel == None:
 			return
 		embed=discord.Embed(title="✏️ Guild Updated", color=0x1184ff, timestamp=datetime.now())
+		bvalue = ""
+		avalue = ""
 		if before.name != after.name:
 			embed.set_thumbnail(url=before.icon_url)
 			embed.title="Server Name Changed"
-			embed.add_field(name="Before:", value=before.name, inline=False)
-			embed.add_field(name="After:", value=after.name, inline=False)
+			bvalue=before.name
+			avalue=after.name
 		elif before.icon_url != after.icon_url:
 			embed.title="Server Icon Changed"
 			embed.description=f"[Link to New Icon]({after.icon_url})"
 			embed.set_image(image=after.icon_url)
+		elif before.region != after.region:
+			embed.title="Server Region Changed"
+			bvalue=before.region
+			avalue=after.region
 		if embed.title == embed.Empty:
 			return
+		if (bvalue != "") and (avalue != ""):
+			embed.add_field(name="Before:", value=bvalue, inline=False)
+			embed.add_field(name="After:", value=avalue, inline=False)
 		await logchannel.send(embed=embed)
 
 	# @commands.Cog.listener()
@@ -472,24 +486,29 @@ class Logging(commands.Cog):
 		if logchannel == None:
 			return
 		embed=discord.Embed(title="✏️ Role Updated", color=after.color, timestamp=datetime.now())
+		bvalue = ""
+		avalue = ""
 		embed.set_footer(text=f"Role ID: {before.id}")
 		if before.color != after.color:
-			embed.add_field(name="Before:", value=f"Color: {before.color}")
-			embed.add_field(name="After:", value=f"Color: {after.color}")
+			bvalue=f"Color: {before.color}"
+			avalue=f"Color: {after.color}"
 		elif before.name != after.name:
-			embed.add_field(name="Before:", value=f"Name: {before.name}")
-			embed.add_field(name="After:", value=f"Name: {after.name}")
+			bvalue=f"Name: {before.name}"
+			avalue=f"Name: {after.name}"
 		elif before.hoist != after.hoist:
-			embed.add_field(name="Before:", value=f"Displayed Separately?: {self.yes if before.hoist else self.no}")
-			embed.add_field(name="After:", value=f"Displayed Separately?: {self.yes if after.hoist else self.no}")
+			bvalue=f"Displayed Separately?: {self.yes if before.hoist else self.no}"
+			avalue=f"Displayed Separately?: {self.yes if after.hoist else self.no}"
 		elif before.position != after.position:
-			pass
-#			embed.add_field(name="Before:", value=f"Position: {before.position}")
-#			embed.add_field(name="After:", value=f"Position: {after.position}")
+			return
+#			bvalue=f"Position: {before.position}"
+#			avalue=f"Position: {after.position}"
 		elif before.permissions != after.permissions:
 #			embed.add_field(name="Before:", value=f"Permissions: {dict(before.permissions)}")
 #			embed.add_field(name="After:", value=f"Permissions: {dict(after.permissions)}")
 			embed.add_field(name="NOTE:", value="This log is a work in progress, eventually it will show which permissions changed :)", inline=False)
+		if (bvalue != "") and (avalue != ""):
+			embed.add_field(name="Before:", value=bvalue, inline=False)
+			embed.add_field(name="After:", value=avalue, inline=False)
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
