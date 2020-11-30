@@ -232,8 +232,9 @@ async def on_message(message):
 		db = await bot.dbquery("pressf", "enabled", f"channelid={message.channel.id}")
 		if db:
 			await message.channel.send(f"{message.author.mention} has paid their respects.")
-	if afkReg.search(message.content):
-		user = message.guild.get_member(afkReg.group(1))
+	afksearch=afkReg.search(message.content)
+	if afksearch:
+		user = message.guild.get_member(afksearch.group(1))
 		db = await bot.dbquery("afk", "message", f"userid={user.id}")
 		if db:
 			embed = discord.Embed(description=db[0][0])
