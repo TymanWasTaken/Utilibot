@@ -522,7 +522,7 @@ class Utils(commands.Cog):
 		await ctx.send(f"{ctx.author.mention}, I set your AFK message to `{afkmessage}`!")
 		if db:
 			await self.bot.dbexec((f"DELETE FROM afk WHERE userid={ctx.author.id}"))
-		await self.bot.dbexec((f"INSERT INTO afk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
+		await self.bot.dbexec((f"INSERT INTO afk VALUES (?, ?)", (str(ctx.author.id), f"{afkmessage}")))
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
