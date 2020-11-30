@@ -128,7 +128,7 @@ class Locking(commands.Cog):
 		removedchannels = []
 		for chan in channels:
 			if chan in existingchannels:
-				existingchannels.remove(index(chan.id))
+				existingchannels.remove(existingchannels.index(chan.id))
 				removedchannels.append(chan.mention)
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
 		await ctx.send(f"Removed the following channels from the list of hardlockable channels:\n{', '.join(removedchannels)}")
