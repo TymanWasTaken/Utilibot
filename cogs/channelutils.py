@@ -23,10 +23,6 @@ class ChannelUtils(commands.Cog):
 			"Type": str(channel.type).capitalize(),
 			"Slowmode": f"{f'{channel.slowmode_delay} seconds' if channel.slowmode_delay > 0 else 'Disabled'}"
 		}
-	#	embed.description=f"""
-	#	**ID:** `{channel.id}`
-	#	**
-	#	""".replace("	", "")
 		for f in fields:
 			embed.add_field(name=f, value=fields[f])
 		embed.set_footer(text="Created at")
