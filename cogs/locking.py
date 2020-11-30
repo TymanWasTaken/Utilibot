@@ -83,7 +83,7 @@ class Locking(commands.Cog):
 		Configure which channels will be locked by server hardlock/unhardlock.
 		"""
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
-		embed=discord.Embed(title="Server Hardlockable Channels", description=f"{ctx.guild} has no configured channels.")
+		embed=discord.Embed(title="Server Hardlockable Channels", description=f"**{ctx.guild}** has no configured channels.")
 		if len(db) > 0:
 			chanlist = []
 			existingchannels = json.loads(db[0][0])
@@ -99,7 +99,7 @@ class Locking(commands.Cog):
 		Adds channels to the list of server hardlockable channels.
 		"""
 		if len(channels) < 1:
-			return await ctx.send("Please provide some channels to remove!")
+			return await ctx.send("Please provide some channels to add!")
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		existingchannels = []
 		if db:
