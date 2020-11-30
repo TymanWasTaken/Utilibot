@@ -270,8 +270,8 @@ async def on_command(ctx):
 			embed.set_author(name="Special Thanksgiving Day message from the Utilibot Development Team")
 			embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
 			await bot.dbexec(f"INSERT INTO turkeyday VALUES ({str(ctx.author.id)}, 'true')")
-			await ctx.send(embed=embed)
-			await bot.get_channel(781596395739152414).send(content=f"{ctx.author} received their turkey day message in **{ctx.guild.name}** ({ctx.channel.mention}).")
+#			await ctx.send(embed=embed)
+#			await bot.get_channel(781596395739152414).send(content=f"{ctx.author} received their turkey day message in **{ctx.guild.name}** ({ctx.channel.mention}).")
 
 
 @bot.event
