@@ -127,9 +127,7 @@ class Locking(commands.Cog):
 		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
 		removedchannels = []
 		for chan in channels:
-			await ctx.send(chan)
 			if chan.id in existingchannels:
-				await ctx.send(chan)
 				existingchannels.remove(chan.id)
 				removedchannels.append(chan.mention)
 		if len(existingchannels) > 1:
