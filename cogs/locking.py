@@ -176,9 +176,9 @@ class Locking(commands.Cog):
 		embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
 			embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}"
-		await bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
-		await bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(channellist))))
-		await bot.dbexec(("INSERT INTO islocked VALUES (?, ?)", (str(ctx.guild.id), "true")))
+		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
+		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(channellist))))
+		await self.bot.dbexec(("INSERT INTO islocked VALUES (?, ?)", (str(ctx.guild.id), "true")))
 		await m.delete()
 		await ctx.send(content="Done!", embed=embed, delete_after=60)
 
