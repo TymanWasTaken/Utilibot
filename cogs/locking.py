@@ -86,7 +86,7 @@ class Locking(commands.Cog):
 		embed=discord.Embed(title="Server Hardlockable Channels", description=f"{ctx.guild} has no configured channels.")
 		if len(db) > 0:
 			chanlist = []
-			exisitngchannels = json.loads(db[0][0])
+			existingchannels = json.loads(db[0][0])
 			for chan in existingchannels:
 				chanlist.append(ctx.guild.get_channel(chan))
 			chanlist = ', '.join(chanlist)
