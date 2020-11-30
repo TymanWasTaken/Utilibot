@@ -234,10 +234,13 @@ async def on_message(message):
 			await message.channel.send(f"{message.author.mention} has paid their respects.")
 	afksearch=afkReg.search(message.content)
 	if afksearch:
-		user = message.guild.get_member(int(afksearch.group(1)))
-		db = await bot.dbquery("globalafk", "message", f"userid={user.id}")
-		if db:
-			embed = discord.Embed(description=db[0][0], color=bot.utils.randcolor())
+		try:
+			user = message.guild.get_member(int(afksearch.group(1)))
+		except:
+			continue
+		globalafk = await bot.dbquery("globalafk", "message", f"userid={user.id}")
+		if globalafk:
+			embed = discord.Embed(description=globalafk[0][0], color=bot.utils.randcolor())
 			embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator} is currently AFK.", icon_url=user.avatar_url)
 			await message.channel.send(embed=embed, delete_after=10)
 	if message.webhook_id != None and message.mention_everyone:
