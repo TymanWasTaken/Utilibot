@@ -234,7 +234,7 @@ async def on_message(message):
 			await message.channel.send(f"{message.author.mention} has paid their respects.")
 	if afkReg.search(message.content):
 		user = message.guild.get_member(afkReg.group(1))
-		db = await bot.dbquery("afk", "message", f"userid={user.id})
+		db = await bot.dbquery("afk", "message", f"userid={user.id}")
 			if db:
 				embed = discord.Embed(description=db[0][0])
 				embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator} is currently AFK in {message.guild}", icon_url=user.avatar_url)
