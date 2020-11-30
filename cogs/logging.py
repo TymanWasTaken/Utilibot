@@ -299,22 +299,22 @@ class Logging(commands.Cog):
 			embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
 			embed.set_footer(text=f"User ID: {before.id}")
 			embed.set_author(name=before, icon_url=before.avatar_url)
-			before = ""
-			after = ""
+			bvalue = ""
+			avalue = ""
 			#Username change
 			if before.name != after.name:
 				if not await self.islogenabled(guild, "username"):
 					return
 				embed.title="Username Changed"
-				before=before.name
-				after=after.name
+				bvalue=before.name
+				avalue=after.name
 			#Discriminator change
 			elif before.discriminator != after.discriminator:
 				if not await self.islogenabled(guild, "discriminator"):
 					return
 				embed.title="Discriminator Changed"
-				before=before.discriminator
-				after=after.discriminator
+				bvalue=before.discriminator
+				avalue=after.discriminator
 			#Avatar change
 			elif before.avatar_url != after.avatar_url:
 				if not await self.islogenabled(guild, "avatar"):
@@ -323,8 +323,8 @@ class Logging(commands.Cog):
 				embed.description = f"[Avatar Link]({after.avatar_url})"
 				embed.set_thumbnail(url=after.avatar_url)
 			if (bvalue != "") and (avalue != ""):
-				embed.add_field(name="Before:", value=before, inline=False)
-				embed.add_field(name="After:", value=after, inline=False)
+				embed.add_field(name="Before:", value=bvalue, inline=False)
+				embed.add_field(name="After:", value=avalue, inline=False)
 			await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
@@ -653,7 +653,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 
 	@commands.Cog.listener()
 	async def on_reaction_clear(self, message, reactions):
-		if not await self.islogenabled(self.bot.get_guild(message.guild_id), "reactionclear"):
+		if not await self.islogenabled(self.bot.get_guild(message.guild.id), "reactionclear"):
 			return
 		reactlist = ", ".join(reactions)
 		rawreactlist = "`, `".join(reactions)
