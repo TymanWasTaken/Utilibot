@@ -102,7 +102,7 @@ class Locking(commands.Cog):
 		existingchannels = []
 		if db:
 			existingchannels = json.loads(db[0][0])
-			await bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
+			await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
 		newchannels = []
 		for chan in channels:
 			if chan not in existingchannels:
