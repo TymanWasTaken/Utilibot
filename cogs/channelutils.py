@@ -8,7 +8,7 @@ class ChannelUtils(commands.Cog):
 	
 	@commands.command(name="channelinfo", aliases=['ci'])
 	@commands.guild_only()
-	async def channelinfo(self, ctx, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel]):
+	async def channelinfo(self, ctx, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel, None]):
 		"""
 		Shows some info on a channel.
 		"""
