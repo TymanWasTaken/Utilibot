@@ -533,14 +533,13 @@ class Utils(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
-		await guild.get_channel(payload.channel_id).send("YEET")
 		if payload.emoji == "📣":
-			ch = payload.channel
+			ch = self.bot.get_channel(payload.channel_id)
 			await ch.send("🤔")
 			if ch.type != discord.ChannelType.news:
 				await ch.send(f"<#{ch.id}> is not an announcement channel!", delete_after=5)
 			else:
-				msg = payload.message
+				msg = ch.fetch_message(payload.message_id)
 				try:
 					await msg.publish()
 					await ch.send(f"Sucessfully published <{msg.jump_url}>!", delete_after=5)
