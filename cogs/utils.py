@@ -365,7 +365,7 @@ class Utils(commands.Cog):
 		await ctx.send(embed=embed)
 	
 #	@commands.command(name="poll")
-#	async def poll(self, ctx, pingrole: typing.Optional[discord.Role]=None, question: str, desc: str=None):
+#	async def poll(self, ctx, question: str, desc: str=None, pingrole: typing.Optional[discord.Role]=None):
 #		content = ""
 #		if pingrole != None:
 #			content = pingrole.mention
@@ -513,15 +513,25 @@ class Utils(commands.Cog):
 					except aiohttp.ContentTypeError:
 						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
 
+	@commands.command(name="afk")
+	async def afk(self, ctx, *message):
+		"""
+		Sets your AFK message.
+		"""
+		db = await bot.dbquery("afk", "message", f"userid=ctx.author.id")
+		await ctx.send(f"{ctx.author.mention}, I set your AFK message to `{message}`!")
+		if db:
+			await bot.dbexec(f"DELETE FROM afk WHERE userid={ctx.author.id}")
+		await bot.dbexec(f"INSERT INTO afk VALUES (?, ?)", (str(message), ctx.author.id))
+
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
 		if payload.emoji == "📣":
 			ch = payload.channel
 			if ch.type != discord.ChannelType.news:
-				er = await payload.channel.send(f"<#{ch.id}> is not an announcement channel!")
-				await er.delete(delay=5)
+				await ch.send(f"<#{ch.id}> is not an announcement channel!", delete_after=5)
 			else:
-				msg = await ch.fetch_message(payload.message.id)
+				msg = payload.message
 				try:
 					await msg.publish()
 					await ch.send(f"Sucessfully published <{msg.jump_url}>!", delete_after=5)
