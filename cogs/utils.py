@@ -514,15 +514,15 @@ class Utils(commands.Cog):
 						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
 
 	@commands.command(name="afk")
-	async def afk(self, ctx, *, message):
+	async def afk(self, ctx, *, afkmessage):
 		"""
 		Sets your AFK message.
 		"""
 		db = await self.bot.dbquery("afk", "message", f"userid={ctx.author.id}")
-		await ctx.send(f"{ctx.author.mention}, I set your AFK message to `{message}`!")
+		await ctx.send(f"{ctx.author.mention}, I set your AFK message to `{afkmessage}`!")
 		if db:
 			await self.bot.dbexec((f"DELETE FROM afk WHERE userid={ctx.author.id}"))
-		await self.bot.dbexec((f"INSERT INTO afk VALUES ({message}, {ctx.author.id})"))
+		await self.bot.dbexec((f"INSERT INTO afk VALUES ({afkmessage}, {ctx.author.id})"))
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
