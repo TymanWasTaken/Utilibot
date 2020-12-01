@@ -103,7 +103,7 @@ async def setPrefix(ctx, prefix):
 			await db.execute(f"INSERT INTO prefixes VALUES ({ctx.guild.id}, \"{prefix}\")")
 			await db.commit()
 
-bot = commands.Bot(command_prefix=getPrefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False), intents=intents)
+bot = commands.Bot(command_prefix=getPrefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False), intents=intents)
 
 bot.setPrefix = setPrefix
 bot.dbquery = query
