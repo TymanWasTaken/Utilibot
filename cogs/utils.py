@@ -366,7 +366,19 @@ class Utils(commands.Cog):
 	@commands.command(name="roleinfo", aliases=['ri'])
 	@commands.guild_only()
 	async def roleinfo(self, ctx, role: discord.Role):
-		await ctx.send("nah")
+		embed=discord.Embed(
+		title=f"{role.name}'s Info",
+		description=f"""
+		**Members:** {len(role.members)}
+		**Position:** {role.position}
+		**Color:** {role.color}
+		**Hoisted:** {self.yes if role.hoist else self.no}
+		**Mentionable:** {self.yes if role.mentionable else self.no}
+		""".replace("	", ""),
+		color=role.color)
+		embed.set_footer(text=f"ID: {role.id}| Created on ")
+		embed.timestamp=role.created_at
+		await ctx.send(embed=embed)
 	
 #	@commands.command(name="poll")
 #	async def poll(self, ctx, question: str, desc: str=None, pingrole: typing.Optional[discord.Role]=None):
