@@ -135,4 +135,4 @@ cogs/friendserver.py
 data.json
 
 # node
-node_modules
+node_modules/
