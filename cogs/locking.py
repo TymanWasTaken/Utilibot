@@ -31,24 +31,19 @@ async def islockable(guild, channel):
 	else:
 		return data[channel]
 
-async def doeschannelexist(guild, channel):
+async def doeschannelexist(guild):
 	if not guild:
 		return
-	channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
-		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
-		if not channeldb:
-			return await ctx.send(f"This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
-		if islockeddb:
-			return await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is already locked down!")
-		channellist = json.loads(channeldb[0][0])
-for chanid in channellist:
-			chan = ctx.guild.get_channel(chanid)
-			if not chan:
-				channellist.remove(chanid)
-				continue
+	channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(guild.id))
+	if not channeldb:
+		return
+	channellist = json.loads(channeldb[0][0])
+	for chanid in channellist:
+		if not guild.get_channel(chanid):
+			channellist.remove(chanid)
+	await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(guild.id))
+	await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(guild.id), str(channellist))))
 
-		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
-		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(channellist))))
 class Locking(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
@@ -100,6 +95,7 @@ class Locking(commands.Cog):
 		"""
 		Configure which channels will be locked by server hardlock/unhardlock.
 		"""
+		await self.doeschannelexist(ctx.guild)
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		embed=discord.Embed(title="Server Hardlockable Channels", description=f"**{ctx.guild}** has no configured channels.")
 		if len(db) > 0:
@@ -117,7 +113,7 @@ class Locking(commands.Cog):
 		Adds channels to the list of server hardlockable channels.
 		"""
 		if len(channels) < 1:
-			return await ctx.send("Please provide some channels to add!")
+			return await ctx.send("Please provide some channels to add to the list!")
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		existingchannels = []
 		if db:
@@ -128,11 +124,9 @@ class Locking(commands.Cog):
 			if chan.id not in existingchannels:
 				existingchannels.append(chan.id)
 				newchannels.append(chan.mention)
-		for chanid in existingchannels:
-			if not ctx.guild.get_channel(chanid):
-				existingchannels.remove(chanid)
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
 		await ctx.send(f"Added the following channels to the list of hardlockable channels:\n{', '.join(newchannels)}")
+		await self.doeschannelexist(ctx.guild)
 
 	@serverhardlockable.command()
 	async def remove(self, ctx, *channels: discord.TextChannel):
@@ -151,25 +145,23 @@ class Locking(commands.Cog):
 			if chan.id in existingchannels:
 				existingchannels.remove(chan.id)
 				removedchannels.append(chan.mention)
-		for chanid in existingchannels:
-			if not ctx.guild.get_channel(chanid):
-				existingchannels.remove(chanid)
 		if len(existingchannels) > 1:
 			await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
 		if len(removedchannels) < 1:
 			await ctx.send("There were no channels to remove.")
 		else:
 			await ctx.send(f"Removed the following channels from the list of hardlockable channels:\n{', '.join(removedchannels)}")
+		await self.doeschannelexist(ctx.guild)
 
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True, manage_guild=True)
 	@commands.guild_only()
-	@commands.is_owner()
 	async def serverhardlock(self, ctx, *, reason=f'None given.'):
 		"""
 		Locks the entire server by setting specified channels' send messages permissions for @everyone to false.
 		"""
+		await self.doeschannelexist(ctx.guild)
 		channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
 		if not channeldb:
@@ -181,9 +173,6 @@ class Locking(commands.Cog):
 		m = await ctx.send("Locking server...")
 		for chanid in channellist:
 			chan = ctx.guild.get_channel(chanid)
-			if not chan:
-				channellist.remove(chanid)
-				continue
 			perms = chan.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages != False:
 				perms.send_messages = False
@@ -194,8 +183,6 @@ class Locking(commands.Cog):
 		embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
 			embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}"
-		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
-		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(channellist))))
 		await self.bot.dbexec(("INSERT INTO islocked VALUES (?, ?)", (str(ctx.guild.id), "true")))
 		await m.delete()
 		if len(locked) < 1:
@@ -208,11 +195,11 @@ class Locking(commands.Cog):
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True, manage_guild=True)
 	@commands.guild_only()
-	@commands.is_owner()
 	async def serverunhardlock(self, ctx, *, reason='None given.'):
 		"""
 		Unlocks the entire server by setting all channels' send messages permissions for @everyone to neutral.
 		"""
+		await self.doeschannelexist(ctx.guild)
 		channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
 		if not channeldb:
@@ -224,9 +211,6 @@ class Locking(commands.Cog):
 		m = await ctx.send("Unlocking server...")
 		for chanid in channellist:
 			chan = ctx.guild.get_channel(chanid)
-			if not chan:
-				channellist.remove(chanid)
-				continue
 			perms = chan.overwrites_for(ctx.guild.default_role)
 			if perms.send_messages == False:
 				perms.send_messages = None
@@ -237,8 +221,6 @@ class Locking(commands.Cog):
 		embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
 			embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}"
-		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
-		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(channellist))))
 		await self.bot.dbexec("DELETE FROM islocked WHERE guildid=" + str(ctx.guild.id))
 		await m.delete()
 		if len(unlocked) < 1:
