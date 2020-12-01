@@ -238,10 +238,25 @@ async def on_message(message):
 		try: user = message.guild.get_member(int(afksearch.group(1)))
 		except: user = None
 		if user and not message.author.bot:
+			localafk = await bot.dbquery("afk", "data", f"guildid={message.guild.id}")
 			globalafk = await bot.dbquery("globalafk", "message", f"userid={user.id}")
+			localmsg = ""
+			globalmsg = ""
+			if localafk:
+				localdata = json.loads((localafk[0][0]).replace("'", '"'))
+				try:
+					localmsg = localdata[str(user.id)]
+				except:
+					pass
 			if globalafk:
-				embed = discord.Embed(description=globalafk[0][0], color=bot.utils.randcolor())
-				embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator} is currently AFK.", icon_url=user.avatar_url)
+				globalmsg = globalafk[0][0]
+			if globalmsg or localmsg:
+				embed = discord.Embed(description=globalmsg, color=bot.utils.randcolor())
+				inguild = ""
+				if localmsg:
+					embed.description=localmsg
+					inguild = f" in {message.guild}"
+				embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator} is currently AFK{inguild}.", icon_url=user.avatar_url)
 				await message.channel.send(embed=embed, delete_after=10)
 	if message.webhook_id != None and message.mention_everyone:
 		webhook_guilds = [693225390130331661, 755887706386726932]
