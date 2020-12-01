@@ -147,28 +147,28 @@ async def on_command_error(ctx, error):
 		errorchannel = bot.get_channel(764333133738541056)
 		longTextRegex = re.match(r"Command raised an exception: HTTPException: 400 Bad Request \(error code: 50035\): Invalid Form Body\nIn (.+): Must be (\d+) or fewer in length.", str(error))
 		if isinstance(error, commands.TooManyArguments):
-			await ctx.send('Too many arguments')
+			await ctx.reply('Too many arguments')
 		elif isinstance(error, commands.NotOwner):
-			await ctx.send('Nice try, but you are not one of the developers.')
+			await ctx.reply('Nice try, but you are not one of the developers.')
 			await errorchannel.send(f"{ctx.author} tried to run `{ctx.command.qualified_name}`, but they are not owner.")
 		elif isinstance(error, commands.CommandNotFound):
 			if ctx.guild and ctx.guild.id in nocommandblacklist:
 				return
 			await ctx.send(f'`{ctx.message.content}` is not a command, <@{ctx.author.id}>')
 		elif isinstance(error, commands.CheckFailure):
-			await ctx.send(error)
+			await ctx.reply(error)
 		elif isinstance(error, BlacklistedError):
-			await ctx.send(error)
+			await ctx.reply(error)
 		elif isinstance(error, commands.DisabledCommand):
-			await ctx.send(f'Sorry, but the command `{ctx.command.qualified_name}` is currently disabled.')
+			await ctx.reply(f'Sorry, but the command `{ctx.command.qualified_name}` is currently disabled.')
 		elif isinstance(error, commands.MissingRequiredArgument):
-			await ctx.send(str(error).capitalize())
+			await ctx.reply(str(error).capitalize())
 		elif isinstance(error, commands.BadArgument) or isinstance(error, commands.BadUnionArgument):
-			await ctx.send(f"There was an error parsing command arguments:\n`{error}`")
+			await ctx.reply(f"There was an error parsing command arguments:\n`{error}`")
 		elif "VoiceError: You are not connected to a voice channel." in str(error):
 			pass
 		elif longTextRegex != None:
-			await ctx.send(f"Command response was too long to send. `{longTextRegex.group(1)}` must be {longTextRegex.group(2)} characters or less.")
+			await ctx.reply(f"Command response was too long to send. `{longTextRegex.group(1)}` must be {longTextRegex.group(2)} characters or less.")
 		else:
 			invitelink = f"https://discord.gg/"
 			for invite in await bot.get_guild(755887706386726932).invites():
