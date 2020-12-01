@@ -138,7 +138,7 @@ async def on_ready():
 		bot.const_emojis[e.name] = str(e)
 	print(f'Bot logged in as {bot.user}')
 	await bot.get_channel(755979601788010527).send(content=datetime.now().strftime("[%m/%d/%Y %I:%M:%S] ") + "Bot online")
-	await bot.change_presence(activity=discord.Game("with my developers' emotions."))
+	await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, "Clari's screams of frustration"))
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -261,6 +261,15 @@ async def on_message(message):
 				embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator} is currently AFK{inguild}.", icon_url=user.avatar_url)
 				embed.set_footer(text=f"Scope: {scope} AFK Message")
 				await message.channel.send(embed=embed, delete_after=10)
+	if message.channel.type == discord.ChannelType.news:
+		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(guild.id))
+		try: chans = json.loads(autopubdb[0][0])
+		except: chans = []
+		if message.channel.id in chans:
+			await message.publish()
+			await message.add_reaction("📣)
+			await asyncio.sleep(3)
+			await message.remove_reaction("📣", message.guild.me)
 	if message.webhook_id != None and message.mention_everyone:
 		webhook_guilds = [693225390130331661, 755887706386726932]
 		if message.guild.id in webhook_guilds:
