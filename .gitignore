@@ -133,3 +133,6 @@ cogs/friendserver.py
 
 # dbs
 data.json
+
+# node
+node_modules
