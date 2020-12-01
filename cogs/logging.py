@@ -67,7 +67,7 @@ class Logging(commands.Cog):
 		"""
 		logchannel = await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(ctx.guild.id))
 		if logchannel == []:
-			return await ctx.send(f"You haven't configured a log channel for this server yet! Type `{(await self.bot.command_prefix(self.bot, ctx.message))[3]}log channel <channel>` to set it up.")
+			return await ctx.send(f"You haven't configured a log channel for this server yet! Type `{ctx.prefix}log channel <channel>` to set it up.")
 		else: 
 			logchannel = logchannel[0][0]
 		db = await self.getlogs(ctx.guild)
