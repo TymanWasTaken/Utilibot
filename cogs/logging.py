@@ -103,6 +103,7 @@ class Logging(commands.Cog):
 		"""
 		Enable one of the logs.
 		"""
+		log = log.lower()
 		if log not in self.log_flat:
 			return await ctx.send("Not a valid log.")
 		db = await self.getlogs(ctx.guild)
@@ -121,6 +122,7 @@ class Logging(commands.Cog):
 		"""
 		Disable one of the logs.
 		"""
+		log = log.lower()
 		if log not in self.log_flat:
 			return await ctx.send("Not a valid log.")
 		db = await self.getlogs(ctx.guild)
