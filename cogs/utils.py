@@ -523,11 +523,16 @@ class Utils(commands.Cog):
 		if db:
 			await self.bot.dbexec((f"DELETE FROM globalafk WHERE userid={ctx.author.id}"))
 			if afkmessage == "AFK":
+				newnick = str(ctx.author.nick).replace("{AFK}", "")
+				if newnick == str(ctx.author.name): newnick = None
+				try: await ctx.author.edit(nick=newnick)
 				await ctx.send(f"{ctx.author.mention}, I removed your AFK!", delete_after=10)
 			else:
 				await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```", delete_after=10)
 				await self.bot.dbexec((f"INSERT INTO globalafk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
 		else:
+			try: await ctx.author.edit(nick="{AFK} " + (str(ctx.author.nick) or str(ctx.author.name)))
+			except: pass
 			await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```!", delete_after=10)
 			await self.bot.dbexec((f"INSERT INTO globalafk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
 
