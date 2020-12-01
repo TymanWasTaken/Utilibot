@@ -560,7 +560,8 @@ class Utils(commands.Cog):
 		db = await self.bot.dbquery("afk", "data", f"guildid={ctx.guild.id}")
 		guilddata={}
 		if db:
-			guilddata = json.loads((db[0][0]).replace("'", '"'))
+#			guilddata = json.loads((db[0][0]).replace("'", '"'))
+			guilddata = json.loads(str(db[0][0]))
 			await self.bot.dbexec("DELETE FROM afk WHERE guildid=" + str(ctx.guild.id))
 		if afkmessage == "AFK":
 			try: 
