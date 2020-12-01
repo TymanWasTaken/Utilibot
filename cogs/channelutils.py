@@ -1,4 +1,4 @@
-import discord, typing
+import discord, typing, json
 from discord.ext import commands
 
 
@@ -44,9 +44,27 @@ class ChannelUtils(commands.Cog):
 			if curtype == discord.ChannelType.news:
 				newtype = discord.ChannelType.text
 			await c.edit(type=newtype, reason=f"{ctx.author} ({ctx.author.id}) converted this channel to type {newtype}.")
-			await ctx.send(f"Changed <#{c.id}> to type `{newtype}`!")
+			await ctx.send(f"{self.bot.const_emojis['yes']} Changed <#{c.id}> to type `{newtype}`!")
 		else:
-			await ctx.send("❌ This server can't have announcement channels! Ask somebody with the `Manage Server` permission to enable Community in Server Settings, then try again.\nPlease do not run this command again until community has been enabled.")
+			await ctx.send(f"{self.bot.const_emojis['no']} This server can't have announcement channels! Ask somebody with the `Manage Server` permission to enable Community in Server Settings, then try again.\nPlease do not run this command again until community has been enabled.")
+
+	@commands.command(name="autopublish", aliases=['autopub', 'ap'])
+	@commands.has_permissions(manage_channels=True)
+	@commands.bot_has_permissions(manage_channels=True)
+	@commands.guild_only()
+	async def autopublish(self, ctx, channel: discord.TextChannel=None):
+		channel = channel or ctx.channel
+		db = await self.bot.dbquery("autopublish_channels", "data", "guildid=" + str(ctx.guild.id))
+		chanlist = []
+		if db:
+			chanlist = json.loads(db[0][0])
+			await self.bot.dbexec("DELETE FROM autopublish_channels WHERE guildid=" + str(ctx.guild.id))
+		if channel.id in chanlist:
+			chanlist.remove(channel.id)
+		else:
+			chanlist.append(channel.id)
+		await self.bot.dbexec(("INSERT INTO autopublish_channels VALUES (?, ?)", (str(ctx.guild.id), str(chanlist))))
+		await ctx.send(f"{self.bot.const_emojis['yes']} Added {channel.mention} to the list of channels that will have their messages autopublished!")
 
 	@commands.command(name="publish")
 	@commands.has_permissions(manage_messages=True)
