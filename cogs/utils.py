@@ -543,20 +543,47 @@ class Utils(commands.Cog):
 		if db:
 			await self.bot.dbexec((f"DELETE FROM globalafk WHERE userid={ctx.author.id}"))
 			if afkmessage == "AFK":
-				newnick = str(ctx.author.nick).replace("{AFK}", "")
-				if newnick == str(ctx.author.name): newnick = None
-				try: await ctx.author.edit(nick=newnick)
-				except: pass
 				await ctx.send(f"{ctx.author.mention}, I removed your AFK!", delete_after=10)
 			else:
 				await ctx.send(f"{ctx.author.mention}, I set your global AFK message to: ```\n{afkmessage}```", delete_after=10)
 				await self.bot.dbexec((f"INSERT INTO globalafk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
 		else:
-			try: await ctx.author.edit(nick="{AFK} " + (str(ctx.author.nick) or str(ctx.author.name)))
-			except: pass
-			await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```", delete_after=10)
+			await ctx.send(f"{ctx.author.mention}, I set your global AFK message to: ```\n{afkmessage}```", delete_after=10)
 			await self.bot.dbexec((f"INSERT INTO globalafk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
+			
+	@commands.command(name="afk")
+	async def afk(self, ctx, *, afkmessage="AFK"):
+		"""
+		Sets your local AFK message.
+		"""
+		await ctx.message.delete(delay=10)
+		db = await self.bot.dbquery("afk", "data", f"guildid={ctx.guild.id}")
+		guilddata={}
+		if db:
+			guilddata = json.loads((db[0][0]).replace("'", '"'))
+			await self.bot.dbexec("DELETE FROM afk WHERE guildid=" + str(ctx.guild.id))
+		if afkmessage == "AFK":
+			try: 
+				message = guilddata[str(ctx.author.id)]
+			except: 
+				message = None
+			if message:
+				guilddata.pop(str(ctx.author.id))
+				await ctx.send(f"{ctx.author.mention}, I removed your AFK!", delete_after=10)
+			else:
+				guilddata[str(ctx.author.id)] = "AFK"
+		else:
+			guilddata[str(ctx.author.id)] = afkmessage
+		await bot.dbexec(("INSERT INTO afk VALUES (?, ?)", (str(ctx.guild.id), str(guilddata))))
+		await ctx.send(f"{ctx.author.mention}, I set your local AFK message to: ```\n{afkmessage}```", delete_after=10)
 
+#			newnick = str(ctx.author.nick).replace("{AFK}", "")
+#			if newnick == str(ctx.author.name): newnick = None
+#			try: await ctx.author.edit(nick=newnick)
+#			except: pass
+#			
+#			try: await ctx.author.edit(nick="{AFK} " + (str(ctx.author.nick) or str(ctx.author.name)))
+#			except: pass
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
