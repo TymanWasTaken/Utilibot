@@ -267,10 +267,9 @@ class Utils(commands.Cog):
 				status = bot.get_emoji(778489150148050996)
 			elif user.status == discord.Status.offline:
 				status = bot.get_emoji(778489148750561292)
+			mobile = self.bot.const_emojis["no"]
 			if user.is_on_mobile():
-				mobile = "✅"
-			else:
-				mobile = "❌"
+				mobile = self.bot.const_emojis["yes"]
 			embed = discord.Embed(
 				title=f"{str(user)}'s Info:", 
 				description=f"""**Nickname:** {user.nick}
@@ -279,7 +278,7 @@ class Utils(commands.Cog):
 				**Joined Server on:** {user.joined_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
 				**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
 				**Status:** {status}
-				**Bot:** {'✅' if user.bot else '❌'}
+				**Bot:** {self.bot.const_emojis["yes"] if user.bot else self.bot.const_emojis["no"]}
 				**Mobile:** {mobile}
 				**Badges:**
 				{flags_nice}"""
@@ -294,7 +293,7 @@ class Utils(commands.Cog):
 				description=f"""**Name:** {user.name}
 				**User ID:** `{user.id}`
 				**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
-				**Bot:** {'✅' if user.bot else '❌'}
+				**Bot:** {self.bot.const_emojis['no'] if user.bot else self.bot.const_emojis['no']}
 				**Badges:**
 				{flags_nice}"""
 				.replace("	", ""),
@@ -555,7 +554,7 @@ class Utils(commands.Cog):
 		else:
 			try: await ctx.author.edit(nick="{AFK} " + (str(ctx.author.nick) or str(ctx.author.name)))
 			except: pass
-			await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```!", delete_after=10)
+			await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```", delete_after=10)
 			await self.bot.dbexec((f"INSERT INTO globalafk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
 
 
