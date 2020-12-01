@@ -392,7 +392,7 @@ class Utils(commands.Cog):
 	@commands.bot_has_permissions(manage_roles=True)
 	async def hoist(self, ctx, role: discord.Role):
 		am = discord.AllowedMentions(roles=False)
-		if role >= ctx.user.top_role:
+		if role >= ctx.author.top_role:
 			await ctx.send(f"You can't edit {role.mention} as it's above your highest role!", allowed_mentions=am)
 		elif role >= self.bot.user.top_role:
 			await ctx.send(f"I can't edit {role.mention} as it's above my highest role!", allowed_mentions=am)
