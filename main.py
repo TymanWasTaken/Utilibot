@@ -262,14 +262,17 @@ async def on_message(message):
 				embed.set_footer(text=f"Scope: {scope} AFK Message")
 				await message.channel.send(embed=embed, delete_after=10)
 	if message.channel.type == discord.ChannelType.news:
-		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(guild.id))
+		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
 		except: chans = []
 		if message.channel.id in chans:
-			await message.publish()
-			await message.add_reaction("📣")
-			await asyncio.sleep(3)
-			await message.remove_reaction("📣", message.guild.me)
+			try:
+				await message.publish()
+				await message.add_reaction("📣")
+				await asyncio.sleep(3)
+				await message.remove_reaction("📣", message.guild.me)
+			except:
+				await message.author.send(f"Failed to publish {message.jump_url}.")
 	if message.webhook_id != None and message.mention_everyone:
 		webhook_guilds = [693225390130331661, 755887706386726932]
 		if message.guild.id in webhook_guilds:
