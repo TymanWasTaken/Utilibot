@@ -50,11 +50,11 @@ class Locking(commands.Cog):
 		ch = channel or ctx.channel
 		perms = ch.overwrites_for(ctx.guild.default_role)
 		if perms.send_messages == False:
-			await ctx.send(f"❌ <#{ch.id}> is already locked!")
+			await ctx.send(f"{self.bot.const_emojis['no']} <#{ch.id}> is already locked!")
 		else:
 			perms.send_messages = False
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author} ({ctx.author.id}.")
-			await ctx.send(f"✅ Successfully locked down <#{ch.id}> \n**Reason**: {reason}", delete_after=10)
+			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully locked down <#{ch.id}> \n**Reason**: {reason}", delete_after=10)
 			await ch.send(embed=discord.Embed(title=f"🔒 Channel Locked 🔒", description=f"This channel was locked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
 		
 	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
@@ -68,11 +68,11 @@ class Locking(commands.Cog):
 		ch = channel or ctx.channel
 		perms = ch.overwrites_for(ctx.guild.default_role)
 		if perms.send_messages != False:
-			await ctx.send(f"❌ <#{ch.id}> is not locked!")
+			await ctx.send(f"{self.bot.const_emojis['no']} <#{ch.id}> is not locked!")
 		else:
 			perms.send_messages = None
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel unlocked by {ctx.author} ({ctx.author.id}.")
-			await ctx.send(f"✅ Successfully unlocked <#{ch.id}>!\n**Reason:** {reason}", delete_after=10)
+			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully unlocked <#{ch.id}>!\n**Reason:** {reason}", delete_after=10)
 			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unlocked 🔓", description=f"This channel was unlocked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
 
 	@commands.group(name="serverhardlockable", aliases=['shlockable', 'shlable'], invoke_without_command=True)
@@ -102,7 +102,7 @@ class Locking(commands.Cog):
 		Adds channels to the list of server hardlockable channels.
 		"""
 		if len(channels) < 1:
-			return await ctx.send("Please provide some channels to add to the list!")
+			return await ctx.send(f"{self.bot.const_emojis['no']} Please provide some channels to add to the list!")
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		existingchannels = []
 		if db:
@@ -114,7 +114,7 @@ class Locking(commands.Cog):
 				existingchannels.append(chan.id)
 				newchannels.append(chan.mention)
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
-		await ctx.send(f"Added the following channels to the list of hardlockable channels:\n{'`||`'.join(newchannels)}")
+		await ctx.send(f"{self.bot.const_emojis['yes']} Added the following channels to the list of hardlockable channels:\n{'`||`'.join(newchannels)}")
 		await self.doeschannelexist(ctx.guild)
 
 	@serverhardlockable.command()
@@ -124,9 +124,9 @@ class Locking(commands.Cog):
 		"""
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		if not db:
-			return await ctx.send(f"This server has no hardlockable channels. Use `{ctx.prefix}shlable add <channels>` to add some.")
+			return await ctx.send(f"{self.bot.const_emojis['no']} This server has no hardlockable channels. Use `{ctx.prefix}shlable add <channels>` to add some.")
 		if len(channels) < 1:
-			return await ctx.send("Please provide some channels to remove from the list!")
+			return await ctx.send("{self.bot.const_emojis['no']} Please provide some channels to remove from the list!")
 		existingchannels = json.loads(db[0][0])
 		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
 		removedchannels = []
@@ -139,7 +139,7 @@ class Locking(commands.Cog):
 		if len(removedchannels) < 1:
 			await ctx.send("There were no channels to remove.")
 		else:
-			await ctx.send(f"Removed the following channels from the list of hardlockable channels:\n{'`||`'.join(removedchannels)}")
+			await ctx.send(f"{self.bot.const_emojis['yes']} Removed the following channels from the list of hardlockable channels:\n{'`||`'.join(removedchannels)}")
 		await self.doeschannelexist(ctx.guild)
 
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
@@ -154,7 +154,7 @@ class Locking(commands.Cog):
 		channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
 		if not channeldb:
-			return await ctx.send(f"This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
+			return await ctx.send(f"{self.bot.const_emojis['no']} This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
 		if islockeddb:
 			return await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is already locked down!")
 		channellist = json.loads(channeldb[0][0])
@@ -168,8 +168,8 @@ class Locking(commands.Cog):
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}).")
 				locked.append(f"<#{chan.id}>")
 				await chan.send(embed=discord.Embed(title=f"🔒 Server Locked! 🔒", description=f"Server locked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
-		embed = discord.Embed(title=f"🔒 Locked down the server!", description=f"**Channels Locked:**\n{' `||` '.join(locked)}", color=2937504)
-		embed.add_field(name="Reason:", value=reason)
+		embed = discord.Embed(title=f"{self.bot.const_emojis['yes']} Locked down the server!", description=f"🔒 **Channels Locked:**\n{' `||` '.join(locked)}", color=2937504)
+		if reason != None: embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
 			embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}"
 		await self.bot.dbexec(("INSERT INTO islocked VALUES (?, ?)", (str(ctx.guild.id), "true")))
@@ -192,7 +192,7 @@ class Locking(commands.Cog):
 		channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
 		if not channeldb:
-			return await ctx.send(f"This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
+			return await ctx.send(f"{self.bot.const_emojis['no']} This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
 		if not islockeddb:
 			return await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is already locked down!")
 		channellist = json.loads(channeldb[0][0])
@@ -206,8 +206,8 @@ class Locking(commands.Cog):
 				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server unlocked by {ctx.author} ({ctx.author.id}).")
 				unlocked.append(f"<#{chan.id}>")
 				await chan.send(embed=discord.Embed(title="🔓 Server Unlocked! 🔓", description=f"Server unlocked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
-		embed = discord.Embed(title=f"🔓 Unlocked the server! 🔓", description=f"**Channels Unlocked:**\n{' `||` '.join(unlocked)}", color=2937504)
-		embed.add_field(name="Reason:", value=reason)
+		embed = discord.Embed(title=f"{self.bot.const_emojis['yes']} Unlocked the server!", description=f"🔓 **Channels Unlocked:**\n{' `||` '.join(unlocked)}", color=2937504)
+		if reason: embed.add_field(name="Reason:", value=reason)
 		if len(embed.description) > 2048:
 			embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}"
 		await self.bot.dbexec("DELETE FROM islocked WHERE guildid=" + str(ctx.guild.id))
@@ -235,9 +235,9 @@ class Locking(commands.Cog):
 				"whitelist": []
 			}
 			await writeDB(db)
-			await ctx.send(f"✅ Successfully softlocked <#{ch.id}>.")
+			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully softlocked <#{ch.id}>.")
 		else:
-			await ctx.send(f"❌ <#{ch.id}> is already softlocked.")
+			await ctx.send(f"{self.bot.const_emojis['no']} <#{ch.id}> is already softlocked.")
 
 	@commands.command(aliases=['wh'])
 	@commands.bot_has_permissions(manage_messages=True)
@@ -249,13 +249,13 @@ class Locking(commands.Cog):
 		"""
 		db = await readDB()
 		if not str(ctx.channel.id) in db["softlocked_channels"]:
-			return await ctx.send("❌ This channel is not softlocked")
+			return await ctx.send("{self.bot.const_emojis['no']} This channel is not softlocked")
 		elif not db["softlocked_channels"][str(ctx.channel.id)]["user"] == str(ctx.author.id):
-			return await ctx.send("❌ You did not softlock this channel")
+			return await ctx.send("{self.bot.const_emojis['no']} You did not softlock this channel")
 		else:
 			db["softlocked_channels"][str(ctx.channel.id)]["whitelist"].append(user.id)
 			await writeDB(db)
-			return await ctx.send(f"✅ Successfully whitelisted {str(user)}")
+			return await ctx.send(f"{self.bot.const_emojis['yes']} Successfully whitelisted {str(user)}")
 
 	@commands.command(name="unsoftlock", aliases=['unlock', 'usl'])
 	@commands.bot_has_permissions(manage_messages=True)
@@ -271,11 +271,11 @@ class Locking(commands.Cog):
 			if db["softlocked_channels"][str(ch.id)]["user"] == str(ctx.author.id):
 				del db["softlocked_channels"][str(ch.id)]
 				await writeDB(db)
-				await ctx.send(f"✅ Successfully unsoftlocked <#{ch.id}>.")
+				await ctx.send(f"{self.bot.const_emojis['yes']} Successfully unsoftlocked <#{ch.id}>.")
 			else:
-				await ctx.send("❌ You cannot unlock this, as you are not the one who locked it.")
+				await ctx.send("{self.bot.const_emojis['no']} You cannot unlock this, as you are not the one who locked it.")
 		else:
-			await ctx.send(f"❌ <#{ch.id}> is not softlocked.")
+			await ctx.send(f"{self.bot.const_emojis['no']} <#{ch.id}> is not softlocked.")
 
 def setup(bot):
 	bot.add_cog(Locking(bot))
