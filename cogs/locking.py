@@ -116,7 +116,24 @@ class Locking(commands.Cog):
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
 		await ctx.send(f"{self.bot.const_emojis['yes']} Added the following channels to the list of hardlockable channels:\n{'`||`'.join(newchannels)}")
 		await self.doeschannelexist(ctx.guild)
-
+			       
+	@serverhardlockable.command()
+	async def addall(self, ctx):
+		"""
+		Adds all channels in the server to the list of server hardlockable channels.
+		"""
+		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
+		existingchannels = []
+		if db:
+			existingchannels = json.loads(db[0][0])
+			await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
+		for chan in guild.channels:
+			if (chan.type == discord.ChannelType.text) and (chan.id not in existingchannels):
+				existingchannel.append(chan.id)
+		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
+		await ctx.send(f"{self.bot.const_emojis['yes']} Added all server channels to the list of hardlockable channels.")
+		await self.doeschannelexist(ctx.guild)
+	
 	@serverhardlockable.command()
 	async def remove(self, ctx, *channels: discord.TextChannel):
 		"""
@@ -142,6 +159,14 @@ class Locking(commands.Cog):
 			await ctx.send(f"{self.bot.const_emojis['yes']} Removed the following channels from the list of hardlockable channels:\n{'`||`'.join(removedchannels)}")
 		await self.doeschannelexist(ctx.guild)
 
+	@serverhardlockable.command()
+	async def removeall(self, ctx):
+		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
+		if db:
+			await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
+		await ctx.send(f"{self.bot.const_emojis['yes']} Reset server hardlockable channels!")
+		await self.doeschannelexist(ctx.guild)
+		
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True, manage_guild=True)
