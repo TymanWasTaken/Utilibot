@@ -549,7 +549,7 @@ class Utils(commands.Cog):
 				except: pass
 				await ctx.send(f"{ctx.author.mention}, I removed your AFK!", delete_after=10)
 			else:
-				await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```", delete_after=10)
+				await ctx.send(f"{ctx.author.mention}, I set your global AFK message to: ```\n{afkmessage}```", delete_after=10)
 				await self.bot.dbexec((f"INSERT INTO globalafk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
 		else:
 			try: await ctx.author.edit(nick="{AFK} " + (str(ctx.author.nick) or str(ctx.author.name)))
