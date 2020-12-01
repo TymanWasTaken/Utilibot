@@ -31,6 +31,24 @@ async def islockable(guild, channel):
 	else:
 		return data[channel]
 
+async def doeschannelexist(guild, channel):
+	if not guild:
+		return
+	channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
+		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
+		if not channeldb:
+			return await ctx.send(f"This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
+		if islockeddb:
+			return await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is already locked down!")
+		channellist = json.loads(channeldb[0][0])
+for chanid in channellist:
+			chan = ctx.guild.get_channel(chanid)
+			if not chan:
+				channellist.remove(chanid)
+				continue
+
+		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
+		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(channellist))))
 class Locking(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
