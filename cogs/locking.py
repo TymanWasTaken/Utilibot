@@ -19,17 +19,6 @@ async def writeDB(data: dict):
 	except Exception as e:
 		print(f"An error occured, {e}")
 
-async def islockable(guild, channel):
-	if not guild:
-		return False
-	db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(guild.id))
-	if len(db) < 1:
-		return False
-	data = json.loads(db[0][0])
-	if channel not in data:
-		return False
-	else:
-		return data[channel]
 
 class Locking(commands.Cog):
 	def __init__(self, bot):
@@ -103,7 +92,7 @@ class Locking(commands.Cog):
 			existingchannels = json.loads(db[0][0])
 			for chan in existingchannels:
 				chanlist.append(str(ctx.guild.get_channel(chan).mention))
-			chanlist = ', '.join(chanlist)
+			chanlist = '`||`'.join(chanlist)
 			embed.description=f"{chanlist}"
 		await ctx.send(embed=embed)
 
@@ -125,7 +114,7 @@ class Locking(commands.Cog):
 				existingchannels.append(chan.id)
 				newchannels.append(chan.mention)
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
-		await ctx.send(f"Added the following channels to the list of hardlockable channels:\n{', '.join(newchannels)}")
+		await ctx.send(f"Added the following channels to the list of hardlockable channels:\n{'`||`'.join(newchannels)}")
 		await self.doeschannelexist(ctx.guild)
 
 	@serverhardlockable.command()
@@ -150,7 +139,7 @@ class Locking(commands.Cog):
 		if len(removedchannels) < 1:
 			await ctx.send("There were no channels to remove.")
 		else:
-			await ctx.send(f"Removed the following channels from the list of hardlockable channels:\n{', '.join(removedchannels)}")
+			await ctx.send(f"Removed the following channels from the list of hardlockable channels:\n{'`||`'.join(removedchannels)}")
 		await self.doeschannelexist(ctx.guild)
 
 	@commands.command(name="serverhardlock", aliases=['serverlockdown', 'shl', 'sld'])
