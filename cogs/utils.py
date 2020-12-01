@@ -364,6 +364,11 @@ class Utils(commands.Cog):
 		embed.timestamp=g.created_at #Created on {g.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}")
 		await ctx.send(embed=embed)
 	
+	@commands.command(name="roleinfo", aliases=['ri'])
+	@commands.guild_only()
+	async def roleinfo(self, ctx, role: discord.Role):
+		await ctx.send("nah")
+	
 #	@commands.command(name="poll")
 #	async def poll(self, ctx, question: str, desc: str=None, pingrole: typing.Optional[discord.Role]=None):
 #		content = ""
@@ -382,6 +387,22 @@ class Utils(commands.Cog):
 		r = await ctx.guild.create_role(name=name, color=color, hoist=hoist, reason=f"Role created by {ctx.author} ({ctx.author.id})")
 		await ctx.send(f"Created {r.mention}!", allowed_mentions=discord.AllowedMentions(roles=False))
 
+	@commands.command(name="hoist")
+	@commands.has_permissions(manage_roles=True)
+	@commands.bot_has_permissions(manage_roles=True)
+	async def hoist(self, ctx, role: discord.Role):
+		am = discord.AllowedMentions(roles=False)
+		if role >= ctx.user.top_role:
+			await ctx.send(f"You can't edit {role.mention} as it's above your highest role!", allowed_mentions=am)
+		elif role >= self.bot.user.top_role:
+			await ctx.send(f"I can't edit {role.mention} as it's above my highest role!", allowed_mentions=am)
+		else:
+			if role.hoist=True:
+				await role.edit(hoist=False, reason=f"Role dehoisted by {ctx.author} ({ctx.author.id}).")
+				await ctx.send(f"Dehoisted {role.mention}!", allowed_mentions=am)
+			else:
+				await role.edit(hoist=True)
+				await ctx.send(f"Hoisted {role.mention}!", allowed_mentions=am)
 
 	@commands.command(name="giverole", aliases=['giveroles', 'grole', 'groles'])
 	@commands.has_permissions(manage_roles=True)
