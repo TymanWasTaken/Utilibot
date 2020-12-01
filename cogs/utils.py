@@ -372,8 +372,8 @@ class Utils(commands.Cog):
 		**Members:** {len(role.members)}
 		**Position:** {role.position}
 		**Color:** {role.color}
-		**Hoisted:** {self.yes if role.hoist else self.no}
-		**Mentionable:** {self.yes if role.mentionable else self.no}
+		**Hoisted:** {self.bot.const_emojis['yes'] if role.hoist else self.bot.const_emojis['no']}
+		**Mentionable:** {self.bot.const_emojis['yes'] if role.mentionable else self.bot.const_emojis['no']}
 		""".replace("	", ""),
 		color=role.color)
 		embed.set_footer(text=f"ID: {role.id}| Created on ")
