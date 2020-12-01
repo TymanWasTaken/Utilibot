@@ -519,7 +519,7 @@ class Utils(commands.Cog):
 		Sets your global AFK message.
 		"""
 		await ctx.message.delete(delay=10)
-		db = await self.bot.dbquery("afk", "message", f"userid={ctx.author.id}")
+		db = await self.bot.dbquery("globalafk", "message", f"userid={ctx.author.id}")
 		if db:
 			await self.bot.dbexec((f"DELETE FROM globalafk WHERE userid={ctx.author.id}"))
 			if afkmessage == "AFK":
