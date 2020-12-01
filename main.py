@@ -138,7 +138,7 @@ async def on_ready():
 		bot.const_emojis[e.name] = str(e)
 	print(f'Bot logged in as {bot.user}')
 	await bot.get_channel(755979601788010527).send(content=datetime.now().strftime("[%m/%d/%Y %I:%M:%S] ") + "Bot online")
-	await bot.change_presence("Clari's screams of frustration", activity=discord.Activity(type=discord.ActivityType.listening))
+	await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Clari's screams of frustration"))
 
 @bot.event
 async def on_command_error(ctx, error):
