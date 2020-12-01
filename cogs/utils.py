@@ -570,21 +570,20 @@ class Utils(commands.Cog):
 			if message:
 				guilddata.pop(str(ctx.author.id))
 				await ctx.send(f"{ctx.author.mention}, I removed your AFK!", delete_after=10)
+				newnick = str(ctx.author.nick).replace("{AFK} ", "")
+				if newnick == str(ctx.author.name): newnick = None
+				try: await ctx.author.edit(nick=newnick, reason="Removing AFK tag.")
+				except: pass
 				return await self.bot.dbexec(("INSERT INTO afk VALUES (?, ?)", (str(ctx.guild.id), str(guilddata))))
 			else:
 				guilddata[str(ctx.author.id)] = "AFK"
 		else:
 			guilddata[str(ctx.author.id)] = afkmessage
 		await self.bot.dbexec(("INSERT INTO afk VALUES (?, ?)", (str(ctx.guild.id), str(guilddata))))
+		newnick = "{AFK} " + (str(ctx.author.nick) or str(ctx.author.name))
+		try: await ctx.author.edit(nick=newnick, reason="Adding AFK tag.")
+		except: pass
 		await ctx.send(f"{ctx.author.mention}, I set your local AFK message to: ```\n{afkmessage}```", delete_after=10)
-
-#			newnick = str(ctx.author.nick).replace("{AFK}", "")
-#			if newnick == str(ctx.author.name): newnick = None
-#			try: await ctx.author.edit(nick=newnick)
-#			except: pass
-#			
-#			try: await ctx.author.edit(nick="{AFK} " + (str(ctx.author.nick) or str(ctx.author.name)))
-#			except: pass
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
