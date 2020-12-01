@@ -397,7 +397,7 @@ class Utils(commands.Cog):
 		elif role >= self.bot.user.top_role:
 			await ctx.send(f"I can't edit {role.mention} as it's above my highest role!", allowed_mentions=am)
 		else:
-			if role.hoist=True:
+			if role.hoist == True:
 				await role.edit(hoist=False, reason=f"Role dehoisted by {ctx.author} ({ctx.author.id}).")
 				await ctx.send(f"Dehoisted {role.mention}!", allowed_mentions=am)
 			else:
