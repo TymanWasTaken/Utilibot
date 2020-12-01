@@ -394,9 +394,20 @@ class Utils(commands.Cog):
 	@commands.has_permissions(manage_roles=True)
 	@commands.bot_has_permissions(manage_roles=True)
 	@commands.guild_only()
-	async def newrole(self, ctx, color: discord.Color=None, hoist: bool=False, position: int=None, *name):
+	async def newrole(self, ctx, color: discord.Color=None, hoist: bool=False, *name):
 		r = await ctx.guild.create_role(name=name, color=color, hoist=hoist, reason=f"Role created by {ctx.author} ({ctx.author.id})")
 		await ctx.send(f"Created {r.mention}!", allowed_mentions=discord.AllowedMentions(roles=False))
+		
+	@commands.command(name="delrole")
+	@commands.has_permissions(manage_roles=True)
+	@commands.bot_has_permissions(manage_roles=True)
+	@commands.guild_only()
+	async def delrole(self, ctx, role: discord.Role):
+		if ctx.author.top_role <= role:
+			await ctx.send(f"You can't delete {role.mention} as it's above your highest role!")
+		else:
+			await role.delete(reason=f"Role deleted by {ctx.author} ({ctx.author.id})")
+			await ctx.send(f"Deleted `{role.name}`!")
 
 	@commands.command(name="hoist")
 	@commands.has_permissions(manage_roles=True)
