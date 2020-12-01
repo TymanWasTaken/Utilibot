@@ -485,7 +485,7 @@ class Logging(commands.Cog):
 		logchannel = await self.getlogchannel(before.guild)
 		if logchannel == None:
 			return
-		embed=discord.Embed(title="✏️ Role Updated", color=after.color, timestamp=datetime.now())
+		embed=discord.Embed(title="✏️ Role Updated", description=f"Role Updated: {before.mention}", color=after.color, timestamp=datetime.now())
 		bvalue = ""
 		avalue = ""
 		embed.set_footer(text=f"Role ID: {before.id}")
