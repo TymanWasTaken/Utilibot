@@ -253,10 +253,13 @@ async def on_message(message):
 			if globalmsg or localmsg:
 				embed = discord.Embed(description=globalmsg, color=bot.utils.randcolor())
 				inguild = ""
+				scope = "Global"
 				if localmsg:
 					embed.description=localmsg
 					inguild = f" in {message.guild}"
+					scope = "Local"
 				embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator} is currently AFK{inguild}.", icon_url=user.avatar_url)
+				embed.set_footer(text=f"Scope: {scope} AFK Message")
 				await message.channel.send(embed=embed, delete_after=10)
 	if message.webhook_id != None and message.mention_everyone:
 		webhook_guilds = [693225390130331661, 755887706386726932]
