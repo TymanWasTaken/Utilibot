@@ -570,6 +570,7 @@ class Utils(commands.Cog):
 			if message:
 				guilddata.pop(str(ctx.author.id))
 				await ctx.send(f"{ctx.author.mention}, I removed your AFK!", delete_after=10)
+				return await self.bot.dbexec(("INSERT INTO afk VALUES (?, ?)", (str(ctx.guild.id), str(guilddata))))
 			else:
 				guilddata[str(ctx.author.id)] = "AFK"
 		else:
