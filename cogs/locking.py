@@ -129,7 +129,7 @@ class Locking(commands.Cog):
 			await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
 		for chan in ctx.guild.channels:
 			if (chan.type == discord.ChannelType.text) and (chan.id not in existingchannels):
-				existingchannel.append(chan.id)
+				existingchannels.append(chan.id)
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
 		await ctx.send(f"{self.bot.const_emojis['yes']} Added all server channels to the list of hardlockable channels.")
 		await self.doeschannelexist(ctx.guild)
