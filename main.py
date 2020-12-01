@@ -366,5 +366,13 @@ disabled_commands = ['mute']
 for cmd in disabled_commands:
 	try: bot.get_command(cmd).update(enabled=False)
 	except: pass
-
-bot.run(os.getenv("BOT_TOKEN"))
+def run_api(bot):
+	from uvicorn import Server, Config
+	server = Server(Config(bot.get_cog("api").app, host="0.0.0.0", port=1234))
+	server.config.setup_event_loop()
+	return bot.loop.create_task(server.serve())
+try:
+	run_api(bot)
+	bot.run(os.getenv("BOT_TOKEN"))
+except KeyboardInterrupt:
+	exit()
