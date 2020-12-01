@@ -4,6 +4,7 @@
   "description": "This is a discord bot that include these things: - [x] Change permissions on all channels - [x] Show the permissions for a specified value - [ ] Change permissions on all roles - [ ] Mute - [x] Kick - [x] Ban - [x] Music",
   "main": "web/server.js",
   "dependencies": {
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
     "socket.io": "^3.0.3"
   },

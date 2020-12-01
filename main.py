@@ -267,7 +267,7 @@ async def on_message(message):
 		except: chans = []
 		if message.channel.id in chans:
 			await message.publish()
-			await message.add_reaction("📣)
+			await message.add_reaction("📣")
 			await asyncio.sleep(3)
 			await message.remove_reaction("📣", message.guild.me)
 	if message.webhook_id != None and message.mention_everyone:
