@@ -580,7 +580,7 @@ class Utils(commands.Cog):
 		else:
 			guilddata[str(ctx.author.id)] = afkmessage
 		await self.bot.dbexec(("INSERT INTO afk VALUES (?, ?)", (str(ctx.guild.id), str(guilddata))))
-		if not "{AFK}" in member.nick:
+		if not "{AFK}" in ctx.author.nick:
 			afk = "{AFK}"
 			newnick = f"{afk} {ctx.author.nick or ctx.author.name}"
 			try: await ctx.author.edit(nick=newnick, reason="Adding AFK tag.")
