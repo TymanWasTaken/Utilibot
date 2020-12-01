@@ -35,7 +35,7 @@ class Locking(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	async def doeschannelexist(guild):
+	async def doeschannelexist(self, guild):
 		if not guild:
 			return
 		channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(guild.id))
