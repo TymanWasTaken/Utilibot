@@ -193,7 +193,7 @@ class Locking(commands.Cog):
 		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
 		if not channeldb:
 			return await ctx.send(f"{self.bot.const_emojis['no']} This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
-		if islockeddb:
+		if not islockeddb:
 			return await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is not locked down!")
 		channellist = json.loads(channeldb[0][0])
 		unlocked = []
