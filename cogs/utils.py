@@ -574,7 +574,7 @@ class Utils(commands.Cog):
 				guilddata[str(ctx.author.id)] = "AFK"
 		else:
 			guilddata[str(ctx.author.id)] = afkmessage
-		await bot.dbexec(("INSERT INTO afk VALUES (?, ?)", (str(ctx.guild.id), str(guilddata))))
+		await self.bot.dbexec(("INSERT INTO afk VALUES (?, ?)", (str(ctx.guild.id), str(guilddata))))
 		await ctx.send(f"{ctx.author.mention}, I set your local AFK message to: ```\n{afkmessage}```", delete_after=10)
 
 #			newnick = str(ctx.author.nick).replace("{AFK}", "")
