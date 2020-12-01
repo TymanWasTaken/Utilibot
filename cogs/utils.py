@@ -526,6 +526,7 @@ class Utils(commands.Cog):
 				newnick = str(ctx.author.nick).replace("{AFK}", "")
 				if newnick == str(ctx.author.name): newnick = None
 				try: await ctx.author.edit(nick=newnick)
+				except: pass
 				await ctx.send(f"{ctx.author.mention}, I removed your AFK!", delete_after=10)
 			else:
 				await ctx.send(f"{ctx.author.mention}, I set your AFK message to: ```\n{afkmessage}```", delete_after=10)
