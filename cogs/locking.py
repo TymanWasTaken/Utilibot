@@ -31,22 +31,22 @@ async def islockable(guild, channel):
 	else:
 		return data[channel]
 
-async def doeschannelexist(guild):
-	if not guild:
-		return
-	channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(guild.id))
-	if not channeldb:
-		return
-	channellist = json.loads(channeldb[0][0])
-	for chanid in channellist:
-		if not guild.get_channel(chanid):
-			channellist.remove(chanid)
-	await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(guild.id))
-	await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(guild.id), str(channellist))))
-
 class Locking(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+
+	async def doeschannelexist(guild):
+		if not guild:
+			return
+		channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(guild.id))
+		if not channeldb:
+			return
+		channellist = json.loads(channeldb[0][0])
+		for chanid in channellist:
+			if not guild.get_channel(chanid):
+				channellist.remove(chanid)
+		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(guild.id))
+		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(guild.id), str(channellist))))
 
 # Things that need to be added - shlable db, 'duration' flag/arg
 # Hardlock- Changes perms.
