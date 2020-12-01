@@ -270,7 +270,7 @@ async def on_message(message):
 				await message.publish()
 				await message.add_reaction("📣")
 				await asyncio.sleep(3)
-				await message.remove_reaction("📣", message.guild.me) #publish
+				await message.remove_reaction("📣", message.guild.me)
 			except:
 				await message.author.send(f"Failed to publish {message.jump_url}.")
 	if message.webhook_id != None and message.mention_everyone:
