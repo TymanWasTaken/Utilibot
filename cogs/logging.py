@@ -57,7 +57,11 @@ class Logging(commands.Cog):
 		results = await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(guild.id))
 		if len(results) < 1:
 			return None
-		return guild.get_channel(int(results[0][0]))
+		try: 
+			return guild.get_channel(int(results[0][0]))
+		except: 
+			await self.bot.dbexec("DELETE FROM logchannel WHERE guildid=" + str(guild.id)
+			return None
 
 	@commands.group(invoke_without_command=True)
 	@commands.has_permissions(manage_guild=True)
@@ -558,7 +562,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		if before.name != after.name:
 			bvalue=f"**Name:** `{before.name}`"
 			avalue=f"**Name:** `{after.name}`"
-		elif before.topic != after.topic:
+		elif before.type == discord.ChannelType.text and before.topic != after.topic:
 			bvalue=f"**Topic:** `{before.topic}`"
 			avalue=f"**Topic:** `{after.topic}`"
 		elif before.type != after.type:
