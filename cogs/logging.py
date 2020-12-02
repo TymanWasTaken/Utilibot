@@ -60,7 +60,7 @@ class Logging(commands.Cog):
 		try: 
 			return guild.get_channel(int(results[0][0]))
 		except: 
-			await self.bot.dbexec("DELETE FROM logchannel WHERE guildid=" + str(guild.id)
+			await self.bot.dbexec("DELETE FROM logchannel WHERE guildid=" + str(guild.id))
 			return None
 
 	@commands.group(invoke_without_command=True)
