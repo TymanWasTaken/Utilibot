@@ -365,7 +365,10 @@ for cmd in disabled_commands:
 	except: pass
 def run_api(bot):
 	from uvicorn import Server, Config
-	server = Server(Config(bot.get_cog("web").app, host="0.0.0.0", port=1234))
+	web_cog = bot.get_cog("web")
+	if web_cog is None:
+		return
+	server = Server(Config(web_cog.app, host="0.0.0.0", port=1234))
 	server.config.setup_event_loop()
 	return bot.loop.create_task(server.serve())
 try:

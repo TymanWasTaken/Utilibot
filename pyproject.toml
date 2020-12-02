@@ -22,9 +22,7 @@ psutil = "^5.7.3"
 tabulate = "^0.8.7"
 riftgun = "^1.1.0"
 "discord.py" = {git = "https://github.com/Rapptz/discord.py", extras = ["voice"]}
-python-socketio = {extras = ["asyncio_client"], version = "^4.6.1"}
 fastapi = "^0.62.0"
-fastapi-utils = "^0.2.1"
 uvicorn = "^0.12.3"
 
 
