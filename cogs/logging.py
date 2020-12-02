@@ -114,7 +114,7 @@ class Logging(commands.Cog):
 		db = await self.getlogs(ctx.guild)
 		if db == None:
 			db = {}	
-		if db[log] == True:
+		if db[log] != None and db[log] == True:
 			await ctx.send(f"`{log}` is already enabled!")
 		else: 
 			db[log] = True
