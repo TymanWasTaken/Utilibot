@@ -120,9 +120,15 @@ class Logging(commands.Cog):
 			return await ctx.send("Not a valid log.")
 		if db == None:
 			db = {}	
-		if db[log] and db[log] == True:
+		entry = False
+		try:
+			db[log] 
+			entry = True
+		except:
+			pass
+		if entry and db[log] == True:
 			await ctx.send(f"`{log}` is already enabled!")
-		else: 
+		else:
 			db[log] = True
 			await self.setlogs(ctx.guild, db)
 			await ctx.send(f"Enabled log `{log}`")
