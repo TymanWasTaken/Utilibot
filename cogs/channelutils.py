@@ -56,15 +56,17 @@ class ChannelUtils(commands.Cog):
 		channel = channel or ctx.channel
 		db = await self.bot.dbquery("autopublish_channels", "data", "guildid=" + str(ctx.guild.id))
 		chanlist = []
+		action = f"Added {channel.mention} to"
 		if db:
 			chanlist = json.loads(db[0][0])
 			await self.bot.dbexec("DELETE FROM autopublish_channels WHERE guildid=" + str(ctx.guild.id))
 		if channel.id in chanlist:
 			chanlist.remove(channel.id)
+			action = f"Removed {channel.mention} from"
 		else:
-			chanlist.append(channel.id)
+			chanlist.append(channel.id)	       
 		await self.bot.dbexec(("INSERT INTO autopublish_channels VALUES (?, ?)", (str(ctx.guild.id), str(chanlist))))
-		await ctx.send(f"{self.bot.const_emojis['yes']} Added {channel.mention} to the list of channels that will have their messages autopublished!")
+		await ctx.send(f"{self.bot.const_emojis['yes']} {action} the list of channels that will have their messages autopublished!")
 
 	@commands.command(name="publish")
 	@commands.has_permissions(manage_messages=True)
