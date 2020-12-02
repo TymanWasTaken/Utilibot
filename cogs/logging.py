@@ -16,7 +16,7 @@ class Logging(commands.Cog):
 		"Server":["serverupdates", "emojis"],
 		"Roles":["rolecreate", "roleupdate", "roledelete"],
 		"Channels":["channelcreate", "channelupdate", "channeldelete"],
-		"Lock/Unlock": ['softlock', 'unsoftlock', 'hardlock', 'unhardlock', 'serversoftlock', 'unserversoftlock', 'serverhardlock', 'unserverhardlock'],
+#		"Lock/Unlock": ['softlock', 'unsoftlock', 'hardlock', 'unhardlock', 'serversoftlock', 'unserversoftlock', 'serverhardlock', 'unserverhardlock'],
 		"Reactions":["reactionadd", "reactionremove", "reactionclear"]
 		}
 		self.log_flat = {x for v in self.logs.values() for x in v}
