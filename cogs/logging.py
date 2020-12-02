@@ -108,13 +108,19 @@ class Logging(commands.Cog):
 		"""
 		Enable one of the logs.
 		"""
+		logcat = log
 		log = log.lower()
-		if log not in self.log_flat:
-			return await ctx.send("Not a valid log.")
 		db = await self.getlogs(ctx.guild)
+		if log not in self.log_flat and logcat in self.logs:
+			for logs in self.logs[logcat]:
+				db[logs] = True
+			await self.setlogs(ctx.guild, db)
+			return await ctx.send(f"Enabled all logs in the category `{logcat}`")
+		elif log not in self.log_flat:
+			return await ctx.send("Not a valid log.")
 		if db == None:
 			db = {}	
-		if db[log] != None and db[log] == True:
+		if db[log] and db[log] == True:
 			await ctx.send(f"`{log}` is already enabled!")
 		else: 
 			db[log] = True
