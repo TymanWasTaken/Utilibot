@@ -1,8 +1,9 @@
 # Imports
-import discord, os, time, glob, postbin, traceback, asyncio, cogs, importlib, aiofiles, json, textwrap, re, sys, aiosqlite, dpytils
+import discord, os, time, glob, postbin, traceback, asyncio, cogs, importlib, aiofiles, json, textwrap, re, sys, aiosqlite, dpytils, aiohttp
 from datetime import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
+from io import BytesIO
 music = importlib.import_module("cogs.music")
 load_dotenv(verbose=True)
 intents = discord.Intents().all()
@@ -232,7 +233,9 @@ async def on_message(message):
 		if not message.author.bot:
 			db = await bot.dbquery("pressf", "enabled", f"channelid={message.channel.id}")
 			if db:
-				await message.channel.send(f"{message.author.mention} has paid their respects.")
+				async with aiohttp.ClientSession() as s:
+					async with s.get("https://i.imgur.com/q3h9bED.png") as r:
+						await message.reply(f"{message.author.mention} has paid their respects.", file=discord.File(BytesIO(await r.content.read()), filename="press_f.png"))
 	afksearch=afkReg.search(message.content)
 	if afksearch:
 		try: user = message.guild.get_member(int(afksearch.group(1)))
