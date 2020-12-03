@@ -237,7 +237,7 @@ class Utils(commands.Cog):
 			user = user_temp
 		flags_nice = []
 		for flag in user.public_flags.all():
-			if flag in badges:
+			if flag.name in badges:
 				flags_nice.append(f"{emojis[flag.name]} {badges[flag.name]}")
 		if user.is_avatar_animated():
 			flags_nice.append(badges["nitro"])
