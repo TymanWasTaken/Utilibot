@@ -492,6 +492,7 @@ class Utils(commands.Cog):
 	@commands.has_permissions(manage_nicknames=True)
 	@commands.bot_has_permissions(manage_nicknames=True)
 	async def dehoist(self, ctx):
+		msg = await ctx.send("Dehoisting...")
 		total = 0
 		success = 0
 		failed = 0
@@ -504,8 +505,8 @@ class Utils(commands.Cog):
 					failed += 1
 				else:
 					success += 1
-					await m.edit(nick=f"{m.nick or m.name}".replace("!", ""), reason=f"Dehoisted by {ctx.author} ({ctx.author.id})")
-		await ctx.send(f"Successfully dehoisted {success} members! (Attempted: {total}, Failed: {failed})")
+					await m.edit(nick=f"{str(m.nick) or str(m.name)}".replace("!", ""), reason=f"Dehoisted by {ctx.author} ({ctx.author.id})")
+		await msg.edit(f"Successfully dehoisted {success} members! (Attempted: {total}, Failed: {failed})")
 
 	@commands.command(aliases=["tr"])
 	async def translate(self, ctx, lang, *, text):
