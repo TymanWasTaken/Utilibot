@@ -267,8 +267,8 @@ class Utils(commands.Cog):
 				**Joined Server on:** {user.joined_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
 				**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
 				**Status:** {emojis[user.status.value]}
-				**Bot:** {bot.const_emojis["yes"] if user.bot else bot.const_emojis["no"]}
-				**Mobile:** {bot.const_emojis["yes"] if user.is_on_mobile() else bot.const_emojis["no"]}
+				**Bot:** {emojis["yes"] if user.bot else emojis["no"]}
+				**Mobile:** {emojis["yes"] if user.is_on_mobile() else emojis["no"]}
 				**Badges:**
 				{flags_nice}"""
 				.replace("	", ""),
@@ -282,7 +282,7 @@ class Utils(commands.Cog):
 				description=f"""**Name:** {user.name}
 				**User ID:** `{user.id}`
 				**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
-				**Bot:** {bot.const_emojis["yes"] if user.bot else bot.const_emojis["no"]}
+				**Bot:** {emojis["yes"] if user.bot else emojis["no"]}
 				**Badges:**
 				{flags_nice}"""
 				.replace("	", ""),
