@@ -506,7 +506,7 @@ class Utils(commands.Cog):
 				else:
 					success += 1
 					await m.edit(nick=f"{str(m.nick) or str(m.name)}".replace("!", ""), reason=f"Dehoisted by {ctx.author} ({ctx.author.id})")
-		await msg.edit(f"Successfully dehoisted {success} members! (Attempted: {total}, Failed: {failed})")
+		await msg.edit(content=f"Successfully dehoisted {success} members! (Attempted: {total}, Failed: {failed})")
 
 	@commands.command(aliases=["tr"])
 	async def translate(self, ctx, lang, *, text):
