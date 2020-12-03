@@ -600,6 +600,14 @@ class Utils(commands.Cog):
 			except: pass
 		await ctx.send(f"{ctx.author.mention}, I set your local AFK message to: ```\n{afkmessage}```", delete_after=10)
 
+	@commands.command(aliases=['ae', 'steal'])
+	@commands.is_owner()
+	@commands.has_permissions(manage_emojis=True)
+	async def addemoji(self, ctx, name, url):
+		async with aiohttp.ClientSession() as s:
+			async with s.get(url) as r:
+				await ctx.guild.create_custom_emoji(name=name, image=await r.content.read())
+
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
 		ch = self.bot.get_channel(payload.channel_id)
