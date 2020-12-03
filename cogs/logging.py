@@ -258,6 +258,8 @@ class Logging(commands.Cog):
 		embed=discord.Embed(color=0x1184ff, timestamp=datetime.now())
 		embed.set_footer(text=f"User ID: {before.id}")
 		embed.set_author(name=before, icon_url=before.avatar_url)
+		bvalue = ""
+		avalue = ""
 		# Nickname change
 		if before.nick != after.nick:
 			if not await self.islogenabled(before.guild, "nickname"):
@@ -267,8 +269,8 @@ class Logging(commands.Cog):
 				embed.title="Nickname Added"
 			elif after.nick == None:
 				embed.title="Nickname Removed"
-			embed.add_field(name="Before:", value=f"```{before.nick}```", inline=False)
-			embed.add_field(name="After:", value=f"```{after.nick}```", inline=False)
+			bvalue = before.nick
+			avalue = after.nick
 		# role change
 		elif before.roles != after.roles:
 			n = "\n"
@@ -285,8 +287,8 @@ class Logging(commands.Cog):
 			if not await self.islogenabled(before.guild, "status"):
 				return
 			embed.title="Status Changed"
-			embed.add_field(name="Before:", value=f"`{before.status}`")
-			embed.add_field(name="After:", value=f"`{after.status}`")
+			bvalue = f"{self.bot.const_emojis[before.status.value]} {str(before.status).capitalize()}"
+			avalue = f"{self.bot.const_emojis[after.status.value]} {str(after.status).capitalize()}"
 		elif before.activity != after.activity:
 			return
 			if not await self.islogenabled(before.guild, "activity"):
@@ -297,13 +299,16 @@ class Logging(commands.Cog):
 			elif after.activity == None:
 				embed.title="Activity Removed"
 			if isinstance(before.activity, discord.CustomActivity):
-				embed.add_field(name="Before:", value=f"```{before.activity.emoji} {before.activity.name}```", inline=False)
-			else:
-				embed.add_field(name="Before:", value=f"```I can't detect non-custom statuses yet :/```", inline=False)
+				bvalue = "{before.activity.emoji} {before.activity.name}"
+#			else:
+#				bavlue = "I can't detect non-custom statuses yet :/"
 			if isinstance(after.activity, discord.CustomActivity):
-				embed.add_field(name="After:", value=f"```{after.activity.emoji} {after.activity.name}```", inline=False)
-			else:
-				embed.add_field(name="After:", value=f"```I can't detect non-custom statuses yet :/```", inline=False)
+				avalue = f"{after.activity.emoji} {after.activity.name}")
+#			else:
+#				avalue = " I can't detect non-custom statuses yet :/"
+		if (bvalue != "") and (avalue != ""):
+			embed.add_field(name="Before:", value=bvalue, inline=False)
+			embed.add_field(name="After:", value=avalue, inline=False)
 		if embed.title != embed.Empty:
 			await logchannel.send(embed=embed)
 
