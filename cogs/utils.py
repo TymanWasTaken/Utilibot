@@ -200,19 +200,20 @@ class Utils(commands.Cog):
 		Shows some info about a user. Defaults to self.
 		"""
 		user = user or ctx.author.id
+		bot = self.bot
 		badges = {
-			discord.UserFlags.early_supporter: f"{self.bot.get_emoji(778489157055414272)} Early supporter",
-			discord.UserFlags.bug_hunter: f"{self.bot.get_emoji(778489159551025162)} Bug hunter",
-			discord.UserFlags.bug_hunter_level_2: f"{self.bot.get_emoji(778489160080162826)} Bug hunter level 2",
-			discord.UserFlags.partner: f"{self.bot.get_emoji(778489162847879179)} Discord partner",
-			discord.UserFlags.verified_bot_developer: f"{self.bot.get_emoji(778489155977216050)} Early verified bot developer",
-			discord.UserFlags.staff: f"{self.bot.get_emoji(778489158221955103)} Discord staff",
-			discord.UserFlags.hypesquad_bravery: f"{self.bot.get_emoji(778489151288246273)} Hypesquad bravery",
-			discord.UserFlags.hypesquad_brilliance: f"{self.bot.get_emoji(778489152228163604)} Hypesquad brilliance",
-			discord.UserFlags.hypesquad_balance: f"{self.bot.get_emoji(778489153405845544)} Hypesquad balance",
-			discord.UserFlags.hypesquad: f"{self.bot.get_emoji(778489154585362442)} Hypesquad events",
-			"nitro": f"{self.bot.get_emoji(779954141262774293)} Nitro",
-			"nitro_guess": f"{self.bot.get_emoji(779954141262774293)} Nitro (⚠ This is a guess, I cannot tell for certain.)",
+			discord.UserFlags.early_supporter: f"{bot.get_emoji(778489157055414272)} Early supporter",
+			discord.UserFlags.bug_hunter: f"{bot.get_emoji(778489159551025162)} Bug hunter",
+			discord.UserFlags.bug_hunter_level_2: f"{bot.get_emoji(778489160080162826)} Bug hunter level 2",
+			discord.UserFlags.partner: f"{bot.get_emoji(778489162847879179)} Discord partner",
+			discord.UserFlags.verified_bot_developer: f"{bot.get_emoji(778489155977216050)} Early verified bot developer",
+			discord.UserFlags.staff: f"{bot.get_emoji(778489158221955103)} Discord staff",
+			discord.UserFlags.hypesquad_bravery: f"{bot.get_emoji(778489151288246273)} Hypesquad bravery",
+			discord.UserFlags.hypesquad_brilliance: f"{bot.get_emoji(778489152228163604)} Hypesquad brilliance",
+			discord.UserFlags.hypesquad_balance: f"{bot.get_emoji(778489153405845544)} Hypesquad balance",
+			discord.UserFlags.hypesquad: f"{bot.get_emoji(778489154585362442)} Hypesquad events",
+			"nitro": f"{bot.get_emoji(779954141262774293)} Nitro",
+			"nitro_guess": f"{bot.get_emoji(779954141262774293)} Nitro (⚠ This is a guess, I cannot tell for certain.)",
 		}
 		statuses = {
 			"online": bot.get_emoji(778489146703609896),
@@ -220,7 +221,6 @@ class Utils(commands.Cog):
 			"dnd": bot.get_emoji(778489150148050996),
 			"offline": bot.get_emoji(778489148750561292),
 		}
-		bot = self.bot
 		try: user = int(user)
 		except: pass
 		if isinstance(user, int):
@@ -273,8 +273,8 @@ class Utils(commands.Cog):
 				**Joined Server on:** {user.joined_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
 				**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
 				**Status:** {statuses[user.status.value]}
-				**Bot:** {self.bot.const_emojis["yes"] if user.bot else self.bot.const_emojis["no"]}
-				**Mobile:** {self.bot.const_emojis["yes"] if user.is_on_mobile() else self.bot.const_emojis["no"]}
+				**Bot:** {bot.const_emojis["yes"] if user.bot else bot.const_emojis["no"]}
+				**Mobile:** {bot.const_emojis["yes"] if user.is_on_mobile() else bot.const_emojis["no"]}
 				**Badges:**
 				{flags_nice}"""
 				.replace("	", ""),
@@ -288,7 +288,7 @@ class Utils(commands.Cog):
 				description=f"""**Name:** {user.name}
 				**User ID:** `{user.id}`
 				**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
-				**Bot:** {self.bot.const_emojis['no'] if user.bot else self.bot.const_emojis['no']}
+				**Bot:** {bot.const_emojis['no'] if user.bot else bot.const_emojis['no']}
 				**Badges:**
 				{flags_nice}"""
 				.replace("	", ""),
