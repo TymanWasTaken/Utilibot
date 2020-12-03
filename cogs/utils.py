@@ -234,6 +234,7 @@ class Utils(commands.Cog):
 			user_temp = discord.utils.get(bot.users, name=user)
 			if user_temp == None:
 				return await ctx.send("The text you gave was not an id, but I could not find them by name.")
+			user_temp = ctx.guild.get_member(user_temp.id) or user_temp
 			user = user_temp
 		flags_nice = []
 		for flag in user.public_flags.all():
