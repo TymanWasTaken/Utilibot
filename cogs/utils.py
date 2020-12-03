@@ -214,6 +214,12 @@ class Utils(commands.Cog):
 			"nitro": f"{self.bot.get_emoji(779954141262774293)} Nitro",
 			"nitro_guess": f"{self.bot.get_emoji(779954141262774293)} Nitro (⚠ This is a guess, I cannot tell for certain.)",
 		}
+		statuses = {
+			"online": bot.get_emoji(778489146703609896),
+			"idle": bot.get_emoji(778489147420704789),
+			"dnd": bot.get_emoji(778489150148050996),
+			"offline": bot.get_emoji(778489148750561292),
+		}
 		bot = self.bot
 		try: user = int(user)
 		except: pass
@@ -259,17 +265,6 @@ class Utils(commands.Cog):
 		else:
 			flags_nice = "\n".join(flags_nice)
 		if isinstance(user, discord.Member):
-			if user.status == discord.Status.online:
-				status = bot.get_emoji(778489146703609896)
-			elif user.status == discord.Status.idle:
-				status = bot.get_emoji(778489147420704789)
-			elif user.status == discord.Status.dnd:
-				status = bot.get_emoji(778489150148050996)
-			elif user.status == discord.Status.offline:
-				status = bot.get_emoji(778489148750561292)
-			mobile = self.bot.const_emojis["no"]
-			if user.is_on_mobile():
-				mobile = self.bot.const_emojis["yes"]
 			embed = discord.Embed(
 				title=f"{str(user)}'s Info:", 
 				description=f"""**Nickname:** {user.nick}
@@ -277,9 +272,9 @@ class Utils(commands.Cog):
 				**Role count:** {len(user.roles)}
 				**Joined Server on:** {user.joined_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
 				**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
-				**Status:** {status}
+				**Status:** {statuses[user.status.value]}
 				**Bot:** {self.bot.const_emojis["yes"] if user.bot else self.bot.const_emojis["no"]}
-				**Mobile:** {mobile}
+				**Mobile:** {self.bot.const_emojis["yes"] if user.is_on_mobile() else self.bot.const_emojis["no"]}
 				**Badges:**
 				{flags_nice}"""
 				.replace("	", ""),
