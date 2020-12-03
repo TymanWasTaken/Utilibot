@@ -487,6 +487,25 @@ class Utils(commands.Cog):
 		elif ctx.author.id == mem.id and (getattr(ctx.author.guild_permissions, "change_nickname") == True):
 			await mem.edit(nick=newnick, reason=f"User changed their nickname from {oldnick} to {newnick}")
 			await ctx.send(f"Changed your nickname from `{oldnick}` to `{mem.nick}`!")
+			
+	@commands.command(name="dehoist")
+	@commands.has_permissions(manage_nicknames=True)
+	@commands.bot_has_permissions(manage_nicknames=True)
+	async def dehoist(self, ctx):
+		total = 0
+		success = 0
+		failed = 0
+		for m in ctx.guild.members:
+			if m.nick.startswith("!") or m.name.startswith("!"):
+				total += 1
+				if m.top_role >= ctx.author.top_role:
+					failed += 1
+				elif m.top_role >= ctx.guild.me.top_role:
+					failed += 1
+				else:
+					success += 1
+					await m.edit(nick=f"{m.nick or m.name}".replace("!", ""), reason=f"Dehoisted by {ctx.author} ({ctx.author.id})")
+		await ctx.send(f"Successfully dehoisted {success} members! (Attempted: {total}, Failed: {failed})")
 
 	@commands.command(aliases=["tr"])
 	async def translate(self, ctx, lang, *, text):
