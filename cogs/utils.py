@@ -260,7 +260,6 @@ class Utils(commands.Cog):
 			flags_nice = "\n".join(flags_nice)
 		if isinstance(user, discord.Member):
 			embed = discord.Embed(
-				title=f"{str(user)}'s Info:", 
 				description=f"""**Nickname:** {user.nick}
 				**User ID:** `{user.id}`
 				**Role count:** {len(user.roles)}
@@ -272,9 +271,9 @@ class Utils(commands.Cog):
 				**Badges:**
 				{flags_nice}"""
 				.replace("	", ""),
-				thumbnail=user.avatar_url,
 				color=user.color
 				)
+			embed.set_author(name=f"{str(user)}'s Info:", icon_url=user.avatar_url)
 			embed.add_field(name="Custom Status", value=f"```{user.activity}```", inline=False)
 		else:
 			embed = discord.Embed(
