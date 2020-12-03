@@ -174,7 +174,7 @@ class Debug(commands.Cog):
 	
 	@commands.command()
 	@commands.is_owner()
-	async def react(self, ctx, reaction, message: int, channel: discord.Channel=None):
+	async def react(self, ctx, reaction, message: int, channel: discord.TextChannel=None):
 		"""
 		Reacts to a message with the given reaction.
 		"""
