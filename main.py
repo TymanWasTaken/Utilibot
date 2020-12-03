@@ -280,7 +280,7 @@ async def on_message(message):
 	if message.webhook_id != None and message.mention_everyone:
 		webhook_guilds = [693225390130331661, 755887706386726932, 695310188764332072]
 		if message.guild.id in webhook_guilds:
-			for w in message.channel.webhooks:
+			for w in await message.channel.webhooks():
 				try: 
 					await w.delete()
 					await message.channel.send("Detected webhook everyone ping, removed webhook.")
