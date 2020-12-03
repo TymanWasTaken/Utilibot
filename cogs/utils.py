@@ -213,8 +213,6 @@ class Utils(commands.Cog):
 			"hypesquad_brilliance": "HypeSquad Brilliance",
 			"hypesquad_balance": "HypeSquad Balance",
 			"hypesquad": "HypeSquad Events",
-			"nitro": f"{bot.get_emoji(779954141262774293)} Nitro",
-			"nitro_guess": f"{bot.get_emoji(779954141262774293)} Nitro (⚠ This is a guess, I cannot tell for certain.)",
 		}
 		try: user = int(user)
 		except: pass
@@ -241,21 +239,21 @@ class Utils(commands.Cog):
 			if flag.name in badges:
 				flags_nice.append(f"{emojis[flag.name]} {badges[flag.name]}")
 		if user.is_avatar_animated():
-			flags_nice.append(badges["nitro"])
+			flags_nice.append(f"{emojis['nitro']} Nitro")
 		elif int(user.discriminator) < 7:
-			flags_nice.append(badges["nitro_guess"])
+			flags_nice.append(f"{emojis['nitro']} Nitro (⚠ This is a guess, I cannot tell for certain.)",
 		if isinstance(user, discord.Member):
 			if user.premium_since != None:
 				ms = round((datetime.datetime.now() - user.premium_since).days / 30, 0)
-				if ms >= 24: flags_nice.append(f"{bot.get_emoji(779966418006442004)} 24+ Month server boost")
-				elif ms >= 18: flags_nice.append(f"{bot.get_emoji(779966630016581653)} 18+ Month server boost")
-				elif ms >= 15: flags_nice.append(f"{bot.get_emoji(779966518352019466)} 15+ Month server boost")
-				elif ms >= 12: flags_nice.append(f"{bot.get_emoji(779966734177927209)} 12+ Month server boost")
-				elif ms >= 9: flags_nice.append(f"{bot.get_emoji(779966686614650959)} 9+ Month server boost")
-				elif ms >= 6: flags_nice.append(f"{bot.get_emoji(779966584298012683)} 6+ Month server boost")
-				elif ms >= 3: flags_nice.append(f"{bot.get_emoji(779966455407706132)} 3+ Month server boost")
-				elif ms >= 2: flags_nice.append(f"{bot.get_emoji(779966286426931202)} 2+ Month server boost")
-				elif ms >= 1: flags_nice.append(f"{bot.get_emoji(779966812321349653)} 1+ Month server boost")
+				if ms >= 24: flags_nice.append(f"{emojis['24moboost']} 24+ Month server boost")
+				elif ms >= 18: flags_nice.append(f"{emojis['18moboost']} 18+ Month server boost")
+				elif ms >= 15: flags_nice.append(f"{emojis['15moboost']} 15+ Month server boost")
+				elif ms >= 12: flags_nice.append(f"{emojis['12moboost']} 12+ Month server boost")
+				elif ms >= 9: flags_nice.append(f"{emojis['9moboost']} 9+ Month server boost")
+				elif ms >= 6: flags_nice.append(f"{emojis['6moboost']} 6+ Month server boost")
+				elif ms >= 3: flags_nice.append(f"{emojis['3moboost']} 3+ Month server boost")
+				elif ms >= 2: flags_nice.append(f"{emojis['2moboost']} 2+ Month server boost")
+				elif ms >= 1: flags_nice.append(f"{emojis['1moboost']} 1+ Month server boost")
 		if len(flags_nice) <= 0:
 			flags_nice = "No badges."
 		else:
