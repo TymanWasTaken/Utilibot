@@ -575,6 +575,7 @@ class Utils(commands.Cog):
 			await self.bot.dbexec((f"INSERT INTO globalafk VALUES (?, ?)", (str(ctx.author.id), str(afkmessage))))
 			
 	@commands.command(name="afk")
+	@commands.guild_only()
 	async def afk(self, ctx, *, afkmessage="AFK"):
 		"""
 		Sets your local AFK message.
