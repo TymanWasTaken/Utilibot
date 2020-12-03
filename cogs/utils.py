@@ -241,7 +241,7 @@ class Utils(commands.Cog):
 		if user.is_avatar_animated():
 			flags_nice.append(f"{emojis['nitro']} Nitro")
 		elif int(user.discriminator) < 7:
-			flags_nice.append(f"{emojis['nitro']} Nitro (⚠ This is a guess, I cannot tell for certain.)",
+			flags_nice.append(f"{emojis['nitro']} Nitro (⚠ This is a guess, I cannot tell for certain.)")
 		if isinstance(user, discord.Member):
 			if user.premium_since != None:
 				ms = round((datetime.datetime.now() - user.premium_since).days / 30, 0)
