@@ -496,7 +496,7 @@ class Utils(commands.Cog):
 		success = 0
 		failed = 0
 		for m in ctx.guild.members:
-			if m.nick.startswith("!") or m.name.startswith("!"):
+			if (m.nick and m.nick.startswith("!")) or m.name.startswith("!"):
 				total += 1
 				if m.top_role >= ctx.author.top_role:
 					failed += 1
