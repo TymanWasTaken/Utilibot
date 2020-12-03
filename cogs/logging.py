@@ -303,7 +303,7 @@ class Logging(commands.Cog):
 #			else:
 #				bavlue = "I can't detect non-custom statuses yet :/"
 			if isinstance(after.activity, discord.CustomActivity):
-				avalue = f"{after.activity.emoji} {after.activity.name}")
+				avalue = f"{after.activity.emoji} {after.activity.name}"
 #			else:
 #				avalue = " I can't detect non-custom statuses yet :/"
 		if (bvalue != "") and (avalue != ""):
