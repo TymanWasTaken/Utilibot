@@ -264,7 +264,8 @@ async def on_message(message):
 				embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator} is currently AFK{inguild}.", icon_url=user.avatar_url)
 				embed.set_footer(text=f"Scope: {scope} AFK Message")
 				await message.channel.send(embed=embed, delete_after=10)
-	if message.guild.id == 728107941126864927 and "wholesome" or "beth" in message.content: await message.channel.send("BETH IS WHOLESOME")
+	if message.guild.id == 728107941126864927 and re.search(r"beth|wholesome", message.content):
+		await message.channel.send("BETH IS WHOLESOME")
 	if message.channel.type == discord.ChannelType.news:
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
