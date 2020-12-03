@@ -278,7 +278,7 @@ async def on_message(message):
 			except:
 				await message.author.send(f"Failed to publish {message.jump_url}.")
 	if message.webhook_id != None and message.mention_everyone:
-		webhook_guilds = [693225390130331661, 755887706386726932]
+		webhook_guilds = [693225390130331661, 755887706386726932, 695310188764332072]
 		if message.guild.id in webhook_guilds:
 			for w in message.channel.webhooks:
 				try: 
