@@ -284,7 +284,7 @@ class Utils(commands.Cog):
 				description=f"""**Name:** {user.name}
 				**User ID:** `{user.id}`
 				**Account Created on:** {user.created_at.astimezone(timezone('US/Mountain')).strftime("%a, %B %d, %Y at %I:%M%p MST")}
-				**Bot:** {bot.const_emojis['no'] if user.bot else bot.const_emojis['no']}
+				**Bot:** {bot.const_emojis["yes"] if user.bot else bot.const_emojis["no"]}
 				**Badges:**
 				{flags_nice}"""
 				.replace("	", ""),
