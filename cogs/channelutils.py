@@ -70,7 +70,7 @@ class ChannelUtils(commands.Cog):
 			for c in chanlist:
 				if ctx.guild.get_channel(c):
 					if ctx.guild.get_channel(c).is_news():
-						total.append(c.mention)
+						total.append(f"<#{c}>")
 					else:
 						chanlist.remove(channel.id)
 				else:
