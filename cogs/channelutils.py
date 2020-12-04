@@ -68,8 +68,8 @@ class ChannelUtils(commands.Cog):
 				chanlist.append(channel.id)
 			total = []
 			for c in chanlist:
-				if guild.get_channel(c):
-					if guild.get_channel(c).is_news():
+				if ctx.guild.get_channel(c):
+					if ctx.guild.get_channel(c).is_news():
 						total.append(c.mention)
 					else:
 						chanlist.remove(channel.id)
