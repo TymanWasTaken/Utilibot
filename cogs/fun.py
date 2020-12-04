@@ -20,12 +20,13 @@ class Fun(commands.Cog):
 		await ctx.send("Hello there.")
 
 	@commands.command()
-	async def say(self, ctx, *, message: commands.clean_content(fix_channel_mentions=True)):
+	@commands.is_owner()
+	async def say(self, ctx, refrence=typing.Optional[discord.Message], *, message: commands.clean_content(fix_channel_mentions=True)):
 		"""
 		Says what you tell it to, self-explanatory.
 		"""
 		await ctx.message.delete()
-		await ctx.send(message)
+		await ctx.send(message, reference=refrence)
 
 	@commands.command()
 	async def paroot(self, ctx):
