@@ -116,7 +116,7 @@ class BlacklistedError(commands.CommandError):
 	pass
 
 async def is_blacklisted(id: int):
-	# Check if user is owner, if so ignore everthing
+	# Check if user is owner, if so ignore everything
 	if id in bot.owner_ids:
 		return False
 	data = await readDB()
@@ -235,7 +235,7 @@ async def on_message(message):
 			if db:
 				async with aiohttp.ClientSession() as s:
 					async with s.get("https://i.imgur.com/q3h9bED.png") as r:
-						await message.reply(f"{message.author.mention} has paid their respects.", file=discord.File(BytesIO(await r.content.read()), filename="press_f.png"))
+						await message.channel.send(f"{message.author.mention} has paid their respects.", file=discord.File(BytesIO(await r.content.read()), filename=f"{message.author.name}-press_f_to_pay_respects.png"))
 	afksearch=afkReg.search(message.content)
 	if afksearch:
 		try: user = message.guild.get_member(int(afksearch.group(1)))
