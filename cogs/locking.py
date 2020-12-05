@@ -174,31 +174,31 @@ class Locking(commands.Cog):
 		"""
 		Locks the entire server by setting specified channels' send messages permissions for @everyone to false.
 		"""
-		async with channel.typing()
-		await self.doeschannelexist(ctx.guild)
-		channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
-		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
-		if not channeldb:
-			return await ctx.send(f"{self.bot.const_emojis['no']} This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
-		if islockeddb:
-			return await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is already locked down!")
-		channellist = json.loads(channeldb[0][0])
-		locked = []
-		m = await ctx.send("Locking server...")
-		for chanid in channellist:
-			chan = ctx.guild.get_channel(chanid)
-			perms = chan.overwrites_for(ctx.guild.default_role)
-			if perms.send_messages != False:
-				perms.send_messages = False
-				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}).")
-				locked.append(f"<#{chan.id}>")
-				await chan.send(embed=discord.Embed(title=f"🔒 Server Locked! 🔒", description=f"Server locked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
-		embed = discord.Embed(title=f"{self.bot.const_emojis['yes']} Locked down the server!", description=f"🔒 **Channels Locked:**\n{' `||` '.join(locked)}", color=2937504)
-		if reason != None: embed.add_field(name="Reason:", value=reason)
-		if len(embed.description) > 2048:
-			embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}"
-		await self.bot.dbexec(("INSERT INTO islocked VALUES (?, ?)", (str(ctx.guild.id), "true")))
-		await m.delete()
+		async with channel.typing():
+			await self.doeschannelexist(ctx.guild)
+			channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
+			islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
+			if not channeldb:
+				return await ctx.send(f"{self.bot.const_emojis['no']} This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
+			if islockeddb:
+				return await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is already locked down!")
+			channellist = json.loads(channeldb[0][0])
+			locked = []
+			m = await ctx.send("Locking server...")
+			for chanid in channellist:
+				chan = ctx.guild.get_channel(chanid)
+				perms = chan.overwrites_for(ctx.guild.default_role)
+				if perms.send_messages != False:
+					perms.send_messages = False
+					await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}).")
+					locked.append(f"<#{chan.id}>")
+					await chan.send(embed=discord.Embed(title=f"🔒 Server Locked! 🔒", description=f"Server locked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
+			embed = discord.Embed(title=f"{self.bot.const_emojis['yes']} Locked down the server!", description=f"🔒 **Channels Locked:**\n{' `||` '.join(locked)}", color=2937504)
+			if reason != None: embed.add_field(name="Reason:", value=reason)
+			if len(embed.description) > 2048:
+				embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}"
+			await self.bot.dbexec(("INSERT INTO islocked VALUES (?, ?)", (str(ctx.guild.id), "true")))
+			await m.delete()
 		if len(locked) < 1:
 			await ctx.send("No channels locked.", delete_after=60)
 		else:
@@ -213,31 +213,31 @@ class Locking(commands.Cog):
 		"""
 		Unlocks the entire server by setting all channels' send messages permissions for @everyone to neutral.
 		"""
-		async with channel.typing()
-		await self.doeschannelexist(ctx.guild)
-		channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
-		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
-		if not channeldb:
-			return await ctx.send(f"{self.bot.const_emojis['no']} This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
-		if not islockeddb:
-			return await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is not locked down!")
-		channellist = json.loads(channeldb[0][0])
-		unlocked = []
-		m = await ctx.send("Unlocking server...")
-		for chanid in channellist:
-			chan = ctx.guild.get_channel(chanid)
-			perms = chan.overwrites_for(ctx.guild.default_role)
-			if perms.send_messages == False:
-				perms.send_messages = None
-				await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server unlocked by {ctx.author} ({ctx.author.id}).")
-				unlocked.append(f"<#{chan.id}>")
-				await chan.send(embed=discord.Embed(title="🔓 Server Unlocked! 🔓", description=f"Server unlocked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
-		embed = discord.Embed(title=f"{self.bot.const_emojis['yes']} Unlocked the server!", description=f"🔓 **Channels Unlocked:**\n{' `||` '.join(unlocked)}", color=2937504)
-		if reason: embed.add_field(name="Reason:", value=reason)
-		if len(embed.description) > 2048:
-			embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}"
-		await self.bot.dbexec("DELETE FROM islocked WHERE guildid=" + str(ctx.guild.id))
-		await m.delete()
+		async with channel.typing():
+			await self.doeschannelexist(ctx.guild)
+			channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
+			islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
+			if not channeldb:
+				return await ctx.send(f"{self.bot.const_emojis['no']} This server has not been configured. Please type `{ctx.prefix}help shlable` for instructions on how to configure server lockdown.")
+			if not islockeddb:
+				return await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is not locked down!")
+			channellist = json.loads(channeldb[0][0])
+			unlocked = []
+			m = await ctx.send("Unlocking server...")
+			for chanid in channellist:
+				chan = ctx.guild.get_channel(chanid)
+				perms = chan.overwrites_for(ctx.guild.default_role)
+				if perms.send_messages == False:
+					perms.send_messages = None
+					await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server unlocked by {ctx.author} ({ctx.author.id}).")
+					unlocked.append(f"<#{chan.id}>")
+					await chan.send(embed=discord.Embed(title="🔓 Server Unlocked! 🔓", description=f"Server unlocked by {ctx.author.mention}!\n**Reason:** {reason}", color=2937504), delete_after=600)
+			embed = discord.Embed(title=f"{self.bot.const_emojis['yes']} Unlocked the server!", description=f"🔓 **Channels Unlocked:**\n{' `||` '.join(unlocked)}", color=2937504)
+			if reason: embed.add_field(name="Reason:", value=reason)
+			if len(embed.description) > 2048:
+				embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}"
+			await self.bot.dbexec("DELETE FROM islocked WHERE guildid=" + str(ctx.guild.id))
+			await m.delete()
 		if len(unlocked) < 1:
 			await ctx.send("No channels unlocked.", delete_after=60)
 		else:
