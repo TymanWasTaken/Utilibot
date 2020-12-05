@@ -37,7 +37,6 @@ class Locking(commands.Cog):
 		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(guild.id))
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(guild.id), str(channellist))))
 
-# Things that need to be added - shlable db, 'duration' flag/arg
 # Hardlock- Changes perms.
 	@commands.command(name="hardlock", aliases=['lockdown', 'hl', 'ld'])
 	@commands.bot_has_permissions(manage_channels=True)
@@ -175,6 +174,7 @@ class Locking(commands.Cog):
 		"""
 		Locks the entire server by setting specified channels' send messages permissions for @everyone to false.
 		"""
+		async with channel.typing()
 		await self.doeschannelexist(ctx.guild)
 		channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
@@ -213,6 +213,7 @@ class Locking(commands.Cog):
 		"""
 		Unlocks the entire server by setting all channels' send messages permissions for @everyone to neutral.
 		"""
+		async with channel.typing()
 		await self.doeschannelexist(ctx.guild)
 		channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
