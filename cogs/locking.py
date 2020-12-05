@@ -53,8 +53,8 @@ class Locking(commands.Cog):
 		else:
 			perms.send_messages = False
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author} ({ctx.author.id}.")
-			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully locked down <#{ch.id}>!{f'\n**Reason:** {reason}' if reason else ''}", delete_after=10)
-			await ch.send(embed=discord.Embed(title=f"🔒 Channel Locked 🔒", description=f"This channel was locked by {ctx.author.mention}!{f'\n**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
+			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully locked down <#{ch.id}>!\n{f'**Reason:** {reason}' if reason else ''}", delete_after=10)
+			await ch.send(embed=discord.Embed(title=f"🔒 Channel Locked 🔒", description=f"This channel was locked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
 		
 	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
 	@commands.bot_has_permissions(manage_channels=True)
@@ -71,8 +71,8 @@ class Locking(commands.Cog):
 		else:
 			perms.send_messages = None
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel unlocked by {ctx.author} ({ctx.author.id}.")
-			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully unlocked <#{ch.id}>!{f'\n**Reason:** {reason}' if reason else ''}", delete_after=10)
-			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unlocked 🔓", description=f"This channel was unlocked by {ctx.author.mention}!{f'\n**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
+			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully unlocked <#{ch.id}>!\n{f'**Reason:** {reason}' if reason else ''}", delete_after=10)
+			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unlocked 🔓", description=f"This channel was unlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
 
 	@commands.group(name="serverhardlockable", aliases=['shlockable', 'shlable'], invoke_without_command=True)
 	@commands.bot_has_permissions(manage_channels=True)
@@ -192,7 +192,7 @@ class Locking(commands.Cog):
 					perms.send_messages = False
 					await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}).")
 					locked.append(f"<#{chan.id}>")
-					await chan.send(embed=discord.Embed(title=f"🔒 Server Locked! 🔒", description=f"Server locked by {ctx.author.mention}!{f'\n**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
+					await chan.send(embed=discord.Embed(title=f"🔒 Server Locked! 🔒", description=f"Server locked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
 			embed = discord.Embed(title=f"{self.bot.const_emojis['yes']} Locked down the server!", description=f"🔒 **Channels Locked:**\n{' `||` '.join(locked)}", color=2937504)
 			if reason != None: embed.add_field(name="Reason:", value=reason)
 			if len(embed.description) > 2048:
@@ -231,7 +231,7 @@ class Locking(commands.Cog):
 					perms.send_messages = None
 					await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server unlocked by {ctx.author} ({ctx.author.id}).")
 					unlocked.append(f"<#{chan.id}>")
-					await chan.send(embed=discord.Embed(title="🔓 Server Unlocked! 🔓", description=f"Server unlocked by {ctx.author.mention}!{f'\n**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
+					await chan.send(embed=discord.Embed(title="🔓 Server Unlocked! 🔓", description=f"Server unlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
 			embed = discord.Embed(title=f"{self.bot.const_emojis['yes']} Unlocked the server!", description=f"🔓 **Channels Unlocked:**\n{' `||` '.join(unlocked)}", color=2937504)
 			if reason: embed.add_field(name="Reason:", value=reason)
 			if len(embed.description) > 2048:
@@ -261,8 +261,8 @@ class Locking(commands.Cog):
 				"whitelist": []
 			}
 			await writeDB(db)
-			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully locked down <#{ch.id}>{f'\n**Reason:** {reason}' if reason else ''}", delete_after=10)
-			await ch.send(embed=discord.Embed(title=f"🔒 Channel Softlocked 🔒", description=f"This channel was softlocked by {ctx.author.mention}!{f'\n**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
+			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully locked down <#{ch.id}>\n{f'**Reason:** {reason}' if reason else ''}", delete_after=10)
+			await ch.send(embed=discord.Embed(title=f"🔒 Channel Softlocked 🔒", description=f"This channel was softlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
 		
 		else:
 			await ctx.send(f"{self.bot.const_emojis['no']} <#{ch.id}> is already softlocked.")
