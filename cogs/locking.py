@@ -71,7 +71,7 @@ class Locking(commands.Cog):
 		else:
 			perms.send_messages = None
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel unlocked by {ctx.author} ({ctx.author.id}.")
-			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully unlocked <#{ch.id}>!{f'\n**Reason:** {reason}' if reason else ''}"", delete_after=10)
+			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully unlocked <#{ch.id}>!{f'\n**Reason:** {reason}' if reason else ''}", delete_after=10)
 			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unlocked 🔓", description=f"This channel was unlocked by {ctx.author.mention}!{f'\n**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
 
 	@commands.group(name="serverhardlockable", aliases=['shlockable', 'shlable'], invoke_without_command=True)
