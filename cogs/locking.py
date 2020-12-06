@@ -1,24 +1,6 @@
 import discord, random, asyncio, aiofiles, json, typing, postbin
 from discord.ext import commands
 
-async def readDB():
-	try:
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
-			return json.loads(await f.read())
-	except Exception as e:
-		print(f"An error occured, {e}")
-
-async def writeDB(data: dict):
-	try:
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f_main:
-			async with aiofiles.open('/home/tyman/code/utilibot/data.json.bak', mode='w') as f_bak:
-				await f_bak.write(await f_main.read())
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='w') as f:
-			d = json.dumps(data)
-			await f.write(d)
-	except Exception as e:
-		print(f"An error occured, {e}")
-
 
 class Locking(commands.Cog):
 	def __init__(self, bot):
@@ -50,11 +32,11 @@ class Locking(commands.Cog):
 		ch = channel or ctx.channel
 		perms = ch.overwrites_for(ctx.guild.default_role)
 		if perms.send_messages == False:
-			await ctx.send(f"{self.emojis['no']} <#{ch.id}> is already locked!")
+			await ctx.send(f"{self.emojis['no']} {ch.mention} is already locked!")
 		else:
 			perms.send_messages = False
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author} ({ctx.author.id}.")
-			await ctx.send(f"{self.emojis['yes']} Successfully locked down <#{ch.id}>!\n{f'**Reason:** {reason}' if reason else ''}", delete_after=10)
+			await ctx.send(f"{self.emojis['yes']} Successfully locked down {ch.mention}!\n{f'**Reason:** {reason}' if reason else ''}", delete_after=10)
 			await ch.send(embed=discord.Embed(title=f"🔒 Channel Locked 🔒", description=f"This channel was locked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
 		
 	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
@@ -68,11 +50,11 @@ class Locking(commands.Cog):
 		ch = channel or ctx.channel
 		perms = ch.overwrites_for(ctx.guild.default_role)
 		if perms.send_messages != False:
-			await ctx.send(f"{self.emojis['no']} <#{ch.id}> is not locked!")
+			await ctx.send(f"{self.emojis['no']} {ch.mention} is not locked!")
 		else:
 			perms.send_messages = None
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel unlocked by {ctx.author} ({ctx.author.id}.")
-			await ctx.send(f"{self.emojis['yes']} Successfully unlocked <#{ch.id}>!\n{f'**Reason:** {reason}' if reason else ''}", delete_after=10)
+			await ctx.send(f"{self.emojis['yes']} Successfully unlocked {ch.mention}!\n{f'**Reason:** {reason}' if reason else ''}", delete_after=10)
 			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unlocked 🔓", description=f"This channel was unlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
 
 	@commands.group(name="serverhardlockable", aliases=['shlockable', 'shlable'], invoke_without_command=True)
@@ -173,7 +155,7 @@ class Locking(commands.Cog):
 	@commands.guild_only()
 	async def serverhardlock(self, ctx, *, reason=None):
 		"""
-		Locks the entire server by setting specified channels' send messages permissions for @everyone to false.
+		Locks the entire server by setting configured channels' send messages permissions for @everyone to false.
 		"""
 		async with ctx.channel.typing():
 			await self.doeschannelexist(ctx.guild)
@@ -212,7 +194,7 @@ class Locking(commands.Cog):
 	@commands.guild_only()
 	async def unserverhardlock(self, ctx, *, reason=None):
 		"""
-		Unlocks the entire server by setting all channels' send messages permissions for @everyone to neutral.
+		Unlocks the entire server by setting configured channels' send messages permissions for @everyone to neutral.
 		"""
 		async with ctx.channel.typing():
 			await self.doeschannelexist(ctx.guild)
@@ -256,7 +238,7 @@ class Locking(commands.Cog):
 		ch = channel or ctx.channel
 		db = await bot.dbquery("softlocked_channels", "data", "channelid=" +str(ch.id))
 		if db:
-			await ctx.send(f"{self.emojis['no'] {ch.mention} is already softlocked!")
+			await ctx.send(f"{self.emojis['no']} {ch.mention} is already softlocked!")
 		else:
 			data = {
 				"user": str(ctx.author.id),
