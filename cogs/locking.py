@@ -175,7 +175,7 @@ class Locking(commands.Cog):
 					perms.send_messages = False
 					await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}).")
 					locked.append(f"<#{chan.id}>")
-					await chan.send(embed=discord.Embed(title=f"🔒 Server Locked! 🔒", description=f"Server locked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
+					await chan.send(embed=discord.Embed(title=f"🔒 Server Locked! 🔒", description=f"Server locked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['lightred']), delete_after=600)
 			embed = discord.Embed(title=f"{self.emojis['yes']} Locked down the server!", description=f"🔒 **Channels Locked:**\n{' `||` '.join(locked)}", color=self.bot.colors['lightred'])
 			if reason != None: embed.add_field(name="Reason:", value=reason)
 			if len(embed.description) > 2048:
