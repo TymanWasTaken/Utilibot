@@ -174,7 +174,7 @@ class Locking(commands.Cog):
 		"""
 		Locks the entire server by setting specified channels' send messages permissions for @everyone to false.
 		"""
-		async with channel.typing():
+		async with ctx.channel.typing():
 			await self.doeschannelexist(ctx.guild)
 			channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 			islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
@@ -209,11 +209,11 @@ class Locking(commands.Cog):
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True, manage_guild=True)
 	@commands.guild_only()
-	async def serverunhardlock(self, ctx, *, reason=None):
+	async def unserverhardlock(self, ctx, *, reason=None):
 		"""
 		Unlocks the entire server by setting all channels' send messages permissions for @everyone to neutral.
 		"""
-		async with channel.typing():
+		async with ctx.channel.typing():
 			await self.doeschannelexist(ctx.guild)
 			channeldb = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 			islockeddb = await self.bot.dbquery("islocked", "status", "guildid=" + str(ctx.guild.id))
