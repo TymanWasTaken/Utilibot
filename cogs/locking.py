@@ -37,7 +37,7 @@ class Locking(commands.Cog):
 			perms.send_messages = False
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel locked by {ctx.author} ({ctx.author.id}.")
 			await ctx.send(f"{self.emojis['yes']} Successfully locked down {ch.mention}!\n{f'**Reason:** {reason}' if reason else ''}", delete_after=10)
-			await ch.send(embed=discord.Embed(title=f"🔒 Channel Locked 🔒", description=f"This channel was locked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
+			await ch.send(embed=discord.Embed(title=f"🔒 Channel Locked 🔒", description=f"This channel was locked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['lightred']), delete_after=600)
 		
 	@commands.command(name="unhardlock", aliases=['unlockdown', 'uhl', 'uld'])
 	@commands.bot_has_permissions(manage_channels=True)
@@ -55,7 +55,7 @@ class Locking(commands.Cog):
 			perms.send_messages = None
 			await ch.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Channel unlocked by {ctx.author} ({ctx.author.id}.")
 			await ctx.send(f"{self.emojis['yes']} Successfully unlocked {ch.mention}!\n{f'**Reason:** {reason}' if reason else ''}", delete_after=10)
-			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unlocked 🔓", description=f"This channel was unlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
+			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unlocked 🔓", description=f"This channel was unlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['teal']), delete_after=600)
 
 	@commands.group(name="serverhardlockable", aliases=['shlockable', 'shlable'], invoke_without_command=True)
 	@commands.bot_has_permissions(manage_channels=True)
@@ -68,7 +68,7 @@ class Locking(commands.Cog):
 		"""
 		await self.doeschannelexist(ctx.guild)
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
-		embed=discord.Embed(title="Server Hardlockable Channels", description=f"**{ctx.guild}** has no configured channels.")
+		embed=discord.Embed(title="Server Hardlockable Channels", description=f"**{ctx.guild}** has no configured channels.", color=self.bot.colors['darkgreen'])
 		if len(db) > 0:
 			chanlist = []
 			existingchannels = json.loads(db[0][0])
@@ -176,7 +176,7 @@ class Locking(commands.Cog):
 					await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}).")
 					locked.append(f"<#{chan.id}>")
 					await chan.send(embed=discord.Embed(title=f"🔒 Server Locked! 🔒", description=f"Server locked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
-			embed = discord.Embed(title=f"{self.emojis['yes']} Locked down the server!", description=f"🔒 **Channels Locked:**\n{' `||` '.join(locked)}", color=2937504)
+			embed = discord.Embed(title=f"{self.emojis['yes']} Locked down the server!", description=f"🔒 **Channels Locked:**\n{' `||` '.join(locked)}", color=self.bot.colors['lightred'])
 			if reason != None: embed.add_field(name="Reason:", value=reason)
 			if len(embed.description) > 2048:
 				embed.description=f"List is too long to send!\nNumber of channels locked: {len(locked)}"
@@ -215,7 +215,7 @@ class Locking(commands.Cog):
 					await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server unlocked by {ctx.author} ({ctx.author.id}).")
 					unlocked.append(f"<#{chan.id}>")
 					await chan.send(embed=discord.Embed(title="🔓 Server Unlocked! 🔓", description=f"Server unlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
-			embed = discord.Embed(title=f"{self.emojis['yes']} Unlocked the server!", description=f"🔓 **Channels Unlocked:**\n{' `||` '.join(unlocked)}", color=2937504)
+			embed = discord.Embed(title=f"{self.emojis['yes']} Unlocked the server!", description=f"🔓 **Channels Unlocked:**\n{' `||` '.join(unlocked)}", color=self.bot.colors['teal'])
 			if reason: embed.add_field(name="Reason:", value=reason)
 			if len(embed.description) > 2048:
 				embed.description=f"List is too long to send!\nNumber of channels unlocked: {len(unlocked)}"
@@ -268,7 +268,7 @@ class Locking(commands.Cog):
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.has_permissions(manage_messages=True)
 	@commands.guild_only()
-	async def unsoftlock(self, ctx, channel: discord.TextChannel=None):
+	async def unsoftlock(self, ctx, channel: discord.TextChannel=None, reason=None):
 		"""
 		Unsoftlocks a channel.
 		"""
