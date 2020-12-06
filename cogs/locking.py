@@ -98,6 +98,27 @@ class Locking(commands.Cog):
 		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
 		await ctx.send(f"{self.emojis['yes']} Added the following channels to the list of hardlockable channels:\n{'`||`'.join(newchannels)}")
 		await self.doeschannelexist(ctx.guild)
+
+	@serverhardlockable.command()
+	async def addcategory(self, ctx, category: discord.CategoryChannel=None):
+		"""
+		Adds all channels in the specified category to the list of server hardlockable channels.
+		"""
+		cat = category or ctx.category
+		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
+		existingchannels = []
+		if db:
+			existingchannels = json.loads(db[0][0])
+			await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
+		newchannels = []
+		for chan in cat.text_channels:
+			if chan.id not in existingchannels:
+				existingchannels.append(chan.id)
+				newchannels.append(chan.mention)
+		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
+		await ctx.send(f"{self.emojis['yes']} Added the following channels to the list of hardlockable channels:\n{'`||`'.join(newchannels)}")
+		await self.doeschannelexist(ctx.guild)
+
 			       
 	@serverhardlockable.command()
 	async def addall(self, ctx):
@@ -142,10 +163,36 @@ class Locking(commands.Cog):
 		await self.doeschannelexist(ctx.guild)
 
 	@serverhardlockable.command()
+	async def removecategory(self, ctx, category: discord.CategoryChannel=None):
+		"""
+		Removes all channels in the specified category from the list of server hardlockable channels.
+		"""
+		cat = category or ctx.category
+		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
+		existingchannels = []
+		if not db:
+			return await ctx.send(f"{self.emojis['no']} This server has no hardlockable channels. Use `{ctx.prefix}shlable add <channels>` to add some.")
+		existingchannels = json.loads(db[0][0])
+		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
+		removedchannels = []
+		for chan in cat.text_channels:
+			if chan.id in existingchannels:
+				existingchannels.remove(chan.id)
+				removedchannels.append(chan.mention)
+		if len(existingchannels) > 1:
+			await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
+		if len(removedchannels) < 1:
+			await ctx.send("There were no channels to remove.")
+		else:
+			await ctx.send(f"{self.emojis['yes']} Removed the following channels from the list of hardlockable channels:\n{'`||`'.join(removedchannels)}")
+		await self.doeschannelexist(ctx.guild)
+
+	@serverhardlockable.command()
 	async def removeall(self, ctx):
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
-		if db:
-			await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
+		if not db:
+			return await ctx.send(f"{self.emojis['no']} This server has no hardlockable channels!")
+		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
 		await ctx.send(f"{self.emojis['yes']} Reset server hardlockable channels!")
 		await self.doeschannelexist(ctx.guild)
 		
