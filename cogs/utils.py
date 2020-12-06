@@ -308,38 +308,30 @@ class Utils(commands.Cog):
 		Shows some info about the server.
 		"""
 		bot = self.bot
+		emojis = bot.const_emojis
 		g = ctx.guild
 		if guildid != None and bot.get_guild(guildid):
-			g = bot.get_guild(guildid)
+			g = await bot.fetch_guild(guildid)
 		humans = 0
 		bots = 0
-		systemchan = 'None set'
-		if g.system_channel != None:
-			systemchan = g.system_channel.mention
-		ruleschan = 'None set'
-		if g.rules_channel != None:
-			ruleschan = g.rules_channel.mention
-		authreq = 'No'
-		if g.mfa_level > 0:
-			authreq = 'Yes'
 		vlevels = ["None: Unrestricted", "Low: Must have a verified email on their Discord account.", "Medium: Must also be registered on Discord for longer than 5 minutes.", "(╯°□°）╯︵ ┻━┻  (High): Must also be a member of this server for longer than 10 minutes.", "┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻  (Extreme): Must have a verified phone on their Discord account."]
-		for m in g.members:
-			if m.bot:
-				bots = bots + 1
-			else:
-				humans = humans + 1
+		filters = ["Don't scan any media content: My friends are nice most of the time.", "Scan media content from members without a role: Recommended for servers that use roles for trusted membership.", "Scan media content from all members: Recommended for when you want that squeaky clean shine."]
+		for m in g.members: 
+			if m.bot: bots += 1
+			else: humans += 1
 		embed = discord.Embed(
 			title=f"{g.name}'s Info",
 			description=f"""**Owner:** {g.owner} ({g.owner.id})
 			**Members:** Total- {g.member_count}, Humans- {humans}, Bots- {bots}
-			**Channels:** {bot.get_emoji(778489166316175413)} {len(g.categories)} categories, {bot.get_emoji(778489167649701898)} {len(g.text_channels)} text, {bot.get_emoji(778489169000661002)} {len(g.voice_channels)} voice
+			**Channels:** {emojis['category']} {len(g.categories)} categories, {emojis['text']} {len(g.text_channels)} text, {emojis['voice']} {len(g.voice_channels)} voice
 			**Roles:** {len(g.roles)-1}
 			**Emojis:** {len(g.emojis)}
 			**Features:** {', '.join(g.features)}
-			**System Messages:** {systemchan}
-			**Rules Channel:** {ruleschan}
-			**2FA Required?** {authreq}
+			**System Messages:** {g.system_channel.mention if g.system_channel else 'None set'}
+			**Rules Channel:** {g.rules_channel.mention if g.rules_channel else 'None set'}
+			**2FA Required?** {emojis['yes'] if g.mfa_level else emojis['no']}
 			**Verification Level:** {vlevels[g.verification_level.value]}
+			**Explicit Content Filter:** {filters[g.explicit_content_filter.value]}
 			**Region:** {g.region}
 			
 			[Link to Icon]({g.icon_url})"""
