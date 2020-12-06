@@ -280,6 +280,31 @@ class Locking(commands.Cog):
 			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unsoftlocked 🔓", description=f"This channel was unsoftlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['teal']), delete_after=600)
 		else:
 			await ctx.send(f"{self.emojis['no']} {ch.mention} is not soflocked!")
+				       
+	@commands.command(name="serversoftlock", aliases=['ssl'])
+	@commands.has_permissions(manage_messages=True, manage_guild=True)
+	@commands.bot_has_permissions(manage_messages=True)
+	@commands.guild_only()
+	async def serversoftlock(self, ctx, reason=None):
+		db = await self.bot.dbquery("softlocked_servers", "locked", "guildid=" +str(ctx.guild.id))
+		if db:
+			await ctx.send(f"{self.emojis['no']} **{ctx.guild}** is already softlocked!")
+		else:
+			await self.bot.dbexec(("INSERT INTO softlocked_servers VALUES (?, ?)", (str(ctx.guild.id), str(whitelist))))
+			await ctx.send(embed=discord.Embed(title=f"🔓 Server Softlocked 🔓", description=f"{self.emojis['yes']} **{ctx.guild}** has been softlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['lightred']), delete_after=600)
+
+
+	@commands.command(name="unserversoftlock", aliases=['ussl'])
+	@commands.has_permissions(manage_messages=True, manage_guild=True)
+	@commands.bot_has_permissions(manage_messages=True)
+	@commands.guild_only()
+	async def unserversoftlock(self, ctx, reason=None):
+		db = await self.bot.dbquery("softlocked_servers", "locked", "guildid=" +str(ctx.guild.id))
+		if db:
+			await self.bot.dbexec("DELETE FROM softlocked_servers WHERE guildid=" +str(ctx.guild.id))
+			await ctx.send(embed=discord.Embed(title=f"🔓 Server Unsoftlocked 🔓", description=f"{self.emojis['yes']} **{ctx.guild}** has been unsoftlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['teal']), delete_after=600)
+		else:
+			await ctx.send(f"{self.emojis['no']} **{ctx.guild}** is not softlocked!")
 
 def setup(bot):
 	bot.add_cog(Locking(bot))
