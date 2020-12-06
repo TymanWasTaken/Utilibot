@@ -275,7 +275,7 @@ class Locking(commands.Cog):
 		ch = channel or ctx.channel
 		db = await self.bot.dbquery("softlocked_channels", "whitelisted", "channelid=" +str(ch.id))
 		if db:
-			await bot.dbexec("DELETE FROM softlocked_channels WHERE channelid=" +str(ch.id))
+			await self.bot.dbexec("DELETE FROM softlocked_channels WHERE channelid=" +str(ch.id))
 			await ctx.send(f"{self.emojis['yes']} Successfully unsoftlocked {ch.mention}!")
 			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unsoftlocked 🔓", description=f"This channel was unsoftlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['teal']), delete_after=600)
 		else:
