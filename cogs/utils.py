@@ -557,7 +557,7 @@ class Utils(commands.Cog):
 					except aiohttp.ContentTypeError:
 						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
 
-	@commands.command(name="globalafk")
+	@commands.command(name="globalafk", aliases=['gafk'])
 	async def globalafk(self, ctx, *, afkmessage="AFK"):
 		"""
 		Sets your global AFK message.
