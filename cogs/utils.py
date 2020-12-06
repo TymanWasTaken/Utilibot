@@ -311,7 +311,7 @@ class Utils(commands.Cog):
 		emojis = bot.const_emojis
 		g = ctx.guild
 		if guildid != None and bot.get_guild(guildid):
-			g = await bot.fetch_guild(guildid)
+			g = bot.get_guild(guildid)
 		humans = 0
 		bots = 0
 		vlevels = ["None: Unrestricted", "Low: Must have a verified email on their Discord account.", "Medium: Must also be registered on Discord for longer than 5 minutes.", "(╯°□°）╯︵ ┻━┻  (High): Must also be a member of this server for longer than 10 minutes.", "┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻  (Extreme): Must have a verified phone on their Discord account."]
