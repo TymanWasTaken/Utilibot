@@ -29,6 +29,14 @@ class Fun(commands.Cog):
 		await ctx.send(message, reference=refrence)
 
 	@commands.command()
+	@commands.is_owner()
+	async def webhook(self, ctx, name, *, text):
+		await ctx.message.delete()
+		w = await ctx.channel.create_webhook(name=name)
+		await w.send(text)
+		await w.delete()
+
+	@commands.command()
 	async def paroot(self, ctx):
 		await ctx.send(self.bot.get_emoji(778489137001922591))
 

@@ -141,6 +141,8 @@ async def on_ready():
 	print(f'Bot logged in as {bot.user}')
 	await bot.get_channel(755979601788010527).send(content=datetime.now().strftime("[%m/%d/%Y %I:%M:%S] ") + "Bot online")
 	await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Clari's screams of frustration"))
+	for error in bot.errors:
+		await bot.get_channel(764333133738541056).send(error, allowed_mentions=discord.AllowedMentions(roles=True))
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -346,12 +348,12 @@ async def on_voice_state_update(member, before, after):
 			vc.cleanup()
 """
 
-def errlog(message):
-	asyncio.create_task(bot.get_channel(764333133738541056).send(message))
-
+bot.errors = []
 bot.load_extension("jishaku")
+no_load_cogs = ['cogs.reminders']
 for file in sorted(glob.glob("cogs/*.py")):
 	file = file.replace(".py", "").replace("/", ".")
+	if file in no_load_cogs: continue
 	try:
 		bot.load_extension(file)
 	except Exception as error:
@@ -359,7 +361,7 @@ for file in sorted(glob.glob("cogs/*.py")):
 		RED = "\033[0;31m"
 		print(f"{RED}{BOLD}Cog {file} failed to load.\n{error}\033[0m")
 		tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
-		# errlog(f"Cog {file} failed to load.```py\n{tb}```")
+		bot.errors.append(f"<@&766132653640122419> Cog {file} failed to load.```py\n{tb}```")
 # bot.load_extension("riftgun")
 
 disabled_commands = ['mute']

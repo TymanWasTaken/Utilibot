@@ -24,6 +24,7 @@ riftgun = "^1.1.0"
 "discord.py" = {git = "https://github.com/Rapptz/discord.py", extras = ["voice"]}
 fastapi = "^0.62.0"
 uvicorn = "^0.12.3"
+urllib3 = "^1.26.2"
 
 
 [tool.poetry.dev-dependencies]
