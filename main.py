@@ -132,6 +132,12 @@ async def blacklist_users(ctx):
 	else:
 		return True
 
+@bot.check
+async def is_ready_for_commands(ctx):
+	if not self.bot.is_ready():
+		raise discord.CheckFailure("Sorry, but I am not ready yet. Please wait a few seconds and try again.")
+	else: return True
+
 @bot.event
 async def on_ready():
 	bot.const_emojis = {}
@@ -219,7 +225,6 @@ afkReg = re.compile(r"<@!?(\d+)>", flags=(re.MULTILINE))
 
 @bot.event
 async def on_message(message):
-	if not bot.is_ready(): return await message.reply("Sorry, but I am not ready yet. Please wait a few seconds and try again.")
 	if not message.guild:
 		log = bot.get_channel(776466538156130314)
 		e = discord.Embed(title="Bot DMed", description=f"""
