@@ -86,7 +86,7 @@ class Moderation(commands.Cog):
 	@commands.has_permissions(manage_messages=True)
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.guild_only()
-	async def user(self, ctx, message: discord.Message, number:int =10):
+	async def after(self, ctx, message: discord.Message, number:int =10):
 		"""
 		Purge a specified amount of messages from after a given message.
 		Number = The number of messages to delete.
