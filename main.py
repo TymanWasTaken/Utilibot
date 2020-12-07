@@ -156,7 +156,7 @@ async def on_command_error(ctx, error):
 		elif isinstance(error, commands.CommandNotFound):
 			if ctx.guild and ctx.guild.id in nocommandblacklist:
 				return
-			await ctx.send(f'`{ctx.message.content}` is not a command, <@{ctx.author.id}>')
+			await ctx.reply(f'`{ctx.message.content}` is not a command!', mention_author=True)
 		elif isinstance(error, commands.CheckFailure):
 			await ctx.reply(error)
 		elif isinstance(error, BlacklistedError):
