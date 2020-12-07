@@ -219,6 +219,7 @@ afkReg = re.compile(r"<@!?(\d+)>", flags=(re.MULTILINE))
 
 @bot.event
 async def on_message(message):
+	if not bot.is_ready(): return await message.reply("Sorry, but I am not ready yet. Please wait a few seconds and try again.")
 	if not message.guild:
 		log = bot.get_channel(776466538156130314)
 		e = discord.Embed(title="Bot DMed", description=f"""
