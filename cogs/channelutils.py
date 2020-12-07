@@ -13,7 +13,7 @@ class ChannelUtils(commands.Cog):
 		Shows some info on a channel.
 		"""
 		channel = channel or ctx.channel
-		embed = discord.Embed(title=f"{channel}'s Info")
+		embed = discord.Embed(title=f"{channel}'s Info", color=self.bot.utils.randcolor())
 		fields = {
 			"ID": f"`{channel.id}`",
 			"Type": f"{self.bot.const_emojis[str(channel.type)]} {str(channel.type).capitalize()}",
@@ -32,7 +32,7 @@ class ChannelUtils(commands.Cog):
 			fields["Channels"] = f"{self.bot.const_emojis['text']} {len(channel.text_channels)}\n{self.bot.const_emojis['voice']} {len(channel.voice_channels)}"
 		for f in fields:
 			embed.add_field(name=f, value=fields[f])
-		embed.set_footer(text="Created at")
+		embed.set_footer(text="Created on")
 		embed.timestamp=channel.created_at
 		await ctx.send(embed=embed)
 
