@@ -99,11 +99,11 @@ class Locking(commands.Cog):
 		await self.doeschannelexist(ctx.guild)
 
 	@serverhardlockable.command(aliases=['categoryaddall'])
-	async def addcategory(self, ctx, category: discord.CategoryChannel=None):
+	async def addcategory(self, ctx, *, category: discord.CategoryChannel=None):
 		"""
 		Adds all channels in the specified category to the list of server hardlockable channels.
 		"""
-		cat = category or ctx.category
+		cat = category or ctx.channel.category
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		existingchannels = []
 		if db:
@@ -162,11 +162,11 @@ class Locking(commands.Cog):
 		await self.doeschannelexist(ctx.guild)
 
 	@serverhardlockable.command(aliases=['categoryremoveall'])
-	async def removecategory(self, ctx, category: discord.CategoryChannel=None):
+	async def removecategory(self, ctx, *, category: discord.CategoryChannel=None):
 		"""
 		Removes all channels in the specified category from the list of server hardlockable channels.
 		"""
-		cat = category or ctx.category
+		cat = category or ctx.channel.category
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		existingchannels = []
 		if not db:
