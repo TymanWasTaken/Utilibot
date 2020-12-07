@@ -5,7 +5,7 @@ from discord.ext import commands
 class Locking(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.emojis = bot.const_emojis
+		self.emojis = self.bot.const_emojis
 
 	async def doeschannelexist(self, guild):
 		if not guild:
@@ -99,7 +99,7 @@ class Locking(commands.Cog):
 		await ctx.send(f"{self.emojis['yes']} Added the following channels to the list of hardlockable channels:\n{'`||`'.join(newchannels)}")
 		await self.doeschannelexist(ctx.guild)
 
-	@serverhardlockable.command()
+	@serverhardlockable.command(aliases=['categoryaddall'])
 	async def addcategory(self, ctx, category: discord.CategoryChannel=None):
 		"""
 		Adds all channels in the specified category to the list of server hardlockable channels.
@@ -162,7 +162,7 @@ class Locking(commands.Cog):
 			await ctx.send(f"{self.emojis['yes']} Removed the following channels from the list of hardlockable channels:\n{'`||`'.join(removedchannels)}")
 		await self.doeschannelexist(ctx.guild)
 
-	@serverhardlockable.command()
+	@serverhardlockable.command(aliases=['categoryremoveall'])
 	async def removecategory(self, ctx, category: discord.CategoryChannel=None):
 		"""
 		Removes all channels in the specified category from the list of server hardlockable channels.
