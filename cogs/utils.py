@@ -461,7 +461,7 @@ class Utils(commands.Cog):
 	@commands.bot_has_permissions(manage_nicknames=True)
 	async def setnick(self, ctx, member: typing.Optional[discord.Member], *, newnick=None):
 		mem = member or ctx.author
-		oldnick = member.nick
+		oldnick = mem.nick
 		if ctx.author.id != mem.id and (getattr(ctx.author.guild_permissions, "manage_nicknames") == False):
 			await ctx.send("You don't have permission to change other users' nicknames!")
 		elif ctx.author.id != mem.id and (getattr(ctx.author.guild_permissions, "manage_nicknames") == True):
