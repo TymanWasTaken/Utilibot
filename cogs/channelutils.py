@@ -13,7 +13,7 @@ class ChannelUtils(commands.Cog):
 		Shows some info on a channel.
 		"""
 		channel = channel or ctx.channel
-		embed = discord.Embed(title=f"#{channel}'s Info")
+		embed = discord.Embed(title=f"{channel}'s Info")
 		fields = {
 			"ID": f"`{channel.id}`",
 			"Type": f"{self.bot.const_emojis[str(channel.type)]} {str(channel.type).capitalize()}",
