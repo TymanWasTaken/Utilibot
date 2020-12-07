@@ -459,7 +459,7 @@ class Utils(commands.Cog):
 
 	@commands.command(name="setnick")
 	@commands.bot_has_permissions(manage_nicknames=True)
-	async def setnick(self, ctx, member: discord.Member=None, *, newnick=None):
+	async def setnick(self, ctx, member=None: discord.Member, *, newnick=None):
 		mem = member or ctx.author
 		oldnick = member.nick
 		if ctx.author.id != mem.id and (getattr(ctx.author.guild_permissions, "manage_nicknames") == False):
