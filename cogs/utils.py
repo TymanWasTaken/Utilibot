@@ -374,7 +374,7 @@ class Utils(commands.Cog):
 	@commands.has_permissions(manage_roles=True)
 	@commands.bot_has_permissions(manage_roles=True)
 	@commands.guild_only()
-	async def newrole(self, ctx, color: discord.Color=None, hoist: bool=False, *, name):
+	async def newrole(self, ctx, color: typing.Optional[discord.Color], hoist: typing.Optional[bool]=False, *, name):
 		r = await ctx.guild.create_role(name=name, color=color, hoist=hoist, reason=f"Role created by {ctx.author} ({ctx.author.id})")
 		await ctx.send(f"Created {r.mention}!", allowed_mentions=discord.AllowedMentions(roles=False))
 		
