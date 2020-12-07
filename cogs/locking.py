@@ -115,9 +115,9 @@ class Locking(commands.Cog):
 				if chan.id not in existingchannels:
 					existingchannels.append(chan.id)
 					newchannels.append(chan.mention)
+		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
 		if len(newchannels) < 1:
 			return await ctx.send(f"{self.bot.const_emojis['no']} There were no channels to add!")
-		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
 		await ctx.send(f"{self.bot.const_emojis['yes']} Added the following channels to the list of hardlockable channels:\n{'`||`'.join(newchannels)}")
 		await self.doeschannelexist(ctx.guild)
 
@@ -137,9 +137,9 @@ class Locking(commands.Cog):
 			if chan.id not in existingchannels:
 				existingchannels.append(chan.id)
 				added += 1
+		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
 		if added == 0:
 			return await ctx.send(f"{self.bot.const_emojis['no']} There were no channels to add!")
-		await self.bot.dbexec(("INSERT INTO server_hardlockable_channels VALUES (?, ?)", (str(ctx.guild.id), str(existingchannels))))
 		await ctx.send(f"{self.bot.const_emojis['yes']} Added all server channels to the list of hardlockable channels.")
 		await self.doeschannelexist(ctx.guild)
 	
