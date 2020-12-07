@@ -471,14 +471,13 @@ class Utils(commands.Cog):
 				return await ctx.send("You can't change this user's nickname as their highest role is above yours!")
 			if (newnick != None) and (len(newnick) > 32):
 				return await ctx.send("This nickname is too long! It must be 32 characters or less.")
-			try:
-				await mem.edit(nick=newnick, reason=f"Nickname changed from {oldnick} to {mem.nick} by {ctx.author} ({ctx.author.id})!")
-				await ctx.send(f"Changed {mem.mention}'s nickname from `{oldnick}` to `{mem.nick}`")
-			except Exception as e:
-				await ctx.send("no\n" +str(e))
+			await mem.edit(nick=newnick, reason=f"Nickname changed from {oldnick} to {mem.nick} by {ctx.author} ({ctx.author.id})!")
+			await ctx.send(f"Changed {mem.mention}'s nickname from `{oldnick}` to `{mem.nick}`")
 		elif ctx.author.id == mem.id and (getattr(ctx.author.guild_permissions, "change_nickname") == False):
 			await ctx.send("You don't have permission to change your nickname!")
 		elif ctx.author.id == mem.id and (getattr(ctx.author.guild_permissions, "change_nickname") == True):
+			if mem.top_role >= ctx.guild.me.top_role:
+				return await ctx.send("I can't change your nickname as your highest role is above mine!")
 			await mem.edit(nick=newnick, reason=f"User changed their nickname from {oldnick} to {newnick}")
 			await ctx.send(f"Changed your nickname from `{oldnick}` to `{mem.nick}`!")
 			
