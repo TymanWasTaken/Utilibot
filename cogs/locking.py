@@ -67,7 +67,7 @@ class Locking(commands.Cog):
 		"""
 		await self.doeschannelexist(ctx.guild)
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
-		embed=discord.Embed(title="Server Hardlockable Channels", description=f"**{ctx.guild}** has no configured channels.", color=self.bot.colors['darkgreen'])
+		embed=discord.Embed(title=f"__{ctx.guild}__'s Server Hardlockable Channels", description="There are no configured channels!", color=self.bot.colors['darkgreen'])
 		if len(db) > 0:
 			chanlist = []
 			existingchannels = json.loads(db[0][0])
