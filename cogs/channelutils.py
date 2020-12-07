@@ -26,7 +26,7 @@ class ChannelUtils(commands.Cog):
 			fields["NSFW?"] = f"{'Yes' if channel.nsfw else 'No'}"
 		elif channel.type == discord.ChannelType.voice:
 			fields["Category"] = f"{channel.category} (`{channel.category.id}`)"
-			fields["Limit"] = f"{channel.user_limit if channel.userlimit > 0 else 'No limit'}"
+			fields["Limit"] = f"{channel.user_limit if channel.user_limit > 0 else 'No limit'}"
 			fields["Bitrate"] = f"{channel.bitrate}"
 		elif channel.type == discord.ChannelType.category:
 			fields["Text"] = f"{self.bot.const_emojis['text']} {len(category.text_channels)}"
