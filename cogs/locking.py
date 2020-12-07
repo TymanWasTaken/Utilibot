@@ -5,7 +5,7 @@ from discord.ext import commands
 class Locking(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.emojis = bot.const_emojis
+		self.emojis = self.bot.const_emojis
 
 	async def doeschannelexist(self, guild):
 		if not guild:
