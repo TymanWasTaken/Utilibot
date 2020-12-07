@@ -16,13 +16,21 @@ class ChannelUtils(commands.Cog):
 		embed = discord.Embed(title=f"#{channel}'s Info")
 		fields = {
 			"ID": f"`{channel.id}`",
-			"Topic": f"```{channel.topic}```",
-			"Category": f"{channel.category} (`{channel.category.id}`)",
-			"Position": str(channel.position),
-			"NSFW?": f"{'Yes' if channel.nsfw else 'No'}",
-			"Type": str(channel.type).capitalize(),
-			"Slowmode": f"{f'{channel.slowmode_delay} seconds' if channel.slowmode_delay > 0 else 'Disabled'}"
+			"Type": f"{self.bot.const_emojis[str(channel.type)]} {str(channel.type).capitalize()}",
+			"Position": str(channel.position)
 		}
+		if channel.type == discord.ChannelType.text:
+			fields["Category"] = f"{channel.category} (`{channel.category.id}`)"
+			fields["Topic"] = f"```\n{channel.topic}```"
+			fields["Slowmode"] = f"{f'{channel.slowmode_delay} seconds' if channel.slowmode_delay > 0 else 'Disabled'}"
+			fields["NSFW?"] = f"{'Yes' if channel.nsfw else 'No'}"
+		elif channel.type == discord.ChannelType.voice:
+			fields["Category"] = f"{channel.category} (`{channel.category.id}`)"
+			fields["Limit"] = f"{channel.user_limit if channel.userlimit > 0 else 'No limit'}"
+			fields["Bitrate"] = f"{channel.bitrate}"
+		elif channel.type == discord.ChannelType.category:
+			fields["Text"] = f"{self.bot.const_emojis['text']} {len(category.text_channels)}"
+			fields["Voice"] = f"{self.bot.const_emojis['voice']} {len(category.voice_channels)}"
 		for f in fields:
 			embed.add_field(name=f, value=fields[f])
 		embed.set_footer(text="Created at")
