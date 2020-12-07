@@ -205,7 +205,7 @@ class ChannelUtils(commands.Cog):
 	@commands.guild_only()
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True)
-	async def slowmode(self, ctx, slowmode: int, channel: typing.Optional[discord.TextChannel]=None):
+	async def slowmode(self, ctx, slowmode: int=0, channel: typing.Optional[discord.TextChannel]=None):
 		"""
 		Sets a text channel's slowmode delay in seconds. Maximum of 21600 seconds (6 hours).
 		"""
