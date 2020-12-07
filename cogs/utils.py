@@ -459,7 +459,7 @@ class Utils(commands.Cog):
 
 	@commands.command(name="setnick")
 	@commands.bot_has_permissions(manage_nicknames=True)
-	async def setnick(self, ctx, member=None: discord.Member, *, newnick=None):
+	async def setnick(self, ctx, member: typing.Optional[discord.Member], *, newnick=None):
 		mem = member or ctx.author
 		oldnick = member.nick
 		if ctx.author.id != mem.id and (getattr(ctx.author.guild_permissions, "manage_nicknames") == False):
@@ -471,8 +471,11 @@ class Utils(commands.Cog):
 				return await ctx.send("You can't change this user's nickname as their highest role is above yours!")
 			if (newnick != None) and (len(newnick) > 32):
 				return await ctx.send("This nickname is too long! It must be 32 characters or less.")
-			await mem.edit(nick=newnick, reason=f"Nickname changed from {oldnick} to {mem.nick} by {ctx.author} ({ctx.author.id})!")
-			await ctx.send(f"Changed {mem.mention}'s nickname from `{oldnick}` to `{mem.nick}`")
+			try:
+				await mem.edit(nick=newnick, reason=f"Nickname changed from {oldnick} to {mem.nick} by {ctx.author} ({ctx.author.id})!")
+				await ctx.send(f"Changed {mem.mention}'s nickname from `{oldnick}` to `{mem.nick}`")
+			except Exception as e:
+				await ctx.send("no\n" +str(e))
 		elif ctx.author.id == mem.id and (getattr(ctx.author.guild_permissions, "change_nickname") == False):
 			await ctx.send("You don't have permission to change your nickname!")
 		elif ctx.author.id == mem.id and (getattr(ctx.author.guild_permissions, "change_nickname") == True):
