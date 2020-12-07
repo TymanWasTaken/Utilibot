@@ -19,7 +19,7 @@ class ChannelUtils(commands.Cog):
 			"Type": f"{self.bot.const_emojis[str(channel.type)]} {str(channel.type).capitalize()}",
 			"Position": str(channel.position)
 		}
-		if channel.type == discord.ChannelType.text:
+		if channel.type == (discord.ChannelType.text or discord.ChannelType.news):
 			fields["Category"] = f"{channel.category} (`{channel.category.id}`)"
 			fields["Topic"] = f"```\n{channel.topic}```"
 			fields["Slowmode"] = f"{f'{channel.slowmode_delay} seconds' if channel.slowmode_delay > 0 else 'Disabled'}"
