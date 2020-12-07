@@ -29,8 +29,8 @@ class ChannelUtils(commands.Cog):
 			fields["Limit"] = f"{channel.user_limit if channel.user_limit > 0 else 'No limit'}"
 			fields["Bitrate"] = f"{channel.bitrate}"
 		elif channel.type == discord.ChannelType.category:
-			fields["Text"] = f"{self.bot.const_emojis['text']} {len(category.text_channels)}"
-			fields["Voice"] = f"{self.bot.const_emojis['voice']} {len(category.voice_channels)}"
+			fields["Text"] = f"{self.bot.const_emojis['text']} {len(channel.text_channels)}"
+			fields["Voice"] = f"{self.bot.const_emojis['voice']} {len(channel.voice_channels)}"
 		for f in fields:
 			embed.add_field(name=f, value=fields[f])
 		embed.set_footer(text="Created at")
