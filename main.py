@@ -308,7 +308,7 @@ async def on_message(message):
 				await message.channel.send(embed=e)
 		await message.channel.send(embed=embed)
 	if shutReg.search(message.content):
-		await ctx.send(bot.const_emojis['shut'], delete_after=60)
+		await message.channel.send(bot.const_emojis['shut'], delete_after=60)
 	if message.channel.type == discord.ChannelType.news:
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
