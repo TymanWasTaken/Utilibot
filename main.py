@@ -296,7 +296,7 @@ async def on_message(message):
 		if msgsearch == message.content:
 			await message.delete()
 		if msg.attachments:
-			embed.add_field(name="Attachments", value=f"{len(msg.attachments)} attachments\n\n{'[a.filename](a.url)' for a in msg.attachments}")
+			embed.add_field(name="Attachments", value=f"{len(msg.attachments)} attachments\n\n{f'[{a.filename}]({a.url})' for a in msg.attachments}")
 		if msg.embeds:
 			embed.add_field(name="Embeds", value=len(msg.embeds))
 			for e in msg.embeds:
