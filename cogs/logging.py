@@ -611,7 +611,8 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 	async def on_raw_reaction_add(self, payload):
 		if not await self.islogenabled(self.bot.get_guild(payload.guild_id), "reactionadd"):
 			return
-		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+		try: message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+		except discord.errors.NotFound: return
 		if not message.guild:
 			return
 		user = message.guild.get_member(payload.user_id)
@@ -647,7 +648,8 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 	async def on_raw_reaction_remove(self, payload):
 		if not await self.islogenabled(self.bot.get_guild(payload.guild_id), "reactionremove"):
 			return
-		message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+		try: message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+		except discord.errors.NotFound: return
 		user = message.guild.get_member(payload.user_id)
 		reaction = payload.emoji
 		if not message.guild:
@@ -681,8 +683,12 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 	async def on_reaction_clear(self, message, reactions):
 		if not await self.islogenabled(self.bot.get_guild(message.guild.id), "reactionclear"):
 			return
-		reactlist = ", ".join(reactions)
-		rawreactlist = "`, `".join(reactions)
+		strreacts = []
+		for r in reactions: strreacts.append(f"{r}")
+		rawreacts = []
+		for r in reactions: rawreacts.append(f"`{r}`")
+		reactlist = ", ".join(strreacts)
+		rawreactlist = ", ".join(rawreacts)
 		logchannel = await self.getlogchannel(message.guild)
 		embed=discord.Embed(title="Reactions Cleared", color=0xa50003, timestamp=datetime.now())
 		embed.description=f"""
