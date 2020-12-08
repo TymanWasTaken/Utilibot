@@ -221,7 +221,7 @@ async def on_error(event, *args, **kwargs):
 	""".replace("	", ""))
 
 fReg = re.compile(r"(^|\A|\s)f($|\Z|\s)", flags=(re.IGNORECASE|re.MULTILINE))
-afkReg = re.compile(r"<@!?(\d+)>", flags=(re.MULTILINE))
+#afkReg = re.compile(r"<@!?(\d+)>", flags=(re.MULTILINE))
 
 @bot.event
 async def on_message(message):
@@ -245,10 +245,9 @@ async def on_message(message):
 				async with aiohttp.ClientSession() as s:
 					async with s.get("https://i.imgur.com/q3h9bED.png") as r:
 						await message.channel.send(f"{message.author.mention} has paid their respects.", file=discord.File(BytesIO(await r.content.read()), filename=f"{message.author.name}-press_f_to_pay_respects.png"))
-	afksearch=afkReg.search(message.content)
-	if afksearch:
-		try: user = message.guild.get_member(int(afksearch.group(1)))
-		except: user = None
+#	afksearch=afkReg.search(message.content)
+	if message.mentions:
+		for user in message.mentions: pass
 		if user and not message.author.bot:
 			localafk = await bot.dbquery("afk", "data", f"guildid={message.guild.id}")
 			globalafk = await bot.dbquery("globalafk", "message", f"userid={user.id}")
