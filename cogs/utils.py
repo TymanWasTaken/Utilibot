@@ -557,6 +557,23 @@ class Utils(commands.Cog):
 						await ctx.send(embed=discord.Embed(color=discord.Color.blurple()).set_image(url=website))
 					except aiohttp.ContentTypeError:
 						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
+	@commands.command(name="msglink", aliases=['mlink'])
+	@commands.has_permissions(manage_messages=True)
+	async def msglink(self, ctx, channel: typing.Optional[discord.TextChannel]):
+		"""
+		Toggle to enable/disable the message link preview autoresponse in a channel. Defaults to current channel.
+		"""
+		ch = channel or ctx.channel
+		action = "Enabled"
+		db = await self.bot.dbquery("msglink", "enabled", "channelid=" + str(ch.id))
+		if db:
+			action = "Disabled"
+			await self.bot.dbexec((f"DELETE FROM msglink WHERE channelid={ch.id}"))
+		else:
+			await self.bot.dbexec((f"DELETE FROM msglink WHERE channelid={ch.id}"))
+			await self.bot.dbexec(("INSERT INTO msglink VALUES (?, ?)", (ch.id, "true")))
+		await ctx.send(f"{action} message link preview for {ch.mention}!")
+
 
 	@commands.command(name="globalafk", aliases=['gafk'])
 	async def globalafk(self, ctx, *, afkmessage="AFK"):
