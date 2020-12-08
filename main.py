@@ -146,7 +146,7 @@ async def on_ready():
 	bot.colors = {'teal': 2937504, 'darkgreen':563482, 'blue': 1148159, 'lightred': 16276311, 'red': 14946834, 'darkred': 11337728}
 	print(f'Bot logged in as {bot.user}')
 	await bot.get_channel(755979601788010527).send(content=datetime.now().strftime("[%m/%d/%Y %I:%M:%S] ") + "Bot online")
-	await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Clari's screams of frustration"))
+	await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Clari struggle"))
 	for error in bot.errors:
 		await bot.get_channel(764333133738541056).send(error, allowed_mentions=discord.AllowedMentions(roles=True))
 
