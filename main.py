@@ -282,6 +282,7 @@ async def on_message(message):
 		guildid=msgsearch.group(1)
 		channelid=msgsearch.group(2)
 		messageid=msgsearch.group(3)
+		await message.channel.send(guildid)
 		g = bot.get_guild(guildid)
 #		if not g:
 #			return await message.channel.send("nopeg")
