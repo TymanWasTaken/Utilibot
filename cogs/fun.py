@@ -30,7 +30,9 @@ class Fun(commands.Cog):
 		if not message.channel == ctx.channel: return
 		quoted = str(message.content).replace("\n", "\n> ")
 		await ctx.message.delete()
-		await ctx.send(f"> {quoted}\n{message.author.mention} {response}\n\n-{ctx.author}")
+		w = await ctx.channel.create_webhook(name=ctx.author.name, avatar=ctx.author.avatar_url)
+		await w.send(f"> {quoted}\n{message.author.mention} {response}\n\n")
+		await w.delete()
 
 
 	@commands.command()
