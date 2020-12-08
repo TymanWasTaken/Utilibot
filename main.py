@@ -229,7 +229,7 @@ async def on_message(message):
 		log = bot.get_channel(776466538156130314)
 		e = discord.Embed(title="Bot DMed", description=f"""
 		User: `{str(message.author)}` ({message.author.id})
-		Content: `{await postbin.postAsync(message.content)}`
+		Content: {await postbin.postAsync(message.content)}
 		""".replace("	", "")
 		)
 		await log.send(embed=e)
@@ -283,8 +283,8 @@ async def on_message(message):
 		channelid=msgsearch.group(2)
 		messageid=msgsearch.group(3)
 		g = bot.get_guild(guildid)
-		if not g:
-			return await message.channel.send("nopeg")
+#		if not g:
+#			return await message.channel.send("nopeg")
 		await message.channel.send("yepg")
 		chan = g.get_channel(channelid)
 		if not chan:
