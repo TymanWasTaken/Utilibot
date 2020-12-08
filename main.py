@@ -221,7 +221,7 @@ async def on_error(event, *args, **kwargs):
 	""".replace("	", ""))
 
 fReg = re.compile(r"(^|\A|\s)f($|\Z|\s)", flags=(re.IGNORECASE|re.MULTILINE))
-#afkReg = re.compile(r"<@!?(\d+)>", flags=(re.MULTILINE))
+msgReg = re.compile(r"(?:[^<]|\A)(?:https:\/\/)?(?:www\.)?(?:ptb\.|canary\.)?discord(?:app)?\.com\/channels\/(\d+)\/(\d+)\/(\d+)(?:[^>]|\Z)", flags=re.MULTILINE|re.IGNORECASE)
 
 @bot.event
 async def on_message(message):
@@ -245,7 +245,6 @@ async def on_message(message):
 				async with aiohttp.ClientSession() as s:
 					async with s.get("https://i.imgur.com/q3h9bED.png") as r:
 						await message.channel.send(f"{message.author.mention} has paid their respects.", file=discord.File(BytesIO(await r.content.read()), filename=f"{message.author.name}-press_f_to_pay_respects.png"))
-#	afksearch=afkReg.search(message.content)
 	if message.mentions:
 		for user in message.mentions:
 			if user and not message.author.bot:
@@ -272,6 +271,29 @@ async def on_message(message):
 					embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator} is currently AFK{inguild}.", icon_url=user.avatar_url)
 					embed.set_footer(text=f"Scope: {scope} AFK Message")
 					await message.channel.send(embed=embed, delete_after=10)
+	msgsearch = msgReg.search(message.content)
+	if msgsearch:
+		if message.author.bot: return
+		db = await bot.dbquery("msglink", "enabled", f"channelid={message.channel.id}")
+		if not db: return
+		guildid=msgsearch.group(2)
+		channelid=msgsearch.group(3)
+		messageid=msgsearch.group(4)
+		g = bot.get_guild(guildid)
+		if not g: return
+		chan = g.get_channel(channelid)
+		if not chan: return
+		msg = await chan.fetch_message(messageid)
+		if not msg: return
+			embed=discord.Embed(description=msg.content, color=bot.utils.randcolor(), timestamp=msg.timestamp)
+		embed.set_author(name=f"Message sent by {msg.author}", icon_url=msg.author.avatar_url)
+		embed.add_field(name="Message Details", value=f"Server: {g.name}\nChannel: {chan.mention}\nMessage: [{msg.id}]({msg.jump_url})\nAuthor ID: {msg.author.id}")
+		embed.set_footer(text=f"Command triggered by {message.author}\nLinked message sent:")
+		if msgsearch == message.content:
+			await message.delete()
+		await ctx.send(embed=embed)  
+
+
 	if message.channel.type == discord.ChannelType.news:
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
