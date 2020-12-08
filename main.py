@@ -281,7 +281,8 @@ async def on_message(message):
 		guildid=msgsearch.group(1)
 		channelid=msgsearch.group(2)
 		messageid=msgsearch.group(3)
-		g = bot.fetch_guild(guildid)
+		g = bot.get_guild(guildid)
+		return bot.get_guild(guildid)
 		if not g:
 			return await ctx.send("mmk")
 		await message.channel.send("yepg")
