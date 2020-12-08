@@ -557,6 +557,7 @@ class Utils(commands.Cog):
 						await ctx.send(embed=discord.Embed(color=discord.Color.blurple()).set_image(url=website))
 					except aiohttp.ContentTypeError:
 						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
+
 	@commands.command(name="msglink", aliases=['mlink'])
 	@commands.has_permissions(manage_messages=True)
 	async def msglink(self, ctx):
@@ -564,13 +565,13 @@ class Utils(commands.Cog):
 		Toggle to enable/disable the message link preview in the current guild.
 		"""
 		action = "Enabled"
-		db = await self.bot.dbquery("msglink", "enabled", "guildid=" + str(guild.id))
+		db = await self.bot.dbquery("msglink", "enabled", "guildid=" + str(ctx.guild.id))
 		if db:
 			action = "Disabled"
-			await self.bot.dbexec((f"DELETE FROM msglink WHERE guildid={guild.id}"))
+			await self.bot.dbexec((f"DELETE FROM msglink WHERE guildid={ctx.guild.id}"))
 		else:
 			await self.bot.dbexec((f"DELETE FROM msglink WHERE guildid={guild.id}"))
-			await self.bot.dbexec(("INSERT INTO msglink VALUES (?, ?)", (guild.id, "true")))
+			await self.bot.dbexec(("INSERT INTO msglink VALUES (?, ?)", (ctx.guild.id, "true")))
 		await ctx.send(f"{action} message link preview in **{guild.name}**!")
 
 
