@@ -5,12 +5,12 @@ class Fun(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	@commands.command()
-	async def hello(self, ctx):
-		"""
-		:)
-		"""
-		await ctx.send("Hello there.")
+#	@commands.command()
+#	async def hello(self, ctx):
+#		"""
+#		:)
+#		"""
+#		await ctx.send("Hello there.")
 
 	@commands.command()
 	@commands.is_owner()
