@@ -277,7 +277,7 @@ async def on_message(message):
 		if message.author.bot: return
 		db = await bot.dbquery("msglink", "enabled", f"channelid={message.channel.id}")
 		if not db:
-			return await message.channel.send("nopedb"
+			return await message.channel.send("nopedb")
 		await message.channel.send("yepdb")
 		guildid=msgsearch.group(1)
 		channelid=msgsearch.group(2)
