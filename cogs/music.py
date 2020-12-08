@@ -1,7 +1,6 @@
 import asyncio, discord, youtube_dl, os, glob, re, DiscordUtils
 from discord.ext import commands
 from discord.ext import tasks
-from youtube_search import YoutubeSearch as yt
 
 music = DiscordUtils.Music()
 
