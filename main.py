@@ -247,31 +247,31 @@ async def on_message(message):
 						await message.channel.send(f"{message.author.mention} has paid their respects.", file=discord.File(BytesIO(await r.content.read()), filename=f"{message.author.name}-press_f_to_pay_respects.png"))
 #	afksearch=afkReg.search(message.content)
 	if message.mentions:
-		for user in message.mentions: pass
-		if user and not message.author.bot:
-			localafk = await bot.dbquery("afk", "data", f"guildid={message.guild.id}")
-			globalafk = await bot.dbquery("globalafk", "message", f"userid={user.id}")
-			localmsg = ""
-			globalmsg = ""
-			if localafk:
-				localdata = json.loads((localafk[0][0]).replace("'", '"'))
-				try:
-					localmsg = localdata[str(user.id)]
-				except:
-					pass
-			if globalafk:
-				globalmsg = globalafk[0][0]
-			if globalmsg or localmsg:
-				embed = discord.Embed(description=globalmsg, color=bot.utils.randcolor())
-				inguild = ""
-				scope = "Global"
-				if localmsg:
-					embed.description=localmsg
-					inguild = f" in {message.guild}"
-					scope = "Local"
-				embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator} is currently AFK{inguild}.", icon_url=user.avatar_url)
-				embed.set_footer(text=f"Scope: {scope} AFK Message")
-				await message.channel.send(embed=embed, delete_after=10)
+		for user in message.mentions:
+			if user and not message.author.bot:
+				localafk = await bot.dbquery("afk", "data", f"guildid={message.guild.id}")
+				globalafk = await bot.dbquery("globalafk", "message", f"userid={user.id}")
+				localmsg = ""
+				globalmsg = ""
+				if localafk:
+					localdata = json.loads((localafk[0][0]).replace("'", '"'))
+					try:
+						localmsg = localdata[str(user.id)]
+					except:
+						pass
+				if globalafk:
+					globalmsg = globalafk[0][0]
+				if globalmsg or localmsg:
+					embed = discord.Embed(description=globalmsg, color=bot.utils.randcolor())
+					inguild = ""
+					scope = "Global"
+					if localmsg:
+						embed.description=localmsg
+						inguild = f" in {message.guild}"
+						scope = "Local"
+					embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator} is currently AFK{inguild}.", icon_url=user.avatar_url)
+					embed.set_footer(text=f"Scope: {scope} AFK Message")
+					await message.channel.send(embed=embed, delete_after=10)
 	if message.channel.type == discord.ChannelType.news:
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
