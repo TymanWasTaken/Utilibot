@@ -273,7 +273,6 @@ async def on_message(message):
 					await message.channel.send(embed=embed, delete_after=10)
 	msgsearch = msgReg.search(message.content)
 	if msgsearch:
-		await message.channel.send(msgsearch)
 		if message.author.bot: return
 		db = await bot.dbquery("msglink", "enabled", f"channelid={message.channel.id}")
 		if not db:
@@ -285,6 +284,7 @@ async def on_message(message):
 		if not g:
 			return await ctx.send("mmk")
 		await message.channel.send("yepg")
+		await message.channel.send(g)
 		chan = g.get_channel(channelid)
 		if not chan:
 			return await message.channel.send("nopec")
