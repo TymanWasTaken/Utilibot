@@ -5,13 +5,6 @@ class Fun(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
-	async def fcheck(self, channel):
-		db = await self.bot.dbquery("pressf", "enabled", "channelid=" + str(channel.id))
-		if db == 'true':
-			return True
-		else:
-			return None
-
 	@commands.command()
 	async def hello(self, ctx):
 		"""
@@ -27,6 +20,18 @@ class Fun(commands.Cog):
 		"""
 		await ctx.message.delete()
 		await ctx.send(message, reference=refrence)
+
+	@commands.command(name="quote")
+	@commands.guild_only()
+	async def quote(self, ctx, message: discord.Message, *, response):
+		"""
+		Quotes a message.
+		"""
+		if not message.channel == ctx.channel: return
+		quoted = str(message.content).replace("\n", "\n> ")
+		await ctx.message.delete()
+		await ctx.send(f"{quoted}\n{message.author.mention} {response}") 
+
 
 	@commands.command()
 	@commands.is_owner()
