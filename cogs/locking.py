@@ -79,7 +79,7 @@ class Locking(commands.Cog):
 			embed.description=f"{chanlist}"
 		if len(embed.description) >= 2048:
 			n = "\n"
-			embed.description = f"Current list of channels is too long to send, view it here:\n{await postbin.postAsync(n.join(fallbacklist))}"
+			embed.description = f"Current list of channels is too long to send, view it here:\n{await postbin.postAsync(n.join(fallbacklist))}\nConfigured channels: {len(existingchannels)}"
 		await ctx.send(embed=embed)
 
 	@serverhardlockable.command()
