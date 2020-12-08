@@ -221,7 +221,7 @@ async def on_error(event, *args, **kwargs):
 	""".replace("	", ""))
 
 fReg = re.compile(r"(^|\A|\s)f($|\Z|\s)", flags=(re.IGNORECASE|re.MULTILINE))
-msgReg = re.compile(r"(?:[^<]|\A)(?:https:\/\/)?(?:www\.)?(?:ptb\.|canary\.)?discord(?:app)?\.com\/channels\/(\d+)\/(\d+)\/(\d+)(?:[^>]|\Z)", flags=re.MULTILINE|re.IGNORECASE)
+msgReg = re.compile(r"(?:[^<]|\A)(?:https:\/\/)?(?:www\.)?(?:ptb\.|canary\.)?discord(?:app)?\.com/channels/(\d+)/(\d+)/(\d+)(?:[^>]|\Z)", flags=re.MULTILINE|re.IGNORECASE)
 
 @bot.event
 async def on_message(message):
