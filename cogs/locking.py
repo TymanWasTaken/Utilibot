@@ -70,11 +70,15 @@ class Locking(commands.Cog):
 		embed=discord.Embed(title=f"__{ctx.guild}__'s Server Hardlockable Channels", description="There are no configured channels!", color=self.bot.colors['darkgreen'])
 		if len(db) > 0:
 			chanlist = []
+			fallbacklist = []
 			existingchannels = json.loads(db[0][0])
 			for chan in existingchannels:
 				chanlist.append(str(ctx.guild.get_channel(chan).mention))
-			chanlist = '`||`'.join(chanlist)
+				fallbacklist.append(f"#{channel.name}")
+			chanlist = ' `||` '.join(chanlist)
 			embed.description=f"{chanlist}"
+		if len(embed.description) >= 2048:
+			embed.description = f"Current list of channels is too long to send, view it here:\n{await postbin.postAsync(' || '.join(fallbacklist))}"
 		await ctx.send(embed=embed)
 
 	@serverhardlockable.command()
