@@ -134,8 +134,8 @@ async def blacklist_users(ctx):
 
 @bot.check
 async def is_ready_for_commands(ctx):
-	if not self.bot.is_ready():
-		raise discord.CheckFailure("Sorry, but I am not ready yet. Please wait a few seconds and try again.")
+	if not ctx.bot.is_ready():
+		raise commands.CheckFailure("Sorry, but I am not ready yet. Please wait a few seconds and try again.")
 	else: return True
 
 @bot.event
