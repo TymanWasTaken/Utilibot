@@ -239,6 +239,8 @@ async def on_message(message):
 		await message.add_reaction(bot.get_emoji(778489134741979186))
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
 		await message.channel.send("no")
+	if shutReg.search(message.content) and not message.author.bot:
+		await message.channel.send(f"{bot.const_emojis['shut'].url}", delete_after=60)
 	if fReg.search(message.content):
 		if not message.author.bot:
 			db = await bot.dbquery("pressf", "enabled", f"channelid={message.channel.id}")
@@ -307,8 +309,6 @@ async def on_message(message):
 			for e in msg.embeds:
 				await message.channel.send(embed=e)
 		await message.channel.send(embed=embed)
-	if shutReg.search(message.content) and not message.author.bot:
-		await message.channel.send(bot.const_emojis['shut'], delete_after=60)
 	if message.channel.type == discord.ChannelType.news:
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
