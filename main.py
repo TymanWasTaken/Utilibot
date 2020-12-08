@@ -289,13 +289,16 @@ async def on_message(message):
 		msg = await chan.fetch_message(messageid)
 		if not msg:
 			return
-		embed=discord.Embed(description=msg.content, color=bot.utils.randcolor(), timestamp=msg.created_at)
+		embed=discord.Embed(description=f"{msg.content if msg.content else '[Message contained only embed]'}", color=bot.utils.randcolor(), timestamp=msg.created_at)
 		embed.set_author(name=f"Message sent by {msg.author}", icon_url=msg.author.avatar_url)
 		embed.add_field(name="Message Details", value=f"Server: {g.name}\nChannel: {chan.mention}\nMessage: [{msg.id}]({msg.jump_url})\nAuthor ID: {msg.author.id}")
 		embed.set_footer(text=f"Command triggered by {message.author}\nLinked message sent:")
 		if msgsearch == message.content:
 			await message.delete()
 		await message.channel.send(embed=embed)
+		if msg.embeds:
+			for e in msg.embeds:
+				await message.channel.send(embed=e)
 	if message.channel.type == discord.ChannelType.news:
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
