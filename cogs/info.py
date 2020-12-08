@@ -76,7 +76,7 @@ class Info(commands.Cog):
 
 	@commands.command()
 	async def suggest(self, ctx):
-		await ctx.send("Please join the support server with `u!invite`, then send your message in the #suggestions channel.")
+		await ctx.send("Please join the support server with `u!invite`, then send your message in the <#755982484444938290> channel. (automated system soon!")
 	
 	@commands.command(name="botperms", aliases=['botpermissions'])
 	@commands.guild_only()
