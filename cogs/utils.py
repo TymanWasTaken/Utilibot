@@ -572,7 +572,7 @@ class Utils(commands.Cog):
 		else:
 			await self.bot.dbexec((f"DELETE FROM msglink WHERE guildid={ctx.guild.id}"))
 			await self.bot.dbexec(("INSERT INTO msglink VALUES (?, ?)", (ctx.guild.id, "true")))
-		await ctx.send(f"{action} message link preview in **{guild.name}**!")
+		await ctx.send(f"{action} message link preview in **{ctx.guild.name}**!")
 
 
 	@commands.command(name="globalafk", aliases=['gafk'])
