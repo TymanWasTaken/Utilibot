@@ -273,22 +273,27 @@ async def on_message(message):
 					await message.channel.send(embed=embed, delete_after=10)
 	msgsearch = msgReg.search(message.content)
 	if msgsearch:
+		await message.channel.send("yepreg")
 		if message.author.bot: return
 		db = await bot.dbquery("msglink", "enabled", f"channelid={message.channel.id}")
 		if not db:
-			return
+			return await message.channel.send("nopedb"
+		await message.channel.send("yepdb")
 		guildid=msgsearch.group(1)
 		channelid=msgsearch.group(2)
 		messageid=msgsearch.group(3)
 		g = bot.get_guild(guildid)
 		if not g:
-			return
+			return await message.channel.send("nopeg")
+		await message.channel.send("yepg")
 		chan = g.get_channel(channelid)
 		if not chan:
-			return
+			return await message.channel.send("nopec")
+		await message.channel.send("yepc")
 		msg = await chan.fetch_message(messageid)
 		if not msg:
-			return
+			return await message.channel.send("nopem")
+		await message.channel.send("yepm")
 		embed=discord.Embed(description=msg.content, color=bot.utils.randcolor(), timestamp=msg.timestamp)
 		embed.set_author(name=f"Message sent by {msg.author}", icon_url=msg.author.avatar_url)
 		embed.add_field(name="Message Details", value=f"Server: {g.name}\nChannel: {chan.mention}\nMessage: [{msg.id}]({msg.jump_url})\nAuthor ID: {msg.author.id}")
@@ -296,6 +301,7 @@ async def on_message(message):
 		if msgsearch == message.content:
 			await message.delete()
 		await message.channel.send(embed=embed)
+		await message.channel.send("idk")
 	if message.channel.type == discord.ChannelType.news:
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
