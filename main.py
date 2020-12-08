@@ -278,11 +278,10 @@ async def on_message(message):
 		db = await bot.dbquery("msglink", "enabled", f"channelid={message.channel.id}")
 		if not db:
 			return
-		guildid=msgsearch.group(1)
-		channelid=msgsearch.group(2)
-		messageid=msgsearch.group(3)
+		guildid = int(msgsearch.group(1))
+		channelid = int(msgsearch.group(2))
+		messageid = int(msgsearch.group(3))
 		g = bot.get_guild(guildid)
-		return bot.get_guild(guildid)
 		if not g:
 			return await ctx.send("mmk")
 		await message.channel.send("yepg")
