@@ -193,7 +193,7 @@ async def on_command_error(ctx, error):
 			tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
 			tb = f"Command ran: {ctx.message.content}\nUser id:{ctx.author.id}\nGuild id:{ctx.guild.id}\n\n{tb}"
 			embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers, they just got a log of the error.\nYou can join the support server [here]({invitelink})\nError message: \n`{str(error)}`", color=0xff1100)
-			await message.channel.send(embed=embed)
+			await ctx.send(embed=embed)
 			m = await errorchannel.send(allowed_mentions=discord.AllowedMentions(everyone=False, roles=True, users=False),content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}`, but this error happened:\nHastebin: {str(bot.get_emoji(778489145524748298))}", embed=embed)
 			try:
 				url = await postbin.postAsync(content=tb, retry=0, find_fallback_on_retry_runout=True)
@@ -209,7 +209,7 @@ async def on_command_error(ctx, error):
 				for message in tb2_wrap:
 					await errorchannel.send(message)
 	except Exception as error:
-		await bot.get_channel(764333133738541056).send(content=f"<@&766132653640122419>\nIronic. The error handler errored.```py\n{''.join(traceback.format_exception(type(error), error, error.__traceback__))}```")
+		await bot.get_channel(764333133738541056).send(content=f"<@&766132653640122419>\nIronic. The error handler errored.```py\n{''.join(traceback.format_exception(type(error), error, error.__traceback__))}```", allowed_mentions=discord.AllowedMentions.all())
 
 @bot.event
 async def on_error(event, *args, **kwargs):
