@@ -157,7 +157,7 @@ class Locking(commands.Cog):
 		if not db:
 			return await ctx.send(f"{self.bot.const_emojis['no']} This server has no hardlockable channels. Use `{ctx.prefix}shlable add <channels>` to add some.")
 		if len(channels) < 1:
-			return await ctx.send("{self.bot.const_emojis['no']} Please provide some channels to remove from the list!")
+			return await ctx.send(f"{self.bot.const_emojis['no']} Please provide some channels to remove from the list!")
 		existingchannels = json.loads(db[0][0])
 		await self.bot.dbexec("DELETE FROM server_hardlockable_channels WHERE guildid=" + str(ctx.guild.id))
 		removedchannels = []
