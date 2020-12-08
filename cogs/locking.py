@@ -74,7 +74,7 @@ class Locking(commands.Cog):
 			existingchannels = json.loads(db[0][0])
 			for chan in existingchannels:
 				chanlist.append(str(ctx.guild.get_channel(chan).mention))
-				fallbacklist.append(f"#{channel.name}")
+				fallbacklist.append(f"#{ctx.guild.get_channel(chan).name}")
 			chanlist = ' `||` '.join(chanlist)
 			embed.description=f"{chanlist}"
 		if len(embed.description) >= 2048:
