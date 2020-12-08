@@ -309,7 +309,6 @@ async def on_message(message):
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
 		except: chans = []
-		chans
 		if message.channel.id in chans and not message.author.bot:
 			try:
 				await message.publish()
