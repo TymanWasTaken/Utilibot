@@ -289,7 +289,7 @@ async def on_message(message):
 		msg = await chan.fetch_message(messageid)
 		if not msg:
 			return
-		embed=discord.Embed(description=f"__Content:__\n{msg.content if msg.content else '[Message contained only embed]'}\n{f'__Embeds:__ {len(msg.embeds)}' if msg.embeds else ''}", color=bot.utils.randcolor(), timestamp=msg.created_at)
+		embed=discord.Embed(description=f"__Content:__\n{msg.content if msg.content else '[Message contained only embed]'}\n\n{f'__Embeds:__ {len(msg.embeds)}' if msg.embeds else ''}", color=bot.utils.randcolor(), timestamp=msg.created_at)
 		embed.set_author(name=f"Message sent by {msg.author}", icon_url=msg.author.avatar_url)
 		embed.add_field(name="Message Details", value=f"Server: {g.name}\nChannel: {chan.mention}\nMessage: [{msg.id}]({msg.jump_url})\nAuthor ID: {msg.author.id}")
 		embed.set_footer(text=f"Command triggered by {message.author}\nLinked message sent")
