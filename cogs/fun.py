@@ -30,7 +30,7 @@ class Fun(commands.Cog):
 		if not message.channel == ctx.channel: return
 		quoted = str(message.content).replace("\n", "\n> ")
 		await ctx.message.delete()
-		await ctx.send(f"> {quoted}\n{message.author.mention} {response}")
+		await ctx.send(f"> {quoted}\n{message.author.mention} {response}\n\n-{ctx.author}")
 
 
 	@commands.command()
