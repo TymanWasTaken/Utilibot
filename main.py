@@ -299,7 +299,8 @@ async def on_message(message):
 			attaches = []
 			for a in msg.attachments:
 				attaches.append(f"[{a.filename}]({a.url})")
-			embed.add_field(name="Attachments", value=f"{len(msg.attachments)} attachments\n{"\n".join(attaches)}")
+			n = "\n"
+			embed.add_field(name="Attachments", value=f"{len(msg.attachments)} attachments\n{n.join(attaches)}")
 		if msg.embeds:
 			embed.add_field(name="Embeds", value=len(msg.embeds))
 			for e in msg.embeds:
