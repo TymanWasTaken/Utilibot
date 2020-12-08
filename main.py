@@ -221,7 +221,8 @@ async def on_error(event, *args, **kwargs):
 	""".replace("	", ""))
 
 fReg = re.compile(r"(^|\A|\s)f($|\Z|\s)", flags=(re.IGNORECASE|re.MULTILINE))
-msgReg = re.compile(r"(?:[^<]|\A)(?:https:\/\/)?(?:www\.)?(?:ptb\.|canary\.)?discord(?:app)?\.com/channels/(\d{17,19})/(\d{17,19})/(\d{17,19})(?:[^>]|\Z)", flags=re.MULTILINE|re.IGNORECASE)
+msgReg = re.compile(r"(?:[^<]|\A)(?:https:\/\/)?(?:www\.)?(?:ptb\.|canary\.)?discord(?:app)?\.com/channels/(\d{17,19})/(\d{17,19})/(\d{17,19})(?:[^>]|\Z)", flags=(re.MULTILINE|re.IGNORECASE))
+shutReg = re.compile(r"(cmp)?\s?shut", flags=(re.MULTILINE|re.IGNORECASE))
 
 @bot.event
 async def on_message(message):
@@ -306,6 +307,8 @@ async def on_message(message):
 			for e in msg.embeds:
 				await message.channel.send(embed=e)
 		await message.channel.send(embed=embed)
+	if shutReg.search(message.content):
+		await ctx.send(bot.const_emojis['shut'], delete_after=60)
 	if message.channel.type == discord.ChannelType.news:
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
