@@ -295,7 +295,7 @@ async def on_message(message):
 		embed.set_footer(text=f"Command triggered by {message.author}\nLinked message sent:")
 		if msgsearch == message.content:
 			await message.delete()
-		await message.channel.send(embed=embed)  
+		await message.channel.send(embed=embed)
 	if message.channel.type == discord.ChannelType.news:
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
