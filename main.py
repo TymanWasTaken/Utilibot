@@ -282,25 +282,20 @@ async def on_message(message):
 		messageid = int(msgsearch.group(3))
 		g = bot.get_guild(guildid)
 		if not g:
-			return await ctx.send("mmk")
-		await message.channel.send("yepg")
-		await message.channel.send(g)
+			return
 		chan = g.get_channel(channelid)
 		if not chan:
-			return await message.channel.send("nopec")
-		await message.channel.send("yepc")
+			return
 		msg = await chan.fetch_message(messageid)
 		if not msg:
-			return await message.channel.send("nopem")
-		await message.channel.send("yepm")
-		embed=discord.Embed(description=msg.content, color=bot.utils.randcolor(), timestamp=msg.timestamp)
+			return
+		embed=discord.Embed(description=msg.content, color=bot.utils.randcolor(), timestamp=msg.created_at)
 		embed.set_author(name=f"Message sent by {msg.author}", icon_url=msg.author.avatar_url)
 		embed.add_field(name="Message Details", value=f"Server: {g.name}\nChannel: {chan.mention}\nMessage: [{msg.id}]({msg.jump_url})\nAuthor ID: {msg.author.id}")
 		embed.set_footer(text=f"Command triggered by {message.author}\nLinked message sent:")
 		if msgsearch == message.content:
 			await message.delete()
 		await message.channel.send(embed=embed)
-		await message.channel.send("idk")
 	if message.channel.type == discord.ChannelType.news:
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
