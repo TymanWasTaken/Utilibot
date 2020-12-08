@@ -125,7 +125,7 @@ class Locking(commands.Cog):
 	@serverhardlockable.command()
 	async def addall(self, ctx):
 		"""
-		Adds all channels in the server to the list of server hardlockable channels.
+		Adds all text channels in the server to the list of server hardlockable channels.
 		"""
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		existingchannels = []
@@ -196,6 +196,9 @@ class Locking(commands.Cog):
 
 	@serverhardlockable.command()
 	async def removeall(self, ctx):
+		"""
+		Removes all configured server hardlockable channels.
+		"""
 		db = await self.bot.dbquery("server_hardlockable_channels", "data", "guildid=" + str(ctx.guild.id))
 		if not db:
 			return await ctx.send(f"{self.bot.const_emojis['no']} This server has no hardlockable channels!")
