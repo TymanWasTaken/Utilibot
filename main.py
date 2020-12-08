@@ -274,7 +274,7 @@ async def on_message(message):
 	msgsearch = msgReg.search(message.content)
 	if msgsearch:
 		if message.author.bot: return
-		db = await bot.dbquery("msglink", "enabled", f"channelid={message.channel.id}")
+		db = await bot.dbquery("msglink", "enabled", f"guildid={message.guild.id}")
 		if not db:
 			return
 		guildid = int(msgsearch.group(1))
