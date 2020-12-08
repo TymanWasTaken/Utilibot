@@ -273,13 +273,13 @@ async def on_message(message):
 					await message.channel.send(embed=embed, delete_after=10)
 	msgsearch = msgReg.search(message.content)
 	if msgsearch:
-		await message.channel.send("yepreg")
+		await message.channel.send(msgsearch)
 		if message.author.bot: return
 		db = await bot.dbquery("msglink", "enabled", f"channelid={message.channel.id}")
 		if not db:
-			return await message.channel.send("nopedb")
-		await message.channel.send("yepdb")
+			return
 		guildid=msgsearch.group(1)
+		await message.channel.send(guildid)
 		channelid=msgsearch.group(2)
 		messageid=msgsearch.group(3)
 		await message.channel.send(guildid)
