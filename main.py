@@ -227,9 +227,12 @@ shutReg = re.compile(r"cmp\s?shut", flags=(re.MULTILINE|re.IGNORECASE))
 @bot.event
 async def on_message(message):
 	if not message.guild:
+		uid = message.author.id
+		bid = bot.user.id
 		log = bot.get_channel(786265454662516746)
-		e = discord.Embed(title="Bot DMed", description=f"Content:\n{message.content}")
-		e.add_field(name="Details", value=f"__From:__ {message.author} (`{message.author.id}`)\n__To:__ {message.channel.recipient if message.author.id == bot.user.id else bot.user} (`{message.channel.recipient.id if message.author.id == bot.user.id else bot.user.id}`)", inline=False)
+		e = discord.Embed(title=('DM Received' if uid == bid else 'DM Sent'), description=f"Content:\n{message.content}")
+		e.add_field(name="Details", value=f"__From:__ {message.author} (`{uid}`)\n__To:__ {message.channel.recipient if uid == bid else bot.user} (`{message.channel.recipient.id if uid == bid else bid}`)", inline=False)
+		e.color = bot.colors['red'] if uid == bot.user.id else bot.colors['darkgreen']
 		await log.send(embed=e)
 	if message.channel.id == 755982484444938290 and not message.content.startswith('=>'):
 		await message.add_reaction(bot.get_emoji(778489135870377994))
