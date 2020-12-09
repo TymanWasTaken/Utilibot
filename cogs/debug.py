@@ -189,6 +189,7 @@ class Debug(commands.Cog):
 		"""
 		DMs the specified user.
 		"""
+		if user.bot: return await ctx.send("You can't DM a bot with another bot!")
 		try:
 			await user.send(f"message\n{f'-{ctx.author}' if not silent else ''}")
 			await ctx.reply(f"Successfully DMed {user}!")
