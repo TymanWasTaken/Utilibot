@@ -185,7 +185,7 @@ class Debug(commands.Cog):
 		except: return await ctx.send(f"'{reaction}' is not a valid reaction!")
 	@commands.command()
 	@commands.is_owner()
-	async def dm(self, ctx, user: discord.User, silent=False, *, message):
+	async def dm(self, ctx, user: discord.User, silent: typing.Optional[bool]=False, *, message):
 		"""
 		DMs the specified user.
 		"""
