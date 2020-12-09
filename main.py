@@ -230,7 +230,7 @@ async def on_message(message):
 		uid = message.author.id
 		bid = bot.user.id
 		log = bot.get_channel(786265454662516746)
-		e = discord.Embed(title=('DM Received' if uid == bid else 'DM Sent'), description=f"Content:\n{message.content}")
+		e = discord.Embed(title=('DM Sent' if uid == bid else 'DM Received'), description=f"Content:\n{message.content}")
 		e.add_field(name="Details", value=f"__From:__ {message.author} (`{uid}`)\n__To:__ {message.channel.recipient if uid == bid else bot.user} (`{message.channel.recipient.id if uid == bid else bid}`)", inline=False)
 		e.color = bot.colors['red'] if uid == bot.user.id else bot.colors['darkgreen']
 		await log.send(embed=e)
