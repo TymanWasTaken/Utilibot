@@ -222,7 +222,7 @@ async def on_error(event, *args, **kwargs):
 
 fReg = re.compile(r"(^|\A|\s)f($|\Z|\s)", flags=(re.IGNORECASE|re.MULTILINE))
 msgReg = re.compile(r"(?:[^<]|\A)(?:https:\/\/)?(?:www\.)?(?:ptb\.|canary\.)?discord(?:app)?\.com/channels/(\d{17,19})/(\d{17,19})/(\d{17,19})(?:[^>]|\Z)", flags=(re.MULTILINE|re.IGNORECASE))
-shutReg = re.compile(r"(cmp)?\s?shut", flags=(re.MULTILINE|re.IGNORECASE))
+shutReg = re.compile(r"cmp\s?shut", flags=(re.MULTILINE|re.IGNORECASE))
 
 @bot.event
 async def on_message(message):
