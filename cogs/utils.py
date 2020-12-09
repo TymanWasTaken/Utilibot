@@ -636,7 +636,8 @@ class Utils(commands.Cog):
 	async def addemoji(self, ctx, name, url):
 		async with aiohttp.ClientSession() as s:
 			async with s.get(url) as r:
-				await ctx.guild.create_custom_emoji(name=name, image=await r.content.read())
+				em = await ctx.guild.create_custom_emoji(name=name, image=await r.content.read())
+				await ctx.send(f"Created the emoji {em} with the name `{em.name}`!")
 
 	@commands.Cog.listener()
 	async def on_raw_reaction_add(self, payload):
