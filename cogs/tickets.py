@@ -8,7 +8,7 @@ class Tickets(commands.Cog):
 	@commands.command(name="ticket", aliases=['tickets'], invoke_without_command=True)
 	@commands.guild_only()
 	async def ticket(self, ctx):
-		return "o.o tickets soon? :wink:"
+		await ctx.send("o.o tickets soon? :wink:")
 	
 def setup(bot):
 	bot.add_cog(Tickets(bot))
