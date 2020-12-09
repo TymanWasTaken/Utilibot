@@ -191,7 +191,7 @@ class Debug(commands.Cog):
 		"""
 		try:
 			await user.send(message)
-			await ctx.send(f"DMed {user} with the message: {message}")
+			await ctx.reply(f"Successfully DMed {user}!")
 		except Exception as e:
 			await ctx.send(f"Failed to DM {user}! Error:\n{e}")
 
