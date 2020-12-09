@@ -32,8 +32,8 @@ class Debug(commands.Cog):
 		log = self.bot.get_channel(776466538156130314)
 		e = discord.Embed(title="Command ran", description=f"""
 		User: `{str(ctx.author)}` ({ctx.author.id})
-		Guild: `{ctx.guild.name + f" ({ctx.guild.id})" if ctx.guild else 'none'}`
-		Channel: `{ctx.channel.name if not isinstance(ctx.channel, discord.DMChannel) else "dm"}` ({ctx.channel.id})
+		Guild: `{ctx.guild.name + f" ({ctx.guild.id})" if ctx.guild else 'None'}`
+		Channel: `{ctx.channel.name if not isinstance(ctx.channel, discord.DMChannel) else "DM"}` ({ctx.channel.id})
 		Message: `{ctx.message.id}`
 		Command: `{ctx.command.qualified_name}`
 		""".replace("	", ""), color=0x2F3138
