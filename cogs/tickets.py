@@ -43,7 +43,7 @@ class Tickets(commands.Cog):
 
 	
 	
-#def setup(bot):
-#	bot.add_cog(Tickets(bot))
-#	print('[TicketsCog] Tickets cog loaded!')
+def setup(bot):
+	bot.add_cog(Tickets(bot))
+	print('[TicketsCog] Tickets cog loaded!')
 	
