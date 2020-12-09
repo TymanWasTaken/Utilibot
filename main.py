@@ -229,7 +229,7 @@ async def on_message(message):
 	if not message.guild:
 		log = bot.get_channel(786265454662516746)
 		e = discord.Embed(title="Bot DMed", description=f"Content:\n{message.content}")
-		e.add_field(name="Details", value=f"Sender: {message.author} (`{message.author.id}`)\nRecipient: {message.channel.recipient if message.author.id == bot.user.id else bot.user} (`{message.channel.recipient.id if message.author.id == bot.user.id else bot.user.id}`)", inline=False)
+		e.add_field(name="Details", value=f"__From:__ {message.author} (`{message.author.id}`)\n__To:__ {message.channel.recipient if message.author.id == bot.user.id else bot.user} (`{message.channel.recipient.id if message.author.id == bot.user.id else bot.user.id}`)", inline=False)
 		await log.send(embed=e)
 	if message.channel.id == 755982484444938290 and not message.content.startswith('=>'):
 		await message.add_reaction(bot.get_emoji(778489135870377994))
