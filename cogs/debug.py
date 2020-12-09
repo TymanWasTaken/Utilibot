@@ -185,12 +185,12 @@ class Debug(commands.Cog):
 		except: return await ctx.send(f"'{reaction}' is not a valid reaction!")
 	@commands.command()
 	@commands.is_owner()
-	async def dm(self, ctx, user: discord.User, *, message):
+	async def dm(self, ctx, user: discord.User, silent=False, *, message):
 		"""
 		DMs the specified user.
 		"""
 		try:
-			await user.send(message)
+			await user.send(f"message\n{f'-{ctx.author}' if not silent else ''}")
 			await ctx.reply(f"Successfully DMed {user}!")
 		except Exception as e:
 			await ctx.send(f"Failed to DM {user}! Error:\n{e}")
