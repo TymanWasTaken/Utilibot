@@ -174,7 +174,7 @@ class Debug(commands.Cog):
 	
 	@commands.command()
 	@commands.is_owner()
-	async def react(self, ctx, message: int, reaction, channel: discord.TextChannel=None):
+	async def react(self, ctx, message: discord.Message, reaction, channel: discord.TextChannel=None):
 		"""
 		Reacts to a message with the given reaction.
 		"""
@@ -183,6 +183,17 @@ class Debug(commands.Cog):
 		except: return await ctx.send(f"`{message}` is not a valid message ID! (Either the message is not in the current/specified channel or it doesn't exist)")
 		try: await msg.add_reaction(str(reaction))
 		except: return await ctx.send(f"'{reaction}' is not a valid reaction!")
+	@commands.command()
+	@commands.is_owner()
+	async def dm(self, ctx, user: discord.User, *, message):
+		"""
+		DMs the specified user.
+		"""
+		try:
+			await user.send(message)
+			await ctx.send(f"DMed {user} with the message: {message}")
+		except Exception as e:
+			await ctx.send(f"Failed to DM {user}! Error:\n{e}")
 
 
 def setup(bot):
