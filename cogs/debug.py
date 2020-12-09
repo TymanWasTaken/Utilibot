@@ -1,4 +1,4 @@
-import discord, sys, os, json, aiofiles
+import discord, sys, os, json, aiofiles, typing
 from discord.ext import commands
 from jishaku import models
 
