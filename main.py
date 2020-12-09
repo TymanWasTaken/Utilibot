@@ -400,12 +400,12 @@ for file in sorted(glob.glob("cogs/*.py")):
 	except Exception as error:
 		BOLD = "\033[1m"
 		RED = "\033[0;31m"
-		print(f"{RED}{BOLD}Cog {file} failed to load.\n{error}\033[0m")
+		print(f"{RED}{BOLD} Cog `{file}` failed to load.\n{error}\033[0m")
 		tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
-		bot.errors.append(f"<@&766132653640122419> Cog {file} failed to load.```py\n{tb}```")
+		bot.errors.append(f"<@&766132653640122419> Cog `{str(file).replace('cogs.', ')'}` failed to load.```py\n{tb}```")
 # bot.load_extension("riftgun")
 
-disabled_commands = ['mute']
+disabled_commands = ['mute', 'ticket']
 
 for cmd in disabled_commands:
 	try: bot.get_command(cmd).update(enabled=False)
