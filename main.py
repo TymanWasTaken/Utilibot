@@ -291,11 +291,11 @@ async def on_message(message):
 		except: return
 		embed=discord.Embed(description=f"__**Content:**__\n{msg.content if msg.content else '[Message contained only embed or attachment]'}", color=bot.utils.randcolor(), timestamp=msg.created_at)
 		embed.set_author(name=f"Message sent by {msg.author}", icon_url=msg.author.avatar_url)
-		embed.add_field(name="Message Details", value=f"""
-			{f'Server: {g.name} (`{g.id}`)' if g.id != message.guild.id else ''}
-			Channel: {chan.mention} (`{chan.id}`)
-			Message: [{msg.id}]({msg.jump_url})
-			Author ID: {msg.author.id}""".replace("	", ""))
+		embed.add_field(name="**Message Details**", value=f"""
+			{f'**Server:** {g.name} (`{g.id}`)' if g.id != message.guild.id else ''}
+			**Channel:** {chan.mention} (`{chan.id}`)
+			**Message:** [{msg.id}]({msg.jump_url})
+			**Author ID:** {msg.author.id}""".replace("	", ""))
 		embed.set_footer(text=f"Command triggered by {message.author}\nLinked message sent")
 		if msgsearch == message.content:
 			await message.delete()
