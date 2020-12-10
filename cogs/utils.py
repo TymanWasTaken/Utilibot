@@ -432,7 +432,7 @@ class Utils(commands.Cog):
 				else:
 					await member.add_roles(role, reason=f"{ctx.author} gave {member.name} {role.name}.")
 					given.append(role)
-			await ctx.send(f"Gave {member.mention} some roles!\nRoles given: {', '.join([x.mention for x in given])}", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
+			await ctx.send(f"Gave {member.mention} some roles!\nRoles given: {', '.join([x.mention for x in given]) if len(given) > 0 else 'None'}\n{'Roles failed: ' + {', '.join([r.mention for r in failed])} if len(failed) > 0 else 'None'}", allowed_mentions=discord.AllowedMentions(users=True, roles=False, everyone=False))
 
 	@commands.command(name="takerole", aliases=['takeroles', 'trole', 'troles', 'removerole', 'removeroles', 'rrole'])
 	@commands.has_permissions(manage_roles=True)
@@ -455,6 +455,7 @@ class Utils(commands.Cog):
 					await ctx.send("You can't change the roles of people above you!")
 				else:
 					await member.remove_roles(role, reason=f"{ctx.author} removed {role.name} from {member.name}.")
+					taken.append(role)
 			await ctx.send(f"Removed some role from {member.mention}!\nRoles taken: {', '.join([x.mention for x in taken])}", allowed_mentions=discord.AllowedMentions(users=False, roles=False, everyone=False))
 
 	@commands.command(name="setnick")
