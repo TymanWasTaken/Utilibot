@@ -375,7 +375,7 @@ async def on_guild_join(guild):
 		denied.append("Embed Links")
 	if denied != []:
 		await guild.owner.send(f"You or someone else has added me to your server, but it appears I do not have the following needed permissions:\n{', '.join(denied)}\n\nIf this is intentional, just ignore this message.")
-
+"""
 @bot.event
 async def on_voice_state_update(member, before, after):
 	channel = before.guild.get_channel(before.id)
@@ -385,7 +385,7 @@ async def on_voice_state_update(member, before, after):
 				vc = member.guild.voice_client
 				await vc.disconnect()
 				vc.cleanup()
-
+"""
 
 bot.errors = []
 bot.load_extension("jishaku")
