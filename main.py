@@ -283,15 +283,12 @@ async def on_message(message):
 		guildid = int(msgsearch.group(1))
 		channelid = int(msgsearch.group(2))
 		messageid = int(msgsearch.group(3))
-		g = bot.get_guild(guildid)
-		if not g:
-			return
-		chan = g.get_channel(channelid)
-		if not chan:
-			return
-		msg = await chan.fetch_message(messageid)
-		if not msg:
-			return
+		try: g = bot.get_guild(guildid)
+		except: return
+		try: chan = g.get_channel(channelid)
+		except: return
+		try: msg = await chan.fetch_message(messageid)
+		except: return
 		embed=discord.Embed(description=f"__**Content:**__\n{msg.content if msg.content else '[Message contained only embed or attachment]'}", color=bot.utils.randcolor(), timestamp=msg.created_at)
 		embed.set_author(name=f"Message sent by {msg.author}", icon_url=msg.author.avatar_url)
 		embed.add_field(name="Message Details", value=f"Server: {g.name}\nChannel: {chan.mention}\nMessage: [{msg.id}]({msg.jump_url})\nAuthor ID: {msg.author.id}")
@@ -370,24 +367,24 @@ async def on_guild_join(guild):
 	print("Joined server")
 	perms = [x for x,y in dict(guild.me.guild_permissions).items() if not y]
 	denied = []
-	if "send_messages" in perms:
-		denied.append("send_messages")
 	if "read_messages" in perms:
-		denied.append("read_messages")
+		denied.append("Read Messages")
+	if "send_messages" in perms:
+		denied.append("Send Messages")
 	if "embed_links" in perms:
-		denied.append("embed_links")
+		denied.append("Embed Links")
 	if denied != []:
 		await guild.owner.send(f"You or someone else has added me to your server, but it appears I do not have the following needed permissions:\n{', '.join(denied)}\n\nIf this is intentional, just ignore this message.")
-"""
+
 @bot.event
 async def on_voice_state_update(member, before, after):
-	channel = bot.get_channel(before.channel.id)
-	if member.guild.me.voice.channel == before.channel and before.channel is not None and after.channel is None:
-		if channel.members == [bot.user.id]:
+#	channel = bot.get_channel(before.id)
+	if member.guild.me.voice.channel == before and before is not None and after is None:
+		if after.members == [bot.user]:
 			vc = member.guild.voice_client
 			await vc.disconnect()
 			vc.cleanup()
-"""
+
 
 bot.errors = []
 bot.load_extension("jishaku")
