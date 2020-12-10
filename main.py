@@ -381,10 +381,10 @@ async def on_voice_state_update(member, before, after):
 	channel = before.guild.get_channel(before.id)
 	if channel.guild.me.voice.channel is not None:
 		if channel.guild.me.voice.channel.id == after.id and before is not None and after is None:
-		if channel.members == [bot.user]:
-			vc = member.guild.voice_client
-			await vc.disconnect()
-			vc.cleanup()
+			if channel.members == [bot.user]:
+				vc = member.guild.voice_client
+				await vc.disconnect()
+				vc.cleanup()
 
 
 bot.errors = []
