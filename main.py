@@ -235,8 +235,8 @@ async def on_message(message):
 		e.color = bot.colors['red'] if uid == bot.user.id else bot.colors['darkgreen']
 		await log.send(embed=e)
 	if message.channel.id == 755982484444938290 and not message.content.startswith('=>'):
-		await message.add_reaction(bot.get_emoji(778489135870377994))
-		await message.add_reaction(bot.get_emoji(778489134741979186))
+		await message.add_reaction(bot.const_emojis['yes'])
+		await message.add_reaction(bot.const_emojis['no'])
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
 		await message.channel.send("no")
 	if shutReg.search(message.content) and not message.author.bot:
