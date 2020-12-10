@@ -237,7 +237,9 @@ class Locking(commands.Cog):
 					perms.send_messages = False
 					await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server locked down by {ctx.author} ({ctx.author.id}).")
 					locked.append(f"<#{chan.id}>")
-					await chan.send(embed=discord.Embed(title=f"🔒 Server Locked! 🔒", description=f"Server locked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['lightred']), delete_after=600)
+					embed=discord.Embed(title=f"🔒 Server Locked! 🔒", description=f"Server locked down by {ctx.author.nick or ctx.author.name}\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['lightred'])
+					embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
+					await chan.send(embed=embed)
 			embed = discord.Embed(title=f"{self.bot.const_emojis['yes']} Locked down the server!", description=f"🔒 **Channels Locked:**\n{' `||` '.join(locked)}", color=self.bot.colors['lightred'])
 			if reason != None: embed.add_field(name="Reason:", value=reason)
 			if len(embed.description) > 2048:
@@ -276,7 +278,9 @@ class Locking(commands.Cog):
 					perms.send_messages = None
 					await chan.set_permissions(ctx.guild.default_role, overwrite=perms, reason=f"Server unlocked by {ctx.author} ({ctx.author.id}).")
 					unlocked.append(f"<#{chan.id}>")
-					await chan.send(embed=discord.Embed(title="🔓 Server Unlocked! 🔓", description=f"Server unlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=2937504), delete_after=600)
+					embed=discord.Embed(title="🔓 Server Unlocked! 🔓", description=f"Server lockdown ended by {ctx.author.nick or ctx.author.name}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['teal'])
+					embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
+					await chan.send(embed=embed, delete_after=3600)
 			embed = discord.Embed(title=f"{self.bot.const_emojis['yes']} Unlocked the server!", description=f"🔓 **Channels Unlocked:**\n{' `||` '.join(unlocked)}", color=self.bot.colors['teal'])
 			if reason: embed.add_field(name="Reason:", value=reason)
 			if len(embed.description) > 2048:
