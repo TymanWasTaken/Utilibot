@@ -302,14 +302,14 @@ class Locking(commands.Cog):
 		Locks down a channel by deleting messages that people send.
 		"""
 		ch = channel or ctx.channel
-		db = await self.bot.dbquery("softlocked_channels", "whitelisted", "channelid=" +str(ch.id))
+		db = await self.bot.dbquery("softlocked_channels", "data", "channelid=" +str(ch.id))
 		if db:
 			await ctx.send(f"{self.bot.const_emojis['no']} {ch.mention} is already softlocked!")
 		else:
-			whitelisted = []
-			await self.bot.dbexec(("INSERT INTO softlocked_channels VALUES (?, ?)", (str(ch.id), str(whitelisted))))
+			whitelisted = [ctx.author.id]
+			await self.bot.dbexec(("INSERT INTO softlocked_channels VALUES (?, ?)", (str(ch.id), "true")))
 			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully softlocked {ch.mention}!\n{f'**Reason:** {reason}' if reason else ''}", delete_after=10)
-			await ch.send(embed=discord.Embed(title=f"🔒 Channel Softlocked 🔒", description=f"This channel was softlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['lightred']), delete_after=600)
+			await ch.send(embed=discord.Embed(title=f"🔒 Channel Softlocked 🔒", description=f"This channel was softlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['lightred']))
 
 	@commands.command(aliases=['wh'])
 	@commands.bot_has_permissions(manage_messages=True)
@@ -341,11 +341,11 @@ class Locking(commands.Cog):
 		Unsoftlocks a channel.
 		"""
 		ch = channel or ctx.channel
-		db = await self.bot.dbquery("softlocked_channels", "whitelisted", "channelid=" +str(ch.id))
+		db = await self.bot.dbquery("softlocked_channels", "data", "channelid=" +str(ch.id))
 		if db:
 			await self.bot.dbexec("DELETE FROM softlocked_channels WHERE channelid=" +str(ch.id))
-			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully unsoftlocked {ch.mention}!")
-			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unsoftlocked 🔓", description=f"This channel was unsoftlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['teal']), delete_after=600)
+			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully unsoftlocked {ch.mention}!", delete_after=10)
+			await ch.send(embed=discord.Embed(title=f"🔓 Channel Unsoftlocked 🔓", description=f"This channel was unsoftlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['teal']))
 		else:
 			await ctx.send(f"{self.bot.const_emojis['no']} {ch.mention} is not soflocked!")
 				       
@@ -355,12 +355,16 @@ class Locking(commands.Cog):
 	@commands.guild_only()
 	@commands.is_owner()
 	async def serversoftlock(self, ctx, reason=None):
-		db = await self.bot.dbquery("softlocked_servers", "locked", "guildid=" +str(ctx.guild.id))
-		if db:
+		locked = 0
+		for chan in ctx.guild.text_channels:
+			db = await self.bot.dbquery("softlocked_channels", "data", "channelid=" +str(chan.id))
+			if not db:
+				await bot.dbexec(("INSERT INTO softlocked_channels VALUES (?, ?)", (str(chan.id), "true")))
+				locked += 1
+		if locked < 1:
 			await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is already softlocked!")
 		else:
-			await self.bot.dbexec(("INSERT INTO softlocked_servers VALUES (?, ?)", (str(ctx.guild.id), str(whitelist))))
-			await ctx.send(embed=discord.Embed(title=f"🔓 Server Softlocked 🔓", description=f"{self.bot.const_emojis['yes']} **{ctx.guild}** has been softlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['lightred']), delete_after=600)
+			await ctx.send(embed=discord.Embed(title=f"🔓 Server Softlocked 🔓", description=f"{self.bot.const_emojis['yes']} **{ctx.guild}** has been softlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['lightred']))
 
 
 	@commands.command(name="unserversoftlock", aliases=['ussl'])
@@ -369,12 +373,17 @@ class Locking(commands.Cog):
 	@commands.guild_only()
 	@commands.is_owner()
 	async def unserversoftlock(self, ctx, reason=None):
-		db = await self.bot.dbquery("softlocked_servers", "locked", "guildid=" +str(ctx.guild.id))
-		if db:
-			await self.bot.dbexec("DELETE FROM softlocked_servers WHERE guildid=" +str(ctx.guild.id))
-			await ctx.send(embed=discord.Embed(title=f"🔓 Server Unsoftlocked 🔓", description=f"{self.bot.const_emojis['yes']} **{ctx.guild}** has been unsoftlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['teal']), delete_after=600)
+		unlocked = 0
+		for chan in ctx.guild.text_channels:
+			db = await self.bot.dbquery("softlocked_channels", "data", "channelid=" +str(chan.id))
+			if db:
+				await bot.dbexec(("DELETE FROM softlocked_channels WHERE channelid=" +str(chan.id)))
+				unlocked += 1
+		if unlocked < 1:
+			await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}}** is not softlocked!")
 		else:
-			await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is not softlocked!")
+			await ctx.send(embed=discord.Embed(title=f"🔓 Server Unsoftlocked 🔓", description=f"{self.bot.const_emojis['yes']} **{ctx.guild}** has been unsoftlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['teal']))
+
 
 def setup(bot):
 	bot.add_cog(Locking(bot))
