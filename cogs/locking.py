@@ -296,7 +296,6 @@ class Locking(commands.Cog):
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.has_permissions(manage_messages=True)
 	@commands.guild_only()
-	@commands.is_owner()
 	async def softlock(self, ctx, channel: discord.TextChannel=None, *, reason=None):
 		"""
 		Locks down a channel by deleting messages that people send.
@@ -306,8 +305,11 @@ class Locking(commands.Cog):
 		if db:
 			await ctx.send(f"{self.bot.const_emojis['no']} {ch.mention} is already softlocked!")
 		else:
+			data = {}
 			whitelisted = [ctx.author.id]
-			await self.bot.dbexec(("INSERT INTO softlocked_channels VALUES (?, ?)", (str(ch.id), "true")))
+			if ctx.guild.owner.id != ctx.author.id: whitelisted.append(ctx.guild.owner.id)
+			data["whitelisted"] = whitelisted
+			await self.bot.dbexec(("INSERT INTO softlocked_channels VALUES (?, ?)", (str(ch.id), str(data))))
 			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully softlocked {ch.mention}!\n{f'**Reason:** {reason}' if reason else ''}", delete_after=10)
 			await ch.send(embed=discord.Embed(title=f"🔒 Channel Softlocked 🔒", description=f"This channel was softlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['lightred']))
 
@@ -321,12 +323,14 @@ class Locking(commands.Cog):
 		Whitelists a user from the softlock in the current channel, allowing them to speak but not unlock.
 		"""
 		ch = channel or ctx.channel
-		db = await self.bot.dbquery("softlocked_channels", "whitelisted", "channelid=" +str(ch.id))
+		db = await self.bot.dbquery("softlocked_channels", "data", "channelid=" +str(ch.id))
 		if db:
-			whitelisted = json.loads(db[0][0])
+			data = json.loads(db[0][0])
+			whitelisted = data["whitelisted"]
 			whitelisted.append(user.id)
+			data["whitelisted"] = whitelisted
 			await self.bot.dbexec("DELETE FROM softlocked_channels WHERE channelid=" +str(ch.id))
-			await self.bot.dbexec(("INSERT INTO softlocked_channels VALUES (?, ?)", (str(ch.id), str(whitelisted))))
+			await self.bot.dbexec(("INSERT INTO softlocked_channels VALUES (?, ?)", (str(ch.id), str(data))))
 			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully whitelisted {user.mention}!")
 		else:
 			await ctx.send(f"{self.bot.const_emojis['no']} {ch.mention} is not softlocked!")
@@ -356,10 +360,14 @@ class Locking(commands.Cog):
 	@commands.is_owner()
 	async def serversoftlock(self, ctx, reason=None):
 		locked = 0
+		data = {}
+		whitelisted = [ctx.author.id]
+		if ctx.guild.owner.id != ctx.author.id: whitelisted.append(ctx.guild.owner.id)
+		data["whitelisted"] = whitelisted
 		for chan in ctx.guild.text_channels:
 			db = await self.bot.dbquery("softlocked_channels", "data", "channelid=" +str(chan.id))
 			if not db:
-				await self.bot.dbexec(("INSERT INTO softlocked_channels VALUES (?, ?)", (str(chan.id), "true")))
+				await self.bot.dbexec(("INSERT INTO softlocked_channels VALUES (?, ?)", (str(chan.id), str(data))))
 				locked += 1
 		if locked < 1:
 			await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is already softlocked!")
