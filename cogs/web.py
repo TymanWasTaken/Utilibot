@@ -13,8 +13,8 @@ class web(commands.Cog):
 		app.mount("/", StaticFiles(directory="web/static"), name="static")
 
 		@app.get("/")
-		def root():
-			with open("web/views/index.html") as f:
+		def index():
+			with open("../web/views/index.html") as f:
 				return fastapi.responses.HTMLResponse(f.read(), 200)
 
 		return app

@@ -393,7 +393,7 @@ async def on_voice_state_update(member, before, after):
 
 bot.errors = []
 bot.load_extension("jishaku")
-no_load_cogs = ['cogs.reminders']
+no_load_cogs = ['cogs.reminders', 'cogs.web']
 for file in sorted(glob.glob("cogs/*.py")):
 	file = file.replace(".py", "").replace("/", ".")
 	if file in no_load_cogs: continue
