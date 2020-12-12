@@ -60,7 +60,6 @@ class Locking(commands.Cog):
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.has_permissions(manage_channels=True)
 	@commands.guild_only()
-	@commands.is_owner()
 	async def serverhardlockable(self, ctx):
 		"""
 		Configure which channels will be locked by server hardlock/unhardlock.
@@ -297,6 +296,7 @@ class Locking(commands.Cog):
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.has_permissions(manage_messages=True)
 	@commands.guild_only()
+	@commands.is_owner()
 	async def softlock(self, ctx, channel: discord.TextChannel=None, *, reason=None):
 		"""
 		Locks down a channel by deleting messages that people send.
@@ -315,6 +315,7 @@ class Locking(commands.Cog):
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.has_permissions(manage_messages=True)
 	@commands.guild_only()
+	@commands.is_owner()
 	async def whitelist(self, ctx, user: discord.Member, channel: discord.TextChannel=None):
 		"""
 		Whitelists a user from the softlock in the current channel, allowing them to speak but not unlock.
@@ -334,6 +335,7 @@ class Locking(commands.Cog):
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.has_permissions(manage_messages=True)
 	@commands.guild_only()
+	@commands.is_owner()
 	async def unsoftlock(self, ctx, channel: discord.TextChannel=None, reason=None):
 		"""
 		Unsoftlocks a channel.
@@ -351,6 +353,7 @@ class Locking(commands.Cog):
 	@commands.has_permissions(manage_messages=True, manage_guild=True)
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.guild_only()
+	@commands.is_owner()
 	async def serversoftlock(self, ctx, reason=None):
 		db = await self.bot.dbquery("softlocked_servers", "locked", "guildid=" +str(ctx.guild.id))
 		if db:
@@ -364,6 +367,7 @@ class Locking(commands.Cog):
 	@commands.has_permissions(manage_messages=True, manage_guild=True)
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.guild_only()
+	@commands.is_owner()
 	async def unserversoftlock(self, ctx, reason=None):
 		db = await self.bot.dbquery("softlocked_servers", "locked", "guildid=" +str(ctx.guild.id))
 		if db:
