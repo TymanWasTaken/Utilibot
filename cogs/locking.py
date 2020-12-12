@@ -359,7 +359,7 @@ class Locking(commands.Cog):
 		for chan in ctx.guild.text_channels:
 			db = await self.bot.dbquery("softlocked_channels", "data", "channelid=" +str(chan.id))
 			if not db:
-				await bot.dbexec(("INSERT INTO softlocked_channels VALUES (?, ?)", (str(chan.id), "true")))
+				await self.bot.dbexec(("INSERT INTO softlocked_channels VALUES (?, ?)", (str(chan.id), "true")))
 				locked += 1
 		if locked < 1:
 			await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is already softlocked!")
@@ -377,7 +377,7 @@ class Locking(commands.Cog):
 		for chan in ctx.guild.text_channels:
 			db = await self.bot.dbquery("softlocked_channels", "data", "channelid=" +str(chan.id))
 			if db:
-				await bot.dbexec(("DELETE FROM softlocked_channels WHERE channelid=" +str(chan.id)))
+				await self.bot.dbexec(("DELETE FROM softlocked_channels WHERE channelid=" +str(chan.id)))
 				unlocked += 1
 		if unlocked < 1:
 			await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is not softlocked!")
