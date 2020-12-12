@@ -307,7 +307,6 @@ class Locking(commands.Cog):
 		else:
 			data = {}
 			whitelisted = [ctx.author.id]
-			if ctx.guild.owner.id != ctx.author.id: whitelisted.append(ctx.guild.owner.id)
 			data["whitelisted"] = whitelisted
 			await self.bot.dbexec(("INSERT INTO softlocked_channels VALUES (?, ?)", (str(ch.id), str(data))))
 			await ctx.send(f"{self.bot.const_emojis['yes']} Successfully softlocked {ch.mention}!\n{f'**Reason:** {reason}' if reason else ''}", delete_after=10)
@@ -327,6 +326,8 @@ class Locking(commands.Cog):
 		if db:
 			data = json.loads(db[0][0])
 			whitelisted = data["whitelisted"]
+			if ctx.author.id not in whitelisted and not getattr(ctx.author.guild_permissions, "administrator"):
+				return await ctx.send(f"{self.bot.const_emojis['no']} You're not whitelisted to speak in this channel and you don't have admin, so you can't whitelist others!")
 			whitelisted.append(user.id)
 			data["whitelisted"] = whitelisted
 			await self.bot.dbexec("DELETE FROM softlocked_channels WHERE channelid=" +str(ch.id))
@@ -362,7 +363,6 @@ class Locking(commands.Cog):
 		locked = 0
 		data = {}
 		whitelisted = [ctx.author.id]
-		if ctx.guild.owner.id != ctx.author.id: whitelisted.append(ctx.guild.owner.id)
 		data["whitelisted"] = whitelisted
 		for chan in ctx.guild.text_channels:
 			db = await self.bot.dbquery("softlocked_channels", "data", "channelid=" +str(chan.id))
