@@ -380,7 +380,7 @@ class Locking(commands.Cog):
 				await bot.dbexec(("DELETE FROM softlocked_channels WHERE channelid=" +str(chan.id)))
 				unlocked += 1
 		if unlocked < 1:
-			await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}}** is not softlocked!")
+			await ctx.send(f"{self.bot.const_emojis['no']} **{ctx.guild}** is not softlocked!")
 		else:
 			await ctx.send(embed=discord.Embed(title=f"🔓 Server Unsoftlocked 🔓", description=f"{self.bot.const_emojis['yes']} **{ctx.guild}** has been unsoftlocked by {ctx.author.mention}!\n{f'**Reason:** {reason}' if reason else ''}", color=self.bot.colors['teal']))
 
