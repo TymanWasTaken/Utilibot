@@ -324,7 +324,7 @@ class Locking(commands.Cog):
 		ch = channel or ctx.channel
 		db = await self.bot.dbquery("softlocked_channels", "data", "channelid=" +str(ch.id))
 		if db:
-			data = json.loads(db[0][0])
+			data = json.loads((db[0][0]).replace("'", '"'))
 			whitelisted = data["whitelisted"]
 			if ctx.author.id not in whitelisted and not getattr(ctx.author.guild_permissions, "administrator"):
 				return await ctx.send(f"{self.bot.const_emojis['no']} You're not whitelisted to speak in this channel and you don't have admin, so you can't whitelist others!")
