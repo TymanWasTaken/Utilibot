@@ -312,7 +312,7 @@ async def on_message(message):
 		await message.channel.send(embed=embed)
 	sldb = await bot.dbquery("softlocked_channels", "data", "channelid=" +str(message.channel.id))
 	if sldb:
-		data = json.loads(sldb[0][0])
+		data = json.loads((sldb[0][0]).replace("'", '"'))
 		if not message.author.id in data["whitelisted"] and not getattr(message.author.guild_permissions, "administrator"):
 			await message.delete()
 	if message.channel.type == discord.ChannelType.news:
