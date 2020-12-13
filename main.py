@@ -310,7 +310,7 @@ async def on_message(message):
 			for e in msg.embeds:
 				await message.channel.send(embed=e)
 		await message.channel.send(embed=embed)
-	sldb = await bot.dbquery("softlocked_channels", "data", "channelid=" +str(message.channel.id)
+	sldb = await bot.dbquery("softlocked_channels", "data", "channelid=" +str(message.channel.id))
 	if sldb:
 		data = json.loads(sldb[0][0])
 		if not message.author.id in data["whitelisted"] and not getattr(message.author.guild_permissions, "administrator"):
