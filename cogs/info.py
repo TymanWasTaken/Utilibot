@@ -1,28 +1,11 @@
-import discord, random, asyncio, string, aiofiles, json, DiscordUtils, postbin
+import discord, random, asyncio, string, aiofiles, json, DiscordUtils, postbin,
 from discord.ext import commands
-import datetime
+from datetime import datetime
 import importlib
 
-async def readDB():
-	try:
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
-			return json.loads(await f.read())
-	except Exception as e:
-		print(f"An error occurred, {e}")
 
-async def writeDB(data: dict):
-	try:
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f_main:
-			async with aiofiles.open('/home/tyman/code/utilibot/data.json.bak', mode='w') as f_bak:
-				await f_bak.write(await f_main.read())
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='w') as f:
-			d = json.dumps(data)
-			await f.write(d)
-	except Exception as e:
-		print(f"An error occured, {e}")
-
-def randcolor():
-	return int("%06x" % random.randint(0, 0xFFFFFF), 16)
+#def randcolor():
+#	return int("%06x" % random.randint(0, 0xFFFFFF), 16)
 
 def permsfromvalue(value):
 	perms = discord.Permissions(permissions=int(value))
@@ -46,11 +29,11 @@ class Info(commands.Cog):
 		Get the bot's latency, in miliseconds.
 		"""
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
-			return await ctx.send("It appears I do not have permission to `Link embeds` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")
-		embed1 = discord.Embed(title="Pong!", description=f"Given Latency:`{round(self.bot.latency * 1000)}ms`", color=randcolor())
+			return await ctx.send("It appears I do not have permission to `Embed Links` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")
+		embed1 = discord.Embed(title="Pong!", description=f"Given Latency:`{round(self.bot.latency * 1000)}ms`", color=discord.Color.random())
 		m = await ctx.send(embed=embed1)
 		time = m.created_at - ctx.message.created_at
-		embed2 = discord.Embed(title="Pong!", description=f"Given Latency: `{round(self.bot.latency * 1000)}ms`\nMeasured Latency: `{int(time.microseconds / 1000)}ms`", color=randcolor())
+		embed2 = discord.Embed(title="Pong!", description=f"Given Latency: `{round(self.bot.latency * 1000)}ms`\nMeasured Latency: `{int(time.microseconds / 1000)}ms`", color=discord.Color.random())
 		await m.edit(embed=embed2)
 
 	@commands.command()
@@ -71,12 +54,20 @@ class Info(commands.Cog):
 			invitelink = invitelink + newinvite.code
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have the `Embed Links` permission in this channel. Please give me this permission or try again in a channel where I do have it, as it is necessary to run this command.")
-		embed = discord.Embed(title="Invite link", description=f"Click the links below to invite the bot to your server, or join our support server!\n[Click me to invite the bot!](https://discord.com/oauth2/authorize?client_id=755084857280954550&scope=bot&permissions=3501078)\n[Click me to join the support server!]({invitelink})", color=randcolor())
+		embed = discord.Embed(title="Invite link", description=f"Click the links below to invite the bot to your server, or join our support server!\n[Click me to invite the bot!](https://discord.com/oauth2/authorize?client_id=755084857280954550&scope=bot&permissions=3501078)\n[Click me to join the support server!]({invitelink})", color=discord.Color.random())
 		await ctx.send(embed=embed)
 
 	@commands.command()
-	async def suggest(self, ctx):
-		await ctx.send("Please join the support server with `u!invite`, then send your message in the <#755982484444938290> channel. (automated system soon!")
+	async def suggest(self, ctx, *, suggestion):
+		schannel = bot.get_channel(755982484444938290)
+		embed = discord.Embed(timestamp=datetime.now())
+		embed.set_author(name=f"Suggestion from {ctx.author}", icon_url=ctx.author.avatar_url)
+		embed.set_footer(text=f"User ID: {ctx.author.id}")
+		embed.description=suggestion
+		sugMsg = await schannel.send(embed=embed)
+		for e in ['yes', 'no']: await sugMsg.add_reaction(self.bot.const_emojis[e])
+		await ctx.send(ctx.author.mention, embed=discord.Embed(title="Suggestion sent successfully!", description=f"You can view it in {schannel.mention}. If you're not in the support server, join with `{ctx.prefix}invite`, and then you can view your suggestion here:\n[Message Link]({sugMsg.jump_url})", color=discord.Color.random())) 
+#		await ctx.send("Please join the support server with `u!invite`, then send your message in the <#755982484444938290> channel. (automated system soon!")
 	
 	@commands.command(name="botperms", aliases=['botpermissions'])
 	@commands.guild_only()
@@ -88,15 +79,15 @@ class Info(commands.Cog):
 		channel_permissions = Whether or not to check the channel permissions, instead of the guild ones (default false)
 		"""
 		if channel_permissions:
-			await ctx.send(embed=discord.Embed(title="All of the bot's permissions in this channel (Permissions not able to be used in this type of channel will show as denied):", description=permsfromvalue(ctx.channel.permissions_for(ctx.me).value) + "\nRun `u!requiredperms` to see which ones the bot needs.", color=randcolor()))
+			await ctx.send(embed=discord.Embed(title="All of the bot's permissions in this channel (Permissions not able to be used in this type of channel will show as denied):", description=permsfromvalue(ctx.channel.permissions_for(ctx.me).value) + "\nRun `u!requiredperms` to see which ones the bot needs.", color=discord.Color.random()))
 		else:
-			await ctx.send(embed=discord.Embed(title="All of the bot's permissions in this server:", description=permsfromvalue(ctx.me.guild_permissions.value) + "\nRun `u!requiredperms` to see which ones the bot needs.", color=randcolor()))
+			await ctx.send(embed=discord.Embed(title="All of the bot's permissions in this server:", description=permsfromvalue(ctx.me.guild_permissions.value) + "\nRun `u!requiredperms` to see which ones the bot needs.", color=discord.Color.random()))
 
 	@commands.command()
 	async def requiredperms(self, ctx):
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have the `Embed Links` permission in this channel. Please give me this permission or try again in a channel where I do have it, as it is necessary to run this command.")
-		embed=discord.Embed(title="Required permissions for the bot:", description="Necessary perms:\n`Read messages`, `Send messages`, `Embed links`\nPerms for commands to run:\n`Kick members`, `Ban members`, `Manage messages`, `Manage channels`", color=randcolor())
+		embed=discord.Embed(title="Required permissions for the bot:", description="Necessary perms:\n`Read messages`, `Send messages`, `Embed links`\nPerms for commands to run:\n`Kick members`, `Ban members`, `Manage messages`, `Manage channels`", color=discord.Color.random())
 		await ctx.send(embed=embed)
 
 	@commands.command()
