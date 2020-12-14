@@ -12,11 +12,11 @@ def permsfromvalue(value):
 	perms_true = sorted([x for x,y in dict(perms).items() if y])
 	perms_false = sorted([x for x,y in dict(perms).items() if not y])
 	nice_perms = ""
-	perms_true = ["\u2705 `" + s for s in perms_true]
-	perms_false = ["\u274c `" + s for s in perms_false]
+	perms_true = ["\u2705 " + s for s in perms_true]
+	perms_false = ["\u274c " + s for s in perms_false]
 	perms_combined = sorted(perms_true + perms_false, key=lambda x: x.strip('\u2705\u274c'))
 	for perm in perms_combined:
-		nice_perms = nice_perms + perm.replace("_", " ").capitalize() + "`\n"
+		nice_perms += f"\n`{perm.replace("_", " ").title()}`"
 	return nice_perms
 
 class Utils(commands.Cog):
@@ -332,7 +332,7 @@ class Utils(commands.Cog):
 			**2FA Required?** {emojis['yes'] if g.mfa_level else emojis['no']}
 			**Verification Level:** {vlevels[g.verification_level.value]}
 			**Explicit Content Filter:** {filters[g.explicit_content_filter.value]}
-			**Region:** {str(g.region).capitalize().replace("Us-", "US-")}
+			**Region:** {str(g.region).title().replace("Us-", "US-")}
 			
 			[Link to Icon]({g.icon_url})"""
 			.replace("	", ""),
