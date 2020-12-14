@@ -326,13 +326,13 @@ class Utils(commands.Cog):
 			**Channels:** {emojis['category']} {len(g.categories)} categories, {emojis['text']} {len(g.text_channels)} text, {emojis['voice']} {len(g.voice_channels)} voice
 			**Roles:** {len(g.roles)-1}
 			**Emojis:** {len(g.emojis)}
-			**Features:** {', '.join(g.features)}
+			**Features:** {", ".join([str(f).capitalize().replace("_", " ") for f in g.features])}
 			**System Messages:** {g.system_channel.mention if g.system_channel else 'None set'}
 			**Rules Channel:** {g.rules_channel.mention if g.rules_channel else 'None set'}
 			**2FA Required?** {emojis['yes'] if g.mfa_level else emojis['no']}
 			**Verification Level:** {vlevels[g.verification_level.value]}
 			**Explicit Content Filter:** {filters[g.explicit_content_filter.value]}
-			**Region:** {g.region}
+			**Region:** {str(g.region).capitalize()}
 			
 			[Link to Icon]({g.icon_url})"""
 			.replace("	", ""),
