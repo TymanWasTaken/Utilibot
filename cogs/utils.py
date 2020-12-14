@@ -12,11 +12,11 @@ def permsfromvalue(value):
 	perms_true = sorted([x for x,y in dict(perms).items() if y])
 	perms_false = sorted([x for x,y in dict(perms).items() if not y])
 	nice_perms = ""
-	perms_true = ["\u2705 " + s for s in perms_true]
-	perms_false = ["\u274c " + s for s in perms_false]
+	perms_true = [f"{self.bot.const_emojis['yes']} `" + s for s in perms_true]
+	perms_false = [f"{self.bot.const_emojis['no']} `" + s for s in perms_false]
 	perms_combined = sorted(perms_true + perms_false, key=lambda x: x.strip('\u2705\u274c'))
 	for perm in perms_combined:
-		nice_perms += f"\n`{perm.replace('_', ' ').title()}`"
+		nice_perms += f"{perm.replace('_', ' ').title()}`\n"
 	return nice_perms
 
 class Utils(commands.Cog):
