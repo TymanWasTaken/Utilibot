@@ -1,4 +1,4 @@
-import discord, random, asyncio, string, aiofiles, json, DiscordUtils, postbin,
+import discord, random, asyncio, string, aiofiles, json, DiscordUtils, postbin
 from discord.ext import commands
 from datetime import datetime
 import importlib
