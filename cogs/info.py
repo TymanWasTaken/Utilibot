@@ -59,7 +59,7 @@ class Info(commands.Cog):
 
 	@commands.command()
 	async def suggest(self, ctx, *, suggestion):
-		schannel = bot.get_channel(755982484444938290)
+		schannel = self.bot.get_channel(755982484444938290)
 		embed = discord.Embed(timestamp=datetime.now())
 		embed.set_author(name=f"Suggestion from {ctx.author}", icon_url=ctx.author.avatar_url)
 		embed.set_footer(text=f"User ID: {ctx.author.id}")
