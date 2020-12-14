@@ -629,7 +629,7 @@ class Utils(commands.Cog):
 			newnick = f"{afk} {ctx.author.nick or ctx.author.name}"
 			try: await ctx.author.edit(nick=newnick, reason="Adding AFK tag.")
 			except: pass
-		await ctx.send(f"{ctx.author.mention}, I set your local AFK message to: ```\n{afkmessage}```", delete_after=10)
+		await ctx.send(f"{ctx.author.mention}, I set your AFK message in **{ctx.guild}** to: ```\n{afkmessage}```", delete_after=10)
 
 	@commands.command(aliases=['ae', 'steal'])
 	@commands.is_owner()
