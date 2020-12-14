@@ -16,7 +16,7 @@ def permsfromvalue(value):
 	perms_false = ["\u274c " + s for s in perms_false]
 	perms_combined = sorted(perms_true + perms_false, key=lambda x: x.strip('\u2705\u274c'))
 	for perm in perms_combined:
-		nice_perms += f"\n`{perm.replace("_", " ").title()}`"
+		nice_perms += f"\n`{perm.replace('_', ' ').title()}`"
 	return nice_perms
 
 class Utils(commands.Cog):
