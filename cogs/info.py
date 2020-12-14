@@ -64,7 +64,7 @@ class Info(commands.Cog):
 		embed.set_author(name=f"Suggestion from {ctx.author}", icon_url=ctx.author.avatar_url)
 		embed.set_footer(text=f"User ID: {ctx.author.id}")
 		embed.description=suggestion
-		sugMsg = await schannel.send(embed=embed)
+		sugMsg = await schannel.send(ctx.author.mention, embed=embed)
 		for e in ['yes', 'no']: await sugMsg.add_reaction(self.bot.const_emojis[e])
 		await ctx.send(ctx.author.mention, embed=discord.Embed(title="Suggestion sent successfully!", description=f"You can view it in {schannel.mention}. If you're not in the support server, join with `{ctx.prefix}invite`, and then you can view your suggestion here:\n[Message Link]({sugMsg.jump_url})", color=discord.Color.random())) 
 #		await ctx.send("Please join the support server with `u!invite`, then send your message in the <#755982484444938290> channel. (automated system soon!")
