@@ -60,6 +60,10 @@ class ChannelUtils(commands.Cog):
 	@commands.bot_has_permissions(manage_channels=True)
 	@commands.guild_only()
 	async def autopublish(self, ctx, channel: discord.TextChannel=None):
+		"""
+		Enables automatically publishing in an announcement channel.
+		Idea from eek's bot MegaPhone
+		"""
 		channel = channel or ctx.channel
 		if channel.is_news():
 			db = await self.bot.dbquery("autopublish_channels", "data", "guildid=" + str(ctx.guild.id))
