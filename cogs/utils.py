@@ -354,6 +354,8 @@ class Utils(commands.Cog):
 		**Color:** {role.color}
 		**Hoisted:** {self.bot.const_emojis['yes'] if role.hoist else self.bot.const_emojis['no']}
 		**Mentionable:** {self.bot.const_emojis['yes'] if role.mentionable else self.bot.const_emojis['no']}
+		**Bot Managed:** {self.bot.const_emojis['yes'] if role.is_bot_managed() else self.bot.const_emojis['no']}
+		{f'**Bot User:** {guild.get_member(role.tags.bot_id)} ({role.tags.bot_id})' if role.tags else ''}
 		""".replace("	", ""),
 		color=role.color)
 		embed.set_footer(text=f"ID: {role.id}| Created on ")
