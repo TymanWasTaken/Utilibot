@@ -95,13 +95,13 @@ async def setPrefix(ctx, prefix):
 	gPrefix = await query("prefixes", f"guildid={ctx.guild.id}")
 	if prefix == None:
 		async with aiosqlite.connect('data.db') as db:
-			await db.execute(f"DELETE FROM prefixes WHERE guildid={ctx.guild.id}")
+			await db.execute(f"DELETE FROM prefixes WHERE guildid=?", (ctx.guild.id))
 			await db.commit()
 	else:
 		async with aiosqlite.connect('data.db') as db:
 			if len(gPrefix) > 0:
 				await db.execute(f"DELETE FROM prefixes WHERE guildid={ctx.guild.id}")
-			await db.execute(f"INSERT INTO prefixes VALUES ({ctx.guild.id}, \"{prefix}\")")
+			await db.execute(f"INSERT INTO prefixes VALUES (?, ?)", (ctx.guild.id, prefix))
 			await db.commit()
 
 bot = commands.Bot(command_prefix=getPrefix, case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False), intents=intents)
