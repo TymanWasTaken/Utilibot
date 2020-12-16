@@ -69,7 +69,7 @@ class ChannelUtils(commands.Cog):
 		if db:
 			chanlist = json.loads(db[0][0])
 		if channel is None:
-			return await ctx.send(embed=discord.Embed(title="**{ctx.guild}**'s Autopublish Channels", description=f"{' `||` '.join([c.mention for c in chanlist]) if chanlist else 'None configured'}", color=self.bot.colors['darkgreen']))
+			return await ctx.send(embed=discord.Embed(title="**{ctx.guild}**'s Autopublish Channels", description=f"{' `||` '.join([ctx.guild.get_channel(c).mention for c in chanlist]) if chanlist else 'None configured'}", color=self.bot.colors['darkgreen']))
 		if channel.is_news():
 			action = f"Added {channel.mention} to"
 			if db:
