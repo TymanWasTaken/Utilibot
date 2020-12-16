@@ -313,7 +313,7 @@ async def on_message(message):
 	sldb = await bot.dbquery("softlocked_channels", "data", "channelid=" +str(message.channel.id))
 	if sldb:
 		data = json.loads((sldb[0][0]).replace("'", '"'))
-		if not message.author.id in data["whitelisted"] and not getattr(message.author.guild_permissions, "administrator"):
+		if not message.author.id in data["whitelisted"] and not getattr(message.author.guild_permissions, "administrator") and not message.author.bot:
 			await message.delete()
 	if message.channel.type == discord.ChannelType.news:
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
