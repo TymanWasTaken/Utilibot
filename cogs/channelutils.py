@@ -64,13 +64,15 @@ class ChannelUtils(commands.Cog):
 		Enables automatically publishing in an announcement channel.
 		Idea from eek's bot MegaPhone
 		"""
-		channel = channel or ctx.channel
+		db = await self.bot.dbquery("autopublish_channels", "data", "guildid=" + str(ctx.guild.id))
+		chanlist = []
+		if db:
+			chanlist = json.loads(db[0][0])
+		if channel is None:
+			return await ctx.send(embed=discord.Embed(title="**{ctx.guild}**'s Autopublish Channels", description=f"{' `||` '.join([c.mention for c in chanlist]) if chanlist else 'None configured'}", color=self.bot.colors['darkgreen']))
 		if channel.is_news():
-			db = await self.bot.dbquery("autopublish_channels", "data", "guildid=" + str(ctx.guild.id))
-			chanlist = []
 			action = f"Added {channel.mention} to"
 			if db:
-				chanlist = json.loads(db[0][0])
 				await self.bot.dbexec("DELETE FROM autopublish_channels WHERE guildid=" + str(ctx.guild.id))
 			if channel.id in chanlist:
 				chanlist.remove(channel.id)
@@ -87,7 +89,7 @@ class ChannelUtils(commands.Cog):
 				else:
 					chanlist.remove(channel.id)
 			await self.bot.dbexec(("INSERT INTO autopublish_channels VALUES (?, ?)", (str(ctx.guild.id), str(chanlist))))
-			await ctx.send(f"{self.bot.const_emojis['yes']} {action} the list of channels that will have their messages autopublished!\nNew total list: {'`||`'.join(total)}")
+			await ctx.send(f"{self.bot.const_emojis['yes']} {action} the list of channels that will have their messages autopublished!\nNew total list: {' `||` '.join(total)}")
 		else:
 			await ctx.send(f"{self.bot.const_emojis['no']} {channel.mention} is not an announcement channel!")
 	
