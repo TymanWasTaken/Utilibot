@@ -95,7 +95,7 @@ class Music(commands.Cog):
 			return await ctx.send('You are not connected to a voice channel.')
 		url = url.lstrip("<").rstrip(">")
 		player = music.get_player(guild_id=ctx.guild.id)
-		await ctx.author.voice.channel.connect()
+		if not ctx.voice_client: await ctx.author.voice.channel.connect()
 		try: await ctx.guild.me.edit(deafen=True)
 		except: pass
 		if not player:
@@ -124,16 +124,9 @@ class Music(commands.Cog):
 	async def volume(self, ctx, volume: int=None):
 		"""Changes the player's volume"""
 
-		if ctx.voice_client is None:
-			return await ctx.send("Not connected to a voice channel.")
-
-		if volume > 200 or volume < 0:
-			return await ctx.send(f"Must be between 0 and 200.")
-
-		if volume is None:
-			return await ctx.send(f"Volume: {ctx.voice_client.source.volume * 100}")
-
-		ctx.voice_client.source.volume = volume / 100
+		player = music.get_player(guild_id=ctx.guild.id)
+		if player is None: return await ctx.send("I am not in a Voice Channel.")
+		player.change_volume(float(volume/100))
 		await ctx.send("Changed volume to {}%".format(volume))
 
 	@commands.command(aliases=["leave"])
