@@ -167,6 +167,8 @@ async def on_command_error(ctx, error):
 			await ctx.reply(f'`{ctx.message.content}` is not a command!', mention_author=True)
 		elif isinstance(error, commands.CheckFailure):
 			await ctx.reply(error)
+		elif isinstance(error, commands.errors.CommandOnCooldown):
+			await ctx.reply(error)
 		elif isinstance(error, BlacklistedError):
 			await ctx.reply(error)
 		elif isinstance(error, commands.DisabledCommand):
