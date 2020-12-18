@@ -279,7 +279,7 @@ async def on_message(message):
 					await message.channel.send(embed=embed, delete_after=10)
 	msgsearch = msgReg.search(message.content)
 	if msgsearch:
-		await message.channel.send("you good there?")
+		# await message.channel.send("you good there?")
 		if message.author.bot: return
 		db = await bot.dbquery("msglink", "enabled", f"guildid={message.guild.id}")
 		if not db:
