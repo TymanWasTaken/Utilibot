@@ -189,8 +189,8 @@ class Debug(commands.Cog):
 		Reacts to a message with the given reaction.
 		"""
 		chan = channel or ctx.channel
-		try: msg = await chan.fetch_message(message)
-		except: return await ctx.send(f"`{message}` is not a valid message ID! (Either the message is not in the current/specified channel or it doesn't exist)")
+#		try: msg = await chan.fetch_message(message)
+#		except: return await ctx.send(f"`{message}` is not a valid message ID! (Either the message is not in the current/specified channel or it doesn't exist)")
 		try: await msg.add_reaction(str(reaction))
 		except: return await ctx.send(f"'{reaction}' is not a valid reaction!")
 	@commands.command()
