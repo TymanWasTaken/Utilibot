@@ -137,7 +137,7 @@ class Debug(commands.Cog):
 
 	@commands.command()
 	@commands.is_owner()
-	async def botstatus(self, ctx, online: typing.Optional[discord.Status] *, newstatus=None):
+	async def botstatus(self, ctx, online: typing.Optional[discord.Status], *, newstatus=None):
 		if len(newstatus) < 1:
 			await self.bot.change_presence(status=(online if online else guild.me.status), activity=None)
 			await ctx.send("Removed my status")
