@@ -15,7 +15,7 @@ class Fun(commands.Cog):
 	@commands.command()
 	@commands.is_owner()
 	@commands.guild_only()
-	async def say(self, ctx, reference: typing.Optional[discord.Message], *, message: commands.clean_content(fix_channel_mentions=True)):
+	async def say(self, ctx, reference: typing.Optional[discord.Message], *, message):
 		"""
 		Says what you tell it to, self-explanatory.
 		"""
