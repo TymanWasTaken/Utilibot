@@ -140,12 +140,8 @@ class Debug(commands.Cog):
 	async def botstatus(self, ctx, online: typing.Optional[discord.Status], *, newstatus=None):
 		online = online or ctx.guild.me.status
 		newstatus = str(newstatus)
-		if newstatus is None:
-			await self.bot.change_presence(status=(online), activity=None)
-			await ctx.send(f"Removed my custom status and set my indicator to {self.bot.const_emojis[str(online)]} `{str(online).capitalize()}`")
-		else:
-			await self.bot.change_presence(status=(online), activity=discord.Activity(type=discord.ActivityType.listening, name=newstatus))
-			await ctx.send(f"Changed my status to ```{newstatus}``` and set my indicator to {self.bot.const_emojis[str(online)]} `{str(online).capitalize()}`")
+		await self.bot.change_presence(status=(online), activity=(discord.Activity(type=discord.ActivityType.listening, name=newstatus)) if newstatus != 'None' else None)
+		await ctx.send(f"Changed my status to ```{newstatus}``` and set my indicator to {self.bot.const_emojis[str(online)]} `{str(online).capitalize()}`")
 
 	@commands.command()
 	@commands.is_owner()
