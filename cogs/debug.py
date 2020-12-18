@@ -137,6 +137,16 @@ class Debug(commands.Cog):
 
 	@commands.command()
 	@commands.is_owner()
+	async def botstatus(self, ctx, online=typing.Optional[discord.Status] *, newstatus=None):
+		if len(newstatus) < 1:
+			await self.bot.change_presence(status=(online if online else guild.me.status), activity=None)
+			await ctx.send("Removed my status")
+		else:
+			await self.bot.change_presence(status=(online if online else guild.me.status), activity=discord.Activity(type=discord.ActivityType.listening, name=newstatus))
+			await ctx.send(f"Changed my status to ```{newstatus}```")
+
+	@commands.command()
+	@commands.is_owner()
 	async def blacklist(self, ctx, id: int):
 		data = ""
 		async with aiofiles.open("/home/tyman/code/utilibot/data.json", mode="r") as f_read:
