@@ -310,9 +310,11 @@ async def on_message(message):
 			embed.add_field(name="Attachments", value=f"{len(msg.attachments)} attachments\n{n.join(attaches)}")
 		if msg.embeds:
 			embed.add_field(name="Embeds", value=len(msg.embeds))
+			await message.channel.send(embed=embed)
 			for e in msg.embeds:
 				await message.channel.send(embed=e)
-		await message.channel.send(embed=embed)
+		else:
+			await message.channel.send(embed=embed)
 	sldb = await bot.dbquery("softlocked_channels", "data", "channelid=" +str(message.channel.id))
 	if sldb:
 		data = json.loads((sldb[0][0]).replace("'", '"'))
