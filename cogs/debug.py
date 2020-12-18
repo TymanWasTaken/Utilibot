@@ -141,7 +141,8 @@ class Debug(commands.Cog):
 		online = online or ctx.guild.me.status
 		activity = activity or (ctx.guild.me.activity.type if ctx.guild.me.activity else None) or discord.ActivityType.listening
 		newstatus = str(newstatus)
-		await self.bot.change_presence(status=(online), activity=(discord.Activity(type=activity, name=newstatus)) if newstatus != 'None' else None)
+		setactivity = discord.Activity(type=activity, name=newstatus) if newstatus != 'None' else None
+		await self.bot.change_presence(status=(online), activity=setactivity)
 		await ctx.send(f"Changed my status to ```{newstatus}``` and set my indicator to {self.bot.const_emojis[str(online)]} `{str(online).capitalize()}`")
 
 	@commands.command()
