@@ -19,14 +19,16 @@ class Fun(commands.Cog):
 		"""
 		Says what you tell it to, self-explanatory.
 		"""
-		await ctx.message.delete()
+		try: await ctx.message.delete()
+		except Forbidden: await ctx.send("Missing `Manage Messages` permissions", delete_after=3)
+		except: pass
 		await ctx.send(message, reference=reference)
 
 	@commands.command(name="quote")
 	@commands.guild_only()
 	async def quote(self, ctx, message: discord.Message, *, response):
 		"""
-		Quotes a message.
+		Quotes about message.
 		"""
 		if not message.channel == ctx.channel: return
 		quoted = str(message.content).replace("\n", "\n> ")
