@@ -33,6 +33,10 @@ class Utils(commands.Cog):
 		"""
 		state = state.lower()
 		permission = permission.lower()
+		try:
+			getattr(discord.Permissions.all(), permission)
+		except NameError:
+			return await ctx.send("Invalid permission name.")
 		if state == "true":
 			state = True
 		elif state == "neutral":
@@ -42,9 +46,15 @@ class Utils(commands.Cog):
 		else:
 			return await ctx.send("State must be one of: True, Neutral, or False")
 		m = await ctx.send(f"Changing permission `{permission}` to state `{state}` for role {role.name} on all channels.")
+		failed_channels = []
 		for channel in ctx.guild.channels:
-			await channel.set_permissions(role, **{permission: state})
-		await m.edit(content=f"Changed permission `{permission}` to state `{state}` for role {role.name} on all channels.")
+			original_overwrites = channel.overwrites_for(role)
+			setattr(original_overwrites, state)
+			try:
+				await channel.set_permissions(role, overwrite=original_overwrites)
+			except:
+				failed_channels.push(channel)
+		await m.edit(content=f"Changed permission `{permission}` to state `{state}` for role {role.name} on all possible channels. Failed channels:\n{' '.join([ch.mention for ch in failed_channels])}")
 
 	@commands.command(name="resetinvites", aliases=['wipeinv', 'delinvs'])
 	@commands.guild_only()
