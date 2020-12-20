@@ -219,7 +219,7 @@ async def on_error(event, *args, **kwargs):
 	tb = "".join(traceback.format_exception(errorInfo[0], errorInfo[1], errorInfo[2]))
 	await bot.get_channel(764333133738541056).send(f"""
 	{event} raised a {errorInfo[0].__name__}: 
-	Guild: {args[0].guild.id if hasattr(args[0], guild) else "not found"}```py
+	Guild: {args[0].guild.id if hasattr(args[0], "guild") else "not found"}```py
 	{tb}```
 	""".replace("	", ""))
 
