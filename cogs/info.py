@@ -99,9 +99,10 @@ class Info(commands.Cog):
 
 	@commands.command(name="botinfo", aliases=['bi'])
 	async def botinfo(self, ctx):
+		bot = self.bot
 		embed = discord.Embed(title="Bot Information", color=discord.Color.random())
 		fields = {
-			"Developers": f"{', '.join([str(await bot.fetch_user(id)) for id in self.bot.owner_ids])}"
+			"Developers": f"{', '.join([str(await bot.fetch_user(id)) for id in bot.owner_ids])}"
 		}
 		for name in fields:
 			embed.add_field(name=name, value=fields[name], inline=False)
