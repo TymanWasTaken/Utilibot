@@ -8,7 +8,8 @@ This is a discord bot that include these things:
 - [x] Kick
 - [x] Ban
 - [x] Logs
-- [x] Lock down a channel or the entire server
+- [x] Fully fledged locking system- Softlock and Hardlock channels, and the server.
+- [x] Many channel utilities, including announcement autopublishing and more.
 - [ ] Tickets
 - [x] Music
 
