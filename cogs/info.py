@@ -97,6 +97,16 @@ class Info(commands.Cog):
 		await self.bot.setPrefix(ctx, prefix)
 		await ctx.send(f"{f'Changed the prefix to `{prefix}`' if prefix else 'Reset the prefix'} for this server!")
 
+	@commands.command(name="botinfo", aliases=['bi']))
+	async def botinfo(self, ctx):
+		embed = discord.Embed(title="Bot Information", color=discord.Color.random())
+		fields = {
+			"Developers": f"{', '.join([str(await bot.fetch_user(id)) for id in self.bot.owner_ids])}"
+		}
+		for name in fields:
+			embed.add_field(name=name, value=fields[name], inline=False)
+		await ctx.send(embed=embed)
+
 	@commands.command()
 	@commands.is_owner()
 	async def chelp(self, ctx, *, argument=None):
