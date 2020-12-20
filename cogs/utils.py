@@ -12,8 +12,8 @@ def permsfromvalue(value):
 	perms_true = sorted([x for x,y in dict(perms).items() if y])
 	perms_false = sorted([x for x,y in dict(perms).items() if not y])
 	nice_perms = ""
-	perms_true = [f"{self.bot.const_emojis['yes']} `" + s for s in perms_true]
-	perms_false = [f"{self.bot.const_emojis['no']} `" + s for s in perms_false]
+	perms_true = [f"{bot.const_emojis['yes']} `" + s for s in perms_true]
+	perms_false = [f"{bot.const_emojis['no']} `" + s for s in perms_false]
 	perms_combined = sorted(perms_true + perms_false, key=lambda x: x.strip('\u2705\u274c'))
 	for perm in perms_combined:
 		nice_perms += f"{perm.replace('_', ' ').title()}`\n"
@@ -202,7 +202,7 @@ class Utils(commands.Cog):
 		"""
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have permission to `Link embeds` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")
-		await ctx.send(embed=discord.Embed(title=f"Permissions for value {value}:", description=permsfromvalue(value), color=randcolor()))
+		await ctx.send(embed=discord.Embed(title=f"Permissions for value {value}:", description=permsfromvalue(value), color=discord.Color.random()))
 
 	@commands.command(name="userinfo", aliases=['ui', 'user', 'info'])
 	async def userinfo(self, ctx, user=None):
@@ -497,13 +497,13 @@ class Utils(commands.Cog):
 	@commands.command(name="dehoist")
 	@commands.has_permissions(manage_nicknames=True)
 	@commands.bot_has_permissions(manage_nicknames=True)
-	async def dehoist(self, ctx):
+	async def dehoist(self, ctx, hoister: str=None):
 		msg = await ctx.send("Dehoisting...")
 		total = 0
 		success = 0
 		failed = 0
 		for m in ctx.guild.members:
-			if (m.nick and m.nick.startswith("!")) or m.name.startswith("!"):
+			if (m.nick and (m.nick.startswith("!") or m.nick.startswith(hoister))) or (m.name.startswith("!") and not str(m.nick).startswith("!")):
 				total += 1
 				if m.top_role >= ctx.author.top_role:
 					failed += 1
