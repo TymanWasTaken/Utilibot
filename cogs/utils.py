@@ -503,7 +503,7 @@ class Utils(commands.Cog):
 		success = 0
 		failed = 0
 		for m in ctx.guild.members:
-			if str(m.nick).startswith(hoister) or (m.name.startswith(hoister) and str(m.nick).startswith(hoister)):
+			if m.display_name.startswith(hoister):
 				total += 1
 				if m.top_role >= ctx.author.top_role:
 					failed += 1
