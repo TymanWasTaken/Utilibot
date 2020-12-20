@@ -148,13 +148,13 @@ async def on_ready():
 	await bot.get_channel(755979601788010527).send(content=datetime.now().strftime("[%m/%d/%Y %I:%M:%S] ") + "Bot online")
 	await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Clari struggle"))
 	for error in bot.errors:
-		await bot.get_channel(764333133738541056).send(error, allowed_mentions=discord.AllowedMentions(roles=True))
+		await bot.get_channel(790325747934953482).send(error, allowed_mentions=discord.AllowedMentions(roles=True))
 
 @bot.event
 async def on_command_error(ctx, error):
 	try:
 		nocommandblacklist = [264445053596991498, 458341246453415947, 735615909884067930]
-		errorchannel = bot.get_channel(764333133738541056)
+		errorchannel = bot.get_channel(790325747934953482)
 		longTextRegex = re.match(r"Command raised an exception: HTTPException: 400 Bad Request \(error code: 50035\): Invalid Form Body\nIn (.+): Must be (\d+) or fewer in length.", str(error))
 		if isinstance(error, commands.TooManyArguments):
 			await ctx.reply('Too many arguments')
@@ -211,13 +211,13 @@ async def on_command_error(ctx, error):
 				for message in tb2_wrap:
 					await errorchannel.send(message)
 	except Exception as error:
-		await bot.get_channel(764333133738541056).send(content=f"<@&766132653640122419>\nIronic. The error handler errored.```py\n{''.join(traceback.format_exception(type(error), error, error.__traceback__))}```", allowed_mentions=discord.AllowedMentions.all())
+		await bot.get_channel(790325747934953482).send(content=f"<@&766132653640122419>\nIronic. The error handler errored.```py\n{''.join(traceback.format_exception(type(error), error, error.__traceback__))}```", allowed_mentions=discord.AllowedMentions.all())
 
 @bot.event
 async def on_error(event, *args, **kwargs):
 	errorInfo = sys.exc_info()
 	tb = "".join(traceback.format_exception(errorInfo[0], errorInfo[1], errorInfo[2]))
-	await bot.get_channel(764333133738541056).send(f"""
+	await bot.get_channel(790325747934953482).send(f"""
 	{event} raised a {errorInfo[0].__name__}: 
 	Guild: {args[0].guild.id if hasattr(args[0], "guild") else "not found"}```py
 	{tb}```
