@@ -512,7 +512,7 @@ class Utils(commands.Cog):
 				else:
 					success += 1
 					newnick = m.nick or m.name
-					await m.edit(nick=f"{newnick}".replace("!", ""), reason=f"Dehoisted by {ctx.author} ({ctx.author.id})")
+					await m.edit(nick=f"{newnick}".replace(hoister, ""), reason=f"Dehoisted by {ctx.author} ({ctx.author.id})")
 		await msg.edit(content=f"Successfully dehoisted {success} members! (Attempted: {total}, Failed: {failed})")
 
 	@commands.command(aliases=["tr"])
