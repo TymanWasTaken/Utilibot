@@ -497,13 +497,13 @@ class Utils(commands.Cog):
 	@commands.command(name="dehoist")
 	@commands.has_permissions(manage_nicknames=True)
 	@commands.bot_has_permissions(manage_nicknames=True)
-	async def dehoist(self, ctx, hoister: str=None):
+	async def dehoist(self, ctx, hoister: str="!"):
 		msg = await ctx.send("Dehoisting...")
 		total = 0
 		success = 0
 		failed = 0
 		for m in ctx.guild.members:
-			if (m.nick and (m.nick.startswith("!") or m.nick.startswith(hoister))) or (m.name.startswith("!") and not str(m.nick).startswith("!")):
+			if str(m.nick).startswith(hoister) or (m.name.startswith(hoister) and str(m.nick).startswith(hoister)):
 				total += 1
 				if m.top_role >= ctx.author.top_role:
 					failed += 1
