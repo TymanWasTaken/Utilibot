@@ -49,7 +49,7 @@ class Utils(commands.Cog):
 		failed_channels = []
 		for channel in ctx.guild.channels:
 			original_overwrites = channel.overwrites_for(role)
-			setattr(original_overwrites, state)
+			setattr(original_overwrites, permission, state)
 			try:
 				await channel.set_permissions(role, overwrite=original_overwrites)
 			except:
