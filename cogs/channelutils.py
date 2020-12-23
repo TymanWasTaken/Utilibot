@@ -51,7 +51,7 @@ class ChannelUtils(commands.Cog):
 			if curtype == discord.ChannelType.news:
 				newtype = discord.ChannelType.text
 			await c.edit(type=newtype, reason=f"{ctx.author} ({ctx.author.id}) converted this channel to type {newtype}.")
-			await ctx.send(f"{self.bot.const_emojis['yes']} Changed <#{c.id}> to type {self.bot.const_emojis[str(newtype)]}`{str(newtype).capitalize()}`!")
+			await ctx.send(f"{self.bot.const_emojis['yes']} Changed <#{c.id}> to type {self.bot.const_emojis[str(newtype)]} `{str(newtype).capitalize()}`!")
 		else:
 			await ctx.send(f"{self.bot.const_emojis['no']} This server can't have announcement channels! Ask somebody with the `Manage Server` permission to enable Community in Server Settings, then try again.\nPlease do not run this command again until community has been enabled.")
 
