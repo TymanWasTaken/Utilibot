@@ -158,13 +158,13 @@ class ChannelUtils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def delchan(self, ctx, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel, None], *, reason="None given."):
+	async def delchan(self, ctx, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel], *, reason="None given."):
 		"""
 		Deletes a specified channel with an optional reason.
 		"""
-		chan = channel or ctx.channel
-		await chan.delete(reason=f"Channel deleted by {ctx.author} ({ctx.author.id}) with reason: {reason}.")
-		await ctx.send(f"Deleted `#{chan.name}`!")
+		await channel.delete(reason=f"Channel deleted by {ctx.author} ({ctx.author.id}) with reason: {reason}.")
+		try: await ctx.send(f"Deleted `#{channel.name}`!")
+		except: await ctx.author.send(f"Deleted `#{channel.name}`!")	
 
 	@commands.command(name="createchannel", aliases=['createchan', 'newchan'])
 	@commands.guild_only()
