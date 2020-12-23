@@ -70,7 +70,7 @@ class ChannelUtils(commands.Cog):
 			chanlist = json.loads(db[0][0])
 		if channel is None:
 			return await ctx.send(embed=discord.Embed(title=f"**{ctx.guild}**'s Autopublish Channels", description=f"{' `||` '.join([ctx.guild.get_channel(c).mention for c in chanlist]) if chanlist else 'None configured'}", color=self.bot.colors['darkgreen']))
-		if channel.is_news():
+		if channel.is_news() or channel.id in chanlist:
 			action = f"Added {channel.mention} to"
 			if db:
 				await self.bot.dbexec("DELETE FROM autopublish_channels WHERE guildid=" + str(ctx.guild.id))
