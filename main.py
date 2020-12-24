@@ -404,7 +404,10 @@ async def on_voice_state_update(member, before, after):
 
 bot.errors = []
 bot.load_extension("jishaku")
-bot.load_extension("DevTools")
+try:
+	bot.load_extension("DevTools")
+except Exception as error:
+	bot.errors.append(str(error))
 no_load_cogs = ['cogs.reminders', 'cogs.web', 'cogs.friendserver', 'cogs.tickets']
 for file in sorted(glob.glob("cogs/*.py")):
 	file = file.replace(".py", "").replace("/", ".")
