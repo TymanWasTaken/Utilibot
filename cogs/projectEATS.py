@@ -17,7 +17,11 @@ class pEATS(commands.Cog):
 		m = await c.fetch_message(791763456646447135)
 		stripmilli = (str(duration).split('.'))[0]
 		separate = stripmilli.split(':')
-		await m.edit(content=f"T- `{split[0]}`")
+		hours = separate[0]
+		minutes = separate[1]
+		seconds = separate[2]
+		formatted = f"0 days, {hours} hour{'s' if int(hours) > 1 else ''}, {minutes} minute{'s' if int(minutes) > 1 else ''}, and {seconds} second{'s' if int(seconds) > 1 else ''}"
+		await m.edit(content=f"T- `{formatted}`")
 
 def setup(bot):
 	bot.add_cog(pEATS(bot))
