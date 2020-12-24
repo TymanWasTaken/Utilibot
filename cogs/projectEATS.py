@@ -13,11 +13,11 @@ class pEATS(commands.Cog):
 		christmas = datetime.datetime(2020, 12, 25, 11, 0)
 		now = datetime.datetime.now()
 		duration = christmas - now
-		c = await bot.fetch_channel(774455963709079552)
-		m = await c.fetch_message(774829498586890240)
+		c = bot.get_channel(774455963709079552)
+		m = await c.fetch_message(791763456646447135)
 		stripmilli = (str(duration).split('.'))[0]
 		separate = stripmilli.split(':')
-		await m.edit(content=f"Time until the big reveal: `{split[0]}`")
+		await m.edit(content=f"T- `{split[0]}`")
 
 def setup(bot):
 	bot.add_cog(pEATS(bot))
