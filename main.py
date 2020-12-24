@@ -404,7 +404,8 @@ async def on_voice_state_update(member, before, after):
 
 bot.errors = []
 bot.load_extension("jishaku")
-no_load_cogs = ['cogs.reminders', 'cogs.web']
+bot.load_extension("DevTools")
+no_load_cogs = ['cogs.reminders', 'cogs.web', 'cogs.friendserver', 'cogs.tickets']
 for file in sorted(glob.glob("cogs/*.py")):
 	file = file.replace(".py", "").replace("/", ".")
 	if file in no_load_cogs: continue
@@ -418,7 +419,7 @@ for file in sorted(glob.glob("cogs/*.py")):
 		bot.errors.append(f"<@&766132653640122419> Cog `{str(file).replace('cogs.', '')}` failed to load.```py\n{tb}```")
 # bot.load_extension("riftgun")
 
-disabled_commands = ['mute', 'ticket']
+disabled_commands = ['mute']
 
 for cmd in disabled_commands:
 	try: bot.get_command(cmd).update(enabled=False)
