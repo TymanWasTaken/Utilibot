@@ -10,12 +10,12 @@ class pEATS(commands.Cog):
 	@tasks.loop(seconds=30)
 	async def editMessage(self):
 		bot = self.bot
-		christmas = datetime.datetime(2020, 12, 25)
+		christmas = datetime.datetime(2020, 12, 25, 11, 0)
 		now = datetime.datetime.now()
-		days = (christmas - now).days
+		seconds = (christmas - now).seconds
 		c = await bot.fetch_channel(774455963709079552)
 		m = await c.fetch_message(774829498586890240)
-		await m.edit(content=f"Days until christmas: `{days}`")
+		await m.edit(content=f"Seconds until the big reveal: `{seconds}` (somebody pls help convert this to good duration)")
 
 def setup(bot):
 	bot.add_cog(pEATS(bot))
