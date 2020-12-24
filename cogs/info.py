@@ -26,7 +26,7 @@ class Info(commands.Cog):
 	@commands.command()
 	async def ping(self, ctx):
 		"""
-		Get the bot's latency, in miliseconds.
+		Get the bot's latency, in milliseconds.
 		"""
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have permission to `Embed Links` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")
