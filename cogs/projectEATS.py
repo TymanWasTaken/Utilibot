@@ -16,7 +16,7 @@ class pEATS(commands.Cog):
 		c = await bot.fetch_channel(774455963709079552)
 		m = await c.fetch_message(774829498586890240)
 		split = duration.split('.')
-		await m.edit(content=f"Time until the big reveal: `{duration[0]}`")
+		await m.edit(content=f"Time until the big reveal: `{split[0]}`")
 
 def setup(bot):
 	bot.add_cog(pEATS(bot))
