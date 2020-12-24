@@ -355,7 +355,8 @@ class Utils(commands.Cog):
 	
 	@commands.command(name="roleinfo", aliases=['ri'])
 	@commands.guild_only()
-	async def roleinfo(self, ctx, role: discord.Role):
+	async def roleinfo(self, ctx, role: typing.Optional[discord.Role]):
+		role = role or ctx.author.top_role
 		embed=discord.Embed(
 		title=f"{role.name}'s Info",
 		description=f"""
