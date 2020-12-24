@@ -15,7 +15,8 @@ class pEATS(commands.Cog):
 		duration = christmas - now
 		c = await bot.fetch_channel(774455963709079552)
 		m = await c.fetch_message(774829498586890240)
-		split = duration.split('.')
+		stripmilli = (str(duration).split('.'))[0]
+		separate = stripmilli.split(':')
 		await m.edit(content=f"Time until the big reveal: `{split[0]}`")
 
 def setup(bot):
