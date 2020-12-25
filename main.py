@@ -170,7 +170,7 @@ async def on_command_error(ctx, error):
 		elif isinstance(error, commands.errors.CommandOnCooldown):
 			await ctx.reply(error)
 		elif isinstance(error, BlacklistedError):
-			await ctx.reply(error)
+			return
 		elif isinstance(error, commands.DisabledCommand):
 			await ctx.reply(f'Sorry, but the command `{ctx.command.qualified_name}` is currently disabled.')
 		elif isinstance(error, commands.MissingRequiredArgument):
