@@ -4,9 +4,6 @@ from pytz import timezone
 from dotenv import load_dotenv
 load_dotenv(dotenv_path="/home/tyman/code/utilibot/.env")
 
-def randcolor():
-	return int("%06x" % random.randint(0, 0xFFFFFF), 16)
-
 def permsfromvalue(value):
 	perms = discord.Permissions(permissions=value)
 	perms_true = sorted([x for x,y in dict(perms).items() if y])
@@ -346,7 +343,7 @@ class Utils(commands.Cog):
 			
 			[Link to Icon]({g.icon_url})"""
 			.replace("	", ""),
-			color=bot.utils.randcolor()
+			color=discord.Color.random()
 		)
 		# embed.add_field(name=f"Emojis ({len(g.emojis)}):", value=f"{for e in g.emojis: ems = f'{ems} {e}'}")
 		embed.set_footer(text=f"ID: {g.id} | Created on ", icon_url=g.icon_url)
