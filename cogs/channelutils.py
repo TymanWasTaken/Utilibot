@@ -225,6 +225,31 @@ class ChannelUtils(commands.Cog):
 			await channel.edit(slowmode_delay=slowmode, reason=f"Slowmode changed to {slowmode} seconds by {ctx.author} ({ctx.author.id}).")
 			await ctx.send(f"Changed {channel.mention}'s slowmode to {slowmode} seconds.")
 
+
+	@commands.Cog.listener()
+	async def on_raw_reaction_add(self, payload):
+		ch = self.bot.get_channel(payload.channel_id)
+		mem = self.bot.get_guild(payload.guild_id).get_member(payload.user_id)
+		if str(payload.emoji) == "📣" and ch.is_news() and payload.user_id != self.bot.user.id and not mem.bot:
+			msg = await ch.fetch_message(payload.message_id)
+			if msg.crossposted:
+				er = f"{msg.jump_url} is already published!"
+				try: await mem.send(er)
+				except: await ch.send(er, delete_after=5)
+			else:
+				try:
+					await msg.publish()
+					suc = f"Sucessfully published <{msg.jump_url}>!"
+					try: await mem.send(suc)
+					except: await ch.send(suc, delete_after=5)
+				except Exception as e:
+					er = f"Couldn't publish <{msg.jump_url}> because:\n{e}."
+					try: await mem.send(er)
+					except:	await ch.send(er, delete_after=5)
+			await msg.remove_reaction("📣", mem)
+
+
+
 def setup(bot):
 	bot.add_cog(ChannelUtils(bot))
 	print('[ChannelUtilsCog] Channel Utils cog loaded')	
