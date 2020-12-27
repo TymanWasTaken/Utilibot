@@ -651,20 +651,6 @@ class Utils(commands.Cog):
 				em = await ctx.guild.create_custom_emoji(name=name, image=await r.content.read())
 				await ctx.send(f"Created the emoji {em} with the name `{em.name}`!")
 
-	@commands.Cog.listener()
-	async def on_raw_reaction_add(self, payload):
-		ch = self.bot.get_channel(payload.channel_id)
-		if str(payload.emoji) == "📣" and payload.user_id != self.bot.user.id and not (await self.bot.fetch_user(payload.user_id)).bot:
-			if ch.type != discord.ChannelType.news:
-				await ch.send(f"<#{ch.id}> is not an announcement channel!", delete_after=5)
-			else:
-				msg = await ch.fetch_message(payload.message_id)
-				try:
-					await msg.publish()
-					await ch.send(f"Sucessfully published <{msg.jump_url}>!", delete_after=5)
-				except discord.HTTPException:
-					await ch.send(f"Couldn't publish <{msg.jump_url}>.", delete_after=5)
-
 def setup(bot):
 	bot.add_cog(Utils(bot))
 	print('[UtilsCog] Utils cog loaded')
