@@ -92,7 +92,7 @@ class Utils(commands.Cog):
 		"""
 		oldname = ctx.guild.name
 		if len(newname) < 2 or len(newname) > 100:
-			await ctx.send("This name is too {'short' if len(newname)<2 else 'long'}! Server names must be between 2 and 100 characters.")
+			await ctx.send(f"This name is too {'short' if len(newname)<2 else 'long'}! Server names must be between 2 and 100 characters.")
 		else:
 			await ctx.guild.edit(name=newname, reason=(f"Server name changed by {ctx.author} ({ctx.author.id})"))
 			await ctx.send(f"Changed the server's name!\nBefore: `{oldname}`\nAfter: `{ctx.guild.name}`")
