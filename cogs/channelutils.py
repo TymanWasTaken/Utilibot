@@ -170,12 +170,11 @@ class ChannelUtils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def createchan(self, ctx, name, position: int=0, *, reason="None given."):
+	async def createchan(self, ctx, category: typing.Optional[discord.CategoryChannel], *, name):
 		"""
-		Creates a text channel with an optional position and reason. Use `newvc` to create a voice channel.
+		Creates a text channel with an optional category. Use `newvc` to create a voice channel.
 		"""
-		c = await ctx.guild.create_text_channel(name=name, reason=f"Channel created by {ctx.author} ({ctx.author.id}) with reason: {reason}")
-		await c.edit(position=position)
+		c = await ctx.guild.create_text_channel(name=name, reason=f"Channel created by {ctx.author} ({ctx.author.id}).", category=category)
 		await c.send(f"I created this channel for you, {ctx.author.mention}!", delete_after=60)
 		await ctx.send(f"{ctx.author.mention}, I created {c.mention} for you!", delete_after=60)
 
@@ -183,12 +182,12 @@ class ChannelUtils(commands.Cog):
 	@commands.guild_only()
 	@commands.has_permissions(manage_channels=True)
 	@commands.bot_has_permissions(manage_channels=True)
-	async def newvc(self, ctx, name, position: int=0, *, reason="None given."):
+	async def newvc(self, ctx, category: typing.Optional[discord.CategoryChannel], *, name):
 		"""
 		Creates a voice channel with an optional position and reason. Use `newchan` to create a text channel.
 		"""
-		c = await ctx.guild.create_voice_channel(name=name, reason=f"Channel created by {ctx.author} ({ctx.author.id}) with reason: {reason}", position=position)
-		await ctx.send(f"I created <#{c.id}> for you, {ctx.author.mention}!")
+		c = await ctx.guild.create_voice_channel(name=name, reason=f"Channel created by {ctx.author} ({ctx.author.id}).", category=category)
+		await ctx.send(f"I created {c.mention} for you, {ctx.author.mention}!")
 
 	@commands.command(name="nuke", aliases=['nukechan', 'clone', 'resetchan'])
 	@commands.guild_only()
