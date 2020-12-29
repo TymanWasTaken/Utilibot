@@ -156,7 +156,7 @@ class Info(commands.Cog):
 				paginator = DiscordUtils.Pagination.CustomEmbedPaginator(ctx, timeout=60, remove_reactions=False, auto_footer=True)
 			paginator.add_reaction('⏮️', "first")
 			paginator.add_reaction('⏪', "back")
-			paginator.add_reaction('⏹', "delete")
+			paginator.add_reaction('⏹️ ', "delete")
 			paginator.add_reaction('⏩', "next")
 			paginator.add_reaction('⏭️', "last")
 			return await paginator.run(embeds)
