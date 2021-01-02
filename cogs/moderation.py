@@ -69,12 +69,14 @@ class Moderation(commands.Cog):
 	@commands.has_permissions(manage_messages=True)
 	@commands.bot_has_permissions(manage_messages=True)
 	@commands.guild_only()
-	async def user(self, ctx, user: discord.Member, number:int =10):
+	async def user(self, ctx, user: typing.Union[discord.User, int], number:int =10):
 		"""
 		Purge a specified amount of messages from the current channel. It will only delete messages made by the mentioned user.
 		Number = The number of messages to delete.
 		"""
-		is_user = lambda msg: msg.author == user
+		if isinstance(user, discord.User): is_user = lambda msg: msg.author.id == user.id
+		else: is_user = lambda msg: msg.author.id == user
+		
 		async with ctx.typing():
 			await ctx.message.delete()
 			deleted = await ctx.channel.purge(limit=number, check=is_user)
