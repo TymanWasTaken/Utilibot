@@ -230,6 +230,7 @@ async def on_error(event, *args, **kwargs):
 fReg = re.compile(r"(^|\A|\s)f($|\Z|\s)", flags=(re.IGNORECASE|re.MULTILINE))
 msgReg = re.compile(r"(?:[^<]|\A)(?:https:\/\/)?(?:www\.)?(?:ptb\.|canary\.)?discord(?:app)?\.com/channels/(\d{17,19})/(\d{17,19})/(\d{17,19})(?:[^>]|\Z)", flags=(re.MULTILINE|re.IGNORECASE))
 shutReg = re.compile(r"cmp\s?shut", flags=(re.MULTILINE|re.IGNORECASE))
+apReg = re.compile(r"\D?\D?(!|?|#|$|%|&|*|-|+|=|:|;|,|.|<|>)")
 
 @bot.event
 async def on_message(message):
@@ -328,7 +329,7 @@ async def on_message(message):
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
 		except: chans = []
-		if message.channel.id in chans and not message.author.bot:
+		if message.channel.id in chans and not message.author.bot and not apReg.match(message.content):
 			try:
 				await message.publish()
 				await message.add_reaction("📣")
