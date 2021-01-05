@@ -201,12 +201,12 @@ class Logging(commands.Cog):
 			after_content = "Message contained embed only"
 		embed = discord.Embed(title=f"Message Edited in #{before.channel.name}", description=f"[Direct Link]({before.jump_url})", color=0x1184ff, timestamp=datetime.now())
 		if len(before_content) <= 1016: 
-			embed.add_field(name="Before:", value=f"```{before_content}```", inline=False)
+			embed.add_field(name="Before:", value=f"```\n{before_content}```", inline=False)
 		else:
 			before_content = await postbin.postAsync(before_content)
 			embed.add_field(name="Before:", value=before_content, inline=False)
 		if len(after_content) <= 1016:
-			embed.add_field(name="After:", value=f"```{after_content}```", inline=False)
+			embed.add_field(name="After:", value=f"```\n{after_content}```", inline=False)
 		else:
 			after_content = await postbin.postAsync(after_content)
 			embed.add_field(name="After:", value=after_content, inline=False)
@@ -225,7 +225,7 @@ class Logging(commands.Cog):
 			return
 		if message.clean_content == "":
 			return
-		embed=discord.Embed(title=f"Message Deleted in #{message.channel.name}", description=f"```{message.clean_content.replace('`', '​`​')}```", color=0xe41212, timestamp=datetime.now())
+		embed=discord.Embed(title=f"Message Deleted in #{message.channel.name}", description=f"```\n{message.clean_content.replace('`', '​`​')}```", color=0xe41212, timestamp=datetime.now())
 		embed.set_author(name=message.author, icon_url=message.author.avatar_url)
 		embed.set_footer(text=f"Author ID: {message.author.id}")
 		if not (message.embeds and not message.content):
