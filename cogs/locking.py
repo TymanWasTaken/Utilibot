@@ -341,7 +341,7 @@ class Locking(commands.Cog):
 	@commands.has_permissions(manage_messages=True)
 	@commands.guild_only()
 	@commands.is_owner()
-	async def unsoftlock(self, ctx, channel: discord.TextChannel=None, reason=None):
+	async def unsoftlock(self, ctx, channel: discord.TextChannel=None, *, reason=None):
 		"""
 		Unsoftlocks a channel.
 		"""
