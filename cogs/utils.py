@@ -474,10 +474,10 @@ class Utils(commands.Cog):
 		if ctx.author.id != mem.id and (getattr(ctx.author.guild_permissions, "manage_nicknames") == False):
 			await ctx.send("You don't have permission to change other users' nicknames!")
 		elif ctx.author.id != mem.id and (getattr(ctx.author.guild_permissions, "manage_nicknames") == True):
-			if mem.top_role >= ctx.guild.me.top_role and mem.id != bot.user.id:
+			if mem.top_role >= ctx.guild.me.top_role and mem.id != self.bot.user.id:
 				return await ctx.send("I can't change this user's nickname as their highest role is above mine!")
-			if mem.top_role > ctx.guild.me.top_role and mem.id == bot.user.id:
-				await mem.edit(nick=newnick, reason=f"Nickname changed from {oldnick} to {mem.nick} by {ctx.author} ({ctx.author.id})!")
+			if mem.top_role > ctx.guild.me.top_role and mem.id == self.bot.user.id:
+				await ctx.guild.me.edit(nick=newnick, reason=f"Nickname changed from {oldnick} to {mem.nick} by {ctx.author} ({ctx.author.id})!")
 				await ctx.send(f"Changed my nickname from `{oldnick}` to `{mem.nick}`")
 			if mem.top_role >= ctx.author.top_role:
 				return await ctx.send("You can't change this user's nickname as their highest role is above yours!")
