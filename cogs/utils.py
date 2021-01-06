@@ -474,14 +474,17 @@ class Utils(commands.Cog):
 		if ctx.author.id != mem.id and (getattr(ctx.author.guild_permissions, "manage_nicknames") == False):
 			await ctx.send("You don't have permission to change other users' nicknames!")
 		elif ctx.author.id != mem.id and (getattr(ctx.author.guild_permissions, "manage_nicknames") == True):
-			if mem.top_role >= ctx.guild.me.top_role:
+			if mem.top_role >= ctx.guild.me.top_role and mem.id != bot.user.id:
 				return await ctx.send("I can't change this user's nickname as their highest role is above mine!")
+			if mem.top_role > ctx.guild.me.top_role and mem.id == bot.user.id:
+				await mem.edit(nick=newnick, reason=f"Nickname changed from {oldnick} to {mem.nick} by {ctx.author} ({ctx.author.id})!")
+				await ctx.send(f"Changed my nickname from `{oldnick}` to `{mem.nick}`")
 			if mem.top_role >= ctx.author.top_role:
 				return await ctx.send("You can't change this user's nickname as their highest role is above yours!")
 			if (newnick != None) and (len(newnick) > 32):
 				return await ctx.send("This nickname is too long! It must be 32 characters or less.")
 			await mem.edit(nick=newnick, reason=f"Nickname changed from {oldnick} to {mem.nick} by {ctx.author} ({ctx.author.id})!")
-			await ctx.send(f"Changed {mem.mention}'s nickname from `{oldnick}` to `{mem.nick}`")
+			await ctx.send(f"Changed {mem}'s nickname from `{oldnick}` to `{mem.nick}`")
 		elif ctx.author.id == mem.id and (getattr(ctx.author.guild_permissions, "change_nickname") == False):
 			await ctx.send("You don't have permission to change your nickname!")
 		elif ctx.author.id == mem.id and (getattr(ctx.author.guild_permissions, "change_nickname") == True):
