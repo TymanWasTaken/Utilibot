@@ -324,6 +324,8 @@ class Utils(commands.Cog):
 		for m in g.members: 
 			if m.bot: bots += 1
 			else: humans += 1
+		rules = "None set"
+		if g.rules_channel: rules = f"{emojis['rules']} {g.rules_channel.mention}"
 		embed = discord.Embed(
 			title=f"{g.name}'s Info",
 			description=f"""**Owner:** {g.owner} ({g.owner.id})
@@ -333,7 +335,7 @@ class Utils(commands.Cog):
 			**Emojis:** {len(g.emojis)}
 			**Features:** {", ".join([str(f).title().replace("_", " ") for f in g.features])}
 			**System Messages:** {g.system_channel.mention if g.system_channel else 'None set'}
-			**Rules Channel:** {g.rules_channel.mention if g.rules_channel else 'None set'}
+			**Rules Channel:** {rules}
 			**2FA Required?** {emojis['yes'] if g.mfa_level else emojis['no']}
 			**Verification Level:** {vlevels[g.verification_level.value]}
 			**Explicit Content Filter:** {filters[g.explicit_content_filter.value]}
