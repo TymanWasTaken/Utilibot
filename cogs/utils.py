@@ -241,7 +241,7 @@ class Utils(commands.Cog):
 			user_temp = ctx.guild.get_member(user_temp.id) or user_temp
 			user = user_temp
 		flags_nice = []
-		voice_info = "Not Connected to Voice"
+		voice_info = "Not connected to voice in this server"
 		for flag in user.public_flags.all():
 			if flag.name in badges:
 				flags_nice.append(f"{emojis[flag.name]} {badges[flag.name]}")
