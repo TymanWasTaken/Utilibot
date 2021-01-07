@@ -240,6 +240,7 @@ class Utils(commands.Cog):
 			user_temp = ctx.guild.get_member(user_temp.id) or user_temp
 			user = user_temp
 		flags_nice = []
+		voice_info = "Not Connected to Voice"
 		for flag in user.public_flags.all():
 			if flag.name in badges:
 				flags_nice.append(f"{emojis[flag.name]} {badges[flag.name]}")
@@ -259,6 +260,24 @@ class Utils(commands.Cog):
 				elif ms >= 3: flags_nice.append(f"{emojis['3moboost']} 3+ Month server boost")
 				elif ms >= 2: flags_nice.append(f"{emojis['2moboost']} 2+ Month server boost")
 				elif ms >= 1: flags_nice.append(f"{emojis['1moboost']} 1+ Month server boost")
+			if member.voice:
+				state = member.voice
+				mute = "No"
+				deaf = "No"
+				video = "Off"
+				stream = "No"
+				if state.mute: mute = emojis['mute']
+				elif state.self_mute: mute = emojis['self_mute']
+				if state.deaf: deaf = emojis['deaf']
+				elif state.self_deaf: deaf = emojis['self_deaf']
+				if state.self_video: video = "On"
+				voice_info = f"""
+				Channel: {emojis['voice']} {state.channel}
+				Muted: {mute}
+				Deafened: {deaf}
+				Video: {video}
+				Streaming: {stream}
+				"""
 		if len(flags_nice) <= 0:
 			flags_nice = "No badges."
 		else:
@@ -280,6 +299,7 @@ class Utils(commands.Cog):
 				)
 			embed.set_author(name=f"{str(user)}'s Info:", icon_url=user.avatar_url)
 			embed.add_field(name="Custom Status", value=f"```{user.activity}```", inline=False)
+			embed.add_field(name=f"Voice State", value=voice_info, inline=False)
 		else:
 			embed = discord.Embed(
 				title=f"{str(user)}'s Info:", 
