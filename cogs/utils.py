@@ -205,7 +205,7 @@ class Utils(commands.Cog):
 		Shows some info about a user. Defaults to self.
 		"""
 		user = user or ctx.author.id
-		user = str(user).replace("<", "").replace("@", "").replace("!", "").replace(">", "")
+		user = str(user).strip("<@!>")
 		bot = self.bot
 		emojis = bot.const_emojis
 		badges = {
