@@ -260,8 +260,8 @@ class Utils(commands.Cog):
 				elif ms >= 3: flags_nice.append(f"{emojis['3moboost']} 3+ Month server boost")
 				elif ms >= 2: flags_nice.append(f"{emojis['2moboost']} 2+ Month server boost")
 				elif ms >= 1: flags_nice.append(f"{emojis['1moboost']} 1+ Month server boost")
-			if member.voice:
-				state = member.voice
+			if user.voice:
+				state = user.voice
 				mute = "No"
 				deaf = "No"
 				video = "Off"
