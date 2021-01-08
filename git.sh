@@ -1,10 +1,8 @@
+git add .
 if [ $# -gt 0 ]
   then
-    git add -A
-	git commit -m "$*"
-	git push
+	git commit -am "$*"
 else
-	git add -A
-	git commit -m "No message specified"
-	git push
+	git commit -am "No message specified"
 fi
+git push

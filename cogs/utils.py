@@ -594,6 +594,31 @@ class Utils(commands.Cog):
 					except aiohttp.ContentTypeError:
 						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
 
+	@commands.command()
+	async def embedsource(self, ctx, messageid: int, channelid: typing.Optional[int]):
+		"""
+		Gets the raw json source of an embed.
+		"""
+		message = await ctx.channel.fetch_message(messageid)
+		embed = discord.Embed(title="Embed Source")
+		embedMsg = discord.Embed()
+		if not message:
+			channel = ctx.guild.get_channel(channelid)
+			if not channel:
+				return await ctx.send("Invalid channel ID")
+			message = await channel.fetch_message(messageid)
+			if not message:
+				return await ctx.send("Could not find the given message in this channel or the given channel")
+		if not message.embeds:
+			return await ctx.send("The message has no embeds.")
+		embedMsg = message.embeds[0]
+		embed.color = embedMsg.color
+		dump = json.dumps(embedMsg.to_dict())
+		embed.description = f"```\n{dump}```"
+		if len(embed.description) >= 2048:
+			embed.description = f"Source was too long to send, you can find it here: {await postbin.postAsync(dump)}"
+		await ctx.send(embed=embed)
+
 	@commands.command(name="msglink", aliases=['mlink'])
 	@commands.has_permissions(manage_messages=True)
 	async def msglink(self, ctx):
