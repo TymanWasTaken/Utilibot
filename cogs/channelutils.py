@@ -46,6 +46,8 @@ class ChannelUtils(commands.Cog):
 		"""
 		if "NEWS" in ctx.guild.features:
 			c = channel or ctx.channel
+			if ctx.guild.rules_channel and ctx.guild.rules_channel.id == c.id:
+				return await ctx.send(f"You can't make the rules channel ({c.mention}) an announcement channel!")
 			curtype = c.type
 			newtype = discord.ChannelType.news
 			if curtype == discord.ChannelType.news:
