@@ -621,7 +621,9 @@ class Utils(commands.Cog):
 			if "description" in em:
 				em["description"] = str(em["description"]).replace('`', '\u200b`\u200b')
 			embed_dicts.append(em)
-		dict = {"content": message.content, "embeds": embed_dicts}
+		dict = {}
+		if message.content: dict["content"] = message.content
+		dict["embeds"] = embed_dicts
 		dump = json.dumps(dict, indent=4, ensure_ascii=False)
 		embed.description = f"```\n{dump}```"
 		embed.set_footer(icon_url=message.author.avatar_url, text=message.author)
