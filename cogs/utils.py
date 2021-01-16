@@ -614,7 +614,7 @@ class Utils(commands.Cog):
 		embed.color = embeds[0].color
 		dump = json.dumps({"content": message.content, "embeds": [e.to_dict() for e in message.embeds]}, indent=4)
 		embed.description = f"```\n{dump}```"
-		embed.set_footer(icon_url=message.author.icon_url, text=message.author)
+		embed.set_footer(icon_url=message.author.avatar_url, text=message.author)
 		if len(embed.description) >= 2048:
 			embed.description = f"Source was too long to send, you can find it here: {await postbin.postAsync(dump)}"
 		await ctx.send(embed=embed)
