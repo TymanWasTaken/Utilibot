@@ -595,19 +595,18 @@ class Utils(commands.Cog):
 						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
 
 	@commands.command(name="source", aliases=['embedsource', 'messagesource', 'rawmessage'])
-	async def source(self, ctx, messageid: int, channelid: typing.Optional[int]):
+	async def source(self, ctx, messageid: int, channel: typing.Optional[discord.TextChannel]):
 		"""
 		Gets the raw json source of an embed.
 		"""
 		m = await ctx.send(embed=discord.Embed(title="Getting source...", description=f"Fetching the source of {messageid}...\nThis may take a while, please wait."))
-		message = await ctx.channel.fetch_message(messageid)
-		embed = discord.Embed(title="Embed Source")
-		if not message:
-			channel = ctx.guild.get_channel(channelid)
-			if not channel:
-				return await ctx.send("Invalid channel ID")
-			message = await channel.fetch_message(messageid)
-			if not message:
+		embed = discord.Embed(title="Message Source")
+		try:
+			message = await ctx.channel.fetch_message(messageid)
+		except:
+			try:
+				message = await channel.fetch_message(messageid)
+			except:
 				return await ctx.send("Could not find the given message in this channel or the given channel")
 		await m.edit(embed=discord.Embed(title="Getting source...", description=f"Fetching the source of {message.jump_url}...\nThis may take a while, please wait."))
 		if not message.embeds:
