@@ -614,12 +614,17 @@ class Utils(commands.Cog):
 			return await ctx.send("The message has no embeds.")
 		embeds = message.embeds
 		embed.color = embeds[0].color
-		dict = {"content": message.content, "embeds": [e.to_dict() for e in message.embeds]}
-		rawdict = {x: dict[x] for x in reversed(dict.keys())}
-		dump = json.dumps(rawdict, indent=4, ensure_ascii=False)
+		embed_dicts = []
+		for em in message.embeds:
+			em = em.to_dict()
+			em = {x: em[x] for x in reversed(em.keys())}
+			if "description" in em:
+				em["description"] = str(em["description"]).replace('`', '\u200b`\u200b')
+			embed_dicts.append(em)
+		dict = {"content": message.content, "embeds": embed_dicts}
+		dump = json.dumps(dict, indent=4, ensure_ascii=False)
 		embed.description = f"```\n{dump}```"
-		embed.set_footer(icon_url=message.author.avatar_url, text=message.author)
-		if len(embed.description) >= 2048:
+		embed.set_footer(icon_url=message.author.avatar_url, text=message.author)		if len(embed.description) >= 2048:
 			embed.description = f"Source was too long to send, you can find it here: {await postbin.postAsync(dump)}"
 		await m.edit(embed=embed)
 
