@@ -608,12 +608,12 @@ class Utils(commands.Cog):
 				try:
 					message = await channel.fetch_message(messageid)
 				except:
-					return await ctx.send("Could not find the given message in this channel or the given channel.")
+					return await m.edit(content="Could not find the given message in this channel or the given channel.", embed=None)
 			else:
-				return await ctx.send("Couldn't find the given message in this channel.")
+				return await m.edit(content="Couldn't find the given message in this channel.", embed=None)
 		await m.edit(embed=discord.Embed(title="Getting source...", description=f"Fetching the source of [{messageid}]({message.jump_url})...\nThis may take a while, please wait."))
 		if not message.embeds:
-			return await ctx.send("The message has no embeds.")
+			return await m.edit(content="The message has no embeds.", embed=None)
 		embeds = message.embeds
 		embed.color = embeds[0].color
 		embed_dicts = []
