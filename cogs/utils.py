@@ -594,8 +594,8 @@ class Utils(commands.Cog):
 					except aiohttp.ContentTypeError:
 						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
 
-	@commands.command()
-	async def embedsource(self, ctx, messageid: int, channelid: typing.Optional[int]):
+	@commands.command(name="source", aliases=['embedsource', 'messagesource', 'rawmessage'])
+	async def source(self, ctx, messageid: int, channelid: typing.Optional[int]):
 		"""
 		Gets the raw json source of an embed.
 		"""
@@ -614,7 +614,9 @@ class Utils(commands.Cog):
 			return await ctx.send("The message has no embeds.")
 		embeds = message.embeds
 		embed.color = embeds[0].color
-		dump = json.dumps({"content": message.content, "embeds": [e.to_dict() for e in message.embeds]}, indent=4)
+		dict = {"content": message.content, "embeds": [e.to_dict() for e in message.embeds]}
+		rawdict = {x: dict[x] for x in reversed(dict.keys())}
+		dump = json.dumps(rawdict, indent=4, ensure_ascii=False)
 		embed.description = f"```\n{dump}```"
 		embed.set_footer(icon_url=message.author.avatar_url, text=message.author)
 		if len(embed.description) >= 2048:
