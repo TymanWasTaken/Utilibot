@@ -601,7 +601,6 @@ class Utils(commands.Cog):
 		"""
 		message = await ctx.channel.fetch_message(messageid)
 		embed = discord.Embed(title="Embed Source")
-		embedMsg = discord.Embed()
 		if not message:
 			channel = ctx.guild.get_channel(channelid)
 			if not channel:
@@ -611,9 +610,9 @@ class Utils(commands.Cog):
 				return await ctx.send("Could not find the given message in this channel or the given channel")
 		if not message.embeds:
 			return await ctx.send("The message has no embeds.")
-		embedMsg = message.embeds[0]
-		embed.color = embedMsg.color
-		dump = json.dumps(embedMsg.to_dict())
+		embeds = message.embeds
+		embed.color = embeds[0].color
+		dump = json.dumps([e.to_dict() for e in message.embeds])
 		embed.description = f"```\n{dump}```"
 		if len(embed.description) >= 2048:
 			embed.description = f"Source was too long to send, you can find it here: {await postbin.postAsync(dump)}"
