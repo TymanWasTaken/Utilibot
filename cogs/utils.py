@@ -625,9 +625,12 @@ class Utils(commands.Cog):
 			embed_dicts.append(em)
 		dict = {}
 		if message.content: dict["content"] = message.content
-		dict["embeds"] = embed_dicts
+		if len(embed_dicts) == 1:
+			dict = embed_dicts[0]
+		else:
+			dict["embeds"] = embed_dicts
 		dump = json.dumps(dict, indent=4, ensure_ascii=False)
-		embed.description = f"```\n{dump}```\nLink:  [{messageid}]({message.jump_url})"
+		embed.description = f"```\n{dump}```Link:  [{messageid}]({message.jump_url})"
 		embed.set_footer(icon_url=message.author.avatar_url, text=message.author)
 		if len(embed.description) >= 2048:
 			embed.description = f"Source was too long to send, you can find it here: {await postbin.postAsync(dump)}"
