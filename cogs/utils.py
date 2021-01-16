@@ -604,11 +604,14 @@ class Utils(commands.Cog):
 		try:
 			message = await ctx.channel.fetch_message(messageid)
 		except:
-			try:
-				message = await channel.fetch_message(messageid)
-			except:
-				return await ctx.send("Could not find the given message in this channel or the given channel")
-		await m.edit(embed=discord.Embed(title="Getting source...", description=f"Fetching the source of {message.jump_url}...\nThis may take a while, please wait."))
+			if channel:
+				try:
+					message = await channel.fetch_message(messageid)
+				except:
+					return await ctx.send("Could not find the given message in this channel or the given channel.")
+			else:
+				return await ctx.send("Couldn't find the given message in this channel.")
+		await m.edit(embed=discord.Embed(title="Getting source...", description=f"Fetching the source of [{messageid}]({message.jump_url})...\nThis may take a while, please wait."))
 		if not message.embeds:
 			return await ctx.send("The message has no embeds.")
 		embeds = message.embeds
@@ -624,7 +627,7 @@ class Utils(commands.Cog):
 		if message.content: dict["content"] = message.content
 		dict["embeds"] = embed_dicts
 		dump = json.dumps(dict, indent=4, ensure_ascii=False)
-		embed.description = f"```\n{dump}```"
+		embed.description = f"```\n{dump}```\nLink:  [{messageid}]({message.jump_url})"
 		embed.set_footer(icon_url=message.author.avatar_url, text=message.author)
 		if len(embed.description) >= 2048:
 			embed.description = f"Source was too long to send, you can find it here: {await postbin.postAsync(dump)}"
