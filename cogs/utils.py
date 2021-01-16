@@ -599,7 +599,7 @@ class Utils(commands.Cog):
 		"""
 		Gets the raw json source of an embed.
 		"""
-		m = await ctx.send(embed=discord.Embed(title="Getting source...", description=f"Fetching the source of {message.jump_url}...\nThis may take a while, please wait."))
+		m = await ctx.send(embed=discord.Embed(title="Getting source...", description=f"Fetching the source of {messageid}...\nThis may take a while, please wait."))
 		message = await ctx.channel.fetch_message(messageid)
 		embed = discord.Embed(title="Embed Source")
 		if not message:
@@ -609,6 +609,7 @@ class Utils(commands.Cog):
 			message = await channel.fetch_message(messageid)
 			if not message:
 				return await ctx.send("Could not find the given message in this channel or the given channel")
+		await ctx.send(embed=discord.Embed(title="Getting source...", description=f"Fetching the source of {message.jump_url}...\nThis may take a while, please wait."))
 		if not message.embeds:
 			return await ctx.send("The message has no embeds.")
 		embeds = message.embeds
