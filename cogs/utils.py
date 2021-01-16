@@ -599,6 +599,7 @@ class Utils(commands.Cog):
 		"""
 		Gets the raw json source of an embed.
 		"""
+		m = await ctx.send(embed=discord.Embed(title="Getting source...", description=f"Fetching the source of {message.jump_url}...\nThis may take a while, please wait."))
 		message = await ctx.channel.fetch_message(messageid)
 		embed = discord.Embed(title="Embed Source")
 		if not message:
@@ -617,7 +618,7 @@ class Utils(commands.Cog):
 		embed.set_footer(icon_url=message.author.avatar_url, text=message.author)
 		if len(embed.description) >= 2048:
 			embed.description = f"Source was too long to send, you can find it here: {await postbin.postAsync(dump)}"
-		await ctx.send(embed=embed)
+		await m.edit(embed=embed)
 
 	@commands.command(name="msglink", aliases=['mlink'])
 	@commands.has_permissions(manage_messages=True)
