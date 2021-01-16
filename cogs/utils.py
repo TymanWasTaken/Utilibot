@@ -634,7 +634,7 @@ class Utils(commands.Cog):
 		embed.set_footer(icon_url=message.author.avatar_url, text=message.author)
 		if len(embed.description) >= 2048:
 			embed.description = f"Source was too long to send, you can find it here: {await postbin.postAsync(dump)}"
-		await m.edit(content="Done!", embed=None, delete_after=30)
+		await m.edit(content="Done!", embed=None, delete_after=5)
 		await ctx.send(embed=embed)
 
 	@commands.command(name="msglink", aliases=['mlink'])
