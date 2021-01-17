@@ -112,6 +112,21 @@ bot.dbexec = dbexec
 bot.dbinsert = dbinsert
 bot.utils = dpytils.utils()
 
+async def invite():
+	invitelink = f"https://discord.gg/"
+	for invite in await bot.get_guild(755887706386726932).invites():
+		if invite.temporary == True:
+			pass
+		else:
+			invitelink += invite.code
+			break
+	else:
+		newinvite = await bot.get_channel(755910440533491773).create_invite(reason="Creating invite to the server for an error message.")
+		invitelink += newinvite.code
+	return invitelink
+
+bot.invite = invite
+
 class BlacklistedError(commands.CommandError):
 	pass
 
@@ -186,19 +201,9 @@ async def on_command_error(ctx, error):
 		elif longTextRegex != None:
 			await ctx.reply(f"Command response was too long to send. `{longTextRegex.group(1)}` must be {longTextRegex.group(2)} characters or less.")
 		else:
-			invitelink = f"https://discord.gg/"
-			for invite in await bot.get_guild(755887706386726932).invites():
-				if invite.temporary == True:
-					pass
-				else:
-					invitelink = invitelink + invite.code
-					break
-			else:
-				newinvite = await bot.get_channel(755910440533491773).create_invite(reason="Creating invite to the server for an error message.")
-				invitelink = invitelink + newinvite.code
 			tb = "".join(traceback.format_exception(type(error), error, error.__traceback__))
 			tb = f"Command ran: {ctx.message.content}\nUser ID:{ctx.author.id}\nGuild ID:{ctx.guild.id if ctx.guild else 'None (DM)'}\n\n{tb}"
-			embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers, they just got a log of the error.\nYou can join the support server [here]({invitelink})\nError message: \n`{str(error)}`", color=0xff1100)
+			embed = discord.Embed(title="Oh no!", description=f"An error occured.\nIf you are a normal user, you may try and contact the developers, they just got a log of the error.\nYou can join the support server [here]({await bot.invite()})\nError message: \n`{str(error)}`", color=0xff1100)
 			await ctx.send(embed=embed)
 			m = await errorchannel.send(allowed_mentions=discord.AllowedMentions(everyone=False, roles=True, users=False),content=f"<@&766132653640122419>\n{ctx.author} tried to run the command `{ctx.command.qualified_name}` in {ctx.guild} ({ctx.guild.id}), but this error happened:\nHastebin: {str(bot.get_emoji(778489145524748298))}", embed=embed)
 			try:
@@ -398,6 +403,12 @@ async def on_guild_join(guild):
 					await a.user.send(f"You added me to your server, **{guild}**, but it appears I do not have the following needed permissions:\n{', '.join(denied)}\n\nIf this is intentional, just ignore this message.")
 		else:
 			await guild.owner.send(f"You or somebody else has added me to your server, **{guild}**, but it appears I do not have the following needed permissions:\n{', '.join(denied)}\n\nIf this is intentional, just ignore this message.")
+
+@bot.event
+async def on_guild_leave(guild):
+	print("Left server")
+	await bot.get_channel(755979601788010527).send(embed=discord.Embed(title="Left Server!", description=f"Name: {guild}\nID: {guild.id}\nOwner: {guild.owner}\nOwner ID: {guild.owner.id}\nCurrent Member Count: {guild.member_count}", color=bot.colors['darkred']))
+#	await guild.owner.send(embed=discord.Embed(title="Goodbye", description=f"It appears that you or somebody else has kicked me from your server, **{guild}**! If you would like to invite me back, you can do so [here]({discord.utils.oauth_url(bot.user.id, guild=guild, permissions=discord.Permissions().all())}.\nIf you'd like to let my developers know why you decided to kick me, and if there's anything we can improve on, join the [Support Server]({await bot.invite()}) and give us your feedback!")
 
 """
 @bot.event
