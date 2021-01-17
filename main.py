@@ -384,18 +384,21 @@ async def on_message(message):
 @bot.event
 async def on_guild_join(guild):
 	print("Joined server")
-	await bot.get_channel(755979601788010527).send(embed=discord.Embed(title="Joined Server!", description=f"Name: {guild}\nID: {guild.id}\nOwner: {guild.owner}\nOwner ID: {guild.owner.id}\nCurrent Member Count: {guild.member_count}"))
+	await bot.get_channel(755979601788010527).send(embed=discord.Embed(title="Joined Server!", description=f"Name: {guild}\nID: {guild.id}\nOwner: {guild.owner}\nOwner ID: {guild.owner.id}\nCurrent Member Count: {guild.member_count}", color=bot.colors['darkgreen']))
 	perms = [x for x,y in dict(guild.me.guild_permissions).items() if not y]
-	await bot.get_channel(755979601788010527).send(perms if perms else "none denied")
 	denied = []
-	if "read_messages" in perms:
-		denied.append("Read Messages")
-	if "send_messages" in perms:
-		denied.append("Send Messages")
-	if "embed_links" in perms:
-		denied.append("Embed Links")
+	for p in perms:
+		if p in ["read_messages", "send_messages", "embed_links"]:
+			denied.append(p.replace("_", " ").title())
 	if denied != []:
-		await guild.owner.send(f"You or someone else has added me to your server, but it appears I do not have the following needed permissions:\n{', '.join(denied)}\n\nIf this is intentional, just ignore this message.")
+		message = f"Somebody has added me to your server, {guild}, but it appears I do not have the following needed permissions:\n{', '.join(denied)}\n\nIf this is intentional, just ignore this message."
+		if "view_audit_log" not in perms:
+			async for a in guild.audit_logs():
+				if a.action == discord.AuditLogAction.bot_add and a.target.id == bot.user.id:
+					await a.user.send(f"You added me to your server, **{guild}**, but it appears I do not have the following needed permissions:\n{', '.join(denied)}\n\nIf this is intentional, just ignore this message.")
+		else:
+			await guild.owner.send(f"You or somebody else has added me to your server, **{guild}**, but it appears I do not have the following needed permissions:\n{', '.join(denied)}\n\nIf this is intentional, just ignore this message.")
+
 """
 @bot.event
 async def on_voice_state_update(member, before, after):
