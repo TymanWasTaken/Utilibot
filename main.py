@@ -384,7 +384,9 @@ async def on_message(message):
 @bot.event
 async def on_guild_join(guild):
 	print("Joined server")
+	await bot.get_channel(755979601788010527).send(embed=discord.Embed(title="Joined Server!", description=f"Name: {guild}\nID: {guild.id}\nOwner: {guild.owner}\nOwner ID: {guild.owner.id}\nCurrent Member Count: {guild.member_count}"))
 	perms = [x for x,y in dict(guild.me.guild_permissions).items() if not y]
+	await bot.get_channel(755979601788010527).send(perms if perms else "none denied")
 	denied = []
 	if "read_messages" in perms:
 		denied.append("Read Messages")
