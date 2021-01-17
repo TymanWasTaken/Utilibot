@@ -389,7 +389,9 @@ async def on_message(message):
 @bot.event
 async def on_guild_join(guild):
 	print("Joined server")
-	await bot.get_channel(755979601788010527).send(embed=discord.Embed(title="Joined Server!", description=f"Name: {guild}\nID: {guild.id}\nOwner: {guild.owner}\nOwner ID: {guild.owner.id}\nCurrent Member Count: {guild.member_count}", color=bot.colors['darkgreen']))
+	embed=discord.Embed(title="Joined Server!", description=f"Name: {guild}\nID: {guild.id}\nOwner: {guild.owner}\nOwner ID: {guild.owner.id}\nCurrent Member Count: {guild.member_count}", color=bot.colors['darkgreen'])
+	embed.set_footer(text=f"Bot Server Count: {len(bot.guilds)}")
+	await bot.get_channel(755979601788010527).send(embed=embed)
 	perms = [x for x,y in dict(guild.me.guild_permissions).items() if not y]
 	denied = []
 	for p in perms:
@@ -405,9 +407,11 @@ async def on_guild_join(guild):
 			await guild.owner.send(f"You or somebody else has added me to your server, **{guild}**, but it appears I do not have the following needed permissions:\n{', '.join(denied)}\n\nIf this is intentional, just ignore this message.")
 
 @bot.event
-async def on_guild_leave(guild):
+async def on_guild_remove(guild):
 	print("Left server")
-	await bot.get_channel(755979601788010527).send(embed=discord.Embed(title="Left Server!", description=f"Name: {guild}\nID: {guild.id}\nOwner: {guild.owner}\nOwner ID: {guild.owner.id}\nCurrent Member Count: {guild.member_count}", color=bot.colors['darkred']))
+	embed=discord.Embed(title="Left Server!", description=f"Name: {guild}\nID: {guild.id}\nOwner: {guild.owner}\nOwner ID: {guild.owner.id}\nCurrent Member Count: {guild.member_count}", color=bot.colors['darkred'])
+	embed.set_footer(text=f"Bot Server Count: {len(bot.guilds)}")
+	await bot.get_channel(755979601788010527).send(embed=embed)
 #	await guild.owner.send(embed=discord.Embed(title="Goodbye", description=f"It appears that you or somebody else has kicked me from your server, **{guild}**! If you would like to invite me back, you can do so [here]({discord.utils.oauth_url(bot.user.id, guild=guild, permissions=discord.Permissions().all())}.\nIf you'd like to let my developers know why you decided to kick me, and if there's anything we can improve on, join the [Support Server]({await bot.invite()}) and give us your feedback!")
 
 """
