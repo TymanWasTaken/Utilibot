@@ -519,7 +519,8 @@ class Utils(commands.Cog):
 	@commands.command(name="dehoist")
 	@commands.has_permissions(manage_nicknames=True)
 	@commands.bot_has_permissions(manage_nicknames=True)
-	async def dehoist(self, ctx, *hoisters=["!", "?", "."]):
+	async def dehoist(self, ctx, *hoisters: str):
+		hoisters = hoisters or ["!", "?", "."]
 		msg = await ctx.send("Dehoisting...")
 		total = 0
 		success = 0
