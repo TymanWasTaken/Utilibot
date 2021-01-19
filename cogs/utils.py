@@ -612,7 +612,9 @@ class Utils(commands.Cog):
 					return await m.edit(content="Could not find the given message in this channel or the given channel.", embed=None)
 			else:
 				return await m.edit(content="Couldn't find the given message in this channel.", embed=None)
-		await m.edit(embed=discord.Embed(title="Getting source...", description=f"Fetching the source of [{messageid}]({message.jump_url})...\nThis may take a while, please wait."))
+		embed1=discord.Embed(title="Getting source...", description=f"Fetching the source of [{messageid}]({message.jump_url})...\nThis may take a while, please wait.")
+		embed1.set_footer(icon_url=message.author.avatar_url, text=message.author)
+		await m.edit(embed=embed1)
 		if not message.embeds:
 			return await m.edit(content="The message has no embeds.", embed=None)
 		embeds = message.embeds
