@@ -519,23 +519,24 @@ class Utils(commands.Cog):
 	@commands.command(name="dehoist")
 	@commands.has_permissions(manage_nicknames=True)
 	@commands.bot_has_permissions(manage_nicknames=True)
-	async def dehoist(self, ctx, hoister: str="!"):
+	async def dehoist(self, ctx, *hoisters=["!", "?", "."]):
 		msg = await ctx.send("Dehoisting...")
 		total = 0
 		success = 0
 		failed = 0
 		for m in ctx.guild.members:
-			if m.display_name.startswith(hoister):
-				total += 1
-				if m.top_role >= ctx.author.top_role:
-					failed += 1
-				elif m.top_role >= ctx.guild.me.top_role:
-					failed += 1
-				else:
-					success += 1
-					newnick = m.nick or m.name
-					newnick = newnick.replace(hoister, "") or "Dehoisted"
-					await m.edit(nick=newnick, reason=f"Dehoisted by {ctx.author} ({ctx.author.id})")
+			for hoister in hoisters:
+				if m.display_name.startswith(hoister):
+					total += 1
+					if m.top_role >= ctx.author.top_role:
+						failed += 1
+					elif m.top_role >= ctx.guild.me.top_role:
+						failed += 1
+					else:
+						success += 1
+						newnick = m.nick or m.name
+						newnick = newnick.replace(hoister, "") or "Dehoisted"
+						await m.edit(nick=newnick, reason=f"Dehoisted by {ctx.author} ({ctx.author.id})")
 		await msg.edit(content=f"Successfully dehoisted {success} members! (Attempted: {total}, Failed: {failed})")
 
 	@commands.command(aliases=["tr"])
