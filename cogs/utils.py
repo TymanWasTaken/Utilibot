@@ -202,7 +202,7 @@ class Utils(commands.Cog):
 		userperms = []
 		for p in sorted(perms):
 			if perms[p]:
-				userperms.append(p.replace('_', ' ').title())
+				userperms.append(p.replace('_', ' ').title().replace('Tts', 'TTS'))
 		await ctx.send(f"{user}'s permissions in {channel.mention}:\nValue: {permsvalue}\nNames: {', '.join(userperms)}")
 
 	@commands.command(name="guildperms", aliases=['serverperms'])
@@ -216,8 +216,8 @@ class Utils(commands.Cog):
 		userperms = []
 		for p in sorted(perms):
 			if perms[p]:
-				userperms.append(p.replace('_', ' ').title())
-		await ctx.send(f"{user}'s permissions in {ctx.guild}:\nValue: {permsvalue}\nNames: {', '.join(userperms)}")
+				userperms.append(p.replace('_', ' ').title().replace('Tts', 'TTS'))
+		await ctx.send(f"{user}'s permissions in {ctx.guild}:\nValue: `{permsvalue.value}`\nNames: {', '.join(userperms)}")
 
 	@commands.command(name="userinfo", aliases=['ui', 'user', 'info'])
 	async def userinfo(self, ctx, user=None):

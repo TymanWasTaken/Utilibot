@@ -130,7 +130,7 @@ async def permsfromvalue(value):
 	allperms = []
 	niceperms = ""
 	for perm in sorted(perms):
-		niceperm = perm.replace('_', ' ').title()
+		niceperm = perm.replace('_', ' ').title().replace('Tts', 'TTS')
 		allperms.append(f"{bot.const_emojis['yes'] if perms[perm] else bot.const_emojis['no']} `{niceperm}`")
 	niceperms = '\n'.join(allperms)
 	return niceperms
