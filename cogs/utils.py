@@ -203,7 +203,7 @@ class Utils(commands.Cog):
 		for p in sorted(perms):
 			if perms[p]:
 				userperms.append(p.replace('_', ' ').title().replace('Tts', 'TTS'))
-		await ctx.send(f"{user}'s permissions in {channel.mention}:\nValue: {permsvalue}\nNames: {', '.join(userperms)}")
+		await ctx.send(f"{user}'s permissions in {channel.mention}:\nValue: `{permsvalue.value}`\nNames: {', '.join(userperms)}")
 
 	@commands.command(name="guildperms", aliases=['serverperms'])
 	async def guildperms(self, ctx, user: typing.Optional[discord.Member]):
