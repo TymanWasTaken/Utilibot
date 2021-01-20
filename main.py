@@ -127,15 +127,22 @@ async def invite():
 
 async def permsfromvalue(value):
 	perms = discord.Permissions(permissions=value)
-	perms_true = sorted([x for x,y in dict(perms).items() if y])
-	perms_false = sorted([x for x,y in dict(perms).items() if not y])
-	nice_perms = ""
-	perms_true = [f"{bot.const_emojis['yes']} `" + s for s in perms_true]
-	perms_false = [f"{bot.const_emojis['no']} `" + s for s in perms_false]
-	perms_combined = sorted(perms_true + perms_false, key=lambda x: x.strip('\u2705\u274c'))
-	for perm in perms_combined:
-		nice_perms += f"{perm.replace('_', ' ').title()}`\n"
-	return nice_perms
+	allperms = []
+	niceperms = ""
+	for perm in sorted(dict(perms)):
+		niceperm = perm.replace('_', ' ').title()
+		allperms.append(f'{bot.const_emojis['yes'] if perms[perm] else bot.const_emojis['no']} `{niceperm}`')
+	niceperms = '\n'.join(allperms)
+	return niceperms
+#	perms_true = sorted([x for x,y in dict(perms).items() if y])
+#	perms_false = sorted([x for x,y in dict(perms).items() if not y])
+#	nice_perms = ""
+#	perms_true = [f"{bot.const_emojis['yes']} `" + s for s in perms_true]
+#	perms_false = [f"{bot.const_emojis['no']} `" + s for s in perms_false]
+#	perms_combined = sorted(perms_true + perms_false, key=lambda x: x.strip('\u2705\u274c'))
+#	for perm in perms_combined:
+#		nice_perms += f"{perm.replace('_', ' ').title()}`\n"
+#	return nice_perms
 
 bot.invite = invite
 bot.permsfromvalue = permsfromvalue

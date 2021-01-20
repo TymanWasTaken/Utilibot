@@ -49,6 +49,9 @@ class Utils(commands.Cog):
 		"""
 		Deletes all invites in the server, pass invite arguments after the command to ignore said invites.
 		"""
+		# Add:
+		# User who created invite
+		# Invite use count
 		if len(await ctx.guild.invites()) < 1:
 			return await ctx.send(f"**{ctx.guild}** has no invites!")
 		else:
