@@ -185,7 +185,15 @@ class Utils(commands.Cog):
 		"""
 		if ctx.channel.permissions_for(ctx.me).embed_links == False:
 			return await ctx.send("It appears I do not have permission to `Link embeds` in this channel. Please give me this permission or try in a channel where I do have it, as it is necessary to run this command.")
-		await ctx.send(embed=discord.Embed(title=f"Permissions for value {value}:", description=self.bot.permsfromvalue(value), color=discord.Color.random()))
+		await ctx.send(embed=discord.Embed(title=f"Permissions for value {value}:", description=await self.bot.permsfromvalue(value), color=discord.Color.random()))
+
+	@commands.command(name="viewperms")
+	async def viewperms(self, ctx, user: typing.Optional[discord.Member]):
+		"""
+		Shows the given user's permissions in the current channel.
+		"""
+		user = user or ctx.author
+		await ctx.send("This command does nothing yet but Clari decided to put it in for reasons.")
 
 	@commands.command(name="userinfo", aliases=['ui', 'user', 'info'])
 	async def userinfo(self, ctx, user=None):
