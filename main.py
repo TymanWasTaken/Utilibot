@@ -126,10 +126,10 @@ async def invite():
 	return invitelink
 
 async def permsfromvalue(value):
-	perms = discord.Permissions(permissions=value)
+	perms = dict(discord.Permissions(value))
 	allperms = []
 	niceperms = ""
-	for perm in sorted(dict(perms)):
+	for perm in sorted(perms):
 		niceperm = perm.replace('_', ' ').title()
 		allperms.append(f"{bot.const_emojis['yes'] if perms[perm] else bot.const_emojis['no']} `{niceperm}`")
 	niceperms = '\n'.join(allperms)
