@@ -9,15 +9,15 @@ class Logging(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.logs = {
-		"Messages":["edit", "delete", "purge"],
-		"Users":["nickname", "userroles", "status", "activity", "username", "discriminator", "avatar", "ban", "unban"],
-		"Join/Leave":["join", "leave"],
-		"Voice":["voicejoin", "voiceleave", "voicemove"],
-		"Server":["serverupdates", "emojis"],
-		"Roles":["rolecreate", "roleupdate", "roledelete"],
-		"Channels":["channelcreate", "channelupdate", "channeldelete"],
+		"messages":["edit", "delete", "purge"],
+		"users":["nickname", "userroles", "status", "activity", "username", "discriminator", "avatar", "ban", "unban"],
+		"join/leave":["join", "leave"],
+		"voice":["voicejoin", "voiceleave", "voicemove"],
+		"server":["serverupdates", "emojis"],
+		"roles":["rolecreate", "roleupdate", "roledelete"],
+		"channels":["channelcreate", "channelupdate", "channeldelete"],
 #		"Lock/Unlock": ['softlock', 'unsoftlock', 'hardlock', 'unhardlock', 'serversoftlock', 'unserversoftlock', 'serverhardlock', 'unserverhardlock'],
-		"Reactions":["reactionadd", "reactionremove", "reactionclear"]
+		"reactions":["reactionadd", "reactionremove", "reactionclear"]
 		}
 		self.log_flat = {x for v in self.logs.values() for x in v}
 		self.yes = f"<:yes:778489135870377994>"
@@ -87,7 +87,7 @@ class Logging(commands.Cog):
 			logs = ""
 			for log in sorted(self.logs[cat]):
 				logs += f"{self.yes if await self.islogenabled(ctx.guild, log) else self.no} `{log}`\n"
-			embed.add_field(name=cat, value=logs, inline=False)
+			embed.add_field(name=cat.title(), value=logs, inline=False)
 		embed.add_field(name="Log Channel", value=f"{f'<#{logchannel}>' if logchannel else 'None Set'}")
 		await ctx.send(embed=embed)
 
@@ -108,18 +108,17 @@ class Logging(commands.Cog):
 		"""
 		Enable one of the logs.
 		"""
-		logcat = log
 		log = log.lower()
 		db = await self.getlogs(ctx.guild)
-		if log not in self.log_flat and logcat in self.logs:
-			for logs in self.logs[logcat]:
-				db[logs] = True
-			await self.setlogs(ctx.guild, db)
-			return await ctx.send(f"Enabled all logs in the category `{logcat}`")
-		elif log not in self.log_flat:
-			return await ctx.send("Not a valid log.")
 		if db == None:
 			db = {}	
+		if log not in self.log_flat and log in self.logs:
+			for logs in self.logs[log]:
+				db[logs] = True
+			await self.setlogs(ctx.guild, db)
+			return await ctx.send(f"Enabled all logs in the category `{log.title()}`")
+		elif log not in self.log_flat:
+			return await ctx.send("Not a valid log.")
 		entry = False
 		try:
 			db[log] 
@@ -140,11 +139,17 @@ class Logging(commands.Cog):
 		Disable one of the logs.
 		"""
 		log = log.lower()
-		if log not in self.log_flat:
-			return await ctx.send("Not a valid log.")
 		db = await self.getlogs(ctx.guild)
 		if db == None:
 			db = {}
+		if log not in self.log_flat and log in self.logs:
+			for logs in self.logs[log]:
+				db[logs] = False
+			await self.setlogs(ctx.guild, db)
+			return await ctx.send(f"Enabled all logs in the category `{log.title()}`")
+		elif log not in self.log_flat:	
+			return await ctx.send("Not a valid log.")
+		db = await self.getlogs(ctx.guild)
 		if db[log] == False:
 			await ctx.send(f"`{log}` is already disabled!")
 		else: 
