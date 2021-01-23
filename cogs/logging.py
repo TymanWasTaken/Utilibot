@@ -146,7 +146,7 @@ class Logging(commands.Cog):
 			for logs in self.logs[log]:
 				db[logs] = False
 			await self.setlogs(ctx.guild, db)
-			return await ctx.send(f"Enabled all logs in the category `{log.title()}`")
+			return await ctx.send(f"Disabled all logs in the category `{log.title()}`")
 		elif log not in self.log_flat:	
 			return await ctx.send("Not a valid log.")
 		db = await self.getlogs(ctx.guild)
