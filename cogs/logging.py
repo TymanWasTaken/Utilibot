@@ -1,4 +1,4 @@
-import discord, dpytils, postbin, aiofiles, json, typing, unicodedata, aiosqlite
+import discord, dpytils, postbin, aiofiles, json, typing, unicodedata, aiosqlite, humanize
 from discord.ext import commands
 from datetime import datetime
 
@@ -370,7 +370,7 @@ class Logging(commands.Cog):
 		Ping: {member.mention}
 		Username: [{member}](https://discord.com/users/{member.id})
 		User ID: {member.id}""".replace("	", ""), inline=False)
-		embed.add_field(name="Account Info", value=f"Account Created on: {member.created_at}\nAccount Age: {datetime.now() - member.created_at}", inline=False)
+		embed.add_field(name="Account Info", value=f"Account Created on: {member.created_at}\nAccount Age: {humanize.precisedelta(datetime.now() - member.created_at, format="%.f")}", inline=False)
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
@@ -387,7 +387,7 @@ class Logging(commands.Cog):
 		Ping: {member.mention}
 		Username: [{member}](https://discord.com/users/{member.id})
 		User ID: {member.id}""".replace("	", ""), inline=False)
-		embed.add_field(name="Account Info", value=f"Account Created on: {member.created_at}\nAccount Age: {datetime.now() - member.created_at}", inline=False)
+		embed.add_field(name="Account Info", value=f"Account Created on: {member.created_at}\nAccount Age: {humanize.precisedelta(datetime.now() - member.created_at, format="%.f")}", inline=False)
 		await logchannel.send(embed=embed)
 
 
