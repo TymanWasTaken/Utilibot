@@ -280,7 +280,7 @@ class Utils(commands.Cog):
 				elif ms >= 6: flags_nice.append(f"{emojis['6moboost']} 6+ Month server boost")
 				elif ms >= 3: flags_nice.append(f"{emojis['3moboost']} 3+ Month server boost")
 				elif ms >= 2: flags_nice.append(f"{emojis['2moboost']} 2+ Month server boost")
-				elif ms >= 1: flags_nice.append(f"{emojis['1moboost']} 1+ Month server boost")
+				elif ms >= 0: flags_nice.append(f"{emojis['1moboost']} 1+ Month server boost")
 			if user.voice:
 				state = user.voice
 				mute = "No"
