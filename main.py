@@ -201,9 +201,7 @@ async def on_command_error(ctx, error):
 			await ctx.reply('Nice try, but you are not one of the developers.')
 			await errorchannel.send(f"{ctx.author} tried to run `{ctx.command.qualified_name}`, but they are not owner.")
 		elif isinstance(error, commands.CommandNotFound):
-			if ctx.guild and ctx.guild.id in nocommandblacklist:
-				return
-			await ctx.reply(f'`{ctx.message.content}` is not a command!', mention_author=True)
+			pass
 		elif isinstance(error, commands.CheckFailure):
 			await ctx.reply(error)
 		elif isinstance(error, commands.errors.CommandOnCooldown):
