@@ -257,28 +257,29 @@ apReg = re.compile(r"\D?\D?(\!|\?|\#|\$|\%|\&|\*|\-|\+|\=|\:|\;|\,|\.|\<|\>)")
 
 @bot.event
 async def on_message(message):
+	channel = message.channel
 	if not message.guild:
 		uid = message.author.id
 		bid = bot.user.id
 		log = bot.get_channel(786265454662516746)
 		e = discord.Embed(title=(f"DM {'Sent' if uid == bid else 'Received'}"), description=f"{message.content}")
-		e.add_field(name="Details", value=f"__From:__ {message.author} (`{uid}`)\n__To:__ {message.channel.recipient if uid == bid else bot.user} (`{message.channel.recipient.id if uid == bid else bid}`)", inline=False)
+		e.add_field(name="Details", value=f"__From:__ {message.author} (`{uid}`)\n__To:__ {channel.recipient if uid == bid else bot.user} (`{channel.recipient.id if uid == bid else bid}`)", inline=False)
 		e.color = bot.colors['red'] if uid == bot.user.id else bot.colors['darkgreen']
 		await log.send(embed=e)
-	if message.channel.id == 755982484444938290 and not message.content.startswith('=>'):
+	if channel.id == 755982484444938290 and not message.content.startswith('=>'):
 		await message.add_reaction(bot.const_emojis['yes'])
 		await message.add_reaction(bot.const_emojis['no'])
 	if message.author.id == 764868481371602975 and message.content == "online please leave me alone":
-		await message.channel.send("no")
+		await channel.send("no")
 	if shutReg.search(message.content) and not message.author.bot:
-		await message.channel.send(f"{bot.const_emojis['shut'].url}", delete_after=60)
+		await channel.send(f"{bot.const_emojis['shut'].url}", delete_after=60)
 	if fReg.search(message.content):
 		if not message.author.bot:
-			db = await bot.dbquery("pressf", "enabled", f"channelid={message.channel.id}")
+			db = await bot.dbquery("pressf", "enabled", f"channelid={channel.id}")
 			if db:
 				async with aiohttp.ClientSession() as s:
 					async with s.get("https://i.imgur.com/q3h9bED.png") as r:
-						await message.channel.send(f"{message.author.mention} has paid their respects.", file=discord.File(BytesIO(await r.content.read()), filename=f"{message.author.name}-press_f_to_pay_respects.png"))
+						await channel.send(f"{message.author.mention} has paid their respects.", file=discord.File(BytesIO(await r.content.read()), filename=f"{message.author.name}-press_f_to_pay_respects.png"))
 	if message.mentions:
 		for user in message.mentions:
 			if user and not message.author.bot:
@@ -304,7 +305,7 @@ async def on_message(message):
 						scope = "Local"
 					embed.set_author(name=f"{user.nick if user.nick else user.name}#{user.discriminator} is currently AFK{inguild}.", icon_url=user.avatar_url)
 					embed.set_footer(text=f"Scope: {scope} AFK Message")
-					await message.channel.send(embed=embed, delete_after=10)
+					await channel.send(embed=embed, delete_after=10)
 	msgsearch = msgReg.search(message.content)
 	if msgsearch:
 		if message.author.bot: return
@@ -320,7 +321,7 @@ async def on_message(message):
 		except: return
 		try: msg = await chan.fetch_message(messageid)
 		except: return
-		embed=discord.Embed(description=f"__**Content:**__\n{msg.content if msg.content else '[Message contained only embed or attachment]'}", color=bot.utils.randcolor(), timestamp=msg.created_at)
+		embed=discord.Embed(title="Content", description=f"{msg.content if msg.content else '[Message contained only embed or attachment]'}", color=bot.utils.randcolor(), timestamp=msg.created_at)
 		embed.set_author(name=f"Message sent by {msg.author}", icon_url=msg.author.avatar_url)
 		embed.add_field(name="**Message Details**", value=f"""
 			{f'**Server:** {g.name} (`{g.id}`)' if g.id != message.guild.id else ''}
@@ -328,7 +329,7 @@ async def on_message(message):
 			**Message:** [{msg.id}]({msg.jump_url})
 			**Author ID:** {msg.author.id}""".replace("	", ""))
 		embed.set_footer(text=f"Command triggered by {message.author}\nLinked message sent")
-		if msgsearch == message.content:
+		if len(msgsearch) == len(message.content):
 			await message.delete()
 		if msg.attachments:
 			attaches = []
@@ -338,21 +339,21 @@ async def on_message(message):
 			embed.add_field(name="Attachments", value=f"{len(msg.attachments)} attachments\n{n.join(attaches)}")
 		if msg.embeds:
 			embed.add_field(name="Embeds", value=len(msg.embeds))
-			await message.channel.send(embed=embed)
+			await channel.send(embed=embed)
 			for e in msg.embeds:
-				await message.channel.send(embed=e)
+				await channel.send(embed=e)
 		else:
-			await message.channel.send(embed=embed)
-	sldb = await bot.dbquery("softlocked_channels", "data", "channelid=" +str(message.channel.id))
+			await channel.send(embed=embed)
+	sldb = await bot.dbquery("softlocked_channels", "data", "channelid=" +str(channel.id))
 	if sldb:
 		data = json.loads((sldb[0][0]).replace("'", '"'))
 		if not message.author.id in data["whitelisted"] and not getattr(message.author.guild_permissions, "administrator") and not message.author.bot:
 			await message.delete()
-	if message.channel.type == discord.ChannelType.news:
+	if channel.type == discord.ChannelType.news:
 		autopubdb = await bot.dbquery("autopublish_channels", "data", "guildid=" + str(message.guild.id))
 		try: chans = json.loads(autopubdb[0][0])
 		except: chans = []
-		if message.channel.id in chans and not message.author.bot and not apReg.match(message.content):
+		if channel.id in chans and not message.author.bot and not apReg.match(message.content):
 			try:
 				await message.publish()
 				await message.add_reaction("📣")
@@ -363,12 +364,12 @@ async def on_message(message):
 	if message.webhook_id != None and message.mention_everyone:
 		webhook_guilds = [693225390130331661, 755887706386726932, 695310188764332072]
 		if message.guild.id in webhook_guilds:
-			for w in await message.channel.webhooks():
+			for w in await channel.webhooks():
 				try: 
 					await w.delete()
-					await message.channel.send("Detected webhook everyone ping, removed webhook.")
+					await channel.send("Detected webhook everyone ping, removed webhook.")
 				except: 
-					await bot.get_channel(776466538156130314).send(f"couldn't remove webhook in {message.channel.mention}.")
+					await bot.get_channel(776466538156130314).send(f"couldn't remove webhook in {channel.mention}.")
 	if message.content == f"<@{bot.user.id}>" or message.content == f"<@!{bot.user.id}>":
 		ps = await getPrefix(bot, message)
 		ps_formatted = [f"`{x}`" for x in ps]
@@ -376,17 +377,17 @@ async def on_message(message):
 		ps_formatted.remove(f"`<@!{bot.user.id}> `")
 		ps_formatted = str(ps_formatted).replace("[", "").replace("]", "").replace("'", "")
 		embed = discord.Embed(title=f"Prefixes for the server \"{message.guild.name}\":", description=ps_formatted).set_footer(text="Note: if you ping the bot with a space after the ping but before the command, it will always work as a prefix. For example: \"@Utilibot ping\"")
-		await message.channel.send(embed=embed)
-	if message.content == "utilibot prefix?" and message.guild:
+		await channel.send(embed=embed)
+	if message.content.lower() == "utilibot prefix?" and message.guild:
 		ps = await getPrefix(bot, message)
 		ps_formatted = [f"`{x}`" for x in ps]
 		ps_formatted.remove(f"`<@{bot.user.id}> `")
 		ps_formatted.remove(f"`<@!{bot.user.id}> `")
 		ps_formatted = str(ps_formatted).replace("[", "").replace("]", "").replace("'", "")
 		embed = discord.Embed(title=f"Prefixes for the server \"{message.guild.name}\":", description=ps_formatted).set_footer(text="Note: if you ping the bot with a space after the ping but before the command, it will always work as a prefix. For example: \"@Utilibot ping\"")
-		await message.channel.send(embed=embed)
+		await channel.send(embed=embed)
 	elif message.content == "utilibot prefix?" and not message.guild:
-		await message.channel.send("As this is a dm channel, there is no prefix. Just say the name of the command and it will run. For example, `ping`.")
+		await channel.send("As this is a dm channel, there is no prefix. Just say the name of the command and it will run. For example, `ping`.")
 	else:
 		await bot.process_commands(message)
 
