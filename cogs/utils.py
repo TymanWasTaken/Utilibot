@@ -1,7 +1,8 @@
-import discord, random, asyncio, aiohttp, os, postbin, typing, datetime, json
+import discord, random, asyncio, aiohttp, os, postbin, typing, datetime, json, requests
 from discord.ext import commands
 from pytz import timezone
 from dotenv import load_dotenv
+from bs4 import BeautifulSoup
 load_dotenv(dotenv_path="/home/tyman/code/utilibot/.env")
 
 class Utils(commands.Cog):
@@ -660,7 +661,34 @@ class Utils(commands.Cog):
 			embed.description = f"Source was too long to send, you can find it here: {await postbin.postAsync(dump)}"
 		await m.edit(content="Done!", embed=None, delete_after=5)
 		await ctx.send(embed=embed)
-
+		
+	@commands.command(name='emoji', aliases=['be', 'emote'])
+	async def emoji(self, ctx: commands.context.Context, emoji: Union[discord.Emoji, str]):
+		f"""
+		Shows an image version of an emoji.
+		Created by {await self.bot.fetch_user(678374009045254198)} (678374009045254198).
+		"""
+		if isinstance(emoji, discord.Emoji):
+			embed = discord.Embed(title=emoji.name, url=str(emoji.url))
+			if ctx.guild.id != emoji.guild_id:
+				guild: discord.Guild = emoji.guild
+				embed.description = f'```\n{emoji}\n```'
+				embed.set_footer(text=guild.name, icon_url=guild.icon_url)
+			embed.set_image(url=str(emoji.url))
+			await ctx.reply(embed=embed)
+		else:
+			url = f'https://emojipedia.org/search/?q={emoji}'
+			r = requests.get(url, headers={'user-agent': 'Mozilla/5.0'})
+			soup = BeautifulSoup(r.content, 'html.parser')
+			website = soup.find('a', href='/twitter/')
+			section = website.find_next('div', {'class': 'vendor-image'})
+			image: Dict[str, str] = section.find('img')
+			emote = image['src']
+			title = image['alt'].replace(
+				' on Twitter Twemoji 13.0.1', '')
+			embed = discord.Embed(title=title, url=url, color=discord.Color.random())
+			embed.set_image(url=emote)
+			await ctx.reply(embed=embed)
 	@commands.command(name="msglink", aliases=['mlink'])
 	@commands.has_permissions(manage_messages=True)
 	async def msglink(self, ctx):

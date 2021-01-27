@@ -8,6 +8,7 @@ class Reminders(commands.Cog):
 	@commands.command()
 	async def remind(self, ctx, time, *, reminder):
 		await ctx.send(self.bot.const_emojis['soontm'])
+
 def setup(bot):
 	bot.add_cog(Reminders(bot))
 	print('[RemindersCog] Reminders cog loaded')
