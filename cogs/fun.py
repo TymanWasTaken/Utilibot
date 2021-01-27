@@ -1,4 +1,4 @@
-import discord, random, typing, json
+import discord, random, typing, json, string
 from discord.ext import commands
 
 class Fun(commands.Cog):
@@ -22,6 +22,23 @@ class Fun(commands.Cog):
 		try: await ctx.message.delete()
 		except: pass
 		await ctx.send(message, reference=reference)
+
+	@commands.command(name="emojispeak", aliases=['el', 'emojiletter'])
+	async def emojispeak(ctx, *, message):
+		"""
+		Turns a message into emojis
+		"""
+		message = message.lower().replace()
+		newmessage = ""
+		for char in message:
+			if char not in string.ascii_lowercase:
+				newmessage += char
+			else:
+				newmessage += f":regional_indicator_{char}:"
+		if len(newmessage) + len(ctx.author) <= 2000:
+			newmessage += f"\n{ctx.author}"
+		await ctx.send(newmessage)
+		await ctx.message.delete()
 
 	@commands.command(name="quote")
 	@commands.guild_only()
