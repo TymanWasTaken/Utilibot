@@ -100,7 +100,7 @@ class Moderation(commands.Cog):
 		await asyncio.sleep(2.5)
 		await message.delete()
 
-	@commands.command(name="kick")
+	@commands.command(name="kick", aliases=['yeet', 'boot'])
 	@commands.bot_has_permissions(kick_members=True)
 	@commands.has_permissions(kick_members=True)
 	@commands.guild_only()
@@ -120,26 +120,57 @@ class Moderation(commands.Cog):
 			except:
 				await ctx.send(f"Error: Could Not DM user")
 
-	@commands.command(name="ban")
+	@commands.command(name="ban", aliases=['bean', 'murder'])
 	@commands.bot_has_permissions(ban_members=True)
 	@commands.has_permissions(ban_members=True)
 	@commands.guild_only()
-	async def ban(self, ctx, user: discord.User, *, reason=None):
+	async def ban(self, ctx, user: typing.Union[discord.User, discord.Member], *, reason=None):
 		"""
 		Does what it says, bans them from the server.
 		"""
-		if member.top_role >= ctx.author.top_role or member.top_role >= ctx.me.top_role:
-			await ctx.send("This user can't be banned due to hierachry.")
-		else:
+		async def banfunc(ctx, user: typing.Union[discord.User, discord.Member], reason=None):
 			await ctx.message.delete()
 			await user.ban(reason=f"{user.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
 			await ctx.send(f"🔨 Banned {user} for the reason: `{reason}`")
 			try:
-				await member.send(f"You were banned from {ctx.guild} for the reason: `{reason}`")
+				await user.send(f"You were banned from {ctx.guild} for the reason: `{reason}`")
 			except discord.Forbidden:
 				await ctx.send("Unable to message user.")
-			await member.ban(reason=f"{member.name} was banned by {ctx.author.name}, for the reason: {reason}")
-			await ctx.send(f"Banned {member} for the reason: `{reason}`")
+
+		if isinstance(user, discord.Member):
+			if user.top_role >= ctx.author.top_role or user.top_role >= ctx.me.top_role:
+				await ctx.send("This user can't be banned due to hierarchy.")
+			else:
+				await banfunc(ctx, user, reason)
+		else:
+			await banfunc(ctx, user, reason)
+"""
+# too lazy to work on this right now, ty if you want to fix this go right ahead
+	@commands.command(name="massban")
+	@commands.bot_has_permissions(ban_members=True)
+	@commands.has_permissions(ban_members=True)
+	@commands.guild_only()
+	async def massban(self, ctx, *users: typing.Union[discord.User, discord.Member], *, reason=None):
+		"""
+#		Bans a list of users from the server.
+		"""
+		async def massbanfunc(ctx, user: typing.Union[discord.User, discord.Member], reason=None):
+			await ctx.message.delete()
+			await user.ban(reason=f"{user.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
+			await ctx.send(f"🔨 Banned {user} for the reason: `{reason}`")
+			try:
+				await user.send(f"You were banned from {ctx.guild} for the reason: `{reason}`")
+			except discord.Forbidden:
+				await ctx.send("Unable to message user.")
+
+		if isinstance(user, discord.Member):
+			if user.top_role >= ctx.author.top_role or user.top_role >= ctx.me.top_role:
+				await ctx.send("This user can't be banned due to hierarchy.")
+			else:
+				await banfunc(ctx, user, reason)
+		else:
+			await banfunc(ctx, user, reason)
+"""
 
 	@commands.command(name="unban")
 	@commands.bot_has_permissions(ban_members=True)

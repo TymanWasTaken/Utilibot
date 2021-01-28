@@ -1,5 +1,5 @@
 {
-	"python.pythonPath": "/home/tyman/.pyenv/versions/3.8.6/bin/python",
+	"python.pythonPath": "/bin/python3",
 	"cSpell.words": [
 		"Unbans",
 		"aiocron",
