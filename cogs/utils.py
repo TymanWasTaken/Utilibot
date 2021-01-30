@@ -663,7 +663,7 @@ class Utils(commands.Cog):
 		await ctx.send(embed=embed)
 		
 	@commands.command(name='emoji', aliases=['be', 'emote'])
-	async def emoji(self, ctx: commands.context.Context, emoji: Union[discord.Emoji, str]):
+	async def emoji(self, ctx: commands.context.Context, emoji: typing.Union[discord.Emoji, str]):
 		f"""
 		Shows an image version of an emoji.
 		Created by {await self.bot.fetch_user(678374009045254198)} (678374009045254198).

@@ -153,7 +153,7 @@ class Moderation(commands.Cog):
 	async def massban(self, ctx, *users: typing.Union[discord.User, discord.Member], *, reason=None):
 		"""
 #		Bans a list of users from the server.
-		"""
+"""
 		async def massbanfunc(ctx, user: typing.Union[discord.User, discord.Member], reason=None):
 			await ctx.message.delete()
 			await user.ban(reason=f"{user.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
