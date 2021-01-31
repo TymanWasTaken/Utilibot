@@ -160,12 +160,12 @@ async def is_blacklisted(id: int):
 	else:
 			return False
 
-@bot.check
-async def blacklist_users(ctx):
-	if await is_blacklisted(ctx.author.id) == True:
-		raise BlacklistedError("I'm sorry, but you have been blacklisted from using this bot.")
-	else:
-		return True
+#@bot.check
+#async def blacklist_users(ctx):
+#	if await is_blacklisted(ctx.author.id) == True:
+#		raise BlacklistedError("I'm sorry, but you have been blacklisted from using this bot.")
+#	else:
+#		return True
 
 @bot.check
 async def is_ready_for_commands(ctx):
