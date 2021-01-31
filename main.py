@@ -1,5 +1,5 @@
 # Imports
-import discord, os, time, glob, postbin, traceback, asyncio, cogs, importlib, aiofiles, json, textwrap, re, sys, aiosqlite, dpytils, aiohttp
+import discord, os, time, glob, postbin, traceback, asyncio, importlib, aiofiles, json, textwrap, re, sys, aiosqlite, dpytils, aiohttp
 from datetime import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
