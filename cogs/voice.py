@@ -17,7 +17,7 @@ async def voicekick(self, ctx, member: discord.Member, *, reason=None):
 		await ctx.send(f"{member} is not in a voice channel!")
 
 @commands.has_permissions(move_members=True)
-@commands.bot_has_permission(move_members=True)
+@commands.bot_has_permissions(move_members=True)
 @commands.guild_only()
 @commands.command(name="voicemove", aliases=['vmove', 'move'])
 async def voicemove(self, ctx, member: discord.Member, channel: discord.VoiceChannel, *, reason=None):
