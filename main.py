@@ -329,7 +329,7 @@ async def on_message(message):
 			**Message:** [{msg.id}]({msg.jump_url})
 			**Author ID:** {msg.author.id}""".replace("	", ""))
 		embed.set_footer(text=f"Command triggered by {message.author}\nLinked message sent")
-		if len(msgsearch) == len(message.content):
+		if len(msgsearch.group(0)) == len(message.content):
 			await message.delete()
 		if msg.attachments:
 			attaches = []

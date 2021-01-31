@@ -144,16 +144,16 @@ class Moderation(commands.Cog):
 				await banfunc(ctx, user, reason)
 		else:
 			await banfunc(ctx, user, reason)
-"""
+	"""
 # too lazy to work on this right now, ty if you want to fix this go right ahead
 	@commands.command(name="massban")
 	@commands.bot_has_permissions(ban_members=True)
 	@commands.has_permissions(ban_members=True)
 	@commands.guild_only()
 	async def massban(self, ctx, *users: typing.Union[discord.User, discord.Member], *, reason=None):
-		"""
+		
 #		Bans a list of users from the server.
-"""
+		
 		async def massbanfunc(ctx, user: typing.Union[discord.User, discord.Member], reason=None):
 			await ctx.message.delete()
 			await user.ban(reason=f"{user.name} was banned by {ctx.author} ({ctx.author.id}), for the reason: {reason}")
@@ -170,7 +170,7 @@ class Moderation(commands.Cog):
 				await banfunc(ctx, user, reason)
 		else:
 			await banfunc(ctx, user, reason)
-"""
+	"""
 
 	@commands.command(name="unban")
 	@commands.bot_has_permissions(ban_members=True)
