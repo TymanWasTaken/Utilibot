@@ -276,7 +276,7 @@ class Logging(commands.Cog):
 				embed.title="Nickname Removed"
 			bvalue = before.nick
 			avalue = after.nick
-		# role change
+		# Role change
 		elif before.roles != after.roles:
 			n = "\n"
 			if not await self.islogenabled(before.guild, "rolechanges"):
@@ -287,6 +287,10 @@ class Logging(commands.Cog):
 			elif len(before.roles) > len(after.roles):
 				embed.title="Role Removed"
 			embed.description=f"{n.join([r.mention for r in set(before.roles) ^ set(after.roles)])}"
+		elif before.pending != after.pending:
+			#if not await self.islogenabled(before.guild)
+			#	return
+			embed.title="Member Passed Rules Screening"
 		elif before.status != after.status:
 			return
 			if not await self.islogenabled(before.guild, "status"):
@@ -314,7 +318,7 @@ class Logging(commands.Cog):
 		if (bvalue != "") and (avalue != ""):
 			embed.add_field(name="Before:", value=bvalue, inline=False)
 			embed.add_field(name="After:", value=avalue, inline=False)
-		if embed.title != embed.Empty:
+		if embed.title:
 			await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
