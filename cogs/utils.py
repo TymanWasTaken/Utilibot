@@ -646,7 +646,7 @@ class Utils(commands.Cog):
 			em = em.to_dict()
 			em = {x: em[x] for x in reversed(em.keys())}
 			if "description" in em:
-				em["description"] = str(em["description"]).replace('`', '\u200b`\u200b')
+				em["description"] = str(em["description"]).replace('```', '\u200b`\u200b`\u200b`\u200b')
 			embed_dicts.append(em)
 		dict = {}
 		if message.content: dict["content"] = message.content
