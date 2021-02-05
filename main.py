@@ -449,7 +449,7 @@ bot.errors = []
 bot.load_extension("jishaku")
 no_load_cogs = ['cogs.reminders', 'cogs.web', 'cogs.friendserver', 'cogs.tickets']
 for file in sorted(glob.glob("cogs/*.py")):
-	file = file.replace(".py", "").replace("/", ".")
+	file = file.replace(".py", "").replace("/", ".").replace("\\", ".")
 	if file in no_load_cogs: continue
 	try:
 		bot.load_extension(file)
