@@ -8,19 +8,21 @@ music = importlib.import_module("cogs.music")
 load_dotenv(verbose=True)
 intents = discord.Intents().all()
 
+path = os.path.dirname(os.path.abspath(__file__))
+
 async def readDB():
 	try:
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f:
+		async with aiofiles.open(path + '/data.json', mode='r') as f:
 			return json.loads(await f.read())
 	except Exception as e:
 		print(f"An error occured, {e}")
 
 async def writeDB(data: dict):
 	try:
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='r') as f_main:
-			async with aiofiles.open('/home/tyman/code/utilibot/data.json.bak', mode='w') as f_bak:
+		async with aiofiles.open(path + '/data.json', mode='r') as f_main:
+			async with aiofiles.open(path + '/data.json.bak', mode='w') as f_bak:
 				await f_bak.write(await f_main.read())
-		async with aiofiles.open('/home/tyman/code/utilibot/data.json', mode='w') as f:
+		async with aiofiles.open(path + '/data.json', mode='w') as f:
 			d = json.dumps(data)
 			await f.write(d)
 	except Exception as e:
