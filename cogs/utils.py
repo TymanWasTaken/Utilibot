@@ -618,7 +618,7 @@ class Utils(commands.Cog):
 						await ctx.send("Failed to decode json, here is raw web response: " + await postbin.postAsync(await r.text()))
 
 	@commands.command(name="source", aliases=['embedsource', 'messagesource', 'rawmessage'])
-	async def source(self, ctx, messageid: int, channel: typing.Optional[discord.TextChannel]):
+	async def source(self, ctx, messageid: int, channel: typing.Optional[discord.TextChannel], unicode: bool=False):
 		"""
 		Gets the raw json source of an embed.
 		"""
@@ -654,7 +654,7 @@ class Utils(commands.Cog):
 			dict = embed_dicts[0]
 		else:
 			dict["embeds"] = embed_dicts
-		dump = json.dumps(dict, indent=4, ensure_ascii=False)
+		dump = json.dumps(dict, indent=4, ensure_ascii=unicode)
 		embed.description = f"```\n{dump}```Link:  [{messageid}]({message.jump_url})"
 		embed.set_footer(icon_url=message.author.avatar_url, text=message.author)
 		if len(embed.description) >= 2048:
