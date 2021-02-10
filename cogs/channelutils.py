@@ -2,7 +2,7 @@ import discord, typing, json
 from discord.ext import commands
 
 
-class ChannelUtils(commands.Cog):
+class ChannelUtils(commands.Cog, name="Channel Utils"):
 	def __init__(self, bot):
 		self.bot = bot
 	
