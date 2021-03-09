@@ -7,6 +7,7 @@
 <div align="center">
 
 <!-- [![CodeFactor](https://img.shields.io/codefactor/grade/github/TymanWasTaken/Utilibot?style=for-the-badge)](https://www.codefactor.io/repository/github/tymanwastaken/cascade) -->
+
 [![discord badge](https://img.shields.io/badge/Join%20the-Discord-blue?style=for-the-badge)](https://discord.gg/2pf4xfG)
 [![uses badges](https://img.shields.io/badge/Uses-Badges-yellow?style=for-the-badge)](https://shields.io)
 [![made with typescript](https://img.shields.io/badge/Made%20With-Typescript-orange?style=for-the-badge)](https://www.typescriptlang.org/)
@@ -25,4 +26,3 @@ You are free to report bugs or contribute to this project. Just open <a href="ht
 
 - <a href="https://discord.js.org/">discord.js</a> - The main library used to interface with discord
 - <a href="https://discord-akairo.github.io/">discord-akairo</a> - The framework the bot is built on
-
