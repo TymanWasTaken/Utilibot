@@ -1,4 +1,4 @@
-import { BotListener } from '../../extensions/BotListener';
+import { BotListener } from '../../lib/extensions/BotListener';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 

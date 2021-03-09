@@ -1,6 +1,4 @@
-import { BotInhibitor } from '../../extensions/BotInhibitor';
-import { BotCommand } from '../../extensions/BotCommand';
-import { Message } from 'discord.js';
+import { BotInhibitor } from '../../lib/extensions/BotInhibitor';
 
 export default class BlacklistInhibitor extends BotInhibitor {
 	constructor() {
@@ -9,10 +7,7 @@ export default class BlacklistInhibitor extends BotInhibitor {
 		});
 	}
 
-	public exec(
-		message: Message,
-		command?: BotCommand
-	): boolean | Promise<boolean> {
+	public exec(): boolean | Promise<boolean> {
 		// This is just a placeholder for now
 		return false;
 	}

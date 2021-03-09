@@ -4,7 +4,12 @@ import {
 	InhibitorHandler,
 	ListenerHandler
 } from 'discord-akairo';
+import { Guild } from 'discord.js';
 import * as path from 'path';
+import { DataTypes, Sequelize } from 'sequelize';
+import * as Models from '../types/Models';
+import { BotGuild } from './BotGuild';
+import { BotMessage } from './BotMessage';
 import { Util } from './Util';
 
 export interface BotConfig {
@@ -20,6 +25,7 @@ export class BotClient extends AkairoClient {
 	public commandHandler: CommandHandler;
 	public util: Util;
 	public ownerID: string[];
+	public db: Sequelize;
 	constructor(config: BotConfig) {
 		super(
 			{
@@ -38,20 +44,24 @@ export class BotClient extends AkairoClient {
 
 		// Create listener handler
 		this.listenerHandler = new ListenerHandler(this, {
-			directory: path.join(__dirname, '..', 'listeners'),
+			directory: path.join(__dirname, '..', '..', 'listeners'),
 			automateCategories: true
 		});
 
 		// Create inhibitor handler
 		this.inhibitorHandler = new InhibitorHandler(this, {
-			directory: path.join(__dirname, '..', 'inhibitors'),
+			directory: path.join(__dirname, '..', '..', 'inhibitors'),
 			automateCategories: true
 		});
 
 		// Create command handler
 		this.commandHandler = new CommandHandler(this, {
-			directory: path.join(__dirname, '..', 'commands'),
-			prefix: this.config.prefix,
+			directory: path.join(__dirname, '..', '..', 'commands'),
+			prefix: async ({ guild }: { guild: Guild }) => {
+				const row = await Models.Guild.findByPk(guild.id);
+				if (!row) return this.config.prefix; // shouldn't be possible but you never know
+				return row.prefix as string;
+			},
 			allowMention: true,
 			handleEdits: true,
 			commandUtil: true,
@@ -70,6 +80,13 @@ export class BotClient extends AkairoClient {
 		});
 
 		this.util = new Util(this);
+		this.db = new Sequelize({
+			dialect: 'sqlite',
+			storage: path.join(__dirname, '..', '..', '..', 'data.db'),
+			logging: false
+		});
+		BotGuild.install();
+		BotMessage.install();
 	}
 
 	// Initialize everything
@@ -95,11 +112,43 @@ export class BotClient extends AkairoClient {
 				console.error('Unable to load loader ' + loader + ' with error ' + e);
 			}
 		}
+		await this.dbPreInit();
 	}
 
-	public async start(): Promise<string> {
+	public async dbPreInit(): Promise<void> {
+		await this.db.authenticate();
+		await Models.Guild.init(
+			{
+				id: {
+					type: DataTypes.STRING,
+					primaryKey: true
+				},
+				prefix: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					defaultValue: this.config.prefix
+				}
+			},
+			{ sequelize: this.db }
+		);
+
+		await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
+	}
+
+	public async dbPostInit(): Promise<void> {
+		for (const guild of this.guilds.cache.values()) {
+			const existing = await Models.Guild.findByPk(guild.id);
+			if (existing !== null) return;
+			const row = Models.Guild.build({
+				id: guild.id
+			});
+			await row.save();
+		}
+	}
+
+	public async start(): Promise<void> {
 		await this._init();
-		return this.login(this.config.token);
+		await this.login(this.config.token);
 	}
 
 	public destroy(relogin = true): void | Promise<string> {

@@ -1,5 +1,6 @@
-import { Message, MessageEmbed } from 'discord.js';
-import { BotCommand } from '../../extensions/BotCommand';
+import { MessageEmbed } from 'discord.js';
+import { BotCommand } from '../../lib/extensions/BotCommand';
+import { BotMessage } from '../../lib/extensions/BotMessage';
 
 export default class PingCommand extends BotCommand {
 	constructor() {
@@ -13,7 +14,7 @@ export default class PingCommand extends BotCommand {
 		});
 	}
 
-	public async exec(message: Message): Promise<void> {
+	public async exec(message: BotMessage): Promise<void> {
 		const sentMessage = await message.util.send('Pong!');
 		const timestamp: number = message.editedTimestamp
 			? message.editedTimestamp

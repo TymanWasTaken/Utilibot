@@ -9,8 +9,9 @@
 	"scripts": {
 		"start": "yarn build && node --trace-warnings -r source-map-support/register dist/bot.js",
 		"build": "yarn rimraf dist/ && yarn tsc",
-		"test": "yarn build && yarn lint",
-		"lint": "yarn eslint ."
+		"test": "yarn lint && yarn build",
+		"lint": "yarn eslint .",
+		"format": "yarn prettier --write ."
 	},
 	"devDependencies": {
 		"@types/node": "^14.14.22",
@@ -28,7 +29,9 @@
 		"discord-akairo": "^8.1.0",
 		"discord.js": "^12.5.1",
 		"got": "^11.8.1",
-		"moment": "^2.29.1"
+		"moment": "^2.29.1",
+		"sequelize": "^6.5.0",
+		"sqlite3": "^5.0.2"
 	},
 	"eslintConfig": {
 		"env": {
@@ -47,6 +50,10 @@
 		},
 		"plugins": [
 			"@typescript-eslint"
+		],
+		"ignorePatterns": [
+			"dist",
+			"node_modules"
 		]
 	},
 	"prettier": {
