@@ -1,48 +1,52 @@
-import {AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler} from 'discord-akairo'
-import {ApiHelper} from './ApiHelper'
-import * as path from 'path'
-import {Util} from './Util'
+import {
+	AkairoClient,
+	CommandHandler,
+	InhibitorHandler,
+	ListenerHandler
+} from 'discord-akairo';
+import * as path from 'path';
+import { Util } from './Util';
 
 export interface BotConfig {
-	token: string,
-	owners: string[],
-	prefix: string
+	token: string;
+	owners: string[];
+	prefix: string;
 }
 
 export class BotClient extends AkairoClient {
-	public apiHelper: ApiHelper
-	public config: BotConfig
-	public listenerHandler: ListenerHandler
-	public inhibitorHandler: InhibitorHandler
-	public commandHandler: CommandHandler
-	public util: Util
-	public ownerID: string[]
+	public config: BotConfig;
+	public listenerHandler: ListenerHandler;
+	public inhibitorHandler: InhibitorHandler;
+	public commandHandler: CommandHandler;
+	public util: Util;
+	public ownerID: string[];
 	constructor(config: BotConfig) {
-		super({
-			ownerID: config.owners
-		}, {
-			allowedMentions: {parse: ['users']} // No everyone or role mentions by default
-		})
-		// Create ApiHelper
-		this.apiHelper = new ApiHelper(config.token)
+		super(
+			{
+				ownerID: config.owners
+			},
+			{
+				allowedMentions: { parse: ['users'] } // No everyone or role mentions by default
+			}
+		);
 
 		// Set token
-		this.token = config.token
-		
+		this.token = config.token;
+
 		// Set config
-		this.config = config
+		this.config = config;
 
 		// Create listener handler
 		this.listenerHandler = new ListenerHandler(this, {
 			directory: path.join(__dirname, '..', 'listeners'),
 			automateCategories: true
-		})
+		});
 
 		// Create inhibitor handler
 		this.inhibitorHandler = new InhibitorHandler(this, {
 			directory: path.join(__dirname, '..', 'inhibitors'),
 			automateCategories: true
-		})
+		});
 
 		// Create command handler
 		this.commandHandler = new CommandHandler(this, {
@@ -57,51 +61,51 @@ export class BotClient extends AkairoClient {
 					timeout: 'Timed out.',
 					ended: 'Too many tries.',
 					cancel: 'Canceled.',
-					retries: 3,
-					time: 3e4,
+					time: 3e4
 				}
 			},
 			ignorePermissions: this.config.owners,
-			ignoreCooldown: this.config.owners
-		})
+			ignoreCooldown: this.config.owners,
+			automateCategories: true
+		});
 
-		this.util = new Util(this)
+		this.util = new Util(this);
 	}
 
 	// Initialize everything
 	private async _init(): Promise<void> {
-		this.commandHandler.useListenerHandler(this.listenerHandler)
-		this.commandHandler.useInhibitorHandler(this.inhibitorHandler)
+		this.commandHandler.useListenerHandler(this.listenerHandler);
+		this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
 		this.listenerHandler.setEmitters({
 			commandHandler: this.commandHandler,
 			listenerHandler: this.listenerHandler,
 			process
-		})
+		});
 		// loads all the handlers
 		const loaders = {
 			commands: this.commandHandler,
 			listeners: this.listenerHandler,
-			inhibitors: this.inhibitorHandler,
-		}
+			inhibitors: this.inhibitorHandler
+		};
 		for (const loader of Object.keys(loaders)) {
 			try {
-				loaders[loader].loadAll()
-				console.log('Successfully loaded ' + loader + '.')
+				loaders[loader].loadAll();
+				console.log('Successfully loaded ' + loader + '.');
 			} catch (e) {
-				console.error('Unable to load loader ' + loader + ' with error ' + e)
+				console.error('Unable to load loader ' + loader + ' with error ' + e);
 			}
 		}
 	}
 
 	public async start(): Promise<string> {
-		await this._init()
-		return this.login(this.config.token)
+		await this._init();
+		return this.login(this.config.token);
 	}
 
 	public destroy(relogin = true): void | Promise<string> {
-		super.destroy()
+		super.destroy();
 		if (relogin) {
-			return this.login(this.config.token)
+			return this.login(this.config.token);
 		}
 	}
 }

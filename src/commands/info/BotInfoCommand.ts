@@ -1,6 +1,6 @@
-import {Message, MessageEmbed} from 'discord.js'
-import {BotCommand} from '../../extensions/BotCommand'
-import {duration} from 'moment'
+import { Message, MessageEmbed } from 'discord.js';
+import { BotCommand } from '../../extensions/BotCommand';
+import { duration } from 'moment';
 
 export default class BotInfoCommand extends BotCommand {
 	constructor() {
@@ -9,18 +9,21 @@ export default class BotInfoCommand extends BotCommand {
 			description: {
 				content: 'Shows information about the bot',
 				usage: 'botinfo',
-				examples: [
-					'botinfo'
-				]
+				examples: ['botinfo']
 			}
-		})
+		});
 	}
 
 	public async exec(message: Message): Promise<void> {
-		const owners = (await this.client.util.mapIDs(this.client.ownerID, true))
-			.join('\n')
-		const currentCommit = (await this.client.util.shell('git rev-parse HEAD')).stdout.replace('\n', '')
-		const repoUrl = (await this.client.util.shell('git remote get-url origin')).stdout.replace('\n', '')
+		const owners = (await this.client.util.mapIDs(this.client.ownerID))
+			.map((u) => u.tag)
+			.join('\n');
+		const currentCommit = (
+			await this.client.util.shell('git rev-parse HEAD')
+		).stdout.replace('\n', '');
+		const repoUrl = (
+			await this.client.util.shell('git remote get-url origin')
+		).stdout.replace('\n', '');
 		const embed = new MessageEmbed()
 			.setTitle('Bot Info:')
 			.addFields([
@@ -42,10 +45,13 @@ export default class BotInfoCommand extends BotCommand {
 				},
 				{
 					name: 'Current commit',
-					value: `[${currentCommit.substring(0, 7)}](${repoUrl}/commit/${currentCommit})`
+					value: `[${currentCommit.substring(
+						0,
+						7
+					)}](${repoUrl}/commit/${currentCommit})`
 				}
 			])
-			.setTimestamp()
-		await message.util.send(embed)
+			.setTimestamp();
+		await message.util.send(embed);
 	}
 }

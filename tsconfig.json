@@ -1,9 +1,16 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es2020",
+		"target": "esNext",
 		"outDir": "dist",
-		"lib": ["ESNext", "ESNext.Array", "ESNext.AsyncIterable", "ESNext.Intl", "ESNext.Symbol", "DOM"],
+		"lib": [
+			"ESNext",
+			"ESNext.Array",
+			"ESNext.AsyncIterable",
+			"ESNext.Intl",
+			"ESNext.Symbol",
+			"DOM"
+		],
 		"sourceMap": false,
 		"inlineSourceMap": true,
 		"inlineSources": true,
@@ -12,8 +19,6 @@
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
 	},
-	"include": [
-		"src/**/*.ts"
-	],
+	"include": ["src/**/*.ts"],
 	"exclude": ["node_modules"]
 }
