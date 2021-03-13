@@ -16,6 +16,12 @@ export interface BotConfig {
 	token: string;
 	owners: string[];
 	prefix: string;
+	dbLogin: {
+		username: string;
+		password: string;
+	};
+	dev: boolean;
+	dbHost: string;
 }
 
 export class BotClient extends AkairoClient {
@@ -80,11 +86,16 @@ export class BotClient extends AkairoClient {
 		});
 
 		this.util = new Util(this);
-		this.db = new Sequelize({
-			dialect: 'sqlite',
-			storage: path.join(__dirname, '..', '..', '..', 'data.db'),
-			logging: false
-		});
+		this.db = new Sequelize(
+			this.config.dev ? 'utilibot-dev' : 'utilibot',
+			this.config.dbLogin.username,
+			this.config.dbLogin.password,
+			{
+				dialect: 'postgres',
+				host: this.config.dbHost,
+				logging: false
+			}
+		);
 		BotGuild.install();
 		BotMessage.install();
 	}
