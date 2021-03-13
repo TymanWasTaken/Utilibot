@@ -16,12 +16,13 @@ export interface BotConfig {
 	token: string;
 	owners: string[];
 	prefix: string;
-	dbLogin: {
+	db: {
 		username: string;
 		password: string;
+		dev: boolean;
+		host: string;
+		port: number;
 	};
-	dev: boolean;
-	dbHost: string;
 }
 
 export class BotClient extends AkairoClient {
@@ -87,12 +88,13 @@ export class BotClient extends AkairoClient {
 
 		this.util = new Util(this);
 		this.db = new Sequelize(
-			this.config.dev ? 'utilibot-dev' : 'utilibot',
-			this.config.dbLogin.username,
-			this.config.dbLogin.password,
+			this.config.db.dev ? 'utilibot-dev' : 'utilibot',
+			this.config.db.username,
+			this.config.db.password,
 			{
 				dialect: 'postgres',
-				host: this.config.dbHost,
+				host: this.config.db.host,
+				port: this.config.db.port,
 				logging: false
 			}
 		);
