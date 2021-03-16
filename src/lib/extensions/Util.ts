@@ -56,4 +56,40 @@ export class Util extends ClientUtil {
 		}
 		throw new Error('No urls worked. (wtf)');
 	}
+
+	public devLog(content: unknown): void {
+		if (this.client.config.dev) console.log(content);
+	}
+
+	public async resolveUserAsync(text: string): Promise<User | null> {
+		const idReg = /\d{17,19}/;
+		const idMatch = text.match(idReg);
+		if (idMatch) {
+			try {
+				const user = await this.client.users.fetch(text);
+				return user;
+			} catch {
+				// pass
+			}
+		}
+		const mentionReg = /<@!?(?<id>\d{17,19})>/;
+		const mentionMatch = text.match(mentionReg);
+		if (mentionMatch) {
+			try {
+				const user = await this.client.users.fetch(mentionMatch.groups.id);
+				return user;
+			} catch {
+				// pass
+			}
+		}
+		const user = this.client.users.cache.find((u) => u.username === text);
+		if (user) return user;
+		return null;
+	}
+
+	public ordinal(n: number): string {
+		const s = ['th', 'st', 'nd', 'rd'],
+			v = n % 100;
+		return n + (s[(v - 20) % 10] || s[v] || s[0]);
+	}
 }

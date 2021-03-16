@@ -6,20 +6,24 @@ import {
 } from 'discord-akairo';
 import { Guild } from 'discord.js';
 import * as path from 'path';
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import * as Models from '../types/Models';
 import { BotGuild } from './BotGuild';
 import { BotMessage } from './BotMessage';
 import { Util } from './Util';
+import * as Tasks from '../../tasks';
+import { v4 as uuidv4 } from 'uuid';
+import { Intents } from 'discord.js';
+import { exit } from 'process';
 
 export interface BotConfig {
 	token: string;
 	owners: string[];
 	prefix: string;
+	dev: boolean;
 	db: {
 		username: string;
 		password: string;
-		dev: boolean;
 		host: string;
 		port: number;
 	};
@@ -36,10 +40,12 @@ export class BotClient extends AkairoClient {
 	constructor(config: BotConfig) {
 		super(
 			{
-				ownerID: config.owners
+				ownerID: config.owners,
+				intents: Intents.ALL
 			},
 			{
-				allowedMentions: { parse: ['users'] } // No everyone or role mentions by default
+				allowedMentions: { parse: ['users'] }, // No everyone or role mentions by default
+				intents: Intents.ALL
 			}
 		);
 
@@ -88,7 +94,7 @@ export class BotClient extends AkairoClient {
 
 		this.util = new Util(this);
 		this.db = new Sequelize(
-			this.config.db.dev ? 'utilibot-dev' : 'utilibot',
+			this.config.dev ? 'utilibot-dev' : 'utilibot',
 			this.config.db.username,
 			this.config.db.password,
 			{
@@ -126,11 +132,14 @@ export class BotClient extends AkairoClient {
 			}
 		}
 		await this.dbPreInit();
+		Object.keys(Tasks).forEach((t) => {
+			setInterval(() => Tasks[t](this), 60000);
+		});
 	}
 
 	public async dbPreInit(): Promise<void> {
 		await this.db.authenticate();
-		await Models.Guild.init(
+		Models.Guild.init(
 			{
 				id: {
 					type: DataTypes.STRING,
@@ -144,8 +153,93 @@ export class BotClient extends AkairoClient {
 			},
 			{ sequelize: this.db }
 		);
-
-		await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
+		Models.Modlog.init(
+			{
+				id: {
+					type: DataTypes.STRING,
+					primaryKey: true,
+					allowNull: false,
+					defaultValue: uuidv4
+				},
+				type: {
+					type: new DataTypes.ENUM(
+						'BAN',
+						'TEMPBAN',
+						'MUTE',
+						'TEMPMUTE',
+						'KICK',
+						'WARN'
+					),
+					allowNull: false
+				},
+				user: {
+					type: DataTypes.STRING,
+					allowNull: false
+				},
+				moderator: {
+					type: DataTypes.STRING,
+					allowNull: false
+				},
+				duration: {
+					type: DataTypes.STRING,
+					allowNull: true
+				},
+				reason: {
+					type: DataTypes.STRING,
+					allowNull: true
+				},
+				guild: {
+					type: DataTypes.STRING,
+					references: {
+						model: Models.Guild as typeof Model
+					}
+				}
+			},
+			{ sequelize: this.db }
+		);
+		Models.Ban.init(
+			{
+				id: {
+					type: DataTypes.STRING,
+					primaryKey: true,
+					allowNull: false,
+					defaultValue: uuidv4
+				},
+				user: {
+					type: DataTypes.STRING,
+					allowNull: false
+				},
+				guild: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					references: {
+						model: Models.Guild as typeof Model,
+						key: 'id'
+					}
+				},
+				expires: {
+					type: DataTypes.DATE,
+					allowNull: true
+				},
+				reason: {
+					type: DataTypes.STRING,
+					allowNull: true
+				},
+				modlog: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					references: {
+						model: Models.Modlog as typeof Model
+					}
+				}
+			},
+			{ sequelize: this.db }
+		);
+		try {
+			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
+		} catch {
+			// Ignore error
+		}
 	}
 
 	public async dbPostInit(): Promise<void> {
@@ -160,8 +254,13 @@ export class BotClient extends AkairoClient {
 	}
 
 	public async start(): Promise<void> {
-		await this._init();
-		await this.login(this.config.token);
+		try {
+			await this._init();
+			await this.login(this.config.token);
+		} catch (e) {
+			console.error(e.stack);
+			exit(2);
+		}
 	}
 
 	public destroy(relogin = true): void | Promise<string> {

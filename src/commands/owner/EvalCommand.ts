@@ -2,7 +2,6 @@
 import { BotCommand } from '../../lib/extensions/BotCommand';
 import { MessageEmbed, Message } from 'discord.js';
 import { inspect, promisify } from 'util';
-import got from 'got';
 import { exec } from 'child_process';
 import { BotMessage } from '../../lib/extensions/BotMessage';
 
@@ -13,7 +12,6 @@ const clean = (text) => {
 			.replace(/@/g, '@' + String.fromCharCode(8203));
 	else return text;
 };
-const sh = promisify(exec);
 
 export default class EvalCommand extends BotCommand {
 	public constructor() {
@@ -66,7 +64,10 @@ export default class EvalCommand extends BotCommand {
 				bot = this.client,
 				guild = message.guild,
 				channel = message.channel,
-				config = this.client.config;
+				config = this.client.config,
+				sh = promisify(exec),
+				models = this.client.db.models,
+				got = await import('got');
 			output = eval(code);
 			output = await output;
 			if (typeof output !== 'string') output = inspect(output, { depth });

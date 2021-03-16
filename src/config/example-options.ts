@@ -7,12 +7,12 @@ export const owners = [
 	'642416218967375882' // 💜Clari#7744
 ];
 export const prefix = 'u2!';
+export const dev = true;
 
 // Database specific
 export const db = {
-	dev: true,
-	host: "localhost",
+	host: 'localhost',
 	port: 5432,
-	username: "username",
-	password: "password"
-}
+	username: 'username',
+	password: 'password'
+};
