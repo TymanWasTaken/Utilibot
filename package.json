@@ -2,7 +2,7 @@
 	"name": "utilibot",
 	"version": "2.0.0",
 	"description": "A utility bot for discord",
-	"main": "src/bot.ts",
+	"main": "dist/bot.js",
 	"repository": "https://github.com/tyman-productions/utilibot",
 	"author": "TymanWasTaken <TymanWasTaken@users.noreply.github.com>",
 	"license": "MIT",

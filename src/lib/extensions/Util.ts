@@ -10,7 +10,15 @@ interface hastebinRes {
 }
 
 export class Util extends ClientUtil {
+	/**
+	 * The client of this ClientUtil
+	 * @type {BotClient}
+	 */
 	public client: BotClient;
+	/**
+	 * The hastebin urls used to post to hastebin, attempts to post in order
+	 * @type {string[]}
+	 */
 	public hasteURLs = [
 		'https://hst.sh',
 		'https://hasteb.in',
@@ -21,19 +29,42 @@ export class Util extends ClientUtil {
 		'https://haste.unbelievaboat.com',
 		'https://haste.tyman.tech'
 	];
+	/**
+	 * A simple promise exec method
+	 */
 	private exec = promisify(exec);
+
+	/**
+	 * Creates this client util
+	 * @param client The client to initialize with
+	 */
 	constructor(client: BotClient) {
 		super(client);
 	}
 
+	/**
+	 * Maps an array of user ids to user objects.
+	 * @param ids The list of IDs to map
+	 * @returns The list of users mapped
+	 */
 	public async mapIDs(ids: string[]): Promise<User[]> {
 		return await Promise.all(ids.map((id) => this.client.users.fetch(id)));
 	}
 
+	/**
+	 * Capitalizes the first letter of the given text
+	 * @param text The text to capitalize
+	 * @returns The capitalized text
+	 */
 	public capitalize(text: string): string {
 		return text.charAt(0).toUpperCase() + text.slice(1);
 	}
 
+	/**
+	 * Runs a shell command and gives the output
+	 * @param command The shell command to run
+	 * @returns The stdout and stderr of the shell command
+	 */
 	public async shell(
 		command: string
 	): Promise<{
@@ -43,6 +74,11 @@ export class Util extends ClientUtil {
 		return await this.exec(command);
 	}
 
+	/**
+	 * Posts text to hastebin
+	 * @param content The text to post
+	 * @returns The url of the posted text
+	 */
 	public async haste(content: string): Promise<string> {
 		for (const url of this.hasteURLs) {
 			try {
@@ -57,10 +93,19 @@ export class Util extends ClientUtil {
 		throw new Error('No urls worked. (wtf)');
 	}
 
+	/**
+	 * Logs something but only in dev mode
+	 * @param content The thing to log
+	 */
 	public devLog(content: unknown): void {
 		if (this.client.config.dev) console.log(content);
 	}
 
+	/**
+	 * Resolves a user-provided string into a user object, if possible
+	 * @param text The text to try and resolve
+	 * @returns The user resolved or null
+	 */
 	public async resolveUserAsync(text: string): Promise<User | null> {
 		const idReg = /\d{17,19}/;
 		const idMatch = text.match(idReg);
@@ -87,6 +132,11 @@ export class Util extends ClientUtil {
 		return null;
 	}
 
+	/**
+	 * Appends the correct ordinal to the given number
+	 * @param n The number to append an ordinal to
+	 * @returns The number with the ordinal
+	 */
 	public ordinal(n: number): string {
 		const s = ['th', 'st', 'nd', 'rd'],
 			v = n % 100;
