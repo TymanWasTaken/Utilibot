@@ -40,10 +40,10 @@ export class BotClient extends AkairoClient {
 	constructor(config: BotConfig) {
 		super(
 			{
-				ownerID: config.owners,
+				ownerID: config.owners
 			},
 			{
-				allowedMentions: { parse: ['users'] }, // No everyone or role mentions by default
+				allowedMentions: { parse: ['users'] } // No everyone or role mentions by default
 			}
 		);
 
