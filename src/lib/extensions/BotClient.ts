@@ -13,11 +13,15 @@ import { BotMessage } from './BotMessage';
 import { Util } from './Util';
 import * as Tasks from '../../tasks';
 import { v4 as uuidv4 } from 'uuid';
-import { Intents } from 'discord.js';
 import { exit } from 'process';
+import { TopGGHandler } from '../top.gg';
 
 export interface BotConfig {
-	token: string;
+	credentials: {
+		botToken: string;
+		dblToken: string;
+		dblWebhookAuth: string;
+	};
 	owners: string[];
 	prefix: string;
 	dev: boolean;
@@ -27,6 +31,14 @@ export interface BotConfig {
 		host: string;
 		port: number;
 	};
+	topGGPort: number;
+	channels: {
+		dblVote: string;
+		log: string;
+		error: string;
+		dm: string;
+		command: string;
+	};
 }
 
 export class BotClient extends AkairoClient {
@@ -34,6 +46,7 @@ export class BotClient extends AkairoClient {
 	public listenerHandler: ListenerHandler;
 	public inhibitorHandler: InhibitorHandler;
 	public commandHandler: CommandHandler;
+	public topGGHandler: TopGGHandler;
 	public util: Util;
 	public ownerID: string[];
 	public db: Sequelize;
@@ -48,7 +61,7 @@ export class BotClient extends AkairoClient {
 		);
 
 		// Set token
-		this.token = config.token;
+		this.token = config.credentials.botToken;
 
 		// Set config
 		this.config = config;
@@ -102,6 +115,7 @@ export class BotClient extends AkairoClient {
 				logging: false
 			}
 		);
+		this.topGGHandler = new TopGGHandler(this);
 		BotGuild.install();
 		BotMessage.install();
 	}
@@ -133,6 +147,7 @@ export class BotClient extends AkairoClient {
 		Object.keys(Tasks).forEach((t) => {
 			setInterval(() => Tasks[t](this), 60000);
 		});
+		this.topGGHandler.init();
 	}
 
 	public async dbPreInit(): Promise<void> {
@@ -254,7 +269,7 @@ export class BotClient extends AkairoClient {
 	public async start(): Promise<void> {
 		try {
 			await this._init();
-			await this.login(this.config.token);
+			await this.login(this.token);
 		} catch (e) {
 			console.error(e.stack);
 			exit(2);
@@ -264,7 +279,7 @@ export class BotClient extends AkairoClient {
 	public destroy(relogin = true): void | Promise<string> {
 		super.destroy();
 		if (relogin) {
-			return this.login(this.config.token);
+			return this.login(this.token);
 		}
 	}
 }
