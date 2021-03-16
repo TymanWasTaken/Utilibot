@@ -9,7 +9,8 @@ export default class PrefixCommand extends BotCommand {
 				{
 					id: 'prefix'
 				}
-			]
+			],
+			userPermissions: ['MANAGE_GUILD']
 		});
 	}
 	async exec(
