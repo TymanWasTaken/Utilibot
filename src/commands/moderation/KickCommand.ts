@@ -40,7 +40,7 @@ export default class PrefixCommand extends BotCommand {
 			await modlogEnry.save();
 		} catch (e) {
 			console.error(e);
-			await message.util.reply(
+			await message.util.send(
 				'Error saving to database. Please report this to a developer.'
 			);
 			return;
@@ -52,11 +52,11 @@ export default class PrefixCommand extends BotCommand {
 				}`
 			);
 		} catch {
-			await message.util.reply('Error kicking :/');
+			await message.util.send('Error kicking :/');
 			await modlogEnry.destroy();
 			return;
 		}
-		await message.util.reply(
+		await message.util.send(
 			`Kicked <@!${user.id}> with reason \`${reason || 'No reason given'}\``
 		);
 	}

@@ -4,7 +4,7 @@
 	"description": "A utility bot for discord",
 	"main": "dist/bot.js",
 	"repository": "https://github.com/tyman-productions/utilibot",
-	"author": "TymanWasTaken <TymanWasTaken@users.noreply.github.com>",
+	"author": "TymanWasTaken <tyman@tyman.tech>",
 	"license": "MIT",
 	"scripts": {
 		"start": "yarn build && node --trace-warnings -r source-map-support/register dist/bot.js",

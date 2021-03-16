@@ -52,7 +52,7 @@ export default class PrefixCommand extends BotCommand {
 				if (time) {
 					const parsed = [...time.matchAll(durationRegex)];
 					if (parsed.length < 1) {
-						await message.util.reply('Invalid time.');
+						await message.util.send('Invalid time.');
 						return;
 					}
 					for (const part of parsed) {
@@ -99,7 +99,7 @@ export default class PrefixCommand extends BotCommand {
 				await banEntry.save();
 			} catch (e) {
 				console.error(e);
-				await message.util.reply(
+				await message.util.send(
 					'Error saving to database. Please report this to a developer.'
 				);
 				return;
@@ -109,13 +109,13 @@ export default class PrefixCommand extends BotCommand {
 					reason ? `reason ${reason}` : 'no reason'
 				}`
 			});
-			await message.util.reply(
+			await message.util.send(
 				`Banned <@!${user.id}> for ${translatedTime.join(', ')} with reason \`${
 					reason || 'No reason given'
 				}\``
 			);
 		} catch {
-			await message.util.reply('Error banning :/');
+			await message.util.send('Error banning :/');
 			await modlogEnry.destroy();
 			await banEntry.destroy();
 			return;

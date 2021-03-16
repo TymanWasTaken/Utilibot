@@ -94,10 +94,10 @@ export default class ModlogCommand extends BotCommand {
 					})
 			);
 			if (page) {
-				await message.util.reply(embedPages[page - 1]);
+				await message.util.send(embedPages[page - 1]);
 				return;
 			} else {
-				await message.util.reply(embedPages[0]);
+				await message.util.send(embedPages[0]);
 				return;
 			}
 		} else if (search) {
@@ -106,7 +106,7 @@ export default class ModlogCommand extends BotCommand {
 				await message.util.send('That modlog does not exist.');
 				return;
 			}
-			await message.util.reply(
+			await message.util.send(
 				new MessageEmbed({
 					title: `Modlog ${entry.id}`,
 					fields: [

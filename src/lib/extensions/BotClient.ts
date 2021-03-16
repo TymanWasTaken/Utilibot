@@ -41,11 +41,9 @@ export class BotClient extends AkairoClient {
 		super(
 			{
 				ownerID: config.owners,
-				intents: Intents.ALL
 			},
 			{
 				allowedMentions: { parse: ['users'] }, // No everyone or role mentions by default
-				intents: Intents.ALL
 			}
 		);
 
