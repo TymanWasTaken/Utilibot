@@ -14,7 +14,7 @@ import { Util } from './Util';
 import * as Tasks from '../../tasks';
 import { v4 as uuidv4 } from 'uuid';
 import { exit } from 'process';
-import { TopGGHandler } from '../top.gg';
+import { TopGGHandler } from '../utils/TopGG';
 
 export interface BotConfig {
 	credentials: {

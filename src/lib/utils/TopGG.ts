@@ -1,38 +1,46 @@
-import { Webhook as TopGGWebhook, Api } from '@top-gg/sdk';
+import { Api } from '@top-gg/sdk';
 import { BotStats, WebhookPayload } from '@top-gg/sdk/dist/typings';
-import { BotClient } from './extensions/BotClient';
-import { topGGPort, credentials, channels } from '../config/options';
-import express, { Request as ExpressRequest, Express } from 'express';
+import { BotClient } from '../extensions/BotClient';
+import { topGGPort, credentials, channels } from '../../config/options';
+import express, { Express } from 'express';
 import { TextChannel, MessageEmbed, Webhook } from 'discord.js';
 import { stripIndent } from 'common-tags';
-
-interface Request extends ExpressRequest {
-	vote: WebhookPayload;
-}
+import {
+	json as bodyParserJSON,
+	urlencoded as bodyParserUrlEncoded
+} from 'body-parser';
 
 export class TopGGHandler {
-	public api: Api;
-	public webhook: TopGGWebhook;
+	public api = new Api(credentials.dblToken);
 	public client: BotClient;
-	public server: Express;
+	public server: Express = express();
 	public constructor(client: BotClient) {
 		this.client = client;
-		this.api = new Api(credentials.dblToken);
-		this.webhook = new TopGGWebhook(credentials.dblWebhookAuth);
-		this.server = express();
 	}
 	public init(): void {
-		setInterval(this.postGuilds, 60000);
-		this.server.post('/dblwebhook', this.webhook.middleware(), async (req) => {
-			const vote = (req as Request).vote;
-			await this.postVoteWebhook(vote);
+		setInterval(this.postGuilds.bind(this), 60000);
+		this.server.use(bodyParserJSON());
+		this.server.use(bodyParserUrlEncoded({ extended: true }));
+		this.server.post('/dblwebhook', async (req, res) => {
+			if (req.headers.authorization !== credentials.dblWebhookAuth) {
+				res.status(403).send('Unauthorized');
+				console.log('Unauthorized DBL webhook request 👀');
+				return;
+			} else {
+				res.status(200).send('OK');
+			}
+			const data = req.body as WebhookPayload;
+			await this.postVoteWebhook(data);
 		});
-		this.server.listen(topGGPort);
+		this.server.listen(topGGPort, () => {
+			console.log(`Started express top.gg server at port ${topGGPort}`);
+		});
 	}
 	public async postGuilds(): Promise<BotStats> {
+		if (this.client.config.dev) return;
 		return await this.api.postStats({
 			serverCount: this.client.guilds.cache.size,
-			shardCount: this.client.shard.count
+			shardCount: this.client.shard ? this.client.shard.count : 1
 		});
 	}
 	public async postVoteWebhook(data: WebhookPayload): Promise<void> {
@@ -42,7 +50,7 @@ export class TopGGHandler {
 					channels.log
 				)) as TextChannel;
 				await channel.send(
-					`Test vote webhook data recieved, ${this.client.util.haste(
+					`Test vote webhook data recieved, ${await this.client.util.haste(
 						JSON.stringify(data, null, '\t')
 					)}`
 				);
