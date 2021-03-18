@@ -25,7 +25,7 @@ export class GuildSettings {
 			entry = GuildModel.build({
 				id: this.message.guild.id,
 				prefix: value
-			})
+			});
 		} else {
 			entry.prefix = value;
 		}
