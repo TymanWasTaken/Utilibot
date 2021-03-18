@@ -76,11 +76,7 @@ export default class ModlogCommand extends BotCommand {
 					${this.client.util.ordinal(logs.indexOf(log) + 1)} action
 				`);
 			}
-			const chunked: string[][] = niceLogs.reduce((all, one, i) => {
-				const ch = Math.floor(i / 3);
-				all[ch] = [].concat(all[ch] || [], one);
-				return all;
-			}, []);
+			const chunked: string[][] = this.client.util.chunk(niceLogs, 3);
 			const embedPages = chunked.map(
 				(e, i) =>
 					new MessageEmbed({
