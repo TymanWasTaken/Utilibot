@@ -20,8 +20,15 @@ export class GuildSettings {
 		);
 	}
 	public async setPrefix(value: string): Promise<void> {
-		const entry = await GuildModel.findByPk(this.message.guild.id);
-		entry.prefix = value;
+		let entry = await GuildModel.findByPk(this.message.guild.id);
+		if (!entry) {
+			entry = GuildModel.build({
+				id: this.message.guild.id,
+				prefix: value
+			})
+		} else {
+			entry.prefix = value;
+		}
 		await entry.save();
 	}
 }
