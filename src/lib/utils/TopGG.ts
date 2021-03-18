@@ -3,7 +3,7 @@ import { BotStats, WebhookPayload } from '@top-gg/sdk/dist/typings';
 import { BotClient } from '../extensions/BotClient';
 import { topGGPort, credentials, channels } from '../../config/options';
 import express, { Express } from 'express';
-import { TextChannel, MessageEmbed, Webhook } from 'discord.js';
+import { TextChannel, MessageEmbed } from 'discord.js';
 import { stripIndent } from 'common-tags';
 import {
 	json as bodyParserJSON,
@@ -24,12 +24,20 @@ export class TopGGHandler {
 		this.server.post('/dblwebhook', async (req, res) => {
 			if (req.headers.authorization !== credentials.dblWebhookAuth) {
 				res.status(403).send('Unauthorized');
-				console.log(`Unauthorized DBL webhook request 👀 ${await this.client.util.haste(JSON.stringify({
-					'Correct Auth': credentials.dblWebhookAuth,
-					'Given Auth': req.headers.authorization,
-					'Headers': req.headers,
-					'Body': req.body
-				}, null, '\t'))}`);
+				console.log(
+					`Unauthorized DBL webhook request 👀 ${await this.client.util.haste(
+						JSON.stringify(
+							{
+								'Correct Auth': credentials.dblWebhookAuth,
+								'Given Auth': req.headers.authorization,
+								'Headers': req.headers,
+								'Body': req.body
+							},
+							null,
+							'\t'
+						)
+					)}`
+				);
 				return;
 			} else {
 				res.status(200).send('OK');
@@ -71,7 +79,10 @@ export class TopGGHandler {
 				channels.dblVote
 			)) as TextChannel;
 			const webhooks = await channel.fetchWebhooks();
-			const webhook = (webhooks.size < 1) ? await channel.createWebhook('Utilibot Voting') : webhooks.first();
+			const webhook =
+				webhooks.size < 1
+					? await channel.createWebhook('Utilibot Voting')
+					: webhooks.first();
 			await webhook.send(
 				new MessageEmbed({
 					title: 'Top.gg vote',

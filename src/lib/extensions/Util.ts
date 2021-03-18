@@ -146,8 +146,8 @@ export class Util extends ClientUtil {
 	public chunk<T>(arr: T[], perChunk: number): T[][] {
 		return arr.reduce((all, one, i) => {
 			const ch = Math.floor(i / perChunk);
-			all[ch] = [].concat((all[ch] || []), one);
-			return all
-		}, [])
+			all[ch] = [].concat(all[ch] || [], one);
+			return all;
+		}, []);
 	}
 }
