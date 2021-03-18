@@ -245,5 +245,8 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/node,yarn,vscode,webstorm
 
+# Options and credentials for the bot
 src/config/options.ts
+
+# Unused sqlite database, uses postgresql now but I am keeping it in here just in case
 data.db
