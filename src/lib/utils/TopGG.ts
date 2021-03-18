@@ -65,8 +65,7 @@ export class TopGGHandler {
 					)}`
 				);
 				return;
-			}
-			else {
+			} else {
 				const parsedData = {
 					user: await this.client.users.fetch(data.user),
 					type: data.type as 'upvote' | 'test',
