@@ -142,4 +142,12 @@ export class Util extends ClientUtil {
 			v = n % 100;
 		return n + (s[(v - 20) % 10] || s[v] || s[0]);
 	}
+
+	public chunk<T>(arr: T[], perChunk: number): T[][] {
+		return arr.reduce((all, one, i) => {
+			const ch = Math.floor(i / perChunk);
+			all[ch] = [].concat((all[ch] || []), one);
+			return all
+		}, [])
+	}
 }
