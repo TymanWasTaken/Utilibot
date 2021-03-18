@@ -10,13 +10,13 @@ import { Guild as GuildModel } from '../types/Models';
 import { BotGuild } from './BotGuild';
 
 export class GuildSettings {
-	private message: Message;
-	constructor(message: Message) {
+	private message: BotMessage;
+	constructor(message: BotMessage) {
 		this.message = message;
 	}
 	public async getPrefix(): Promise<string> {
 		return await GuildModel.findByPk(this.message.guild.id).then(
-			(gm) => gm.prefix as string
+			(gm) => gm?.prefix || this.message.client.config.prefix
 		);
 	}
 	public async setPrefix(value: string): Promise<void> {
@@ -35,6 +35,7 @@ export class BotMessage extends Message {
 		super(client, data, channel);
 	}
 	public guild: BotGuild;
+	public client: BotClient;
 	static install(): void {
 		Structures.extend('Message', () => BotMessage);
 	}

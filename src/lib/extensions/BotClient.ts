@@ -83,7 +83,7 @@ export class BotClient extends AkairoClient {
 			directory: path.join(__dirname, '..', '..', 'commands'),
 			prefix: async ({ guild }: { guild: Guild }) => {
 				const row = await Models.Guild.findByPk(guild.id);
-				if (!row) return this.config.prefix; // shouldn't be possible but you never know
+				if (!row) return this.config.prefix;
 				return row.prefix as string;
 			},
 			allowMention: true,
@@ -252,17 +252,6 @@ export class BotClient extends AkairoClient {
 			await this.db.sync({ alter: true }); // Sync all tables to fix everything if updated
 		} catch {
 			// Ignore error
-		}
-	}
-
-	public async dbPostInit(): Promise<void> {
-		for (const guild of this.guilds.cache.values()) {
-			const existing = await Models.Guild.findByPk(guild.id);
-			if (existing !== null) return;
-			const row = Models.Guild.build({
-				id: guild.id
-			});
-			await row.save();
 		}
 	}
 

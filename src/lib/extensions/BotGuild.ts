@@ -9,7 +9,7 @@ export class GuildSettings {
 	}
 	public async getPrefix(): Promise<string> {
 		return await GuildModel.findByPk(this.guild.id).then(
-			(gm) => gm.prefix as string
+			(gm) => gm?.prefix || this.guild.client.config.prefix
 		);
 	}
 	public async setPrefix(value: string): Promise<void> {
@@ -27,4 +27,5 @@ export class BotGuild extends Guild {
 		Structures.extend('Guild', () => BotGuild);
 	}
 	public settings = new GuildSettings(this);
+	public client: BotClient;
 }
