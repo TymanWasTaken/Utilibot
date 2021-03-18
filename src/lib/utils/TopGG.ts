@@ -3,7 +3,7 @@ import { BotStats, WebhookPayload } from '@top-gg/sdk/dist/typings';
 import { BotClient } from '../extensions/BotClient';
 import { topGGPort, credentials, channels } from '../../config/options';
 import express, { Express } from 'express';
-import { TextChannel, MessageEmbed } from 'discord.js';
+import { TextChannel, MessageEmbed, WebhookClient } from 'discord.js';
 import { stripIndent } from 'common-tags';
 import {
 	json as bodyParserJSON,
@@ -66,38 +66,44 @@ export class TopGGHandler {
 				);
 				return;
 			}
-			const timestamp = new Date().getTime();
-			const parsedData = {
-				user: await this.client.users.fetch(data.user),
-				type: data.type as 'upvote' | 'test',
-				isWeekend: data.isWeekend
-			};
-			const channel = (await this.client.channels.fetch(
-				channels.dblVote
-			)) as TextChannel;
-			const webhooks = await channel.fetchWebhooks();
-			const webhook =
-				webhooks.size < 1
-					? await channel.createWebhook('Utilibot Voting')
-					: webhooks.first();
-			await webhook.send(
-				new MessageEmbed({
-					title: 'Top.gg vote',
-					description: stripIndent`
-					User: ${parsedData.user.tag}
-					Weekend (worth double): ${parsedData.isWeekend ? 'Yes' : 'No'}
-				`,
-					author: {
-						name: parsedData.user.tag,
-						icon_url: parsedData.user.avatarURL({ dynamic: true })
-					},
-					timestamp
-				}),
-				{
+			else {
+				const parsedData = {
+					user: await this.client.users.fetch(data.user),
+					type: data.type as 'upvote' | 'test',
+					isWeekend: data.isWeekend
+				};
+				const channel = (await this.client.channels.fetch(
+					channels.dblVote
+				)) as TextChannel;
+				const webhooks = await channel.fetchWebhooks();
+				const webhook =
+					webhooks.size < 1
+						? await channel.createWebhook('Utilibot Voting')
+						: webhooks.first();
+				const webhookClient = new WebhookClient(webhook.id, webhook.token, {
+					allowedMentions: { parse: [] }
+				});
+				await webhookClient.send(undefined, {
 					username: 'Utilibot Voting',
-					avatarURL: this.client.user.avatarURL({ dynamic: true })
-				}
-			);
+					avatarURL: this.client.user.avatarURL({ dynamic: true }),
+					embeds: [
+						new MessageEmbed()
+							.setTitle('Top.GG Vote')
+							// prettier-ignore
+							.setDescription(
+								stripIndent`
+								User: ${parsedData.user.tag}
+								Weekend (worth double): ${parsedData.isWeekend ? 'Yes' : 'No'}
+							`
+							)
+							.setAuthor(
+								parsedData.user.tag,
+								parsedData.user.avatarURL({ dynamic: true })
+							)
+							.setTimestamp()
+					]
+				});
+			}
 		} catch (e) {
 			console.error(e);
 		}
