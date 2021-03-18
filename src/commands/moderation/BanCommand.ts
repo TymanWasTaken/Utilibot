@@ -104,15 +104,28 @@ export default class PrefixCommand extends BotCommand {
 				);
 				return;
 			}
+			try {
+				await user.send(
+					`You were banned in ${message.guild.name} ${
+						translatedTime.length >= 1
+							? `for ${translatedTime.join(', ')}`
+							: 'permanently'
+					} with reason \`${reason || 'No reason given'}\``
+				);
+			} catch (e) {
+				await message.channel.send('Error sending message to user');
+			}
 			await message.guild.members.ban(user, {
 				reason: `Banned by ${message.author.tag} with ${
 					reason ? `reason ${reason}` : 'no reason'
 				}`
 			});
 			await message.util.send(
-				`Banned <@!${user.id}> for ${translatedTime.join(', ')} with reason \`${
-					reason || 'No reason given'
-				}\``
+				`Banned <@!${user.id}> ${
+					translatedTime.length >= 1
+						? `for ${translatedTime.join(', ')}`
+						: 'permanently'
+				} with reason \`${reason || 'No reason given'}\``
 			);
 		} catch {
 			await message.util.send('Error banning :/');
