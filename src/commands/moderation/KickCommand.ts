@@ -46,6 +46,15 @@ export default class PrefixCommand extends BotCommand {
 			return;
 		}
 		try {
+			await user.send(
+				`You were kicked in ${message.guild.name} with reason \`${
+					reason || 'No reason given'
+				}\``
+			);
+		} catch (e) {
+			await message.channel.send('Error sending message to user');
+		}
+		try {
 			await user.kick(
 				`Kicked by ${message.author.tag} with ${
 					reason ? `reason ${reason}` : 'no reason'
