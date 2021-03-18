@@ -24,7 +24,7 @@ export class TopGGHandler {
 		this.server.post('/dblwebhook', async (req, res) => {
 			if (req.headers.authorization !== credentials.dblWebhookAuth) {
 				res.status(403).send('Unauthorized');
-				console.log(
+				await this.client.util.warn(
 					`Unauthorized DBL webhook request 👀 ${await this.client.util.haste(
 						JSON.stringify(
 							{
@@ -59,10 +59,7 @@ export class TopGGHandler {
 	public async postVoteWebhook(data: WebhookPayload): Promise<void> {
 		try {
 			if (data.type === 'test') {
-				const channel = (await this.client.channels.fetch(
-					channels.log
-				)) as TextChannel;
-				await channel.send(
+				await this.client.util.info(
 					`Test vote webhook data recieved, ${await this.client.util.haste(
 						JSON.stringify(data, null, '\t')
 					)}`

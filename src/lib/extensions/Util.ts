@@ -4,6 +4,7 @@ import { User } from 'discord.js';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import got from 'got';
+import { TextChannel } from 'discord.js';
 
 interface hastebinRes {
 	key: string;
@@ -143,11 +144,53 @@ export class Util extends ClientUtil {
 		return n + (s[(v - 20) % 10] || s[v] || s[0]);
 	}
 
+	/**
+	 * Chunks an array to the specified size
+	 * @param arr The array to chunk
+	 * @param perChunk The amount of items per chunk
+	 * @returns The chunked array
+	 */
 	public chunk<T>(arr: T[], perChunk: number): T[][] {
 		return arr.reduce((all, one, i) => {
 			const ch = Math.floor(i / perChunk);
 			all[ch] = [].concat(all[ch] || [], one);
 			return all;
 		}, []);
+	}
+
+	/**
+	 * Logs a message to console and log channel as info
+	 * @param message The message to send
+	 */
+	public async info(message: string): Promise<void> {
+		console.log(`INFO: ${message}`);
+		const channel = (await this.client.channels.fetch(
+			this.client.config.channels.log
+		)) as TextChannel;
+		await channel.send(`INFO: ${message}`);
+	}
+
+	/**
+	 * Logs a message to console and log channel as a warning
+	 * @param message The message to send
+	 */
+	public async warn(message: string): Promise<void> {
+		console.warn(`WARN: ${message}`);
+		const channel = (await this.client.channels.fetch(
+			this.client.config.channels.log
+		)) as TextChannel;
+		await channel.send(`WARN: ${message}`);
+	}
+
+	/**
+	 * Logs a message to console and log channel as an error
+	 * @param message The message to send
+	 */
+	public async error(message: string): Promise<void> {
+		console.error(`ERROR: ${message}`);
+		const channel = (await this.client.channels.fetch(
+			this.client.config.channels.error
+		)) as TextChannel;
+		await channel.send(`ERROR: ${message}`);
 	}
 }

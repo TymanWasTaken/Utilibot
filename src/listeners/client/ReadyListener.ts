@@ -11,6 +11,8 @@ export default class CommandBlockedListener extends BotListener {
 	public async exec(): Promise<void> {
 		console.log('Bot ready, running db post init...');
 		await this.client.dbPostInit();
-		console.log(`Sucessfully logged in as ${this.client.user.tag}`);
+		await this.client.util.info(
+			`Sucessfully logged in as ${this.client.user.tag}`
+		);
 	}
 }
