@@ -26,7 +26,7 @@ export default class HelpCommand extends BotCommand {
 		message: BotMessage,
 		{ command }: { command: BotCommand }
 	): Promise<Message> {
-		const prefix = this.handler.prefix;
+		const prefix = await message.settings.getPrefix();
 		if (!command) {
 			const embed = new MessageEmbed()
 				.addField(
@@ -36,7 +36,7 @@ export default class HelpCommand extends BotCommand {
                 `
 				)
 				.setFooter(
-					`For more information about a command use "${await message.settings.getPrefix()}help <command>"`
+					`For more information about a command use "${prefix}help <command>"`
 				)
 				.setTimestamp();
 			for (const category of this.handler.categories.values()) {
