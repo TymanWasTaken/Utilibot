@@ -30,8 +30,7 @@ export default class BotInfoCommand extends BotCommand {
 			.addFields([
 				{
 					name: 'Owners',
-					value: owners,
-					inline: true
+					value: owners
 				},
 				{
 					name: 'Uptime',
@@ -41,8 +40,12 @@ export default class BotInfoCommand extends BotCommand {
 				},
 				{
 					name: 'User count',
-					value: this.client.users.cache.size,
-					inline: true
+					value: this.client.users.cache.size
+				},
+				
+				{
+					name: 'Guild count',
+					value: this.client.guilds.cache.size
 				},
 				{
 					name: 'Current commit',
