@@ -6,7 +6,7 @@ utils = dpytils.utils()
 
 
 class Logging(commands.Cog):
-	def __init__(self, bot):
+	def __init__(self, bot: commands.Bot):
 		self.bot = bot
 		self.logs = {
 		"messages":["edit", "delete", "purge"],
@@ -23,7 +23,7 @@ class Logging(commands.Cog):
 		self.yes = f"<:yes:778489135870377994>"
 		self.no = f"<:no:778489134741979186>"
 
-	async def islogenabled(self, guild, log):
+	async def islogenabled(self, guild: discord.Guild, log):
 		if not guild:
 			return False
 		db = await self.bot.dbquery("logging", "data", "guildid=" + str(guild.id))
@@ -35,7 +35,7 @@ class Logging(commands.Cog):
 		else:
 			return data[log]
 
-	async def getlogs(self, guild):
+	async def getlogs(self, guild: discord.Guild):
 		if not guild:
 			return None
 		db = await self.bot.dbquery("logging", "data", "guildid=" + str(guild.id))
@@ -44,7 +44,7 @@ class Logging(commands.Cog):
 		data = json.loads(db[0][0])
 		return data
 
-	async def setlogs(self, guild, data):
+	async def setlogs(self, guild: discord.Guild, data):
 		if not guild:
 			return None
 		try:
@@ -53,7 +53,7 @@ class Logging(commands.Cog):
 			await self.bot.dbexec(("DELETE FROM logging WHERE guildid=?", (guild.id,)))
 			await self.bot.dbexec(("INSERT INTO logging VALUES (?, ?)", (guild.id, json.dumps(data))))
 
-	async def getlogchannel(self, guild):
+	async def getlogchannel(self, guild: discord.Guild):
 		results = await self.bot.dbquery('logchannel', 'channelid', 'guildid=' + str(guild.id))
 		if len(results) < 1:
 			return None
@@ -66,7 +66,7 @@ class Logging(commands.Cog):
 	@commands.group(invoke_without_command=True)
 	@commands.has_permissions(manage_guild=True)
 	@commands.guild_only()
-	async def log(self, ctx):
+	async def log(self, ctx: commands.Context):
 		"""
 		Shows logging settings for the current server.
 		"""
@@ -93,7 +93,7 @@ class Logging(commands.Cog):
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
-	async def channel(self, ctx, channel: discord.TextChannel):
+	async def channel(self, ctx: commands.Context, channel: discord.TextChannel):
 		"""
 		Sets the logging channel.
 		"""
@@ -104,7 +104,7 @@ class Logging(commands.Cog):
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
-	async def enable(self, ctx, log: str):
+	async def enable(self, ctx: commands.Context, log: str):
 		"""
 		Enable one of the logs.
 		"""
@@ -134,7 +134,7 @@ class Logging(commands.Cog):
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
-	async def disable(self, ctx, log: str):
+	async def disable(self, ctx: commands.Context, log: str):
 		"""
 		Disable one of the logs.
 		"""
@@ -159,7 +159,7 @@ class Logging(commands.Cog):
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
-	async def enableall(self, ctx):
+	async def enableall(self, ctx: commands.Context):
 		"""
 		Enable all of the logs.
 		"""
@@ -173,7 +173,7 @@ class Logging(commands.Cog):
 
 	@log.command()
 	@commands.has_permissions(manage_guild=True)
-	async def disableall(self, ctx):
+	async def disableall(self, ctx: commands.Context):
 		"""
 		Disable all of the logs.
 		"""
@@ -186,7 +186,7 @@ class Logging(commands.Cog):
 		await ctx.send(f"Disabled all logs.")
 
 	@commands.Cog.listener()
-	async def on_message_edit(self, before, after):
+	async def on_message_edit(self, before: discord.Message, after: discord.Message):
 		if before.content == after.content:
 			return
 		if not before.guild:
@@ -220,7 +220,7 @@ class Logging(commands.Cog):
 		await logchannel.send(embed=embed)
 	
 	@commands.Cog.listener()
-	async def on_message_delete(self, message):
+	async def on_message_delete(self, message: discord.Message):
 		if not message.guild:
 			return
 		if not await self.islogenabled(message.guild, "delete"):
@@ -238,7 +238,7 @@ class Logging(commands.Cog):
 	
 	@commands.Cog.listener()
 	async def on_bulk_message_delete(self, messages):
-		exmsg = messages[0]
+		exmsg: discord.Message = messages[0]
 		if not exmsg.guild:
 			return
 		if not await self.islogenabled(exmsg.guild, "purge"):
@@ -254,7 +254,7 @@ class Logging(commands.Cog):
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
-	async def on_member_update(self, before, after):
+	async def on_member_update(self, before: discord.Member, after: discord.Member):
 		if not before.guild:
 			return
 		logchannel = await self.getlogchannel(before.guild)
@@ -322,7 +322,7 @@ class Logging(commands.Cog):
 			await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
-	async def on_user_update(self, before, after):
+	async def on_user_update(self, before: discord.User, after: discord.User):
 		for guild in self.bot.guilds:
 			if before.id not in [m.id for m in guild.members]:
 				continue
@@ -361,7 +361,7 @@ class Logging(commands.Cog):
 			await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
-	async def on_member_join(self, member):
+	async def on_member_join(self, member: discord.Member):
 		logchannel = await self.getlogchannel(member.guild)
 		if logchannel == None:
 			return
@@ -378,7 +378,7 @@ class Logging(commands.Cog):
 		await logchannel.send(embed=embed)
 
 	@commands.Cog.listener()
-	async def on_member_remove(self, member):
+	async def on_member_remove(self, member: discord.Member):
 		logchannel = await self.getlogchannel(member.guild)
 		if logchannel == None:
 			return
@@ -396,7 +396,7 @@ class Logging(commands.Cog):
 
 
 	@commands.Cog.listener()
-	async def on_voice_state_update(self, member, before, after):
+	async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
 		if not member.guild:
 			return
 		logchannel = await self.getlogchannel(member.guild)
@@ -573,9 +573,9 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		embed=discord.Embed(title=f"{channel.type} Channel Created".capitalize(), description=f"**Name:** {channel.name}\n**Category:** {channel.category}", color=5496236)
 		embed.set_footer(text=f"Channel ID: {channel.id}")
 		await logchannel.send(embed=embed)
-				    
+
 	@commands.Cog.listener()
-	async def on_guild_channel_update(self, before, after):
+	async def on_guild_channel_update(self, before: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel], after: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.CategoryChannel]):
 		if not await self.islogenabled(before.guild, "channelupdate"):
 			return
 		logchannel = await self.getlogchannel(before.guild)
@@ -595,7 +595,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 			bvalue=f"**Type:** `{str(before.type).capitalize()}`"
 			avalue=f"**Type:** `{str(after.type).capitalize()}`"
 		elif before.category != after.category:
-			if not channel.guild.get_channel(before.parent_id):
+			if not before.guild.get_channel(before.parent_id):
 				return
 			bvalue=f"**Category:** `{before.category}`"
 			avalue=f"**Category:** `{after.category}`"
@@ -604,7 +604,7 @@ Created at: {role.created_at}""", color=role.color, timestamp=datetime.now())
 		embed.add_field(name="Before:", value=bvalue, inline=False)
 		embed.add_field(name="After:", value=avalue, inline=False)
 		await logchannel.send(embed=embed)
-				    
+
 	@commands.Cog.listener()
 	async def on_guild_channel_delete(self, channel):
 		if not await self.islogenabled(channel.guild, "channeldelete"):

@@ -6,7 +6,7 @@ authors = ["Tyman"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "3.8.*"
+python = ">=3.8.0 <4.0.0"
 postbin = {git = "https://github.com/dragdev-studios/PostBin"}
 python-dotenv = "^0.15.0"
 jishaku = "^1.19.2"
@@ -25,6 +25,7 @@ riftgun = "^1.1.0"
 fastapi = "^0.62.0"
 uvicorn = "^0.12.3"
 urllib3 = "^1.26.2"
+bs4 = "^0.0.1"
 
 
 [tool.poetry.dev-dependencies]
