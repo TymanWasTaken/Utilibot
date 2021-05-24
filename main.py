@@ -298,7 +298,7 @@ async def on_message(message):
 				if globalafk:
 					globalmsg = globalafk[0][0]
 				if globalmsg or localmsg:
-					embed = discord.Embed(description=globalmsg, color=bot.utils.randcolor())
+					embed = discord.Embed(description=globalmsg, color=discord.Color.random())
 					inguild = ""
 					scope = "Global"
 					if localmsg:
@@ -323,7 +323,7 @@ async def on_message(message):
 		except: return
 		try: msg = await chan.fetch_message(messageid)
 		except: return
-		embed=discord.Embed(title="Content", description=f"{msg.content if msg.content else '[Message contained only embed or attachment]'}", color=bot.utils.randcolor(), timestamp=msg.created_at)
+		embed=discord.Embed(title="Content", description=f"{msg.content if msg.content else '[Message contained only embed or attachment]'}", color=discord.Color.random(), timestamp=msg.created_at)
 		embed.set_author(name=f"Message sent by {msg.author}", icon_url=msg.author.avatar_url)
 		embed.add_field(name="**Message Details**", value=f"""
 			{f'**Server:** {g.name} (`{g.id}`)' if g.id != message.guild.id else ''}
